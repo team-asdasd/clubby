@@ -22,6 +22,7 @@
                     </nav>
                 </div>
             </div>
+
             <div class="inner cover">
                 <h1 class="cover-heading">"Every day is a new day. It is better to be lucky. But I would rather be
                     exact. Then when luck comes you are ready."</h1>

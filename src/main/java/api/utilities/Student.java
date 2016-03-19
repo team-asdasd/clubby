@@ -1,14 +1,11 @@
 package api.utilities;
 
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 @XmlRootElement(name="student")
 public class Student implements Serializable{
-
-
 	private static final long serialVersionUID = 6718071273578435756L;
 	
 	private int id;
@@ -17,8 +14,6 @@ public class Student implements Serializable{
 	
 	public Student() {
 	}
-	
-	
 
 	public Student(int id, String name, int age) {
 		super();
@@ -26,7 +21,6 @@ public class Student implements Serializable{
 		this.name = name;
 		this.age = age;
 	}
-
 
 	@XmlElement
 	public int getId() {
@@ -55,14 +49,8 @@ public class Student implements Serializable{
 		this.age = age;
 	}
 
-
-
 	@Override
 	public String toString() {
 		return "Student [id=" + id + ", name=" + name + ", age=" + age + "]";
 	}
-
-	
-	
-	
 }

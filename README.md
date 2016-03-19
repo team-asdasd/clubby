@@ -11,3 +11,12 @@
 
 - [Funkciniai](/docs/SGP_uzduotis_2016.pdf)
 - [Nefunkciniai](/docs/KokybiniaiReikalavimai.pdf)
+
+
+# Setup
+
+## IntelliJ
+
+1. Checkout
+2. Import `pom.xml` to IntelliJ
+3. // TODOOOOO

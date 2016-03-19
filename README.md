@@ -4,6 +4,7 @@
 
 ## Linkai
 
+- [Aplikacija](http://clubby-teamasdasd.rhcloud.com/)
 - [Trello Boardas](https://trello.com/b/nIlxlaQh/psk)
 
 ## Reikalavimai

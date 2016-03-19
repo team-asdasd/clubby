@@ -1,4 +1,4 @@
-package utilities;
+package utilities.configuration;
 
 import java.util.Properties;
 

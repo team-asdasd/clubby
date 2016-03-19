@@ -21,12 +21,12 @@ import java.util.Set;
 
 public class ApplicationRealm extends AuthorizingRealm {
     // TODO: Refactor this to our style
-    protected static final String DEFAULT_AUTHENTICATION_QUERY = "select password from security.users where username = ?";
+    protected static final String DEFAULT_AUTHENTICATION_QUERY = "select password from security.logins where username = ?";
 
 
     // TODO: add roles, permissions etc
     protected static final String DEFAULT_SALTED_AUTHENTICATION_QUERY = "select password, password_salt from users where username = ?";
-    protected static final String DEFAULT_USER_ROLES_QUERY = "select role_name from user_roles where username = ?";
+    protected static final String DEFAULT_USER_ROLES_QUERY = "select role_name from security.logins_roles where username = ?";
     protected static final String DEFAULT_PERMISSIONS_QUERY = "select permission from roles_permissions where role_name = ?";
 
     // private static final Logger log = LoggerFactory.getLogger(JdbcRealm.class);
@@ -39,7 +39,7 @@ public class ApplicationRealm extends AuthorizingRealm {
      *   <li>EXTERNAL - salt is not stored in the database. {@link #getSaltForUser(String)} will be called
      *       to get the salt</li></ul>
      */
-    public enum SaltStyle {NO_SALT, CRYPT, COLUMN, EXTERNAL};
+    public enum SaltStyle {NO_SALT, CRYPT, COLUMN, EXTERNAL}
 
     protected DataSource dataSource;
 
@@ -53,78 +53,26 @@ public class ApplicationRealm extends AuthorizingRealm {
 
     protected SaltStyle saltStyle = SaltStyle.NO_SALT;
 
-    /**
-     * Sets the datasource that should be used to retrieve connections used by this realm.
-     *
-     * @param dataSource the SQL data source.
-     */
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
-    /**
-     * Overrides the default query used to retrieve a user's password during authentication.  When using the default
-     * implementation, this query must take the user's username as a single parameter and return a single result
-     * with the user's password as the first column.  If you require a solution that does not match this query
-     * structure, you can override {@link #doGetAuthenticationInfo(org.apache.shiro.authc.AuthenticationToken)} or
-     * just {@link #getPasswordForUser(java.sql.Connection,String)}
-     *
-     * @param authenticationQuery the query to use for authentication.
-     * @see #DEFAULT_AUTHENTICATION_QUERY
-     */
     public void setAuthenticationQuery(String authenticationQuery) {
         this.authenticationQuery = authenticationQuery;
     }
 
-    /**
-     * Overrides the default query used to retrieve a user's roles during authorization.  When using the default
-     * implementation, this query must take the user's username as a single parameter and return a row
-     * per role with a single column containing the role name.  If you require a solution that does not match this query
-     * structure, you can override {@link #doGetAuthorizationInfo(PrincipalCollection)} or just
-     * {@link #getRoleNamesForUser(java.sql.Connection,String)}
-     *
-     * @param userRolesQuery the query to use for retrieving a user's roles.
-     * @see #DEFAULT_USER_ROLES_QUERY
-     */
     public void setUserRolesQuery(String userRolesQuery) {
         this.userRolesQuery = userRolesQuery;
     }
 
-    /**
-     * Overrides the default query used to retrieve a user's permissions during authorization.  When using the default
-     * implementation, this query must take a role name as the single parameter and return a row
-     * per permission with three columns containing the fully qualified name of the permission class, the permission
-     * name, and the permission actions (in that order).  If you require a solution that does not match this query
-     * structure, you can override {@link #doGetAuthorizationInfo(org.apache.shiro.subject.PrincipalCollection)} or just
-     * {@link #getPermissions(java.sql.Connection,String,java.util.Collection)}</p>
-     * <p/>
-     * <b>Permissions are only retrieved if you set {@link #permissionsLookupEnabled} to true.  Otherwise,
-     * this query is ignored.</b>
-     *
-     * @param permissionsQuery the query to use for retrieving permissions for a role.
-     * @see #DEFAULT_PERMISSIONS_QUERY
-     * @see #setPermissionsLookupEnabled(boolean)
-     */
     public void setPermissionsQuery(String permissionsQuery) {
         this.permissionsQuery = permissionsQuery;
     }
 
-    /**
-     * Enables lookup of permissions during authorization.  The default is "false" - meaning that only roles
-     * are associated with a user.  Set this to true in order to lookup roles <b>and</b> permissions.
-     *
-     * @param permissionsLookupEnabled true if permissions should be looked up during authorization, or false if only
-     *                                 roles should be looked up.
-     */
     public void setPermissionsLookupEnabled(boolean permissionsLookupEnabled) {
         this.permissionsLookupEnabled = permissionsLookupEnabled;
     }
 
-    /**
-     * Sets the salt style.  See {@link #saltStyle}.
-     *
-     * @param saltStyle new SaltStyle to set.
-     */
     public void setSaltStyle(SaltStyle saltStyle) {
         this.saltStyle = saltStyle;
         if (saltStyle == SaltStyle.COLUMN && authenticationQuery.equals(DEFAULT_AUTHENTICATION_QUERY)) {

@@ -1,7 +1,6 @@
 package api.configuration;
 
-
-import api.resources.StudentResource;
+import api.resources.UsersResource;
 
 import java.util.Set;
 import java.util.HashSet;
@@ -13,7 +12,7 @@ public class ApplicationConfiguration extends Application {
     private Set<Class<?>> empty = new HashSet<Class<?>>();
     public ApplicationConfiguration(){
 
-        singletons.add(new StudentResource());
+        singletons.add(new UsersResource());
 
     }
 

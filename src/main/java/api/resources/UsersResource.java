@@ -12,17 +12,17 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
-@Path("/students")
-public class StudentResource {
+@Path("/users")
+public class UsersResource {
 
-    List<Student> students = new ArrayList<Student>();
+    List<Student> users = new ArrayList<Student>();
     StringListConverter converter = new StringListConverter();
 
-    public StudentResource() {
+    public UsersResource() {
         // Populate test data. Later each WS method will retrieve data from DB.
-        students.add(new Student(12344, "Mike", 17));
-        students.add(new Student(12345, "Jane", 19));
-        students.add(new Student(12346, "Bob", 19));
+        users.add(new Student(12344, "Mike", 17));
+        users.add(new Student(12345, "Jane", 19));
+        users.add(new Student(12346, "Bob", 19));
     }
 
     @GET
@@ -30,7 +30,7 @@ public class StudentResource {
     public Response getStudentList() {
         StudentWrapper wrapper = new StudentWrapper();
 
-        wrapper.setList(students);
+        wrapper.setList(users);
 
         return Response.status(200).entity(wrapper).build();
     }
@@ -42,7 +42,7 @@ public class StudentResource {
         StudentWrapper wrapper = new StudentWrapper();
 
         List<Student> newList = new ArrayList<Student>();
-        for (Student student : students) {
+        for (Student student : users) {
             if (student.getAge() > Integer.parseInt(anAge)) {
                 newList.add(student);
             }

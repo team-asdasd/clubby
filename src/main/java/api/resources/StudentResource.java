@@ -35,8 +35,6 @@ public class StudentResource {
         return Response.status(200).entity(wrapper).build();
     }
 
-
-
     @GET
     @Path("overAge/{age}")
     @Produces("application/json")

@@ -9,6 +9,22 @@ public class DatasourceConfiguration extends Properties {
         String host = System.getenv("OPENSHIFT_POSTGRESQL_DB_HOST");
         String port = System.getenv("OPENSHIFT_POSTGRESQL_DB_PORT");
 
+        if (username == null) {
+            username = "";
+        }
+
+        if (password == null) {
+            password = "";
+        }
+        
+        if (host == null) {
+            host = "";
+        }
+
+        if (port == null) {
+            port = "";
+        }
+
         super.put("user", username);
         super.put("password", password);
         super.put("serverName", host);

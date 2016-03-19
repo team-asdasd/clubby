@@ -1,0 +1,9 @@
+{
+  "name": "clubby",
+  "dependencies": {
+    "jquery": "^2.2.0"
+  },
+  "devDependencies": {
+  },
+  "private": true
+}

@@ -3,6 +3,9 @@ package api.resources;
 import api.utilities.StringListConverter;
 import api.utilities.Student;
 import api.utilities.StudentWrapper;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -12,7 +15,9 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
+@Api(value = "user")
 @Path("/users")
+@Produces({"application/json"})
 public class UsersController {
 
     List<Student> users = new ArrayList<Student>();
@@ -27,6 +32,10 @@ public class UsersController {
 
     @GET
     @Produces("application/json")
+    @ApiOperation(value = "Finds Pets by status",
+            notes = "Multiple status values can be provided with comma seperated strings",
+            response = StudentWrapper.class,
+            responseContainer = "List")
     public Response getStudentList() {
         StudentWrapper wrapper = new StudentWrapper();
 
@@ -38,6 +47,10 @@ public class UsersController {
     @GET
     @Path("overAge/{age}")
     @Produces("application/json")
+    @ApiOperation(value = "Finds Pets by status",
+            notes = "Multiple status values can be provided with comma seperated strings",
+            response = StudentWrapper.class,
+            responseContainer = "List")
     public Response getStudentOverAgeList(@PathParam("age") String anAge) {
         StudentWrapper wrapper = new StudentWrapper();
 

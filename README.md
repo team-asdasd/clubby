@@ -9,7 +9,7 @@
 
 ## Requirements
 
-- [Funkctional (LT)](/docs/SGP_uzduotis_2016.pdf)
+- [Functional (LT)](/docs/SGP_uzduotis_2016.pdf)
 - [Non functional (LT)](/docs/KokybiniaiReikalavimai.pdf)
 
 

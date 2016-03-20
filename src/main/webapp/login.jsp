@@ -1,4 +1,10 @@
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <%@ page import="security.shiro.facebook.FacebookSettings" %>
+
+<shiro:user>
+    <% response.sendRedirect("/"); %>
+</shiro:user>
+
 <!DOCTYPE html>
 <html>
 <head>

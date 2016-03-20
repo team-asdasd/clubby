@@ -34,7 +34,7 @@ public class FacebookRealm extends AuthorizingRealm {
                 String REDIRECT_URL = FacebookSettings.getRedirectUrl();
                 String APP_SECRET = FacebookSettings.getSecret();
 
-                URL authUrl = new URL("https://graph.facebook.com/v2.3/oauth/access_token?client_id=" + APP_ID +
+                URL authUrl = new URL("https://graph.facebook.com/v2.5/oauth/access_token?client_id=" + APP_ID +
                         "&redirect_uri=" + REDIRECT_URL +
                         "&client_secret=" + APP_SECRET +
                         "&code=" + code);
@@ -53,7 +53,7 @@ public class FacebookRealm extends AuthorizingRealm {
                     if (response.isSuccessStatusCode()) {
                         FacebookOauthResponse facebookOauthResponse = response.parseAs(FacebookOauthResponse.class);
 
-                        URL url = new URL("https://graph.facebook.com/me?access_token=" + facebookOauthResponse.AccessToken);
+                        URL url = new URL("https://graph.facebook.com/v2.5/me?fields=name,email&access_token=" + facebookOauthResponse.AccessToken);
 
                         HttpRequest getUserInfoRequest = factory.buildGetRequest(new GenericUrl(url)).setParser(jsonObjectParser);
                         HttpResponse userInfoResponse = getUserInfoRequest.execute();

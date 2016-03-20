@@ -15,6 +15,7 @@ public class FacebookAuthenticationInfo implements AuthenticationInfo {
         Collection<String> principals = new ArrayList<>();
         principals.add(facebookUserDetails.Id);
         principals.add(facebookUserDetails.Name); // Is this appropriate is the name not really a Principal ?
+        principals.add(facebookUserDetails.Email);
 
         this.principalCollection = new SimplePrincipalCollection(principals, realmName);
     }

@@ -8,4 +8,7 @@ public class FacebookUserDetails {
 
     @Key("name")
     public String Name;
+
+    @Key("email")
+    public String Email;
 }

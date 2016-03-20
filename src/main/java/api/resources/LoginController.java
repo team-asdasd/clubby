@@ -22,7 +22,7 @@ public class LoginController {
             FacebookToken facebookToken = new FacebookToken(code);
             try {
                 SecurityUtils.getSubject().login(facebookToken);
-                response.sendRedirect(response.encodeRedirectURL("/index.jsp"));
+                response.sendRedirect(response.encodeRedirectURL("/"));
             } catch (AuthenticationException ae) {
                 throw new Exception(ae);
             }

@@ -1,4 +1,4 @@
-package security.shiro;
+package security.shiro.application;
 
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationException;
@@ -33,13 +33,15 @@ public class ApplicationRealm extends AuthorizingRealm {
 
     /**
      * Password hash salt configuration. <ul>
-     *   <li>NO_SALT - password hashes are not salted.</li>
-     *   <li>CRYPT - password hashes are stored in unix crypt format.</li>
-     *   <li>COLUMN - salt is in a separate column in the database.</li> 
-     *   <li>EXTERNAL - salt is not stored in the database. {@link #getSaltForUser(String)} will be called
-     *       to get the salt</li></ul>
+     * <li>NO_SALT - password hashes are not salted.</li>
+     * <li>CRYPT - password hashes are stored in unix crypt format.</li>
+     * <li>COLUMN - salt is in a separate column in the database.</li>
+     * <li>EXTERNAL - salt is not stored in the database. {@link #getSaltForUser(String)} will be called
+     * to get the salt</li></ul>
      */
-    public enum SaltStyle {NO_SALT, CRYPT, COLUMN, EXTERNAL}
+    public enum SaltStyle {
+        NO_SALT, CRYPT, COLUMN, EXTERNAL
+    }
 
     protected DataSource dataSource;
 
@@ -127,11 +129,6 @@ public class ApplicationRealm extends AuthorizingRealm {
 
         } catch (SQLException e) {
             final String message = "There was a SQL error while authenticating user [" + username + "]";
-//            if (log.isErrorEnabled()) {
-//                log.error(message, e);
-//            }
-
-            // Rethrow any SQL errors as an authentication exception
             throw new AuthenticationException(message, e);
         } finally {
             JdbcUtils.closeConnection(conn);
@@ -218,11 +215,7 @@ public class ApplicationRealm extends AuthorizingRealm {
 
         } catch (SQLException e) {
             final String message = "There was a SQL error while authorizing user [" + username + "]";
-//            if (log.isErrorEnabled()) {
-//                log.error(message, e);
-//            }
 
-            // Rethrow any SQL errors as an authorization exception
             throw new AuthorizationException(message, e);
         } finally {
             JdbcUtils.closeConnection(conn);
@@ -230,8 +223,8 @@ public class ApplicationRealm extends AuthorizingRealm {
 
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roleNames);
         info.setStringPermissions(permissions);
-        return info;
 
+        return info;
     }
 
     protected Set<String> getRoleNamesForUser(Connection conn, String username) throws SQLException {
@@ -253,10 +246,6 @@ public class ApplicationRealm extends AuthorizingRealm {
                 // Add the role to the list of names if it isn't null
                 if (roleName != null) {
                     roleNames.add(roleName);
-                } else {
-//                    if (log.isWarnEnabled()) {
-//                        log.warn("Null role name found while retrieving role names for user [" + username + "]");
-//                    }
                 }
             }
         } finally {
@@ -303,5 +292,14 @@ public class ApplicationRealm extends AuthorizingRealm {
 
     protected String getSaltForUser(String username) {
         return username;
+    }
+
+    @Override
+    public boolean supports(AuthenticationToken token) {
+        if (token instanceof UsernamePasswordToken) {
+            return true;
+        }
+
+        return false;
     }
 }

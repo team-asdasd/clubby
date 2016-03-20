@@ -1,4 +1,4 @@
-package security.shiro;
+package security.shiro.application;
 
 import org.postgresql.ds.PGSimpleDataSource;
 

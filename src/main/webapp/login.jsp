@@ -1,4 +1,4 @@
-<%@ page import="api.resources.FacebookSettings" %>
+<%@ page import="security.shiro.facebook.FacebookSettings" %>
 <!DOCTYPE html>
 <html>
 <head>

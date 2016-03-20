@@ -13,12 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Path("/users")
-public class UsersResource {
+public class UsersController {
 
     List<Student> users = new ArrayList<Student>();
     StringListConverter converter = new StringListConverter();
 
-    public UsersResource() {
+    public UsersController() {
         // Populate test data. Later each WS method will retrieve data from DB.
         users.add(new Student(12344, "Mike", 17));
         users.add(new Student(12345, "Jane", 19));

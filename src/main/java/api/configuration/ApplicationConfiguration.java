@@ -1,7 +1,7 @@
 package api.configuration;
 
 import api.resources.LoginController;
-import api.resources.UsersResource;
+import api.resources.UsersController;
 
 import java.util.Set;
 import java.util.HashSet;
@@ -11,8 +11,9 @@ public class ApplicationConfiguration extends Application {
 
     private Set<Object> singletons = new HashSet<Object>();
     private Set<Class<?>> empty = new HashSet<Class<?>>();
-    public ApplicationConfiguration(){
-        singletons.add(new UsersResource());
+
+    public ApplicationConfiguration() {
+        singletons.add(new UsersController());
         singletons.add(new LoginController());
     }
 
@@ -20,6 +21,7 @@ public class ApplicationConfiguration extends Application {
     public Set<Class<?>> getClasses() {
         return empty;
     }
+
     @Override
     public Set<Object> getSingletons() {
         return singletons;

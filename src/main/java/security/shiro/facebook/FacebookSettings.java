@@ -1,4 +1,4 @@
-package api.resources;
+package security.shiro.facebook;
 
 public class FacebookSettings {
     // TODO: cache

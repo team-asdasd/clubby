@@ -1,3 +1,4 @@
+<%@ page import="api.resources.FacebookSettings" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -35,6 +36,8 @@
                         </fieldset>
                     </form>
                 </div>
+
+                <a href="https://www.facebook.com/dialog/oauth?client_id=<% out.println(FacebookSettings.getAppId()); %>&redirect_uri=<% out.println(FacebookSettings.getRedirectUrl()); %>">Facebook</a>
             </div>
         </div>
     </div>

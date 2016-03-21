@@ -64,7 +64,7 @@ public class FacebookRealm extends AuthorizingRealm {
 
                         info = new FacebookAuthenticationInfo(fud, this.getName());
                     } else {
-
+                        throw new Exception("Facebook auth responded with status code: " + response.getStatusCode());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

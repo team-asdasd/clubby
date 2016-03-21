@@ -1,16 +1,32 @@
 package security.shiro.facebook;
 
 public class FacebookSettings {
-    // TODO: cache
+    private static String secretCache;
+    private static String redirectUrlCache;
+    private static String appIdCache;
+
     public static String getSecret() {
-        return System.getenv("FACEBOOK_CLUBBY_SECRET");
+        if(secretCache == null)
+        {
+            secretCache = System.getenv("FACEBOOK_CLUBBY_SECRET");
+        }
+        return secretCache ;
     }
 
     public static String getRedirectUrl() {
-        return System.getenv("FACEBOOK_CLUBBY_REDIRECT_URL");
+
+        if(redirectUrlCache == null)
+        {
+            redirectUrlCache = System.getenv("FACEBOOK_CLUBBY_REDIRECT_URL");
+        }
+        return redirectUrlCache ;
     }
 
     public static String getAppId() {
-        return System.getenv("FACEBOOK_CLUBBY_APP_ID");
+        if(appIdCache == null)
+        {
+            appIdCache = System.getenv("FACEBOOK_CLUBBY_APP_ID");
+        }
+        return appIdCache ;
     }
 }

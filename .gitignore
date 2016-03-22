@@ -43,7 +43,7 @@ hs_err_pid*
 
 # IntelliJ
 src/web/out/
-
+out
 # mpeltonen/sbt-idea plugin
 .idea_modules/
 

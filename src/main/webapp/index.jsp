@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <jsp:include page="partials/_head.jsp"></jsp:include>
+    <jsp:include page="app/shared/partials/_head.jsp"></jsp:include>
     <link href="res/cover.css" rel="stylesheet">
     <title>Clubby</title>
 </head>
@@ -40,6 +40,6 @@
         </div>
     </div>
 </div>
-<jsp:include page="partials/_scripts.jsp"></jsp:include>
+<jsp:include page="app/shared/partials/_scripts.jsp"></jsp:include>
 </body>
 </html>

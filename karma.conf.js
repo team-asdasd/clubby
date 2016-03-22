@@ -1,12 +1,11 @@
 module.exports = function(config) {
     config.set({
-        basePath: '../',
+        basePath: '../src/main/webapp/',
         frameworks: [ 'jasmine' ],
         files: [
-            'libs/jquery/dist/jquery.js',
-            'node_modules/angular/angular.js',
-            'node_modules/angular-mocks/angular-mocks.js',
-            'node_modules/lodash/dist/lodash.js',
+            'bower_components/angular/angular.js',
+            'bower_components/angular-mocks/angular-mocks.js',
+            'bower_components/lodash/dist/lodash.js',
             'app/**/*.js',
             'tests/**/*.js',
             'app/**/*.html'
@@ -18,7 +17,7 @@ module.exports = function(config) {
         singleRun: true,
         plugins: [
             'karma-phantomjs-launcher',
-            'karma-jasmine',
+            'karma-jasmine'
         ]
     });
 };

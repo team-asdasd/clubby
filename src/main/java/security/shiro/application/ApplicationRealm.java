@@ -23,13 +23,10 @@ public class ApplicationRealm extends AuthorizingRealm {
     // TODO: Refactor this to our style
     protected static final String DEFAULT_AUTHENTICATION_QUERY = "select password from security.logins where username = ?";
 
-
     // TODO: add roles, permissions etc
-    protected static final String DEFAULT_SALTED_AUTHENTICATION_QUERY = "select password, password_salt from users where username = ?";
+    protected static final String DEFAULT_SALTED_AUTHENTICATION_QUERY = "";
     protected static final String DEFAULT_USER_ROLES_QUERY = "select role_name from security.logins_roles where username = ?";
-    protected static final String DEFAULT_PERMISSIONS_QUERY = "select permission from roles_permissions where role_name = ?";
-
-    // private static final Logger log = LoggerFactory.getLogger(JdbcRealm.class);
+    protected static final String DEFAULT_PERMISSIONS_QUERY = "select permission from security.roles_permissions where role_name = ?";
 
     /**
      * Password hash salt configuration. <ul>
@@ -83,7 +80,6 @@ public class ApplicationRealm extends AuthorizingRealm {
     }
 
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-
         UsernamePasswordToken upToken = (UsernamePasswordToken) token;
         String username = upToken.getUsername();
 
@@ -138,7 +134,6 @@ public class ApplicationRealm extends AuthorizingRealm {
     }
 
     private String[] getPasswordForUser(Connection conn, String username) throws SQLException {
-
         String[] result;
         boolean returningSeparatedSalt = false;
         switch (saltStyle) {
@@ -193,7 +188,6 @@ public class ApplicationRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-
         //null usernames are invalid
         if (principals == null) {
             throw new AuthorizationException("PrincipalCollection method argument cannot be null.");
@@ -240,7 +234,6 @@ public class ApplicationRealm extends AuthorizingRealm {
 
             // Loop over results and add each returned role to a set
             while (rs.next()) {
-
                 String roleName = rs.getString(1);
 
                 // Add the role to the list of names if it isn't null

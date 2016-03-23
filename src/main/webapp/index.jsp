@@ -17,7 +17,7 @@
                         <ul class="nav masthead-nav">
                             <li class="active"><a href="/">Home</a></li>
                             <shiro:user><li><a href="/app">App</a></li></shiro:user>
-                            <shiro:hasRole name="admin"><li><a href="/admin">Admin</a></li></shiro:hasRole>
+                            <shiro:hasRole name="administrator"><li><a href="/admin">Admin</a></li></shiro:hasRole>
                             <shiro:user><li><a href="logout">Logout</a></li></shiro:user>
                             <shiro:guest><li><a href="login.jsp">Login</a></li></shiro:guest>
                         </ul>

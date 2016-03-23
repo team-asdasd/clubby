@@ -117,7 +117,7 @@ public class ApplicationRealm extends AuthorizingRealm {
                 throw new UnknownAccountException("No account found for user [" + username + "]");
             }
 
-            info = new SimpleAuthenticationInfo(username, password.toCharArray(), getName()); // TODO: Investigate
+            info = new SimpleAuthenticationInfo(username, password.toCharArray(), getName()); // TODO: Investigate Principals
 
             if (salt != null) {
                 info.setCredentialsSalt(ByteSource.Util.bytes(salt));

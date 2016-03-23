@@ -1,5 +1,5 @@
 package api.contracts.responses;
 
-public class UserResponse {
+public class UserResponse extends BaseResponse {
     public String Username;
 }

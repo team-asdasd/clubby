@@ -1,6 +1,6 @@
 package api.configuration;
 
-import api.resources.LoginController;
+import api.resources.LoginResource;
 import api.resources.UserResource;
 import io.swagger.jaxrs.config.BeanConfig;
 
@@ -23,7 +23,7 @@ public class ApplicationConfiguration extends Application {
         beanConfig.setScan(true);
 
         classes.add(UserResource.class);
-        classes.add(LoginController.class);
+        classes.add(LoginResource.class);
 
         classes.add(io.swagger.jaxrs.listing.ApiListingResource.class);
         classes.add(io.swagger.jaxrs.listing.SwaggerSerializers.class);

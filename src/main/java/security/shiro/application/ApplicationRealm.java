@@ -48,7 +48,7 @@ public class ApplicationRealm extends AuthorizingRealm {
 
     protected String permissionsQuery = DEFAULT_PERMISSIONS_QUERY;
 
-    protected boolean permissionsLookupEnabled = false;
+    protected boolean permissionsLookupEnabled = true;
 
     protected SaltStyle saltStyle = SaltStyle.NO_SALT;
 
@@ -117,7 +117,7 @@ public class ApplicationRealm extends AuthorizingRealm {
                 throw new UnknownAccountException("No account found for user [" + username + "]");
             }
 
-            info = new SimpleAuthenticationInfo(username, password.toCharArray(), getName());
+            info = new SimpleAuthenticationInfo(username, password.toCharArray(), getName()); // TODO: Investigate
 
             if (salt != null) {
                 info.setCredentialsSalt(ByteSource.Util.bytes(salt));

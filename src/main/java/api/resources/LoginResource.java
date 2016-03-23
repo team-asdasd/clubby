@@ -12,7 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 
 @Path("/login")
-public class LoginController {
+public class LoginResource {
     @GET
     @Path("facebook")
     @Produces("application/json")

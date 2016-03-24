@@ -15,19 +15,3 @@ WITH (
 );
 ALTER TABLE security.logins
   OWNER TO adminumaaqhz;
-
-
--- Constraint: security.logins_pkey
-
--- ALTER TABLE security.logins DROP CONSTRAINT logins_pkey;
-
-ALTER TABLE security.logins
-  ADD CONSTRAINT logins_pkey PRIMARY KEY(id);
-
-
--- Constraint: security.logins_username_unique
-
--- ALTER TABLE security.logins DROP CONSTRAINT logins_username_unique;
-
-ALTER TABLE security.logins
-  ADD CONSTRAINT logins_username_unique UNIQUE(username);

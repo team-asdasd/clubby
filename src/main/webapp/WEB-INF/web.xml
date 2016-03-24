@@ -52,7 +52,7 @@
     <!-- Error Pages -->
     <error-page>
         <error-code>404</error-code>
-        <location>/errors/404.html</location>
+        <location>/app/shared/errors/404.html</location>
     </error-page>
     <error-page>
         <error-code>401</error-code>

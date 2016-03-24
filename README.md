@@ -17,7 +17,7 @@
 
 ## IntelliJ
 
-### Project
+### Backend Project
 
 1. Checkout
 2. Import `pom.xml` to IntelliJ
@@ -29,6 +29,14 @@
 8. Edit configurations -> add -> jboss local
 9. Deployment -> add -> artifact -> clubby:war
 10. Run and have fun
+
+### UI Project
+
+1. Run `npm install`
+2. Run `bower install`
+3. Available grunt tasks:
+    1. `grunt serve` does not run tests on file save
+    2. `grunt dev` runs tests on file save
 
 ### Database
 

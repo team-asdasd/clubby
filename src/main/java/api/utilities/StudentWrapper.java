@@ -1,6 +1,5 @@
 package api.utilities;
 
-
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
@@ -19,8 +18,4 @@ public class StudentWrapper {
 	public void setList(List<Student> list) {
 		this.list = list;
 	}
-	
-	
-	
-	
 }

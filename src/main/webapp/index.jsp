@@ -16,12 +16,15 @@
                     <nav>
                         <ul class="nav masthead-nav">
                             <li class="active"><a href="/">Home</a></li>
+                            <shiro:user><li><a href="/app">App</a></li></shiro:user>
+                            <shiro:hasRole name="administrator"><li><a href="/admin">Admin</a></li></shiro:hasRole>
                             <shiro:user><li><a href="logout">Logout</a></li></shiro:user>
                             <shiro:guest><li><a href="login.jsp">Login</a></li></shiro:guest>
                         </ul>
                     </nav>
                 </div>
             </div>
+
             <div class="inner cover">
                 <h1 class="cover-heading">"Every day is a new day. It is better to be lucky. But I would rather be
                     exact. Then when luck comes you are ready."</h1>

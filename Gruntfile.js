@@ -76,9 +76,6 @@ module.exports = function (grunt) {
         }
     });
 
-    // Default task(s).
     grunt.registerTask('dev', ['watch:dev']);
     grunt.registerTask('serve', ['watch:serve']);
-    grunt.registerTask('test', ['jshint', 'karma:continuous']);
-
 };

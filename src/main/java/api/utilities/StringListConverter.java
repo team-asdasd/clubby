@@ -43,8 +43,7 @@ public class StringListConverter implements ParamConverter<List<String>> {
 	{
 		return gson.toJson(value);
 	}
-	
-	
+
 	public  List<String> fromJson(String json) {		
 		Type collectionType = new TypeToken<Collection<String>>(){}.getType();
 		Collection<String> list = gson.fromJson(json, collectionType);

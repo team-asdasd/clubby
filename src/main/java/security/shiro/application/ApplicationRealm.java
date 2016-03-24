@@ -1,4 +1,4 @@
-package security.shiro;
+package security.shiro.application;
 
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationException;
@@ -21,25 +21,24 @@ import java.util.Set;
 
 public class ApplicationRealm extends AuthorizingRealm {
     // TODO: Refactor this to our style
-    protected static final String DEFAULT_AUTHENTICATION_QUERY = "select password from security.users where username = ?";
-
+    protected static final String DEFAULT_AUTHENTICATION_QUERY = "select password from security.logins where username = ?";
 
     // TODO: add roles, permissions etc
-    protected static final String DEFAULT_SALTED_AUTHENTICATION_QUERY = "select password, password_salt from users where username = ?";
-    protected static final String DEFAULT_USER_ROLES_QUERY = "select role_name from user_roles where username = ?";
-    protected static final String DEFAULT_PERMISSIONS_QUERY = "select permission from roles_permissions where role_name = ?";
-
-    // private static final Logger log = LoggerFactory.getLogger(JdbcRealm.class);
+    protected static final String DEFAULT_SALTED_AUTHENTICATION_QUERY = "";
+    protected static final String DEFAULT_USER_ROLES_QUERY = "select role_name from security.logins_roles where username = ?";
+    protected static final String DEFAULT_PERMISSIONS_QUERY = "select permission from security.roles_permissions where role_name = ?";
 
     /**
      * Password hash salt configuration. <ul>
-     *   <li>NO_SALT - password hashes are not salted.</li>
-     *   <li>CRYPT - password hashes are stored in unix crypt format.</li>
-     *   <li>COLUMN - salt is in a separate column in the database.</li> 
-     *   <li>EXTERNAL - salt is not stored in the database. {@link #getSaltForUser(String)} will be called
-     *       to get the salt</li></ul>
+     * <li>NO_SALT - password hashes are not salted.</li>
+     * <li>CRYPT - password hashes are stored in unix crypt format.</li>
+     * <li>COLUMN - salt is in a separate column in the database.</li>
+     * <li>EXTERNAL - salt is not stored in the database. {@link #getSaltForUser(String)} will be called
+     * to get the salt</li></ul>
      */
-    public enum SaltStyle {NO_SALT, CRYPT, COLUMN, EXTERNAL};
+    public enum SaltStyle {
+        NO_SALT, CRYPT, COLUMN, EXTERNAL
+    }
 
     protected DataSource dataSource;
 
@@ -49,82 +48,30 @@ public class ApplicationRealm extends AuthorizingRealm {
 
     protected String permissionsQuery = DEFAULT_PERMISSIONS_QUERY;
 
-    protected boolean permissionsLookupEnabled = false;
+    protected boolean permissionsLookupEnabled = true;
 
     protected SaltStyle saltStyle = SaltStyle.NO_SALT;
 
-    /**
-     * Sets the datasource that should be used to retrieve connections used by this realm.
-     *
-     * @param dataSource the SQL data source.
-     */
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
-    /**
-     * Overrides the default query used to retrieve a user's password during authentication.  When using the default
-     * implementation, this query must take the user's username as a single parameter and return a single result
-     * with the user's password as the first column.  If you require a solution that does not match this query
-     * structure, you can override {@link #doGetAuthenticationInfo(org.apache.shiro.authc.AuthenticationToken)} or
-     * just {@link #getPasswordForUser(java.sql.Connection,String)}
-     *
-     * @param authenticationQuery the query to use for authentication.
-     * @see #DEFAULT_AUTHENTICATION_QUERY
-     */
     public void setAuthenticationQuery(String authenticationQuery) {
         this.authenticationQuery = authenticationQuery;
     }
 
-    /**
-     * Overrides the default query used to retrieve a user's roles during authorization.  When using the default
-     * implementation, this query must take the user's username as a single parameter and return a row
-     * per role with a single column containing the role name.  If you require a solution that does not match this query
-     * structure, you can override {@link #doGetAuthorizationInfo(PrincipalCollection)} or just
-     * {@link #getRoleNamesForUser(java.sql.Connection,String)}
-     *
-     * @param userRolesQuery the query to use for retrieving a user's roles.
-     * @see #DEFAULT_USER_ROLES_QUERY
-     */
     public void setUserRolesQuery(String userRolesQuery) {
         this.userRolesQuery = userRolesQuery;
     }
 
-    /**
-     * Overrides the default query used to retrieve a user's permissions during authorization.  When using the default
-     * implementation, this query must take a role name as the single parameter and return a row
-     * per permission with three columns containing the fully qualified name of the permission class, the permission
-     * name, and the permission actions (in that order).  If you require a solution that does not match this query
-     * structure, you can override {@link #doGetAuthorizationInfo(org.apache.shiro.subject.PrincipalCollection)} or just
-     * {@link #getPermissions(java.sql.Connection,String,java.util.Collection)}</p>
-     * <p/>
-     * <b>Permissions are only retrieved if you set {@link #permissionsLookupEnabled} to true.  Otherwise,
-     * this query is ignored.</b>
-     *
-     * @param permissionsQuery the query to use for retrieving permissions for a role.
-     * @see #DEFAULT_PERMISSIONS_QUERY
-     * @see #setPermissionsLookupEnabled(boolean)
-     */
     public void setPermissionsQuery(String permissionsQuery) {
         this.permissionsQuery = permissionsQuery;
     }
 
-    /**
-     * Enables lookup of permissions during authorization.  The default is "false" - meaning that only roles
-     * are associated with a user.  Set this to true in order to lookup roles <b>and</b> permissions.
-     *
-     * @param permissionsLookupEnabled true if permissions should be looked up during authorization, or false if only
-     *                                 roles should be looked up.
-     */
     public void setPermissionsLookupEnabled(boolean permissionsLookupEnabled) {
         this.permissionsLookupEnabled = permissionsLookupEnabled;
     }
 
-    /**
-     * Sets the salt style.  See {@link #saltStyle}.
-     *
-     * @param saltStyle new SaltStyle to set.
-     */
     public void setSaltStyle(SaltStyle saltStyle) {
         this.saltStyle = saltStyle;
         if (saltStyle == SaltStyle.COLUMN && authenticationQuery.equals(DEFAULT_AUTHENTICATION_QUERY)) {
@@ -133,7 +80,6 @@ public class ApplicationRealm extends AuthorizingRealm {
     }
 
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-
         UsernamePasswordToken upToken = (UsernamePasswordToken) token;
         String username = upToken.getUsername();
 
@@ -171,7 +117,7 @@ public class ApplicationRealm extends AuthorizingRealm {
                 throw new UnknownAccountException("No account found for user [" + username + "]");
             }
 
-            info = new SimpleAuthenticationInfo(username, password.toCharArray(), getName());
+            info = new SimpleAuthenticationInfo(username, password.toCharArray(), getName()); // TODO: Investigate Principals
 
             if (salt != null) {
                 info.setCredentialsSalt(ByteSource.Util.bytes(salt));
@@ -179,11 +125,6 @@ public class ApplicationRealm extends AuthorizingRealm {
 
         } catch (SQLException e) {
             final String message = "There was a SQL error while authenticating user [" + username + "]";
-//            if (log.isErrorEnabled()) {
-//                log.error(message, e);
-//            }
-
-            // Rethrow any SQL errors as an authentication exception
             throw new AuthenticationException(message, e);
         } finally {
             JdbcUtils.closeConnection(conn);
@@ -193,7 +134,6 @@ public class ApplicationRealm extends AuthorizingRealm {
     }
 
     private String[] getPasswordForUser(Connection conn, String username) throws SQLException {
-
         String[] result;
         boolean returningSeparatedSalt = false;
         switch (saltStyle) {
@@ -248,7 +188,6 @@ public class ApplicationRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-
         //null usernames are invalid
         if (principals == null) {
             throw new AuthorizationException("PrincipalCollection method argument cannot be null.");
@@ -270,11 +209,7 @@ public class ApplicationRealm extends AuthorizingRealm {
 
         } catch (SQLException e) {
             final String message = "There was a SQL error while authorizing user [" + username + "]";
-//            if (log.isErrorEnabled()) {
-//                log.error(message, e);
-//            }
 
-            // Rethrow any SQL errors as an authorization exception
             throw new AuthorizationException(message, e);
         } finally {
             JdbcUtils.closeConnection(conn);
@@ -282,8 +217,8 @@ public class ApplicationRealm extends AuthorizingRealm {
 
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roleNames);
         info.setStringPermissions(permissions);
-        return info;
 
+        return info;
     }
 
     protected Set<String> getRoleNamesForUser(Connection conn, String username) throws SQLException {
@@ -299,16 +234,11 @@ public class ApplicationRealm extends AuthorizingRealm {
 
             // Loop over results and add each returned role to a set
             while (rs.next()) {
-
                 String roleName = rs.getString(1);
 
                 // Add the role to the list of names if it isn't null
                 if (roleName != null) {
                     roleNames.add(roleName);
-                } else {
-//                    if (log.isWarnEnabled()) {
-//                        log.warn("Null role name found while retrieving role names for user [" + username + "]");
-//                    }
                 }
             }
         } finally {
@@ -355,5 +285,14 @@ public class ApplicationRealm extends AuthorizingRealm {
 
     protected String getSaltForUser(String username) {
         return username;
+    }
+
+    @Override
+    public boolean supports(AuthenticationToken token) {
+        if (token instanceof UsernamePasswordToken) {
+            return true;
+        }
+
+        return false;
     }
 }

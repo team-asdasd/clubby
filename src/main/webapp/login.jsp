@@ -1,3 +1,10 @@
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
+<%@ page import="security.shiro.facebook.FacebookSettings" %>
+
+<shiro:user>
+    <% response.sendRedirect("/"); %>
+</shiro:user>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,6 +16,8 @@
         }
     </style>
     <title>Clubby - Login</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/4.12.0/bootstrap-social.css">
 </head>
 <body>
 <div class="container">
@@ -33,6 +42,10 @@
                                 </label>
                             </div>
                             <input class="btn btn-lg btn-success btn-block" type="submit" value="Login">
+
+                            <a href="https://www.facebook.com/dialog/oauth?client_id=<% out.println(FacebookSettings.getAppId()); %>&redirect_uri=<% out.println(FacebookSettings.getRedirectUrl()); %>&scope=email" class="btn btn-lg btn-block btn-social btn-facebook" style="text-align: center;">
+                                <span class="fa fa-facebook"></span> Sign in with Facebook
+                            </a>
                         </fieldset>
                     </form>
                 </div>

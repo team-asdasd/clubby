@@ -49,11 +49,16 @@ To access database you will need to use RedHat Client a.k.a. OpenShift client to
 
 2. Run `rhc port-forward -a clubby` - this will tunnel traffic from your localhost ports through `rhc` client straight to endpoints on the server using ssh. See the printed table in console for `ip:port` mappings (some local ports may be already in use, so it will iterate the port).
 
-3. Set environment variables (ask team for values):
+3. Set environment variables for DB (ask team for values):
   * `OPENSHIFT_POSTGRESQL_DB_USERNAME`
   * `OPENSHIFT_POSTGRESQL_DB_PASSWORD`
   * `OPENSHIFT_POSTGRESQL_DB_HOST`
   * `OPENSHIFT_POSTGRESQL_DB_PORT`
+
+4. Set environment variables for Facebook (ask team for values):
+  * `FACEBOOK_CLUBBY_SECRET`
+  * `FACEBOOK_CLUBBY_REDIRECT_URL`
+  * `FACEBOOK_CLUBBY_APP_ID`
 
 ## More notes
 

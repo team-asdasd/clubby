@@ -1,5 +1,8 @@
-Internal app space
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
+<h1>APP</h1>
 
-users only mwahahahahahah
+<p>users only mwahahahahahah</p>
 
-JBOSS Performance page: <a href="snoop.jsp">here</a>
+<shiro:hasRole name="admin">
+    <p>Admin section: <a href="/admin">here</a></p>
+</shiro:hasRole>

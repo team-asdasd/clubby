@@ -5,6 +5,8 @@ sudo: false
 before_script:
 - npm install
 - bower install
+script:
+- mvn package -Popenshift
 deploy:
   skip_cleanup: true
   

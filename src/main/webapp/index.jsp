@@ -4,7 +4,7 @@
 <head>
     <jsp:include page="app/shared/partials/_head.jsp"></jsp:include>
     <link href="res/cover.css" rel="stylesheet">
-    <title>Clubby</title>
+    <title>Clubby - Team ASDASD</title>
 </head>
 <body>
 <div class="site-wrapper">

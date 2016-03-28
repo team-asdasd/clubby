@@ -7,6 +7,9 @@ before_script:
 - bower install
 script:
 - mvn package -Popenshift
+before_deploy:
+- sed -i '/node_modules\//d' .gitignore
+- sed -i '/bower_components\//d' .gitignore
 deploy:
   skip_cleanup: true
   

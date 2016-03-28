@@ -1,18 +1,29 @@
 language: java
 jdk:
 - oraclejdk8
+
 sudo: false
+
 before_script:
 - npm install
 - bower install
+
 script:
 - mvn package -Popenshift
+
+after_success:
+- ls
+- git config --global user.email "travis@localhost.localdomain"
+- git config --global user.name "Travis CI"
+- git add --all
+- git commit -am "Travis build $TRAVIS_BUILD_NUMBER"
+
 before_deploy:
 - sed -i '/node_modules\//d' .gitignore
 - sed -i '/bower_components\//d' .gitignore
+
 deploy:
   skip_cleanup: true
-  
   provider: openshift
   user: $OPENSHIFT_USERNAME
   password: $OPENSHIFT_PASSWORD

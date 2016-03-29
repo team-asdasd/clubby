@@ -1,0 +1,7 @@
+echo "Installing NPM dependencies"
+npm install
+echo "Installing NPM dependencies: Done!"
+
+echo "Installing Bower dependencies"
+bower install
+echo "Installing Bower dependencies: Done!"

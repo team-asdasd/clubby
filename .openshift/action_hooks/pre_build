@@ -1,14 +1,15 @@
-echo "INFO: Installing NPM dependencies"
-npm install
-echo "Installing NPM dependencies: Done!"
-
 # Save the old HOME so we can reset after script.
 OLD_HOME=$HOME
 
 ##########
-echo "INFO: Installing Bower dependencies"
 cd $OPENSHIFT_REPO_DIR
 export HOME=$OPENSHIFT_REPO_DIR
+
+echo "INFO: Installing NPM dependencies"
+npm install
+echo "Installing NPM dependencies: Done!"
+
+echo "INFO: Installing Bower dependencies"
 bower install
 echo "INFO: Installing Bower dependencies: Done!"
 

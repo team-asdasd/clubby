@@ -5,6 +5,11 @@ OLD_HOME=$HOME
 cd $OPENSHIFT_REPO_DIR
 export HOME=$OPENSHIFT_REPO_DIR
 
+echo "INFO: Installing NPM dependencies"
+npm install bower
+# npm install 
+echo "Installing NPM dependencies: Done!"
+
 echo "INFO: Installing Bower dependencies"
 $HOME/node_modules/.bin/bower install
 echo "INFO: Installing Bower dependencies: Done!"

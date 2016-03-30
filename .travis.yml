@@ -15,6 +15,7 @@ after_success:
 - sed -i '/bower_components\//d' .gitignore
 - git config --global user.email "travis@localhost.localdomain"
 - git config --global user.name "Travis CI"
+- git checkout $TRAVIS_BRANCH
 - git add --all
 - git commit -am "Travis build $TRAVIS_BUILD_NUMBER"
 

@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.com/Tony-Mc/asdasd.svg?token=fdKC47jJTuUKGzpgQy8t&branch=master)](https://travis-ci.com/Tony-Mc/asdasd)
 ![awd](/docs/asdasd.png)
 
 # PSK
@@ -12,23 +13,36 @@
 - [Functional (LT)](/docs/SGP_uzduotis_2016.pdf)
 - [Non functional (LT)](/docs/KokybiniaiReikalavimai.pdf)
 
-
 # Setup
 
 ## IntelliJ
 
+### Application Server
+1. Get [Wildfly 10](http://wildfly.org/downloads/) here.
+2. (Optional) You may need to configure admin user for it.
+
 ### Backend Project
 
 1. Checkout
-2. Import `pom.xml` to IntelliJ
-3. Next -> select openshift -> next x4
-4. File->Project structure->artifacts
-5. add-> web application exploded ->from modules-> OK
-6. add -> web application archive -> for 'clubby'
-7. Rename to 'ROOT.war' -> OK
-8. Edit configurations -> add -> jboss local
-9. Deployment -> add -> artifact -> clubby:war
-10. Run and have fun
+2. Import `pom.xml` to IntelliJ. Hit next.
+3. Select `openshift` profile. Hit next 4x times.
+
+From here you can go two ways:
+
+1. Maven way (may require IntelliJ Maven tools). This is the way app is built in the cloud.
+    1. Edit configurations -> Add -> JBoss -> Local.
+    2. Clear `before launch` configuration (list of steps at the bottom).
+    3. Add -> Run Maven Goal -> Command line -> `clean`
+    4. Add -> Run Maven Goal -> Command line -> `package -P openshift`
+    5. Build project.
+    6. Deployment -> Add -> External Source -> Select `/deployments/ROOT.war`
+2. Default IntelliJ way
+    1. File -> Project Structure -> Artifacts
+    2. Add -> Web Application: Exploded -> From modules -> OK
+    3. Add -> Web Application: Archive -> For `clubby`
+    4. Rename Web Application: Archive file you just created from `clubby.war` (or sth) to `ROOT.war` -> OK
+    5. Edit configurations -> Add -> JBoss -> Local
+    6. Deployment -> Add -> Artifact -> clubby:war
 
 ### UI Project
 

@@ -43,7 +43,7 @@
                             </div>
                             <input class="btn btn-lg btn-success btn-block" type="submit" value="Login">
 
-                            <a href="https://www.facebook.com/dialog/oauth?client_id=<% out.println(FacebookSettings.getAppId()); %>&redirect_uri=<% out.println(FacebookSettings.getRedirectUrl()); %>&scope=email" class="btn btn-lg btn-block btn-social btn-facebook" style="text-align: center;">
+                            <a href="https://www.facebook.com/dialog/oauth?client_id=<% out.print(FacebookSettings.getAppId()); %>&redirect_uri=<% out.print(FacebookSettings.getRedirectUrl()); %>&scope=email" class="btn btn-lg btn-block btn-social btn-facebook" style="text-align: center;">
                                 <span class="fa fa-facebook"></span> Sign in with Facebook
                             </a>
                         </fieldset>

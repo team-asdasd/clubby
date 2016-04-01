@@ -3,7 +3,7 @@
 <html>
 <head>
     <jsp:include page="app/shared/partials/_head.jsp"></jsp:include>
-    <link href="res/cover.css" rel="stylesheet">
+    <link href="./res/cover.css" rel="stylesheet">
     <title>Clubby - Team ASDASD</title>
 </head>
 <body>
@@ -26,13 +26,14 @@
             </div>
 
             <div class="inner cover">
-                <h1 class="cover-heading">"Every day is a new day. It is better to be lucky. But I would rather be
-                    exact. Then when luck comes you are ready."</h1>
-                <p class="lead"> - Ernest Hemingway, The Old Man and the Sea</p>
-                <p class="lead">
-                    <a href="https://www.google.com/search?q=Ernest+Hemingway%2C+The+Old+Man+and+the+Sea"
-                       class="btn btn-lg btn-default">Learn more</a>
-                </p>
+                <%--<h1 class="cover-heading">"Every day is a new day. It is better to be lucky. But I would rather be--%>
+                    <%--exact. Then when luck comes you are ready."</h1>--%>
+                <%--<p class="lead"> - Ernest Hemingway, The Old Man and the Sea</p>--%>
+                <%--<p class="lead">--%>
+                    <%--<a href="https://www.google.com/search?q=Ernest+Hemingway%2C+The+Old+Man+and+the+Sea"--%>
+                       <%--class="btn btn-lg btn-default">Learn more</a>--%>
+                <%--</p>--%>
+                <my-app>Loading...</my-app>
             </div>
             <div class="mastfoot">
                 <div class="inner">
@@ -43,6 +44,7 @@
         </div>
     </div>
 </div>
+
 <jsp:include page="app/shared/partials/_scripts.jsp"></jsp:include>
 </body>
 </html>

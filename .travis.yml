@@ -5,9 +5,10 @@ jdk:
 sudo: false
 
 before_script:
-- cd src/main/webapp
+- cd src/main/webapp # jump to package.json
 - npm install
 - npm run build
+- cd ../../.. # jump back to root
 
 script:
 - mvn package -Popenshift

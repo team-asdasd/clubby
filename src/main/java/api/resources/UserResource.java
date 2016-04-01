@@ -1,6 +1,8 @@
 package api.resources;
 
-import api.contracts.responses.UserResponse;
+import api.contracts.requests.GetUserInfoRequest;
+import api.contracts.responses.GetUserInfoResponse;
+import api.handlers.GetUserInfoHandler;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
@@ -16,26 +18,19 @@ import javax.ws.rs.core.Response;
 @Path("/user")
 @Produces({"application/json"})
 public class UserResource {
+    private final GetUserInfoHandler _handler;
+
     public UserResource() {
+        _handler = new GetUserInfoHandler();
     }
 
     @GET
-    @ApiOperation(value = "Gets user information for current user.", response = UserResponse.class, code = 200)
+    @ApiOperation(value = "Gets user information for current user.", response = GetUserInfoResponse.class, code = 200)
     public Response getUserInfo() {
-        Subject currentUser = SecurityUtils.getSubject();
+        GetUserInfoRequest request = new GetUserInfoRequest();
 
-        if (currentUser.isAuthenticated()) {
-
-            UserResponse response = new UserResponse();
-
-            response.Username = currentUser.getPrincipal().toString();
-
-            // TODO: Map with business user and return more info.
-
-            return Response.status(200).entity(response).build();
-        }
-
-        return Response.status(401).build();
+        GetUserInfoResponse response = _handler.Handle(request);
+        return Response.status(200).entity(response).build();
     }
 
     @GET

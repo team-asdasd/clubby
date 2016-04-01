@@ -61,6 +61,7 @@ nbproject
 output
 # Next line commented out, because test/webapp-virtual-library and
 # test/webapp-virtual-webapp use it:
+/src/main/webapp/node_modules
 target
 work
 build.properties
@@ -86,3 +87,4 @@ webapps/docs/jdbc-pool.xml
 node_modules/
 bower_components/
 build/
+src/main/webapp/dist/

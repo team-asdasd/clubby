@@ -7,7 +7,4 @@
 
 <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
 
-<script src="node_modules/angular2/bundles/angular2-polyfills.js"></script>
 
-<script src="dist/vendor.bundle.js"></script>
-<script src="dist/app.bundle.js"></script>

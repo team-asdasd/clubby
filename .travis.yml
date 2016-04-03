@@ -5,13 +5,15 @@ jdk:
 sudo: false
 
 before_script:
+- cd src/main/webapp # jump to package.json
 - npm install
-- bower install
+- npm run build
+- cd ../../.. # jump back to root
 
 script:
 - mvn package -Popenshift
 
-after_success:
+before_deploy:
 - sed -i '/bower_components\//d' .gitignore
 - git config --global user.email "builds@travis-ci.com"
 - git config --global user.name "Travis CI"

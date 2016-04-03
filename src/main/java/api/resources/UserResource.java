@@ -3,6 +3,7 @@ package api.resources;
 import api.contracts.requests.GetUserInfoRequest;
 import api.contracts.responses.GetUserInfoResponse;
 import api.handlers.GetUserInfoHandler;
+import api.handlers.utilities.StatusResolver;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
@@ -29,8 +30,11 @@ public class UserResource {
     public Response getUserInfo() {
         GetUserInfoRequest request = new GetUserInfoRequest();
 
-        GetUserInfoResponse response = _handler.Handle(request);
-        return Response.status(200).entity(response).build();
+        GetUserInfoResponse response = _handler.handle(request);
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
     }
 
     @GET

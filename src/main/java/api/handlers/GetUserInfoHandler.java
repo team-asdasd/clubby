@@ -9,17 +9,19 @@ import org.apache.shiro.subject.Subject;
 public class GetUserInfoHandler extends BaseHandler<GetUserInfoRequest, GetUserInfoResponse> {
 
     @Override
-    protected boolean IsValid(GetUserInfoRequest request) {
+    protected boolean isValid(GetUserInfoRequest request) {
         Subject currentUser = SecurityUtils.getSubject();
 
         return currentUser.isAuthenticated();
     }
 
     @Override
-    protected GetUserInfoResponse HandleBase(GetUserInfoRequest request) {
+    protected GetUserInfoResponse handleBase(GetUserInfoRequest request) throws Exception {
         Subject currentUser = SecurityUtils.getSubject();
 
-        GetUserInfoResponse response = new GetUserInfoResponse();
+        GetUserInfoResponse response = createResponse();
+
+        // TODO: Map to business
 
         response.Username = currentUser.getPrincipal().toString();
 
@@ -27,7 +29,7 @@ public class GetUserInfoHandler extends BaseHandler<GetUserInfoRequest, GetUserI
     }
 
     @Override
-    protected GetUserInfoResponse HandleError(Exception e) {
-        return null;
+    protected GetUserInfoResponse createResponse() {
+        return new GetUserInfoResponse();
     }
 }

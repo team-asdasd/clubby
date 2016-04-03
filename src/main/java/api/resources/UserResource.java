@@ -1,13 +1,17 @@
 package api.resources;
 
 import api.contracts.requests.GetUserInfoRequest;
+import api.contracts.requests.HasPermissionRequest;
+import api.contracts.requests.HasRoleRequest;
 import api.contracts.responses.GetUserInfoResponse;
+import api.contracts.responses.HasPermissionResponse;
+import api.contracts.responses.HasRoleResponse;
 import api.handlers.GetUserInfoHandler;
+import api.handlers.HasPermissionHandler;
+import api.handlers.HasRoleHandler;
 import api.handlers.utilities.StatusResolver;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -19,10 +23,14 @@ import javax.ws.rs.core.Response;
 @Path("/user")
 @Produces({"application/json"})
 public class UserResource {
-    private final GetUserInfoHandler _handler;
+    private final GetUserInfoHandler getUserInfoHandler;
+    private final HasPermissionHandler hasPermissionHandler;
+    private final HasRoleHandler hasRoleHandler;
 
     public UserResource() {
-        _handler = new GetUserInfoHandler();
+        getUserInfoHandler = new GetUserInfoHandler();
+        hasPermissionHandler = new HasPermissionHandler();
+        hasRoleHandler = new HasRoleHandler();
     }
 
     @GET
@@ -30,7 +38,7 @@ public class UserResource {
     public Response getUserInfo() {
         GetUserInfoRequest request = new GetUserInfoRequest();
 
-        GetUserInfoResponse response = _handler.handle(request);
+        GetUserInfoResponse response = getUserInfoHandler.handle(request);
 
         int statusCode = StatusResolver.getStatusCode(response);
 
@@ -41,30 +49,27 @@ public class UserResource {
     @Path("/hasRole/{roleName}")
     @ApiOperation(value = "Checks if current user has specified role.", response = boolean.class)
     public Response hasRole(@PathParam("roleName") String roleName) {
-        Subject currentUser = SecurityUtils.getSubject();
+        HasRoleRequest request = new HasRoleRequest();
+        request.RoleName = roleName;
 
-        if (currentUser.isAuthenticated()) {
+        HasRoleResponse response = hasRoleHandler.handle(request);
 
-            boolean hasRole = currentUser.hasRole(roleName);
+        int statusCode = StatusResolver.getStatusCode(response);
 
-            return Response.status(200).entity(hasRole).build();
-        }
-
-        return Response.status(401).build();
+        return Response.status(statusCode).entity(response.HasRole).build();
     }
 
     @GET
     @Path("/hasPermission/{permissionName}")
     @ApiOperation(value = "Checks if current user has specified permission.", response = boolean.class)
     public Response hasPermission(@PathParam("permissionName") String permissionName) {
-        Subject currentUser = SecurityUtils.getSubject();
+        HasPermissionRequest request = new HasPermissionRequest();
+        request.PermissionName = permissionName;
 
-        if (currentUser.isAuthenticated()) {
-            boolean hasPermission = currentUser.isPermitted(permissionName);
+        HasPermissionResponse response = hasPermissionHandler.handle(request);
 
-            return Response.status(200).entity(hasPermission).build();
-        }
+        int statusCode = StatusResolver.getStatusCode(response);
 
-        return Response.status(401).build();
+        return Response.status(statusCode).entity(response.HasPermission).build();
     }
 }

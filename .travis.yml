@@ -16,7 +16,7 @@ script:
 before_deploy:
 - ls
 - sed -i '/node_modules\//d' .gitignore
-- sed -i '/src/main/webapp/dist\//d' .gitignore
+- sed -i '/src\/main\/webapp\/dist\//d' .gitignore
 - git config --global user.email "travis@localhost.localdomain"
 - git config --global user.name "Travis CI"
 - git checkout $TRAVIS_BRANCH

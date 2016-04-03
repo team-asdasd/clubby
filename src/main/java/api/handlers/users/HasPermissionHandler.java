@@ -1,4 +1,4 @@
-package api.handlers;
+package api.handlers.users;
 
 import api.contracts.requests.HasPermissionRequest;
 import api.contracts.responses.HasPermissionResponse;

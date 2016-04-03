@@ -15,6 +15,7 @@ public class HomeController extends ControllerBase {
     @Override
     protected String processCore(WebContext ctx) {
         ctx.setVariable("pageTitle", "Pagrindinis");
+        ctx.setVariable("layout","_baseLayout");
 
         return "index";
     }

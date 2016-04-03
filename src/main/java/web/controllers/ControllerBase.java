@@ -27,6 +27,13 @@ public abstract class ControllerBase {
         ctx.setVariable("authenticated", sub.isAuthenticated());
         ctx.setVariable("administrator", sub.isPermitted("administrator"));
 
+        Object layout = ctx.getVariable("layout");
+        if(layout != null){
+            ctx.setVariable("view", view);
+
+            view = layout.toString();
+        }
+
         templateEngine.process(view, ctx, response.getWriter());
     }
 

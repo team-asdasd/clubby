@@ -9,8 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
+import web.controllers.AppController;
 import web.controllers.ControllerBase;
 import web.controllers.HomeController;
+import web.controllers.LoginController;
 
 /**
  * Created by Mindaugas on 03/04/2016.
@@ -20,8 +22,6 @@ public class ApplicationConfiguration {
 
     private TemplateEngine templateEngine;
     private Map<String, ControllerBase> controllersByURL;
-
-
 
     public ApplicationConfiguration(final ServletContext servletContext) {
 
@@ -39,13 +39,15 @@ public class ApplicationConfiguration {
         this.templateEngine.setTemplateResolver(templateResolver);
 
         this.controllersByURL = new HashMap<String, ControllerBase>();
-        this.controllersByURL.put("/", new HomeController());
+        this.controllersByURL.put("", new HomeController());
+        this.controllersByURL.put("login", new LoginController());
+        this.controllersByURL.put("app", new AppController());
     }
 
 
     public ControllerBase resolveControllerForRequest(final HttpServletRequest request) {
         final String path = getRequestPath(request);
-        return this.controllersByURL.get(path);
+        return this.controllersByURL.get(path.replace("/",""));
     }
 
 

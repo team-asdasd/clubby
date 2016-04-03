@@ -1,21 +1,23 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
->
-<head th:fragment="head">
+      xmlns:th="http://www.thymeleaf.org">
+
+<head  th:include="/shared/head::head">
+    <!-- To work directly from browser -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <link href="../../res/cover.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/4.12.0/bootstrap-social.css">
 
-    <link th:if="${layout} == '_baseLayout'" th:href="@{../../res/cover.css}" rel="stylesheet">
-
-    <title th:utext="#{title(${pageTitle})}">Clubby - Team ASDASD</title>
+    <title>Clubby - Team ASDASD</title>
 </head>
 <body>
+<h1 th:text="'HI, ' + ${userName} + '!!!'"></h1>
+<h2 th:text="'Server says that now is ' + ${today}"></h2>
 
 </body>
 </html>

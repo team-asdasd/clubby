@@ -29,17 +29,12 @@ public class ViewsFilter implements Filter {
         this.application = new ApplicationConfiguration(this.servletContext);
     }
 
-
-
-
     public void doFilter(final ServletRequest request, final ServletResponse response,
                          final FilterChain chain) throws IOException, ServletException {
         if (!process((HttpServletRequest)request, (HttpServletResponse)response)) {
             chain.doFilter(request, response);
         }
     }
-
-
 
 
     public void destroy() {
@@ -55,44 +50,30 @@ public class ViewsFilter implements Filter {
             // This prevents triggering engine executions for resource URLs
             if (request.getRequestURI().startsWith("/css") ||
                     request.getRequestURI().startsWith("/images") ||
-                    request.getRequestURI().startsWith("/favicon")) {
+                    request.getRequestURI().startsWith("/favicon") ||
+                    request.getRequestURI().startsWith("/api")) {
                 return false;
             }
 
-
-            /*
-             * Query controller/URL mapping and obtain the controller
-             * that will process the request. If no controller is available,
-             * return false and let other filters/servlets process the request.
-             */
             ControllerBase controller = this.application.resolveControllerForRequest(request);
             if (controller == null) {
                 return false;
             }
 
-            /*
-             * Obtain the TemplateEngine instance.
-             */
             TemplateEngine templateEngine = this.application.getTemplateEngine();
 
-            /*
-             * Write the response headers
-             */
             response.setContentType("text/html;charset=UTF-8");
             response.setHeader("Pragma", "no-cache");
             response.setHeader("Cache-Control", "no-cache");
             response.setDateHeader("Expires", 0);
 
-            /*
-             * Execute the controller and process view template,
-             * writing the results to the response writer.
-             */
             controller.process(
                     request, response, this.servletContext, templateEngine);
 
             return true;
 
         } catch (Exception e) {
+            //todo send exceptions to error pages and show
             try {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             } catch (final IOException ignored) {

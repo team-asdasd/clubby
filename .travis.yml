@@ -14,11 +14,16 @@ script:
 - mvn package -Popenshift
 
 before_deploy:
-- sed -i '/bower_components\//d' .gitignore
-- git config --global user.email "builds@travis-ci.com"
+- sed -i '/node_modules\//d' .gitignore
+- git config --global user.email "travis@localhost.localdomain"
 - git config --global user.name "Travis CI"
 - git checkout $TRAVIS_BRANCH
-- git add --all
+- git add '/src/main/webapp/dist/vendor.bundle.js'
+- git add '/src/main/webapp/dist/app.bundle.js'
+- git add '/src/main/webapp/dist/styles.bundle.css'
+- git add '/src/main/webapp/node_modules/angular2/bundles/angular2-polyfills.js'
+- git add '/src/main/webapp/node_modules/jquery/dist/jquery.js'
+- git add '/src/main/webapp/node_modules/bootstrap/dist/js/bootstrap.js'
 - git commit -am "Travis build $TRAVIS_BUILD_NUMBER"
 
 deploy:

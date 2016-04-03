@@ -16,7 +16,7 @@ public class GetUserInfoHandler extends BaseHandler<GetUserInfoRequest, GetUserI
     }
 
     @Override
-    protected GetUserInfoResponse handleBase(GetUserInfoRequest request) throws Exception {
+    protected GetUserInfoResponse handleBase(GetUserInfoRequest request) {
         Subject currentUser = SecurityUtils.getSubject();
 
         GetUserInfoResponse response = createResponse();

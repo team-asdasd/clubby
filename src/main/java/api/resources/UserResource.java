@@ -26,7 +26,7 @@ public class UserResource {
     }
 
     @GET
-    @ApiOperation(value = "Gets user information for current user.", response = GetUserInfoResponse.class, code = 200)
+    @ApiOperation(value = "Gets user information for current user.", response = GetUserInfoResponse.class)
     public Response getUserInfo() {
         GetUserInfoRequest request = new GetUserInfoRequest();
 
@@ -39,7 +39,7 @@ public class UserResource {
 
     @GET
     @Path("/hasRole/{roleName}")
-    @ApiOperation(value = "Checks if current user has specified role.", response = boolean.class, code = 200)
+    @ApiOperation(value = "Checks if current user has specified role.", response = boolean.class)
     public Response hasRole(@PathParam("roleName") String roleName) {
         Subject currentUser = SecurityUtils.getSubject();
 
@@ -55,7 +55,7 @@ public class UserResource {
 
     @GET
     @Path("/hasPermission/{permissionName}")
-    @ApiOperation(value = "Checks if current user has specified permission.", response = boolean.class, code = 200)
+    @ApiOperation(value = "Checks if current user has specified permission.", response = boolean.class)
     public Response hasPermission(@PathParam("permissionName") String permissionName) {
         Subject currentUser = SecurityUtils.getSubject();
 

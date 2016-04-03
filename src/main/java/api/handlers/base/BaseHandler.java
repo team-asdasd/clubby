@@ -23,7 +23,7 @@ public abstract class BaseHandler<TRequest extends BaseRequest, TResponse extend
 
     protected abstract boolean isValid(TRequest request);
 
-    protected abstract TResponse handleBase(TRequest request) throws Exception;
+    protected abstract TResponse handleBase(TRequest request);
 
     protected abstract TResponse createResponse();
 

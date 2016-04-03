@@ -11,6 +11,7 @@ import java.util.Date;
 public class AppController extends ControllerBase {
     @Override
     protected String processCore(WebContext ctx) {
+        ctx.setVariable("pageTitle", "Super App");
         ctx.setVariable("today", new Date().toString());
         ctx.setVariable("userName", SecurityUtils.getSubject().getPrincipal().toString());
         ctx.setVariable("layout", "_baseLayout");

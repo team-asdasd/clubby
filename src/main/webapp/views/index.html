@@ -1,0 +1,31 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head  th:include="/shared/head::head">
+    <!-- To work directly from browser -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="../res/cover.css" rel="stylesheet">
+    <title>Clubby - Team ASDASD</title>
+</head>
+
+
+<body>
+    <link href="./res/cover.css" rel="stylesheet">
+
+    <my-app>Loading...</my-app>
+</body>
+
+
+<div th:include="shared/scripts::scripts">
+    <!-- To work directly from browser -->
+    <script src="../node_modules/angular2/bundles/angular2-polyfills.js"></script>
+
+    <script src="../dist/vendor.bundle.js"></script>
+    <script src="../dist/app.bundle.js"></script>
+</div>
+</html>
+

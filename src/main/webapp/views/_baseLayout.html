@@ -1,0 +1,60 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head  th:include="shared/head::head">
+    <title>Clubby - Team ASDASD</title>
+</head>
+
+<body>
+<div class="site-wrapper">
+    <div class="site-wrapper-inner">
+        <div class="cover-container">
+            <div class="masthead clearfix">
+                <div class="inner">
+                    <h3 class="masthead-brand">clubby</h3>
+                    <nav>
+                        <ul class="nav masthead-nav">
+                            <li class="active"><a href="/">Home</a></li>
+                            <li th:if="${authenticated}== true"><a href="/app/">App</a></li>
+                            <li th:if="${administrator}== true"><a href="/admin">Admin</a></li>
+                            <li th:if="${authenticated}== true"><a href="/logout">Logout</a></li>
+                            <li th:if="${authenticated}== false"><a href="/login">Login</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
+            <div th:include="${view}::body" class="inner cover"></div>
+
+            <div th:include="shared/footer::footer" class="mastfoot">
+                <div class="inner">
+                    <p>Created by Team ASDASD</p>
+                    <p>&copy; 2016 TeamASDASD ALL RIGHTS RESERVED</p>
+                    <p>Static footer</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:include="shared/scripts::scripts"></div>
+<script type="text/javascript">
+    var link = window.location.href;
+    if(window.location.href.indexOf(';') > 0){
+        link = window.location.href.substr(0,window.location.href.indexOf(';'));
+    }
+
+
+    var links = document.getElementsByTagName('nav')[0].getElementsByTagName('li');
+    for(var i = 0; i < links.length; i++){
+        links[i].className = links[i].className || '';
+        if(links[i].children[0].href == link){
+            links[i].className += ' active';
+        }else{
+            links[i].className = links[i].className.replace('active','');
+        }
+    }
+</script>
+</body>
+</html>
+

@@ -1,0 +1,21 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Scripts</title>
+</head>
+<body>
+    <div th:fragment="scripts">
+        <!--<script src="node_modules/jquery/dist/jquery.js"></script>
+        <script src="node_modules/jquery/dist/test.js"></script>
+        <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>-->
+
+        <script th:src="@{../../node_modules/angular2/bundles/angular2-polyfills.js}"></script>
+
+        <script th:src="@{../../dist/vendor.bundle.js}"></script>
+        <script th:src="@{../../dist/app.bundle.js}"></script>
+    </div>
+</body>
+</html>

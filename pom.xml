@@ -88,6 +88,13 @@
             <artifactId>swagger-jaxrs</artifactId>
             <version>1.5.0</version>
         </dependency>
+
+        <!-- thymeleaf -->
+        <dependency>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf</artifactId>
+            <version>3.0.0.BETA02</version>
+        </dependency>
     </dependencies>
     <profiles>
         <profile>

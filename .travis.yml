@@ -18,9 +18,8 @@ before_deploy:
 - git config --global user.email "travis@localhost.localdomain"
 - git config --global user.name "Travis CI"
 - git checkout $TRAVIS_BRANCH
-- git add '/src/main/webapp/dist/vendor.bundle.js'
-- git add '/src/main/webapp/dist/app.bundle.js'
-- git add '/src/main/webapp/dist/styles.bundle.css'
+- git add './dist/vendor.bundle.js'
+- git add './dist/app.bundle.js'
 - git add '/src/main/webapp/node_modules/angular2/bundles/angular2-polyfills.js'
 - git add '/src/main/webapp/node_modules/jquery/dist/jquery.js'
 - git add '/src/main/webapp/node_modules/bootstrap/dist/js/bootstrap.js'

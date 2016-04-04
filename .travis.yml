@@ -5,6 +5,8 @@ jdk:
 sudo: false
 
 before_script:
+- nvm install 5.10.0
+- nvm use 5.10.0
 - cd src/main/webapp # jump to package.json
 - npm install
 - npm run build
@@ -20,11 +22,11 @@ before_deploy:
 - git config --global user.email "travis@localhost.localdomain"
 - git config --global user.name "Travis CI"
 - git checkout $TRAVIS_BRANCH
-- git add '/src/main/webapp/dist/vendor.bundle.js'
-- git add '/src/main/webapp/dist/app.bundle.js'
-- git add '/src/main/webapp/node_modules/angular2/bundles/angular2-polyfills.js'
-- git add '/src/main/webapp/node_modules/jquery/dist/jquery.js'
-- git add '/src/main/webapp/node_modules/bootstrap/dist/js/bootstrap.js'
+- git add src/main/webapp/dist/vendor.bundle.js
+- git add src/main/webapp/dist/app.bundle.js
+- git add src/main/webapp/node_modules/angular2/bundles/angular2-polyfills.js
+- git add src/main/webapp/node_modules/jquery/dist/jquery.js
+- git add src/main/webapp/node_modules/bootstrap/dist/js/bootstrap.js
 - git commit -am "Travis build $TRAVIS_BUILD_NUMBER"
 
 deploy:

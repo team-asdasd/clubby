@@ -1,4 +1,7 @@
-[![Build Status](https://travis-ci.com/Tony-Mc/asdasd.svg?token=fdKC47jJTuUKGzpgQy8t&branch=master)](https://travis-ci.com/Tony-Mc/asdasd)
+[![Build Status](https://travis-ci.com/Tony-Mc/asdasd.svg?token=fdKC47jJTuUKGzpgQy8t&branch=master)](https://travis-ci.com/tony-mc/asdasd)
+[![Dependency Status](https://david-dm.org/tony-mc/asdasd.svg?path=src/main/webapp)](https://david-dm.org/tony-mc/asdasd?path=src/main/webapp)
+[![devDependency Status](https://david-dm.org/tony-mc/asdasd/dev-status.svg?path=src/main/webapp)](https://david-dm.org/tony-mc/asdasd?path=src/main/webapp#info=devDependencies)
+
 ![awd](/docs/asdasd.png)
 
 # PSK

@@ -5,6 +5,7 @@ jdk:
 sudo: false
 
 before_script:
+- nvm ls
 - cd src/main/webapp # jump to package.json
 - npm install
 - npm run build

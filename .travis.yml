@@ -4,6 +4,11 @@ jdk:
 
 sudo: false
 
+notifications:
+  slack:
+    rooms:
+      - $SLACK_NOTIFICATIONS_TOKEN_TRAVIS
+
 before_script:
 - nvm install 5.10.0
 - nvm use 5.10.0

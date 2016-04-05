@@ -38,8 +38,9 @@ deploy:
   provider: openshift
   user: $OPENSHIFT_USERNAME
   password: $OPENSHIFT_PASSWORD
-  app: clubby
+  app:
+    master: clubby
+    development: devclubby
   domain: teamasdasd
   on:
     repo: Tony-Mc/asdasd
-    branch: master

@@ -49,6 +49,8 @@ From here you can go two ways:
 
 ## UI Project
 
+Based on `https://github.com/preboot/angular2-webpack`
+
 ### Installing
 
 * `clone` the repo

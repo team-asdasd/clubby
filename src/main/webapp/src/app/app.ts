@@ -6,7 +6,7 @@ import '../style/app.scss';
 
 import {Api} from './services/api/api';
 import {Home} from './components/home/home';
-import {About} from "./components/about/about";
+import {Profile} from "./components/about/profile";
 
 /*
  * App Component
@@ -22,7 +22,7 @@ import {About} from "./components/about/about";
 })
 @RouteConfig([
   {path: '/', component: Home, name: 'Home'},
-  {path: '/About', component: About, name: 'About'}
+  {path: '/Profile', component: Profile, name: 'Profile'}
 ])
 export class App {
   url: string = 'https://github.com/preboot/angular2-webpack';

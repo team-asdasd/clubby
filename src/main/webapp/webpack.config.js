@@ -15,9 +15,9 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
  */
 var ENV = process.env.npm_lifecycle_event;
 var isTest = ENV === 'test' || ENV === 'test-watch';
-// var isProd = ENV === 'build';
+var isProd = ENV === 'build';
 // temp: always dev env
-var isProd = false;
+// var isProd = false;
 
 
 module.exports = function makeWebpackConfig() {
@@ -189,7 +189,7 @@ module.exports = function makeWebpackConfig() {
       // Extract css files
       // Reference: https://github.com/webpack/extract-text-webpack-plugin
       // Disabled when in test mode or not in build mode
-      new ExtractTextPlugin('css/[name].css', {disable: !isProd})
+      new ExtractTextPlugin('css/[name].[hash].css', {disable: !isProd})
     );
   }
 

@@ -12,5 +12,9 @@ body {
 small {
   display: block;
   line-height: 1.428571429;
-  color: $font;
+  color: #999;
+}
+
+.well {
+  background: $light;
 }

@@ -47,15 +47,42 @@ From here you can go two ways:
     5. Edit configurations -> Add -> JBoss -> Local
     6. Deployment -> Add -> Artifact -> clubby:war
 
-### UI Project
+## UI Project
 
-1. Run `npm install`
-2. Run `bower install`
-3. Available grunt tasks:
-    1. `grunt serve` does not run tests on file save
-    2. `grunt dev` runs tests on file save
+Based on `https://github.com/preboot/angular2-webpack`
 
-### Database
+### Installing
+
+* `clone` the repo
+* `npm install` to install all dependencies
+
+### Running the app
+
+After you have installed all dependencies you can now run the app with:
+
+```bash
+npm start
+```
+
+It will start a local server using `webpack-dev-server` which will watch, build (in-memory), and reload for you. The port will be displayed to you as `http://localhost:3000`.
+
+### Developing UI
+
+#### Add new components, services, pipes with Angular 2 cli
+
+* `npm install -g angular-cli` to install Angular 2 cli
+* Add a new component with: `ng generate component my-new-component`
+* Add a new service with: `ng generate service my-new-service`
+* Add a new pipe with: `ng generate pipe my-new-pipe`
+
+Read more at [angular-cli github](https://github.com/angular/angular-cli).
+
+#### Build files
+
+* single run: `npm run build`
+* build files and watch: `npm run watch`
+
+## Database
 
 For this you will need an account on [Openshift](https://www.openshift.com/).
 To access database you will need to use RedHat Client a.k.a. OpenShift client tools - `rhc`

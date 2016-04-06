@@ -1,9 +1,6 @@
 package web.filter;
 
-import org.thymeleaf.TemplateEngine;
 import web.configuration.ApplicationConfiguration;
-import web.controllers.ControllerBase;
-
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,8 +16,7 @@ public class ViewsFilter implements Filter {
     private ServletContext servletContext;
     private ApplicationConfiguration application;
 
-
-    public ViewsFilter() {
+    public ViewsFilter() throws Exception {
         super();
     }
 
@@ -46,31 +42,24 @@ public class ViewsFilter implements Filter {
             throws ServletException {
 
         try {
-
-            // This prevents triggering engine executions for resource URLs
-            if (request.getRequestURI().startsWith("/css") ||
-                    request.getRequestURI().startsWith("/images") ||
+            // do not execute those requests
+            if (request.getRequestURI().endsWith(".css") ||
+                    request.getRequestURI().endsWith(".js") ||
+                    request.getRequestURI().endsWith(".ts") ||
+                    request.getRequestURI().endsWith(".map") ||
                     request.getRequestURI().startsWith("/favicon") ||
                     request.getRequestURI().startsWith("/api")) {
                 return false;
             }
 
-            ControllerBase controller = this.application.resolveControllerForRequest(request);
-            if (controller == null) {
+            //todo try catch errors
+            if(this.application.getForwarder().forward(request,response,this.servletContext)){
+                return true;
+            }
+            else{
+                //todo show 404 eroor
                 return false;
             }
-
-            TemplateEngine templateEngine = this.application.getTemplateEngine();
-
-            response.setContentType("text/html;charset=UTF-8");
-            response.setHeader("Pragma", "no-cache");
-            response.setHeader("Cache-Control", "no-cache");
-            response.setDateHeader("Expires", 0);
-
-            controller.process(
-                    request, response, this.servletContext, templateEngine);
-
-            return true;
 
         } catch (Exception e) {
             //todo send exceptions to error pages and show

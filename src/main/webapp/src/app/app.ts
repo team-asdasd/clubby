@@ -1,5 +1,5 @@
 import {Component} from 'angular2/core';
-import {RouteConfig, ROUTER_DIRECTIVES} from 'angular2/router';
+import {Router, RouteConfig, ROUTER_DIRECTIVES} from 'angular2/router';
 import {FORM_PROVIDERS} from 'angular2/common';
 
 import '../style/app.scss';
@@ -21,12 +21,12 @@ import {Profile} from "./components/about/profile";
   template: require('./app.html')
 })
 @RouteConfig([
-  {path: '/', component: Home, name: 'Home'},
-  {path: '/Profile', component: Profile, name: 'Profile'}
+  {path: '/', component: Home, as: 'Home'},
+  {path: '/Profile', component: Profile, as: 'Profile'}
 ])
 export class App {
   url: string = 'https://github.com/preboot/angular2-webpack';
 
-  constructor(public api: Api) {
+  constructor(private router: Router) {
   }
 }

@@ -6,12 +6,30 @@
 }
 
 header {
-  background-color: $dark;
-  padding: 16px;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
+
+  .open > a, .active > a {
+    background-color: $dark;
+  }
+
+  .navbar, .dropdown-menu {
+    background-color: $darkest;
+    border: none;
+    border-radius: 0;
+
+    a {
+      text-decoration: none;
+      color: $light;
+    }
+
+    a:hover {
+      background-color: $dark;
+    }
+  }
+
 }
 
 main {

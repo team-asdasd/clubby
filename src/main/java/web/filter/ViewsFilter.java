@@ -1,6 +1,8 @@
 package web.filter;
 
 import web.configuration.ApplicationConfiguration;
+import web.helpers.ExceptionHelper;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -58,17 +60,20 @@ public class ViewsFilter implements Filter {
             }
             else{
                 //todo show 404 eroor
-                return false;
+                request.setAttribute("path", request.getRequestURI());
+                if(!this.application.getForwarder().forward("/error/404",request,response,this.servletContext)){
+                    throw new RuntimeException("404 error page load failed");
+                }
+                return true;
             }
 
         } catch (Exception e) {
             //todo send exceptions to error pages and show
-            try {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            } catch (final IOException ignored) {
-                // Just ignore this
+            request.setAttribute("exception",ExceptionHelper.exceptionStacktraceToString(e));
+            if(!this.application.getForwarder().forward("/error/500",request,response,this.servletContext)){
+                throw e;
             }
-            throw new ServletException(e);
+           return true;
         }
 
     }

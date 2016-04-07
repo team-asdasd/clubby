@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 
 /**
@@ -26,6 +27,18 @@ public class RequestsForwarder {
                            final ServletContext servletContext){
         Boolean found = false;
         int hash = getRequestPath(request).replace("/","").hashCode();
+        if(routesMap.containsKey(hash)){
+            forward(request,response,servletContext,hash);
+            found = true;
+        }
+
+        return found;
+    }
+
+    public Boolean forward(String path, final HttpServletRequest request,final HttpServletResponse response,
+                           final ServletContext servletContext){
+        Boolean found = false;
+        int hash = path.replace("/","").hashCode();
         if(routesMap.containsKey(hash)){
             forward(request,response,servletContext,hash);
             found = true;

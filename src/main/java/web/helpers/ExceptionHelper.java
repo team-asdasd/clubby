@@ -1,5 +1,6 @@
 package web.helpers;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 /**
@@ -8,6 +9,13 @@ import java.util.Arrays;
 public class ExceptionHelper {
     public static String exceptionStacktraceToString(Exception e)
     {
-        return Arrays.toString(e.getStackTrace());
+        String exception = "";
+        if( e instanceof InvocationTargetException){
+            Throwable ex =  ((InvocationTargetException) e).getTargetException();
+            exception = ex.getMessage() + " " + Arrays.toString(ex.getStackTrace());
+        }
+
+        exception += e.getMessage() + " " + Arrays.toString(e.getStackTrace());
+        return exception;
     }
 }

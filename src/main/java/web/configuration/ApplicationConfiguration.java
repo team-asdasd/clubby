@@ -3,6 +3,7 @@ package web.configuration;
 import javax.servlet.ServletContext;
 
 import web.controllers.AppController;
+import web.controllers.ErrorController;
 import web.controllers.HomeController;
 import web.controllers.LoginController;
 import web.helpers.RequestsForwarder;
@@ -23,6 +24,7 @@ public class ApplicationConfiguration {
         classes.add(AppController.class);
         classes.add(HomeController.class);
         classes.add(LoginController.class);
+        classes.add(ErrorController.class);
 
         try {
             requestsForwarder = new RequestsForwarder(classes);

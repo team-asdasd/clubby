@@ -18,8 +18,13 @@ public class Sender {
 
         Subject sub = SecurityUtils.getSubject();
 
-        ctx.setVariable("authenticated", sub.isAuthenticated());
-        ctx.setVariable("administrator", sub.isPermitted("administrator"));
+        try{
+            ctx.setVariable("authenticated", sub.isAuthenticated());
+            ctx.setVariable("administrator", sub.isPermitted("administrator"));
+        }catch (Exception e){
+            //do nothing in case db error
+            ctx.setVariable("administrator", false);
+        }
 
         Object layout = ctx.getVariable("layout");
         if(layout != null){

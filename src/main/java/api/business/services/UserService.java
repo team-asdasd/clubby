@@ -17,7 +17,20 @@ public class UserService implements IUserService {
     }
 
     public User getByEmail(String email) {
-        TypedQuery<User> users = em.createQuery("FROM User WHERE email = :email", User.class).setParameter("email", email);
-        return users.getSingleResult();
+        try {
+            TypedQuery<User> users = em.createQuery("FROM User WHERE email = :email", User.class).setParameter("email", email);
+            return users.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void createUser(User user) {
+        em.getTransaction().begin();
+        if (!em.contains(user)) {
+            em.persist(user);
+            em.flush();
+        }
+        em.getTransaction().commit();
     }
 }

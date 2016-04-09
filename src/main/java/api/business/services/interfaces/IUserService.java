@@ -6,4 +6,6 @@ public interface IUserService {
     User get(int id);
 
     User getByEmail(String email);
+
+    void createUser(User user);
 }

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class FacebookLoginHandler extends BaseHandler<FacebookLoginRequest, FacebookLoginResponse> {
     @Override
-    protected ArrayList<ErrorDto> validate(FacebookLoginRequest request) {
+    public ArrayList<ErrorDto> validate(FacebookLoginRequest request) {
         ArrayList<ErrorDto> errors = new ArrayList<>();
 
         if (request.Code == null) {
@@ -29,7 +29,7 @@ public class FacebookLoginHandler extends BaseHandler<FacebookLoginRequest, Face
     }
 
     @Override
-    protected FacebookLoginResponse handleBase(FacebookLoginRequest request) {
+    public FacebookLoginResponse handleBase(FacebookLoginRequest request) {
         FacebookToken facebookToken = new FacebookToken(request.Code);
 
         SecurityUtils.getSubject().login(facebookToken);
@@ -38,7 +38,7 @@ public class FacebookLoginHandler extends BaseHandler<FacebookLoginRequest, Face
     }
 
     @Override
-    protected FacebookLoginResponse createResponse() {
+    public FacebookLoginResponse createResponse() {
         return new FacebookLoginResponse();
     }
 }

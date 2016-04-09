@@ -32,13 +32,13 @@ public abstract class BaseHandler<TRequest extends BaseRequest, TResponse extend
         return response;
     }
 
-    protected abstract ArrayList<ErrorDto> validate(TRequest request);
+    public abstract ArrayList<ErrorDto> validate(TRequest request);
 
-    protected abstract TResponse handleBase(TRequest request);
+    public abstract TResponse handleBase(TRequest request);
 
-    protected abstract TResponse createResponse();
+    public abstract TResponse createResponse();
 
-    protected TResponse handleException(Exception e) {
+    public TResponse handleException(Exception e) {
         TResponse response = createResponse();
 
         response.Errors = new ArrayList<>();
@@ -53,7 +53,7 @@ public abstract class BaseHandler<TRequest extends BaseRequest, TResponse extend
     private String getMessage(Exception e) {
         String message = e.getMessage();
         if (message == null || message.isEmpty()) {
-            return "Unknown error";
+            return String.format("Unknown error (%s)", e.getClass());
         } else {
             return message;
         }

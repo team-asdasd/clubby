@@ -16,7 +16,7 @@
                     <nav>
                         <ul class="nav masthead-nav">
                             <li class="active"><a href="/">Home</a></li>
-                            <li th:if="${authenticated}== true"><a href="/dist/">App</a></li>
+                            <li th:if="${authenticated}== true"><a href="/app">App</a></li>
                             <li th:if="${administrator}== true"><a href="/admin">Admin</a></li>
                             <li th:if="${authenticated}== true"><a href="/logout">Logout</a></li>
                             <li th:if="${authenticated}== false"><a href="/login">Login</a></li>

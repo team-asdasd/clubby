@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+
+    <persistence-unit name="clubbyPersistenceUnit">
+        <mapping-file>User.xml</mapping-file>
+        <mapping-file>Login.xml</mapping-file>
+        <class>api.business.User</class>
+        <class>api.business.Login</class>
+        <properties>
+            <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/clubby"/>
+            <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
+        </properties>
+    </persistence-unit>
+</persistence>

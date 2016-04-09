@@ -1,7 +1,7 @@
 package api.handlers.users;
 
-import api.business.User;
-import api.business.services.interfaces.IUserInfoService;
+import api.business.entities.User;
+import api.business.services.interfaces.IUserService;
 import api.contracts.requests.GetUserInfoRequest;
 import api.contracts.responses.GetUserInfoResponse;
 import api.contracts.responses.base.ErrorCodes;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 @Stateless
 public class GetUserInfoHandler extends BaseHandler<GetUserInfoRequest, GetUserInfoResponse> {
     @Inject
-    private IUserInfoService userInfoService;
+    private IUserService userInfoService;
 
     @Override
     public ArrayList<ErrorDto> validate(GetUserInfoRequest request) {
@@ -42,15 +42,11 @@ public class GetUserInfoHandler extends BaseHandler<GetUserInfoRequest, GetUserI
 
         GetUserInfoResponse response = createResponse();
 
-        // TODO: Map to business
+        response.Email = currentUser.getPrincipal().toString();
 
+        User user = userInfoService.getByEmail(response.Email);
 
-        User user = userInfoService.get(1);
-
-
-        response.Username = currentUser.getPrincipal().toString();
         response.Name = user.getName();
-        response.Email = user.getEmail();
 
         return response;
     }

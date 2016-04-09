@@ -2,7 +2,7 @@
 <entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm"
         version="2.0">
 
-    <entity class="api.business.User">
+    <entity class="api.business.entities.User">
         <table name="users" schema="main" catalog="clubby"/>
         <attributes>
             <id name="id">
@@ -14,7 +14,7 @@
             <basic name="email">
                 <column name="email" nullable="false"/>
             </basic>
-            <one-to-one name="login" optional="true" target-entity="api.business.Login">
+            <one-to-one name="login" optional="true" target-entity="api.business.entities.Login">
                 <join-column name="login" nullable="false" referenced-column-name="id"/>
             </one-to-one>
         </attributes>

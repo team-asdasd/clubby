@@ -1,4 +1,4 @@
-package api.business;
+package api.business.entities;
 
 import javax.persistence.*;
 

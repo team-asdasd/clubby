@@ -12,11 +12,16 @@ public class LoginService implements ILoginService {
     private EntityManager em = EntityManagerContainer.getEntityManager(); // TODO: Fix freaking injecting with @PersistenceContext... or not if we want to use env vars?
 
     public void createLogin(Login login) {
-        em.getTransaction().begin();
-        if (!em.contains(login)) {
-            em.persist(login);
-            em.flush();
+        try {
+            em.getTransaction().begin();
+            if (!em.contains(login)) {
+                em.persist(login);
+                em.flush();
+            }
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw e;
         }
-        em.getTransaction().commit();
     }
 }

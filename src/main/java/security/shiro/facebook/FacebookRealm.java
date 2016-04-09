@@ -1,5 +1,11 @@
 package security.shiro.facebook;
 
+import api.business.entities.Login;
+import api.business.entities.User;
+import api.business.services.LoginService;
+import api.business.services.UserService;
+import api.business.services.interfaces.ILoginService;
+import api.business.services.interfaces.IUserService;
 import com.google.api.client.http.*;
 import com.google.api.client.http.apache.ApacheHttpTransport;
 import com.google.api.client.json.JsonObjectParser;
@@ -12,9 +18,15 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 import java.net.URL;
+import java.util.UUID;
 
 public class FacebookRealm extends AuthorizingRealm {
+    private IUserService userService = new UserService();
+    private ILoginService loginService = new LoginService();
+
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         return new SimpleAuthorizationInfo(); // TODO: Resolve roles by existing users in JDBC
@@ -63,18 +75,24 @@ public class FacebookRealm extends AuthorizingRealm {
                         userInfoResponse.disconnect();
 
                         info = new FacebookAuthenticationInfo(fud, this.getName());
+
+                        if (userService.getByEmail(fud.Email) == null) {
+                            User user = new User();
+                            user.setName(fud.Name);
+                            user.setEmail(fud.Email);
+                            userService.createUser(user);
+                        }
                     } else {
                         throw new Exception("Facebook auth responded with status code: " + response.getStatusCode());
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    throw new Exception("Failed to login");
                 } finally {
                     response.disconnect();
                 }
             }
-
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new AuthenticationException("Login failed.", e);
         }
 
         return info;

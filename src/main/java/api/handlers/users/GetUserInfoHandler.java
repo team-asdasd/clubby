@@ -41,10 +41,12 @@ public class GetUserInfoHandler extends BaseHandler<GetUserInfoRequest, GetUserI
         Subject currentUser = SecurityUtils.getSubject();
 
         GetUserInfoResponse response = createResponse();
-
         response.Email = currentUser.getPrincipal().toString();
 
         User user = userInfoService.getByEmail(response.Email);
+        if (user == null) {
+            return handleException(new Exception("User not found.")); // Todo Custom error for not found -> Handle(Error)
+        }
 
         response.Name = user.getName();
 

@@ -26,11 +26,16 @@ public class UserService implements IUserService {
     }
 
     public void createUser(User user) {
-        em.getTransaction().begin();
-        if (!em.contains(user)) {
-            em.persist(user);
-            em.flush();
+        try {
+            em.getTransaction().begin();
+            if (!em.contains(user)) {
+                em.persist(user);
+                em.flush();
+            }
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw e;
         }
-        em.getTransaction().commit();
     }
 }

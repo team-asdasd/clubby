@@ -10,16 +10,16 @@ import {
   beforeEachProviders
 } from 'angular2/testing';
 import {provide} from 'angular2/core';
-import {CottagesHome} from './cottages';
+import {CottagesList} from './cottages-list';
 
 
-describe('CottagesHome Component', () => {
+describe('CottagesList Component', () => {
 
   beforeEachProviders((): any[] => []);
 
 
   it('should ...', injectAsync([TestComponentBuilder], (tcb:TestComponentBuilder) => {
-    return tcb.createAsync(CottagesHome).then((fixture) => {
+    return tcb.createAsync(CottagesList).then((fixture) => {
       fixture.detectChanges();
     });
   }));

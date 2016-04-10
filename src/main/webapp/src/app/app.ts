@@ -14,25 +14,25 @@ import {Cottages} from "./components/cottages/cottages";
  * Top Level Component
  */
 @Component({
-    selector: 'app', // <app></app>
-    providers: [...FORM_PROVIDERS, Api],
-    directives: [...ROUTER_DIRECTIVES],
-    pipes: [],
-    styles: [require('./app.scss')],
-    template: require('./app.html')
+    selector : 'app', // <app></app>
+    providers : [...FORM_PROVIDERS, Api],
+    directives : [...ROUTER_DIRECTIVES],
+    pipes : [],
+    styles : [require('./app.scss')],
+    template : require('./app.html')
 })
 @RouteConfig([
-    {path: '/', component: Home, as: 'Home'},
-    {path: '/Profile', component: Profile, as: 'Profile'},
-    {path: '/Cottages', component: Cottages, as: 'Cottages'}
+    {path : '/', component : Home, as : 'Home', useAsDefault : true},
+    {path : '/Profile', component : Profile, as : 'Profile'},
+    {path : '/Cottages/...', component : Cottages, as : 'Cottages'}
 ])
 export class App {
-    url:string = 'https://github.com/preboot/angular2-webpack';
+    url: string = 'https://github.com/preboot/angular2-webpack';
 
-    constructor(private router:Router) {
+    constructor(private router: Router) {
     }
 
     public isRouteActive(route) {
-        return this.router.isRouteActive(this.router.generate(route))
+        return this.router.isRouteActive(this.router.generate(route));
     }
 }

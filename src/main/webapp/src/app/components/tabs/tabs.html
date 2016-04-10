@@ -1,0 +1,13 @@
+<header>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <!--TODO: fix layout so it is responsive-->
+            <ul *ngFor="#el of options" class="nav navbar-nav">
+                <li [class.active]="isRouteActive([el.link])">
+                    <a [routerLink]="[el.link]">{{el.name}}</a>
+                </li>
+            </ul>
+        </div><!-- /.container-fluid -->
+    </nav>
+</header>

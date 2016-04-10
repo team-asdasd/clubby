@@ -1,5 +1,6 @@
 package security.shiro.facebook;
 
+import clients.facebook.responses.FacebookUserDetails;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;

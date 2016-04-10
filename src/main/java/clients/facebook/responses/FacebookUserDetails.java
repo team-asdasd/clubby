@@ -1,5 +1,6 @@
-package security.shiro.facebook;
+package clients.facebook.responses;
 
+import clients.facebook.responses.FacebookPicture;
 import com.google.api.client.util.Key;
 
 public class FacebookUserDetails {

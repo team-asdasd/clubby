@@ -1,4 +1,4 @@
-package security.shiro.facebook;
+package clients.facebook.responses;
 
 import com.google.api.client.util.Key;
 

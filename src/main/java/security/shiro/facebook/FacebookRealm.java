@@ -1,10 +1,11 @@
 package security.shiro.facebook;
 
 import api.business.entities.User;
-import api.business.services.LoginService;
 import api.business.services.UserService;
-import api.business.services.interfaces.ILoginService;
 import api.business.services.interfaces.IUserService;
+import clients.facebook.FacebookSettings;
+import clients.facebook.responses.FacebookOauthResponse;
+import clients.facebook.responses.FacebookUserDetails;
 import com.google.api.client.http.*;
 import com.google.api.client.http.apache.ApacheHttpTransport;
 import com.google.api.client.json.JsonObjectParser;
@@ -59,8 +60,9 @@ public class FacebookRealm extends AuthorizingRealm {
                 try {
                     if (response.isSuccessStatusCode()) {
                         FacebookOauthResponse facebookOauthResponse = response.parseAs(FacebookOauthResponse.class);
+                        FacebookSettings.setAccessToken(facebookOauthResponse.AccessToken);
 
-                        URL url = new URL("https://graph.facebook.com/v2.5/me?fields=name,email,picture&access_token=" + facebookOauthResponse.AccessToken);
+                        URL url = new URL("https://graph.facebook.com/v2.5/me?fields=name,email,picture&access_token=" + FacebookSettings.getAccessToken());
 
                         HttpRequest getUserInfoRequest = factory.buildGetRequest(new GenericUrl(url)).setParser(jsonObjectParser);
                         HttpResponse userInfoResponse = getUserInfoRequest.execute();
@@ -74,6 +76,7 @@ public class FacebookRealm extends AuthorizingRealm {
                             User user = new User();
                             user.setName(fud.Name);
                             user.setEmail(fud.Email);
+                            user.setFacebookUser(true);
                             userService.createUser(user);
                         }
                     } else {

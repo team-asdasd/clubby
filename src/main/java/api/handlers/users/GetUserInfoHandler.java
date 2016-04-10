@@ -7,17 +7,23 @@ import api.contracts.responses.GetUserInfoResponse;
 import api.contracts.responses.base.ErrorCodes;
 import api.contracts.responses.base.ErrorDto;
 import api.handlers.base.BaseHandler;
+import clients.facebook.interfaces.IFacebookClient;
+import clients.facebook.responses.FacebookUserDetails;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import java.io.IOException;
 import java.util.ArrayList;
 
 @Stateless
 public class GetUserInfoHandler extends BaseHandler<GetUserInfoRequest, GetUserInfoResponse> {
     @Inject
     private IUserService userInfoService;
+
+    @Inject
+    private IFacebookClient facebookClient;
 
     @Override
     public ArrayList<ErrorDto> validate(GetUserInfoRequest request) {
@@ -48,8 +54,16 @@ public class GetUserInfoHandler extends BaseHandler<GetUserInfoRequest, GetUserI
             return handleException(new Exception("User not found.")); // Todo Custom error for not found -> Handle(Error)
         }
 
-        if(user.isFacebookUser()){
+        if (user.isFacebookUser()) {
+            try {
+                FacebookUserDetails userDetails = facebookClient.getUserDetails();
+                if (!userDetails.Picture.isSilhouette()) {
+                    response.Picture = userDetails.Picture.getUrl();
+                }
 
+            } catch (IOException e) {
+                handleException(e);
+            }
         }
 
         response.Name = user.getName();

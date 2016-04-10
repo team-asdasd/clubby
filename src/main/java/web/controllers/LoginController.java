@@ -1,7 +1,7 @@
 package web.controllers;
 
 import org.thymeleaf.context.WebContext;
-import security.shiro.facebook.FacebookSettings;
+import clients.facebook.FacebookSettings;
 
 /**
  * Created by Mindaugas on 03/04/2016.

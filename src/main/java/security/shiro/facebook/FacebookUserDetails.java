@@ -11,4 +11,7 @@ public class FacebookUserDetails {
 
     @Key("email")
     public String Email;
+
+    @Key("picture")
+    public FacebookPicture Picture;
 }

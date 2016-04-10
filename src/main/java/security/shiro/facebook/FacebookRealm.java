@@ -1,6 +1,5 @@
 package security.shiro.facebook;
 
-import api.business.entities.Login;
 import api.business.entities.User;
 import api.business.services.LoginService;
 import api.business.services.UserService;
@@ -18,14 +17,10 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
 import java.net.URL;
-import java.util.UUID;
 
 public class FacebookRealm extends AuthorizingRealm {
     private IUserService userService = new UserService();
-    private ILoginService loginService = new LoginService();
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
@@ -65,13 +60,12 @@ public class FacebookRealm extends AuthorizingRealm {
                     if (response.isSuccessStatusCode()) {
                         FacebookOauthResponse facebookOauthResponse = response.parseAs(FacebookOauthResponse.class);
 
-                        URL url = new URL("https://graph.facebook.com/v2.5/me?fields=name,email&access_token=" + facebookOauthResponse.AccessToken);
+                        URL url = new URL("https://graph.facebook.com/v2.5/me?fields=name,email,picture&access_token=" + facebookOauthResponse.AccessToken);
 
                         HttpRequest getUserInfoRequest = factory.buildGetRequest(new GenericUrl(url)).setParser(jsonObjectParser);
                         HttpResponse userInfoResponse = getUserInfoRequest.execute();
 
                         FacebookUserDetails fud = userInfoResponse.parseAs(FacebookUserDetails.class);
-
                         userInfoResponse.disconnect();
 
                         info = new FacebookAuthenticationInfo(fud, this.getName());

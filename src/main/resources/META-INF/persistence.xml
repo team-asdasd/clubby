@@ -2,8 +2,6 @@
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
 
     <persistence-unit name="clubbyPersistenceUnit">
-        <mapping-file>User.xml</mapping-file>
-        <mapping-file>Login.xml</mapping-file>
         <class>api.business.entities.User</class>
         <class>api.business.entities.Login</class>
         <properties>

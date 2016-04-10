@@ -9,10 +9,11 @@ public class User {
     private String name;
     private String email;
     private Login login;
+    private boolean facebookUser;
 
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getId() {
         return id;
     }
@@ -39,6 +40,16 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Basic
+    @Column(name = "isfacebook")
+    public boolean isFacebookUser() {
+        return facebookUser;
+    }
+
+    public void setFacebookUser(boolean facebookUser) {
+        this.facebookUser = facebookUser;
     }
 
     @Override

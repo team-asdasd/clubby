@@ -48,6 +48,10 @@ public class GetUserInfoHandler extends BaseHandler<GetUserInfoRequest, GetUserI
             return handleException(new Exception("User not found.")); // Todo Custom error for not found -> Handle(Error)
         }
 
+        if(user.isFacebookUser()){
+
+        }
+
         response.Name = user.getName();
 
         return response;

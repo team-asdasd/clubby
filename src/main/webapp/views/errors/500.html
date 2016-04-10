@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="404 Not Found">
+    <meta name="description" content="500 internal server error">
     <meta name="author" content="">
-    <title>Unauthorized</title>
+    <title>404 Not Found</title>
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
@@ -26,7 +26,7 @@
         }
 
         /* Everything but the jumbotron gets side spacing for mobile-first views */
-        .masthead, .body-content, {
+        .masthead, .body-content {
             padding-left: 15px;
             padding-right: 15px;
         }
@@ -54,38 +54,55 @@
         .red {
             color: #d9534f;
         }
+        p.lead{
+            word-wrap: break-word;
+        }
     </style>
     <script type="text/javascript">
         function loadDomain() {
             var display = document.getElementById("display-domain");
-            display.innerHTML = document.domain;
+            display.innerHTML = window.location.href;
         }
     </script>
     <style type="text/css"></style>
 </head>
 <body onload="javascript:loadDomain();">
+<!-- Error Page Content -->
 <div class="container">
+    <!-- Jumbotron -->
     <div class="jumbotron">
-        <h1><i class="fa fa-ban red"></i> Unauthorized</h1>
-        <p class="lead">You tried to access something you don't have rights to on
-            <em>
-                <span id="display-domain"></span>
-            </em>.
-        </p>
-        <p>
-            <a onclick="javascript:checkSite();" class="btn btn-default btn-lg">
-                <span class="green">Take Me To The Homepage</span>
-            </a>
-            <script type="text/javascript">
-                function checkSite() {
-                    var currentSite = window.location.hostname;
-                    window.location = "http://" + currentSite;
-                }
-            </script>
+        <h1><i class="fa fa-frown-o red"></i>Internal server error occurred.</h1>
+        <p class="lead">Something really bad just happened in <em><span
+                id="display-domain"></span></em>.</p>
+        <p><a href="/" class="btn btn-default btn-lg"><span class="green">Take Me To The Homepage</span></a>
         </p>
     </div>
 </div>
+<div class="container">
+    <div class="body-content">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>What happened?</h2>
+                <!--<h2>What can I do?</h2>-->
+                <p th:text="${exception}" class="lead">Error 500</p>
+            </div>
+            <!--<div class="col-md-6">-->
+            <!--<p class="lead">If you're a site visitor</p>-->
+                <!--<p>Please use your browser's back button and check that you're in the right place. If you need immediate-->
+                    <!--assistance, please send us an email instead.</p>-->
+                <!--<p class="lead">If you're the site owner</p>-->
+                <!--<p>Please check that you're in the right place and get in touch with your website provider if you-->
+                    <!--believe this to be an error.</p>-->
+            <!--</div>-->
+        </div>
+    </div>
+</div>
+<!-- End Error Page Content -->
+<!--Scripts-->
+<!-- jQuery library -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+
 </body>
 </html>

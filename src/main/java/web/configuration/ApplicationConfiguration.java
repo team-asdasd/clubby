@@ -1,75 +1,41 @@
 package web.configuration;
 
-
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 import web.controllers.AppController;
-import web.controllers.ControllerBase;
+import web.controllers.ErrorController;
 import web.controllers.HomeController;
 import web.controllers.LoginController;
+import web.helpers.RequestsForwarder;
+import web.helpers.TemplateEngineFactory;
+
+import java.util.HashSet;
 
 /**
  * Created by Mindaugas on 03/04/2016.
  */
 public class ApplicationConfiguration {
+    private RequestsForwarder requestsForwarder;
 
-
-    private TemplateEngine templateEngine;
-    private Map<String, ControllerBase> controllersByURL;
-
-    public ApplicationConfiguration(final ServletContext servletContext) {
-
+    public ApplicationConfiguration(final ServletContext servletContext)  {
         super();
 
-        ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
+        HashSet<Class<?>> classes = new HashSet<>();
+        classes.add(AppController.class);
+        classes.add(HomeController.class);
+        classes.add(LoginController.class);
+        classes.add(ErrorController.class);
 
-        templateResolver.setTemplateMode("HTML");
-        templateResolver.setPrefix("/views/");
-        templateResolver.setSuffix(".html");
-        templateResolver.setCacheTTLMs(Long.valueOf(3600000L));
-        templateResolver.setCacheable(true);
-
-        this.templateEngine = new TemplateEngine();
-        this.templateEngine.setTemplateResolver(templateResolver);
-
-        this.controllersByURL = new HashMap<String, ControllerBase>();
-        this.controllersByURL.put("", new HomeController());
-        this.controllersByURL.put("login", new LoginController());
-        this.controllersByURL.put("app", new AppController());
-    }
-
-
-    public ControllerBase resolveControllerForRequest(final HttpServletRequest request) {
-        final String path = getRequestPath(request);
-        return this.controllersByURL.get(path.replace("/",""));
-    }
-
-
-    public TemplateEngine getTemplateEngine() {
-        return this.templateEngine;
-    }
-
-    private static String getRequestPath(final HttpServletRequest request) {
-
-        String requestURI = request.getRequestURI();
-        final String contextPath = request.getContextPath();
-
-        final int fragmentIndex = requestURI.indexOf(';');
-        if (fragmentIndex != -1) {
-            requestURI = requestURI.substring(0, fragmentIndex);
+        try {
+            requestsForwarder = new RequestsForwarder(classes);
+        } catch (Exception e) {
+            //because java
+            e.printStackTrace();
         }
-
-        if (requestURI.startsWith(contextPath)) {
-            return requestURI.substring(contextPath.length());
-        }
-        return requestURI;
+        TemplateEngineFactory.setupTemplateEngineFactory(servletContext);
     }
 
-
+    public RequestsForwarder getForwarder(){
+        return requestsForwarder;
+    }
 }

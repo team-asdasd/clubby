@@ -1,4 +1,6 @@
-<html lang="en">
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,7 +26,7 @@
         }
 
         /* Everything but the jumbotron gets side spacing for mobile-first views */
-        .masthead, .body-content, {
+        .masthead, .body-content {
             padding-left: 15px;
             padding-right: 15px;
         }
@@ -56,10 +58,9 @@
     <script type="text/javascript">
         function loadDomain() {
             var display = document.getElementById("display-domain");
-            display.innerHTML = document.domain;
+            display.innerHTML = window.location.href;
         }
     </script>
-    <style type="text/css"></style>
 </head>
 <body onload="javascript:loadDomain();">
 <!-- Error Page Content -->
@@ -67,15 +68,11 @@
     <!-- Jumbotron -->
     <div class="jumbotron">
         <h1><i class="fa fa-frown-o red"></i> 404 Not Found</h1>
-        <p class="lead">We couldn't find what you're looking for on <em><span
+        <p class="lead">
+            'We couldn't find what you're looking for on
+            <em><span
                 id="display-domain"></span></em>.</p>
-        <p><a onclick="javascript:checkSite();" class="btn btn-default btn-lg"><span class="green">Take Me To The Homepage</span></a>
-            <script type="text/javascript">
-                function checkSite() {
-                    var currentSite = window.location.hostname;
-                    window.location = "http://" + currentSite;
-                }
-            </script>
+        <p><a href="/" class="btn btn-default btn-lg"><span class="green">Take Me To The Homepage</span></a>
         </p>
     </div>
 </div>

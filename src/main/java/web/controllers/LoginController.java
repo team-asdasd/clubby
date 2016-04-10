@@ -2,17 +2,21 @@ package web.controllers;
 
 import org.thymeleaf.context.WebContext;
 import security.shiro.facebook.FacebookSettings;
+import web.helpers.Controller;
+import web.helpers.PathMapping;
+import web.helpers.Sender;
 
 /**
  * Created by Mindaugas on 03/04/2016.
  */
-public class LoginController extends ControllerBase {
-    @Override
-    protected String processCore(WebContext ctx) {
+@Controller("Login")
+public class LoginController {
+    @PathMapping("")
+    public void login(WebContext ctx) throws Exception {
         ctx.setVariable("fbAppId", FacebookSettings.getAppId());
         ctx.setVariable("fbRedirect", FacebookSettings.getRedirectUrl());
         ctx.setVariable("pageTitle", "Prisijungti");
 
-        return "auth/login";
+        Sender.sendView(ctx, "auth/login");
     }
 }

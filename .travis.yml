@@ -6,8 +6,10 @@ sudo: false
 
 notifications:
   slack:
-    rooms:
-      - $SLACK_NOTIFICATIONS_TOKEN_TRAVIS
+    secure: NlKxULWubvFbrYOtcA9eIuaFsJZz64XRPmqPZQi0Nnw//vyjJ90MSbvvanrCZikH4aG7i8nhIkHHvzcKf3BHCJd1Aa4VDGkDnCX2uVO/SoqFJANBkMM9mob9V1J7cGZzoNB3WVmwFRnk+K20onvcEdBTag17CgKSxPnnuUeUQL3n/lf0qAAzka2yUq2cG+lQ/rWJbl5MrAeF89wO0nwMGARBYksNJvPjI0Kc4G+3Rj+FDGAdX2r2oaeoQ4fLfoydXkqHML9jX61YWZtcbtwiXQAFOinSYwCbE4/MPuJHwS1QMirmk2pitM4nUqGlXDWoKM9qadX9rlnGjvq58PSRZG3SEp6t5GMJO1Z2GJ8w2WKXQen7fa0egtR3N2k7F+ye0ZA8i/tuAUB2sSbs7AHhUhRcLRAXuUPF6kHTYZaqekuaMNcLD7PXY5ljt13Ar1qTWj1kYZUbe5QLXAEz2HPXwgjF1MSqJquIBKGWqXVNMFa7+OgisjCL43VBCQ6N3raW0Tq9xhsqbHHGVkAuQ7sMBKL1GxmzCx8cWRdLRF/zjDW/K59UDo0CvN2EeWkz+cPyTJHk9AeEUP92ykgLo818EOfYxNtY5FWs254CYgcfBQ6POGo3LtTCM1Uq3K6nAYzAQcEqCxXAv4pF6D63trt3z4osxLuJw7Z3ISphowbgwMg=
+  on_success: always
+  on_failure: always
+  on_start: always
 
 before_script:
 - nvm install 5.10.0
@@ -26,8 +28,7 @@ before_deploy:
 - git checkout $TRAVIS_BRANCH
 - sed -i '/src\/main\/webapp\/node_modules\//d' .gitignore
 - sed -i '/src\/main\/webapp\/dist\//d' .gitignore
-- git add src/main/webapp/dist/vendor.bundle.js
-- git add src/main/webapp/dist/app.bundle.js
+- git add src/main/webapp/dist/
 - git add src/main/webapp/node_modules/angular2/bundles/angular2-polyfills.js
 - git add src/main/webapp/node_modules/jquery/dist/jquery.js
 - git add src/main/webapp/node_modules/bootstrap/dist/js/bootstrap.js
@@ -38,8 +39,9 @@ deploy:
   provider: openshift
   user: $OPENSHIFT_USERNAME
   password: $OPENSHIFT_PASSWORD
-  app: clubby
+  app:
+    master: clubby
+    development: devclubby
   domain: teamasdasd
   on:
     repo: Tony-Mc/asdasd
-    branch: master

@@ -8,4 +8,6 @@ public interface IUserService {
     User getByEmail(String email);
 
     void createUser(User user);
+
+    void createFacebookUser(String name, String email);
 }

@@ -1,12 +1,15 @@
 package api.business.services;
 
+import api.business.entities.Login;
 import api.business.entities.User;
 import api.business.services.interfaces.IUserService;
 import api.configuration.EntityManagerContainer;
 
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
+import java.util.UUID;
 
 @RequestScoped
 public class UserService implements IUserService {
@@ -36,6 +39,33 @@ public class UserService implements IUserService {
         } catch (Exception e) {
             em.getTransaction().rollback();
             throw e;
+        }
+    }
+
+    @Override
+    public void createFacebookUser(String name, String email) {
+        EntityTransaction transaction = em.getTransaction();
+        try {
+            transaction.begin();
+
+            User user = new User();
+            Login login = new Login();
+
+            user.setName(name);
+            user.setEmail(email);
+            user.setFacebookUser(true);
+            user.setLogin(login);
+
+            login.setUsername(email);
+            login.setUser(user);
+            login.setPassword(UUID.randomUUID().toString());
+
+            em.persist(user);
+            em.persist(login);
+
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
         }
     }
 }

@@ -1,8 +1,12 @@
 package security.shiro.facebook;
 
+import api.business.entities.Login;
 import api.business.entities.User;
+import api.business.services.LoginService;
 import api.business.services.UserService;
+import api.business.services.interfaces.ILoginService;
 import api.business.services.interfaces.IUserService;
+import api.configuration.EntityManagerContainer;
 import clients.facebook.FacebookSettings;
 import clients.facebook.responses.FacebookOauthResponse;
 import clients.facebook.responses.FacebookUserDetails;
@@ -18,10 +22,13 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 
+import javax.persistence.EntityTransaction;
 import java.net.URL;
+import java.util.UUID;
 
 public class FacebookRealm extends AuthorizingRealm {
     private IUserService userService = new UserService();
+    private ILoginService loginService = new LoginService();
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
@@ -57,7 +64,9 @@ public class FacebookRealm extends AuthorizingRealm {
 
                 HttpResponse response = getAuthRequest.execute();
 
+                EntityTransaction transaction = null;
                 try {
+                    transaction = null;
                     if (response.isSuccessStatusCode()) {
                         FacebookOauthResponse facebookOauthResponse = response.parseAs(FacebookOauthResponse.class);
                         FacebookSettings.setAccessToken(facebookOauthResponse.AccessToken);
@@ -73,11 +82,7 @@ public class FacebookRealm extends AuthorizingRealm {
                         info = new FacebookAuthenticationInfo(fud, this.getName());
 
                         if (userService.getByEmail(fud.Email) == null) {
-                            User user = new User();
-                            user.setName(fud.Name);
-                            user.setEmail(fud.Email);
-                            user.setFacebookUser(true);
-                            userService.createUser(user);
+                            userService.createFacebookUser(fud.Name, fud.Email);
                         }
                     } else {
                         throw new Exception("Facebook auth responded with status code: " + response.getStatusCode());

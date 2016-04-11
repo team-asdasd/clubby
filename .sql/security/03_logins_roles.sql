@@ -4,11 +4,7 @@
 
 CREATE TABLE security.logins_roles
 (
-  role_name text,
-  username text
+  role_name TEXT,
+  username  TEXT
 )
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE security.logins_roles
-  OWNER TO adminumaaqhz;
+WITH (OIDS =FALSE);

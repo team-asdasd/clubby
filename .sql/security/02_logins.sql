@@ -4,14 +4,10 @@
 
 CREATE TABLE security.logins
 (
-  id serial NOT NULL,
-  username text,
-  password text,
+  id       SERIAL NOT NULL,
+  username TEXT,
+  password TEXT,
   CONSTRAINT logins_pkey PRIMARY KEY (id),
   CONSTRAINT logins_username_unique UNIQUE (username)
 )
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE security.logins
-  OWNER TO adminumaaqhz;
+WITH (OIDS =FALSE);

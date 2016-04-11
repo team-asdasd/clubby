@@ -5,7 +5,6 @@
         <class>api.business.entities.User</class>
         <class>api.business.entities.Login</class>
         <properties>
-            <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/clubby"/>
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
             <property name="hibernate.jdbc.use_get_generated_keys" value="true"/>

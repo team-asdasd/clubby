@@ -35,8 +35,6 @@ public class LogsController {
             for (String line : lines) {
                 logs.add(line.split("\\$sep\\$"));
             }
-
-            logger.info(logs);
         }catch (Exception e){
             logger.error(e);
         }

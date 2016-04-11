@@ -56,7 +56,6 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-logs
 nbproject
 output
 # Next line commented out, because test/webapp-virtual-library and

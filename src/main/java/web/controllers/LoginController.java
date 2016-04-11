@@ -1,5 +1,7 @@
 package web.controllers;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.thymeleaf.context.WebContext;
 import security.shiro.facebook.FacebookSettings;
 import web.helpers.Controller;
@@ -13,10 +15,15 @@ import web.helpers.Sender;
 public class LoginController {
     @PathMapping("")
     public void login(WebContext ctx) throws Exception {
-        ctx.setVariable("fbAppId", FacebookSettings.getAppId());
-        ctx.setVariable("fbRedirect", FacebookSettings.getRedirectUrl());
-        ctx.setVariable("pageTitle", "Prisijungti");
+        Subject sub = SecurityUtils.getSubject();
+        if(sub.isAuthenticated() == true){
+            ctx.getResponse().sendRedirect(ctx.getResponse().encodeRedirectURL("/"));
+        }else{
+            ctx.setVariable("fbAppId", FacebookSettings.getAppId());
+            ctx.setVariable("fbRedirect", FacebookSettings.getRedirectUrl());
+            ctx.setVariable("pageTitle", "Prisijungti");
 
-        Sender.sendView(ctx, "auth/login");
+            Sender.sendView(ctx, "auth/login");
+        }
     }
 }

@@ -2,10 +2,7 @@ package web.configuration;
 
 import javax.servlet.ServletContext;
 
-import web.controllers.AppController;
-import web.controllers.ErrorController;
-import web.controllers.HomeController;
-import web.controllers.LoginController;
+import web.controllers.*;
 import web.helpers.RequestsForwarder;
 import web.helpers.TemplateEngineFactory;
 
@@ -25,6 +22,7 @@ public class ApplicationConfiguration {
         classes.add(HomeController.class);
         classes.add(LoginController.class);
         classes.add(ErrorController.class);
+        classes.add(LogsController.class);
 
         try {
             requestsForwarder = new RequestsForwarder(classes);

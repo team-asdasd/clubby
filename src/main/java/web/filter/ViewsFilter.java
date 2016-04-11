@@ -2,6 +2,8 @@ package web.filter;
 
 import web.configuration.ApplicationConfiguration;
 import web.helpers.ExceptionHelper;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +16,7 @@ import java.io.IOException;
 
 public class ViewsFilter implements Filter {
 
-
+    static final Logger logger = LogManager.getLogger(ViewsFilter.class.getName());
     private ServletContext servletContext;
     private ApplicationConfiguration application;
 
@@ -42,7 +44,7 @@ public class ViewsFilter implements Filter {
 
     private boolean process(HttpServletRequest request, HttpServletResponse response)
             throws ServletException {
-
+        logger.trace("Request for " + request.getRequestURI());
         try {
             // do not execute those requests
             if (request.getRequestURI().endsWith(".css") ||
@@ -59,6 +61,7 @@ public class ViewsFilter implements Filter {
                 return true;
             }
             else{
+                logger.warn("404 "+ request.getRequestURI());
                 //todo show 404 eroor
                 request.setAttribute("path", request.getRequestURI());
                 if(!this.application.getForwarder().forward("/error/404",request,response,this.servletContext)){
@@ -68,6 +71,7 @@ public class ViewsFilter implements Filter {
             }
 
         } catch (Exception e) {
+            logger.error(e);
             //todo send exceptions to error pages and show
             request.setAttribute("exception",ExceptionHelper.exceptionStacktraceToString(e));
             if(!this.application.getForwarder().forward("/error/500",request,response,this.servletContext)){

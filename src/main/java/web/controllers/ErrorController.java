@@ -12,6 +12,7 @@ import web.helpers.Sender;
 public class ErrorController {
     @PathMapping("500")
     public void Error500(WebContext ctx) throws Exception {
+        ctx.setVariable("layout",null);
         String exception = ctx.getRequest().getAttribute("exception").toString();
         ctx.setVariable("exception", exception);
 
@@ -20,6 +21,7 @@ public class ErrorController {
 
     @PathMapping("404")
     public void Error404(WebContext ctx) throws Exception {
+        ctx.setVariable("layout",null);
         String path = ctx.getRequest().getAttribute("path").toString();
         ctx.setVariable("path", path);
         ctx.setVariable("host", ctx.getRequest().getRemoteHost());

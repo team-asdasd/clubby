@@ -4,11 +4,15 @@ import api.contracts.requests.base.BaseRequest;
 import api.contracts.responses.base.BaseResponse;
 import api.contracts.responses.base.ErrorCodes;
 import api.contracts.responses.base.ErrorDto;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BaseHandler<TRequest extends BaseRequest, TResponse extends BaseResponse> {
+
+    final Logger logger = LogManager.getLogger(getClass().getName());
 
     public final TResponse handle(TRequest request) {
         try {
@@ -20,6 +24,7 @@ public abstract class BaseHandler<TRequest extends BaseRequest, TResponse extend
                 return handleErrors(errors);
             }
         } catch (Exception e) {
+            logger.error(e);
             return handleException(e);
         }
     }

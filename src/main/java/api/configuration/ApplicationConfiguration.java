@@ -14,6 +14,8 @@ public class ApplicationConfiguration extends Application {
     private Set<Class<?>> classes = new HashSet<>();
 
     public ApplicationConfiguration() {
+        EntityManagerContainer.initialize();
+
         BeanConfig beanConfig = new BeanConfig();
         beanConfig.setVersion("1.0.0");
         beanConfig.setSchemes(new String[]{"http"});

@@ -1,9 +1,10 @@
-package security.shiro.facebook;
+package clients.facebook;
 
 public class FacebookSettings {
     private static String secretCache;
     private static String redirectUrlCache;
     private static String appIdCache;
+    private static String accessToken;
 
     public static String getSecret() {
         if(secretCache == null)
@@ -28,5 +29,13 @@ public class FacebookSettings {
             appIdCache = System.getenv("FACEBOOK_CLUBBY_APP_ID");
         }
         return appIdCache ;
+    }
+
+    public static String getAccessToken() {
+        return accessToken;
+    }
+
+    public static void setAccessToken(String accessToken) {
+        FacebookSettings.accessToken = accessToken;
     }
 }

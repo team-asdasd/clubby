@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class HasRoleHandler extends BaseHandler<HasRoleRequest, HasRoleResponse> {
     @Override
-    protected ArrayList<ErrorDto> validate(HasRoleRequest request) {
+    public ArrayList<ErrorDto> validate(HasRoleRequest request) {
         Subject currentUser = SecurityUtils.getSubject();
 
         ArrayList<ErrorDto> errors = new ArrayList<>();
@@ -40,7 +40,7 @@ public class HasRoleHandler extends BaseHandler<HasRoleRequest, HasRoleResponse>
     }
 
     @Override
-    protected HasRoleResponse handleBase(HasRoleRequest request) {
+    public HasRoleResponse handleBase(HasRoleRequest request) {
         Subject currentUser = SecurityUtils.getSubject();
 
         boolean hasRole = currentUser.hasRole(request.RoleName);
@@ -53,7 +53,7 @@ public class HasRoleHandler extends BaseHandler<HasRoleRequest, HasRoleResponse>
     }
 
     @Override
-    protected HasRoleResponse createResponse() {
+    public HasRoleResponse createResponse() {
         return new HasRoleResponse();
     }
 }

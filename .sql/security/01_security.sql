@@ -2,5 +2,4 @@
 
 -- DROP SCHEMA security;
 
-CREATE SCHEMA security
-  AUTHORIZATION adminumaaqhz;
+CREATE SCHEMA security;

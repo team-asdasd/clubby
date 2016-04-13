@@ -25,7 +25,7 @@ public class ApplicationConfiguration extends Application {
             url = "localhost:8080";
         }
 
-        beanConfig.setHost("http://" + url);
+        beanConfig.setHost(url);
         beanConfig.setBasePath("/api");
         beanConfig.setResourcePackage("api.resources");
         beanConfig.setScan(true);

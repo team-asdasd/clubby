@@ -25,8 +25,12 @@ public class RequestsForwarder {
 
     public Boolean forward(final HttpServletRequest request,final HttpServletResponse response,
                            final ServletContext servletContext){
+
         Boolean found = false;
-        int hash = getRequestPath(request).replace("/","").hashCode();
+        String path = getRequestPath(request).substring(1);
+        if(path.endsWith("/"))
+            path = path.substring(0, path.length() - 1);
+        int hash = path.hashCode();
         if(routesMap.containsKey(hash)){
             forward(request,response,servletContext,hash);
             found = true;
@@ -38,7 +42,10 @@ public class RequestsForwarder {
     public Boolean forward(String path, final HttpServletRequest request,final HttpServletResponse response,
                            final ServletContext servletContext){
         Boolean found = false;
-        int hash = path.replace("/","").hashCode();
+        path = path.substring(1);
+        if(path.endsWith("/"))
+            path = path.substring(0, path.length() - 1);
+        int hash = path.hashCode();
         if(routesMap.containsKey(hash)){
             forward(request,response,servletContext,hash);
             found = true;
@@ -68,7 +75,7 @@ public class RequestsForwarder {
                 String methodPath = method.getAnnotation(PathMapping.class).value().toLowerCase();
 
                 Function<WebContext,String> consumer = CreateConsumer(controller,method);
-                String stringKey = ctrName + methodPath;
+                String stringKey = methodPath.isEmpty() ? ctrName : ctrName + "/" + methodPath;
 
                 routesMap.put(stringKey.hashCode(),consumer);
             }

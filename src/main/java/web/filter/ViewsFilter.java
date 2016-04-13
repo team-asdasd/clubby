@@ -49,6 +49,9 @@ public class ViewsFilter implements Filter {
             // do not execute those requests
             if (request.getRequestURI().endsWith(".css") ||
                     request.getRequestURI().endsWith(".js") ||
+                    request.getRequestURI().endsWith(".png") ||
+                    request.getRequestURI().endsWith(".ttf") ||
+                    request.getRequestURI().endsWith(".gif") ||
                     request.getRequestURI().endsWith(".ts") ||
                     request.getRequestURI().endsWith(".map") ||
                     request.getRequestURI().startsWith("/favicon") ||

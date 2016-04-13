@@ -22,7 +22,7 @@ public class ApplicationConfiguration {
         classes.add(HomeController.class);
         classes.add(LoginController.class);
         classes.add(ErrorController.class);
-        classes.add(LogsController.class);
+        classes.add(AdminController.class);
 
         try {
             requestsForwarder = new RequestsForwarder(classes);

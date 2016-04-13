@@ -37,7 +37,7 @@ public final class SlackAppenderImpl extends AbstractAppender {
     protected SlackAppenderImpl(String name, Filter filter,
                                 Layout<? extends Serializable> layout, final boolean ignoreExceptions) {
         super(name, filter, layout, ignoreExceptions);
-        logsUrl = "http://" + System.getenv("OPENSHIFT_APP_DNS")+ "/logs";
+        logsUrl = "http://" + System.getenv("OPENSHIFT_APP_DNS")+ "/admin/logs";
 
         url = new GenericUrl(System.getenv("SLACK_HOOK"));
 

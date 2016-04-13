@@ -3,22 +3,22 @@ package web.controllers;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.thymeleaf.context.WebContext;
-import sun.misc.Regexp;
 import web.helpers.Controller;
 import web.helpers.PathMapping;
 import web.helpers.Sender;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
-/**
- * Created by Mindaugas on 10/04/2016.
- */
-@Controller("Logs")
-public class LogsController {
+@Controller("Admin")
+public class AdminController {
     final Logger logger = LogManager.getLogger(getClass().getName());
-    @PathMapping("")
-    public void index(WebContext ctx) throws Exception {
+
+    @PathMapping("logs")
+    public void logsIndex(WebContext ctx) throws Exception {
         ArrayList<String[]> logs = new ArrayList<>();
 
         try {
@@ -43,16 +43,23 @@ public class LogsController {
         ctx.setVariable("pageTitle", "Logai");
         ctx.setVariable("layout","shared/_noFooterLayout");
 
-        Sender.sendView(ctx, "logs/logs");
+        Sender.sendView(ctx, "admin/logs");
     }
 
-    @PathMapping("clear")
+    @PathMapping("clearlogs")
     public void clearLogs(WebContext ctx) throws IOException {
         File file = new File("logs/app.log");
         PrintWriter writer = new PrintWriter(file);
         writer.print("");
         writer.close();
 
-        ctx.getResponse().sendRedirect(ctx.getResponse().encodeRedirectURL("/logs"));
+        ctx.getResponse().sendRedirect(ctx.getResponse().encodeRedirectURL("logs"));
     }
+
+    @PathMapping("swagger")
+    public void swaggerIndex(WebContext ctx) throws Exception {
+
+        Sender.sendView(ctx, "admin/swagger");
+    }
+
 }

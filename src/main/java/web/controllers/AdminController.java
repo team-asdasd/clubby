@@ -53,7 +53,7 @@ public class AdminController {
         writer.print("");
         writer.close();
 
-        ctx.getResponse().sendRedirect(ctx.getResponse().encodeRedirectURL("logs"));
+        ctx.getResponse().sendRedirect(ctx.getResponse().encodeRedirectURL("/admin/logs"));
     }
 
     @PathMapping("swagger")

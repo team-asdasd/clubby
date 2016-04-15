@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm"
+        version="2.0">
+
+    <entity class="api.business.entities.Login">
+        <table name="logins" schema="security" catalog="clubby"/>
+        <attributes>
+            <id name="id">
+                <column name="id" precision="-1"/>
+            </id>
+            <basic name="username">
+                <column name="username" nullable="false"/>
+            </basic>
+            <basic name="password">
+                <column name="password" nullable="false"/>
+            </basic>
+            <one-to-one name="user" optional="true" mapped-by="login" target-entity="api.business.entities.User"/>
+        </attributes>
+    </entity>
+</entity-mappings>

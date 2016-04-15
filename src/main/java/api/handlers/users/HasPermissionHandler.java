@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class HasPermissionHandler extends BaseHandler<HasPermissionRequest, HasPermissionResponse> {
     @Override
-    protected ArrayList<ErrorDto> validate(HasPermissionRequest request) {
+    public ArrayList<ErrorDto> validate(HasPermissionRequest request) {
         Subject currentUser = SecurityUtils.getSubject();
 
         ArrayList<ErrorDto> errors = new ArrayList<>();
@@ -39,7 +39,7 @@ public class HasPermissionHandler extends BaseHandler<HasPermissionRequest, HasP
     }
 
     @Override
-    protected HasPermissionResponse handleBase(HasPermissionRequest request) {
+    public HasPermissionResponse handleBase(HasPermissionRequest request) {
         Subject currentUser = SecurityUtils.getSubject();
 
         boolean hasPermission = currentUser.isPermitted(request.PermissionName);
@@ -51,7 +51,7 @@ public class HasPermissionHandler extends BaseHandler<HasPermissionRequest, HasP
     }
 
     @Override
-    protected HasPermissionResponse createResponse() {
+    public HasPermissionResponse createResponse() {
         return new HasPermissionResponse();
     }
 }

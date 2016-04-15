@@ -14,10 +14,18 @@ public class ApplicationConfiguration extends Application {
     private Set<Class<?>> classes = new HashSet<>();
 
     public ApplicationConfiguration() {
+        EntityManagerContainer.initialize();
+
         BeanConfig beanConfig = new BeanConfig();
         beanConfig.setVersion("1.0.0");
         beanConfig.setSchemes(new String[]{"http"});
-        beanConfig.setHost("localhost:8080");
+
+        String url = System.getenv("OPENSHIFT_APP_DNS");
+        if(url == null || url.isEmpty()){
+            url = "localhost:8080";
+        }
+
+        beanConfig.setHost(url);
         beanConfig.setBasePath("/api");
         beanConfig.setResourcePackage("api.resources");
         beanConfig.setScan(true);

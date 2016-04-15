@@ -1,5 +1,6 @@
 package security.shiro.facebook;
 
+import clients.facebook.responses.FacebookUserDetails;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
@@ -13,8 +14,6 @@ public class FacebookAuthenticationInfo implements AuthenticationInfo {
 
     public FacebookAuthenticationInfo(FacebookUserDetails facebookUserDetails, String realmName){
         Collection<String> principals = new ArrayList<>();
-        principals.add(facebookUserDetails.Id);
-        principals.add(facebookUserDetails.Name); // Is this appropriate is the name not really a Principal ?
         principals.add(facebookUserDetails.Email);
 
         this.principalCollection = new SimplePrincipalCollection(principals, realmName);

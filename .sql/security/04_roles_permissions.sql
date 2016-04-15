@@ -4,12 +4,8 @@
 
 CREATE TABLE security.roles_permissions
 (
-  role_name text NOT NULL,
-  permission text,
+  role_name  TEXT NOT NULL,
+  permission TEXT,
   CONSTRAINT roles_permissions_pkey PRIMARY KEY (role_name)
 )
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE security.roles_permissions
-  OWNER TO adminumaaqhz;
+WITH (OIDS =FALSE);

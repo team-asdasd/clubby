@@ -13,6 +13,7 @@ import api.handlers.utilities.StatusResolver;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
+import javax.ejb.EJB;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -23,12 +24,14 @@ import javax.ws.rs.core.Response;
 @Path("/user")
 @Produces({"application/json"})
 public class UserResource {
-    private final GetUserInfoHandler getUserInfoHandler;
+    @EJB
+    private GetUserInfoHandler getUserInfoHandler;
+
     private final HasPermissionHandler hasPermissionHandler;
     private final HasRoleHandler hasRoleHandler;
 
     public UserResource() {
-        getUserInfoHandler = new GetUserInfoHandler();
+
         hasPermissionHandler = new HasPermissionHandler();
         hasRoleHandler = new HasRoleHandler();
     }

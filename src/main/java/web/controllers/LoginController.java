@@ -3,7 +3,7 @@ package web.controllers;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.thymeleaf.context.WebContext;
-import security.shiro.facebook.FacebookSettings;
+import clients.facebook.FacebookSettings;
 import web.helpers.Controller;
 import web.helpers.PathMapping;
 import web.helpers.Sender;

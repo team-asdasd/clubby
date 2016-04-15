@@ -14,7 +14,7 @@ public class TemplateEngineFactory {
     public static void setupTemplateEngineFactory(final ServletContext servletContext){
         ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
         templateResolver.setTemplateMode("HTML");
-        templateResolver.setPrefix("/views/");
+        templateResolver.setPrefix("/public/");
         templateResolver.setSuffix(".html");
         templateResolver.setCacheTTLMs(Long.valueOf(3600000L));
         templateResolver.setCacheable(true);

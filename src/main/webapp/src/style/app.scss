@@ -1,8 +1,14 @@
 // styles in src/style directory are applied to the whole page
+@import "colors";
+
+// Custom styles, overrides bootstrap
 body {
-    background: #0147A7;
-    color: #fff;
+  background: $light;
 }
+
+header {
+}
+
 a {
-    color: #03A9F4;
+  color: $font;
 }

@@ -16,11 +16,6 @@ import java.util.Date;
 public class AppController {
     @PathMapping("")
     public void test(WebContext ctx) throws Exception {
-//        ctx.setVariable("pageTitle", "Super App");
-//        ctx.setVariable("today", new Date().toString());
-//        ctx.setVariable("userName", SecurityUtils.getSubject().getPrincipal().toString());
-//        ctx.setVariable("layout", "_baseLayout");
-
         Sender.sendView(ctx, "app/index");
     }
 

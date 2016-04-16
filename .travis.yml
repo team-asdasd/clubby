@@ -27,8 +27,8 @@ before_deploy:
 - git config --global user.name "Travis CI"
 - git checkout $TRAVIS_BRANCH
 - sed -i '/src\/main\/webapp\/node_modules\//d' .gitignore
-- sed -i '/src\/main\/webapp\/dist\//d' .gitignore
-- git add src/main/webapp/dist/
+- sed -i '/src\/main\/webapp\/public\/app\//d' .gitignore
+- git add src/main/webapp/public/app/
 - git add src/main/webapp/node_modules/angular2/bundles/angular2-polyfills.js
 - git add src/main/webapp/node_modules/jquery/dist/jquery.js
 - git add src/main/webapp/node_modules/bootstrap/dist/js/bootstrap.js

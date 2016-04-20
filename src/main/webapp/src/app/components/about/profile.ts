@@ -19,5 +19,4 @@ export class Profile implements OnInit {
     ngOnInit() {
         console.log('Hello profile');
     }
-
 }

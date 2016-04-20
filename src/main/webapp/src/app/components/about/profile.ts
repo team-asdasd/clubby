@@ -1,3 +1,4 @@
+import {Api} from "../../services/api/api";
 import {Component, OnInit} from 'angular2/core';
 import {User} from './user';
 
@@ -11,13 +12,8 @@ import {User} from './user';
 })
 export class Profile implements OnInit {
     user: User;
-    constructor() {
-        //create a fake user
-        this.user = {
-            fullName: 'Bhja Fo',
-            email: 'jojo@gmail.com',
-            birthday: 'June 02, 1998'
-        };
+    constructor(userService: Api) {
+        userService.getUserInfo().subscribe(user => this.user = user);
     }
 
     ngOnInit() {

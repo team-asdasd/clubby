@@ -2,6 +2,7 @@
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
 
     <persistence-unit name="clubbyPersistenceUnit">
+        <jta-data-source>java:jboss/datasources/PostgreSQLDS</jta-data-source>
         <class>api.business.entities.User</class>
         <class>api.business.entities.Login</class>
         <properties>

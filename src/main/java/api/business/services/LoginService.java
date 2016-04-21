@@ -1,6 +1,7 @@
 package api.business.services;
 
 import api.business.entities.Login;
+import api.business.entities.User;
 import api.business.services.interfaces.ILoginService;
 import api.configuration.EntityManagerContainer;
 
@@ -23,5 +24,10 @@ public class LoginService implements ILoginService {
             em.getTransaction().rollback();
             throw e;
         }
+    }
+
+    public boolean isFreeUserName(String username) {
+        boolean userNameExists = em.createQuery("SELECT 1 FROM security.logins WHERE username = :username", boolean.class).setParameter("username", username).getSingleResult();
+        return !userNameExists;
     }
 }

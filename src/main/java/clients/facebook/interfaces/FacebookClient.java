@@ -6,6 +6,7 @@ import com.google.api.client.http.*;
 import com.google.api.client.http.apache.ApacheHttpTransport;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.gson.GsonFactory;
+import org.apache.shiro.SecurityUtils;
 
 import javax.enterprise.context.RequestScoped;
 import java.io.IOException;
@@ -24,7 +25,9 @@ public class FacebookClient implements IFacebookClient {
 
             JsonObjectParser jsonObjectParser = new GsonFactory().createJsonObjectParser();
 
-            URL url = new URL("https://graph.facebook.com/v2.5/me?fields=name,email,picture&access_token=" + FacebookSettings.getAccessToken());
+            String accessToken = GetAccessToken();
+
+            URL url = new URL("https://graph.facebook.com/v2.5/me?fields=name,email,picture&access_token=" + accessToken);
 
             HttpRequest getUserInfoRequest = factory.buildGetRequest(new GenericUrl(url)).setParser(jsonObjectParser);
             userInfoResponse = getUserInfoRequest.execute();
@@ -38,5 +41,9 @@ public class FacebookClient implements IFacebookClient {
         }
 
         return fud;
+    }
+
+    private String GetAccessToken() {
+        return SecurityUtils.getSubject().getSession().getAttribute(FacebookSettings.getAccessTokenKey()).toString();
     }
 }

@@ -11,19 +11,25 @@ import javax.servlet.ServletContext;
 public class TemplateEngineFactory {
     private static TemplateEngine _templateEngine;
 
-    public static void setupTemplateEngineFactory(final ServletContext servletContext){
+    public static void setupTemplateEngineFactory(final ServletContext servletContext) {
         ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
         templateResolver.setTemplateMode("HTML");
-        templateResolver.setPrefix("/views/");
+        templateResolver.setPrefix("/public/");
         templateResolver.setSuffix(".html");
-        templateResolver.setCacheTTLMs(Long.valueOf(3600000L));
-        templateResolver.setCacheable(true);
 
-        _templateEngine= new TemplateEngine();
+        String url = System.getenv("OPENSHIFT_APP_DNS");
+        if (url == null || url.isEmpty()) {
+            templateResolver.setCacheable(false);
+        } else {
+            templateResolver.setCacheTTLMs(3600000L);
+            templateResolver.setCacheable(true);
+        }
+        
+        _templateEngine = new TemplateEngine();
         _templateEngine.setTemplateResolver(templateResolver);
     }
 
-    public static TemplateEngine getTemplateEngine(){
+    public static TemplateEngine getTemplateEngine() {
         return _templateEngine;
     }
 }

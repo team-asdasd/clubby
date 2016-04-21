@@ -6,14 +6,14 @@ import {
   beforeEachProviders
 } from 'angular2/testing';
 
-import {About} from './about';
+import {Profile} from './profile';
 
 describe('About Component', () => {
 
   beforeEachProviders(() => []);
 
   it('should ...', injectAsync([TestComponentBuilder], (tcb:TestComponentBuilder) => {
-    return tcb.createAsync(About).then((fixture) => {
+    return tcb.createAsync(Profile).then((fixture) => {
       fixture.detectChanges();
     });
   }));

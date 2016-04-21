@@ -1,12 +1,9 @@
 package security.shiro.facebook;
 
-import api.business.entities.Login;
-import api.business.entities.User;
 import api.business.services.LoginService;
 import api.business.services.UserService;
 import api.business.services.interfaces.ILoginService;
 import api.business.services.interfaces.IUserService;
-import api.configuration.EntityManagerContainer;
 import clients.facebook.FacebookSettings;
 import clients.facebook.responses.FacebookOauthResponse;
 import clients.facebook.responses.FacebookUserDetails;
@@ -14,6 +11,7 @@ import com.google.api.client.http.*;
 import com.google.api.client.http.apache.ApacheHttpTransport;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.gson.GsonFactory;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -22,9 +20,7 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 
-import javax.persistence.EntityTransaction;
 import java.net.URL;
-import java.util.UUID;
 
 public class FacebookRealm extends AuthorizingRealm {
     private IUserService userService = new UserService();
@@ -64,14 +60,15 @@ public class FacebookRealm extends AuthorizingRealm {
 
                 HttpResponse response = getAuthRequest.execute();
 
-                EntityTransaction transaction = null;
                 try {
-                    transaction = null;
                     if (response.isSuccessStatusCode()) {
                         FacebookOauthResponse facebookOauthResponse = response.parseAs(FacebookOauthResponse.class);
-                        FacebookSettings.setAccessToken(facebookOauthResponse.AccessToken);
+                        String accessToken = facebookOauthResponse.AccessToken;
 
-                        URL url = new URL("https://graph.facebook.com/v2.5/me?fields=name,email,picture&access_token=" + FacebookSettings.getAccessToken());
+                        String accessTokenKey = FacebookSettings.getAccessTokenKey();
+                        SecurityUtils.getSubject().getSession().setAttribute(accessTokenKey, accessToken);
+
+                        URL url = new URL("https://graph.facebook.com/v2.5/me?fields=name,email,picture&access_token=" + accessToken);
 
                         HttpRequest getUserInfoRequest = factory.buildGetRequest(new GenericUrl(url)).setParser(jsonObjectParser);
                         HttpResponse userInfoResponse = getUserInfoRequest.execute();

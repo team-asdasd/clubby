@@ -71,9 +71,9 @@ It will start a local server using `webpack-dev-server` which will watch, build 
 #### Add new components, services, pipes with Angular 2 cli
 
 * `npm install -g angular-cli` to install Angular 2 cli
-* Add a new component with: `ng generate component my-new-component`
-* Add a new service with: `ng generate service my-new-service`
-* Add a new pipe with: `ng generate pipe my-new-pipe`
+* Add a new component with: `ng generate components/component my-new-component`
+* Add a new service with: `ng generate service services/my-new-service`
+* Add a new pipe with: `ng generate pipe pipes/my-new-pipe`
 
 Read more at [angular-cli github](https://github.com/angular/angular-cli).
 

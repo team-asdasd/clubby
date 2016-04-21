@@ -86,3 +86,4 @@ webapps/docs/jdbc-pool.xml
 bower_components/
 build/
 src/main/webapp/dist/
+src/main/webapp/public/app/

@@ -1,21 +1,40 @@
 // styles applied on :host are applied on the current component, "app" in this case
+@import "../style/colors";
+
 :host {
   display: block;
 }
 
 header {
-  background-color: #fff;
-  padding: 16px;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+
+  .open > a, .active > a {
+    background-color: $darker;
+  }
+
+  .navbar, .dropdown-menu {
+    background-color: $darkest;
+    border: none;
+    border-radius: 0;
+    margin: 0px;
+
+    a {
+      text-decoration: none;
+      color: $light;
+    }
+
+    a:hover {
+      background-color: $darker;
+    }
+  }
 }
 
 main {
-  padding: 1em;
-  font-family: Arial, Helvetica, sans-serif;
+  //padding: 1em;
+  font-family: 'Oswald', sans-serif;
   text-align: center;
   margin-top: 50px;
   display: block;

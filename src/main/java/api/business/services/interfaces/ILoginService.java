@@ -5,5 +5,5 @@ import api.business.entities.Login;
 public interface ILoginService {
     void createLogin(Login login);
 
-    boolean isFreeUserName(String username);
+    Login getByUserName(String username);
 }

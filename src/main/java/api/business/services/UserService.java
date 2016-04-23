@@ -4,6 +4,9 @@ import api.business.entities.Login;
 import api.business.entities.User;
 import api.business.services.interfaces.IUserService;
 import api.configuration.EntityManagerContainer;
+import org.apache.shiro.authc.credential.DefaultPasswordService;
+import org.apache.shiro.authc.credential.PasswordService;
+import org.apache.shiro.crypto.hash.Sha256Hash;
 
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
@@ -28,26 +31,29 @@ public class UserService implements IUserService {
         }
     }
 
-    public void createUser(User user) {
+    public void createUser(User user, Login login) {
+        //todo use encrypted password
+        /*PasswordService passwordService = new DefaultPasswordService();
+        String encrypted = passwordService.encryptPassword(login.getPassword());
+
+        login.setPassword(encrypted);
+*/
+        EntityTransaction transaction = em.getTransaction();
         try {
-            em.getTransaction().begin();
-            if (!em.contains(user)) {
-                em.persist(user);
-                em.flush();
-            }
-            em.getTransaction().commit();
+            transaction.begin();
+
+            em.persist(user);
+            em.persist(login);
+
+            transaction.commit();
         } catch (Exception e) {
-            em.getTransaction().rollback();
+            transaction.rollback();
             throw e;
         }
     }
 
     @Override
     public void createFacebookUser(String name, String email) {
-        EntityTransaction transaction = em.getTransaction();
-        try {
-            transaction.begin();
-
             User user = new User();
             Login login = new Login();
 
@@ -60,12 +66,6 @@ public class UserService implements IUserService {
             login.setUser(user);
             login.setPassword(UUID.randomUUID().toString());
 
-            em.persist(user);
-            em.persist(login);
-
-            transaction.commit();
-        } catch (Exception e) {
-            transaction.rollback();
-        }
+            createUser(user, login);
     }
 }

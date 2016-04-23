@@ -15,7 +15,6 @@ public class Sender {
         ctx.getResponse().setHeader("Cache-Control", "no-cache");
         ctx.getResponse().setDateHeader("Expires", 0);
 
-
         Subject sub = SecurityUtils.getSubject();
 
         try{

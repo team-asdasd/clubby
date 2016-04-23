@@ -43,7 +43,7 @@ public class ViewsFilter implements Filter {
 
 
     private boolean process(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException {
+            throws ServletException, IOException {
         logger.trace("Request for " + request.getRequestURI());
         try {
             // do not execute those requests

@@ -2,7 +2,9 @@ package api.handlers.users;
 
 import api.business.services.interfaces.ILoginService;
 import api.business.services.interfaces.IUserService;
+import api.contracts.requests.FreeEmailRequest;
 import api.contracts.requests.FreeUsernameRequest;
+import api.contracts.responses.FreeEmailResponse;
 import api.contracts.responses.FreeUsernameResponse;
 import api.contracts.responses.base.ErrorCodes;
 import api.contracts.responses.base.ErrorDto;
@@ -16,13 +18,13 @@ import java.util.ArrayList;
  * Created by Mindaugas on 21/04/2016.
  */
 @Stateless
-public class FreeUsernameHandler extends BaseHandler<FreeUsernameRequest, FreeUsernameResponse> {
+public class FreeEmailHandler extends BaseHandler<FreeEmailRequest, FreeEmailResponse> {
 
     @Inject
-    private ILoginService loginService;
+    private IUserService userService;
 
     @Override
-    public ArrayList<ErrorDto> validate(FreeUsernameRequest request) {
+    public ArrayList<ErrorDto> validate(FreeEmailRequest request) {
         ArrayList<ErrorDto> errors = new ArrayList<>();
 
         if (request == null) {
@@ -33,16 +35,16 @@ public class FreeUsernameHandler extends BaseHandler<FreeUsernameRequest, FreeUs
     }
 
     @Override
-    public FreeUsernameResponse handleBase(FreeUsernameRequest request) {
-        FreeUsernameResponse response = createResponse();
+    public FreeEmailResponse handleBase(FreeEmailRequest request) {
+        FreeEmailResponse response = createResponse();
 
-        response.FreeUserName = loginService.getByUserName(request.UserName) == null;
+        response.FreeEmail = userService.getByEmail(request.Email) == null;
 
         return response;
     }
 
     @Override
-    public FreeUsernameResponse createResponse() {
-        return new FreeUsernameResponse();
+    public FreeEmailResponse createResponse() {
+        return new FreeEmailResponse();
     }
 }

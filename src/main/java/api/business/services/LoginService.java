@@ -7,6 +7,7 @@ import api.configuration.EntityManagerContainer;
 
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 @RequestScoped
 public class LoginService implements ILoginService {
@@ -26,8 +27,12 @@ public class LoginService implements ILoginService {
         }
     }
 
-    public boolean isFreeUserName(String username) {
-        boolean userNameExists = em.createQuery("SELECT 1 FROM security.logins WHERE username = :username", boolean.class).setParameter("username", username).getSingleResult();
-        return !userNameExists;
+    public Login getByUserName(String username) {
+        try {
+            TypedQuery<Login> logins = em.createQuery("FROM logins WHERE username = :username", Login.class).setParameter("username", username);
+            return logins.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

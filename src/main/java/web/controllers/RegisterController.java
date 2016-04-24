@@ -1,6 +1,9 @@
 package web.controllers;
 
+import api.contracts.responses.base.BaseResponse;
+import api.contracts.responses.base.ErrorCodes;
 import com.google.api.client.http.HttpResponse;
+import com.google.api.client.util.SecurityUtils;
 import org.thymeleaf.context.WebContext;
 import web.contracts.RegistrationRequest;
 import web.helpers.*;
@@ -16,11 +19,45 @@ public class RegisterController {
         RegistrationRequest request = Parser.fromQueryString(ctx.getRequest().getReader().readLine(), RegistrationRequest.class);
 
         if(validate(request)){
-            HttpResponse response = HttpClient.postJson("/api/user/create", request, null);
+            BaseResponse response = HttpClient.postJson("/api/user/create", request, null, BaseResponse.class);
+
+            if(response.Errors == null || response.Errors.size() == 0){
+                ctx.setVariable("pageTitle", "Register");
+                ctx.setVariable("layout","shared/_noFooterLayout");
+                ctx.setVariable("registred", true);
+
+                Sender.sendView(ctx, "auth/register");
+            }else{
+                setVariables(request,ctx);
+                ctx.setVariable("pageTitle", "Register");
+                ctx.setVariable("layout","shared/_noFooterLayout");
+
+                if(response.Errors.stream().anyMatch(errorDto -> errorDto.Code == ErrorCodes.DUPLICATE_USERNAME)){
+                    ctx.setVariable("duplicateUserName", true);
+                }
+                if(response.Errors.stream().anyMatch(errorDto -> errorDto.Code == ErrorCodes.DUPLICATE_EMAIL)){
+                    ctx.setVariable("duplicateEmail", true);
+                }
+
+                Sender.sendView(ctx, "auth/register");
+            }
         }
+        else if(org.apache.shiro.SecurityUtils.getSubject().isAuthenticated() == true){
+            ctx.getResponse().sendRedirect(ctx.getResponse().encodeRedirectURL("/"));
+        }
+        else{
+            ctx.setVariable("pageTitle", "Register");
+            ctx.setVariable("layout","shared/_noFooterLayout");
 
-        Sender.sendView(ctx, "auth/register");
+            Sender.sendView(ctx, "auth/register");
+        }
+    }
 
+    private void setVariables(RegistrationRequest request, WebContext ctx){
+        ctx.setVariable("firstName",request.firstName);
+        ctx.setVariable("lastName",request.lastName);
+        ctx.setVariable("email",request.email);
+        ctx.setVariable("userName",request.userName);
     }
 
     private boolean validate(RegistrationRequest request){

@@ -2,15 +2,13 @@ package web.helpers;
 
 import com.google.api.client.http.*;
 import com.google.api.client.http.apache.ApacheHttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.http.json.JsonHttpContent;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.gson.Gson;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import javax.ws.rs.client.Entity;
 import java.io.IOException;
-import java.io.OutputStream;
 
 /**
  * Created by Mindaugas on 22/04/2016.
@@ -18,11 +16,15 @@ import java.io.OutputStream;
 public  class HttpClient {
     private static HttpRequestFactory _requestFactory;
     private static JsonObjectParser  _jsonObjectParser;
+    private static Gson  _gson;
     private static String _baseUrl;
+    private static Logger logger = LogManager.getLogger(HttpClient.class.getName());
+
     static {
         HttpTransport transport = new ApacheHttpTransport();
         _requestFactory = transport.createRequestFactory();
         _jsonObjectParser = new GsonFactory().createJsonObjectParser();
+        _gson = new Gson();
 
         _baseUrl = System.getenv("OPENSHIFT_APP_DNS");
         if(_baseUrl == null || _baseUrl.isEmpty()){
@@ -37,14 +39,14 @@ public  class HttpClient {
             HttpRequest request = _requestFactory.buildGetRequest(new GenericUrl(url)).setParser(_jsonObjectParser);
             entity = request.execute().parseAs(entityClass);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e);
         }
 
         return entity;
     }
 
-    public static HttpResponse postJson(String url, Object entity, String cookie){
-        HttpResponse response = null;
+    public static<T> T postJson(String url, Object entity, String cookie, Class<T> entityClass){
+        T response = null;
         try {
             GenericUrl ur = new GenericUrl("http://"+_baseUrl);
             ur.setRawPath(url);
@@ -56,10 +58,15 @@ public  class HttpClient {
                 headers.set("Cookie", cookie);
                 request.setHeaders(headers);
             }
-
-            response = request.execute();
+            HttpResponse httpResp = request.execute();
+            response = _gson.fromJson(httpResp.parseAsString(), entityClass);
         } catch (IOException e) {
-            e.printStackTrace();
+            try {
+                response = _gson.fromJson(((HttpResponseException) e).getContent(), entityClass);
+            }catch (Exception ex){
+                logger.error(ex);
+            }
+
         }
 
         return response;

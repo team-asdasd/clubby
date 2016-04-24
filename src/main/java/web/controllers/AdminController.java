@@ -18,6 +18,15 @@ import java.util.Collections;
 public class AdminController {
     final Logger logger = LogManager.getLogger(getClass().getName());
 
+    @PathMapping("")
+    public void adminIndex(WebContext ctx) throws Exception {
+        ctx.setVariable("pageTitle", "Admin");
+        ctx.setVariable("navbarSearch", false);
+        ctx.setVariable("layout","admin/shared/_adminLayout");
+
+        Sender.sendView(ctx, "admin/admin");
+    }
+
     @PathMapping("logs")
     public void logsIndex(WebContext ctx) throws Exception {
         ArrayList<String[]> logs = new ArrayList<>();
@@ -69,5 +78,4 @@ public class AdminController {
 
         Sender.sendView(ctx, "admin/swagger");
     }
-
 }

@@ -1,13 +1,9 @@
 package web.controllers;
 
-import org.apache.shiro.SecurityUtils;
 import org.thymeleaf.context.WebContext;
 import web.helpers.Controller;
 import web.helpers.PathMapping;
 import web.helpers.Sender;
-
-import javax.ws.rs.ApplicationPath;
-import java.util.Date;
 
 /**
  * Created by Mindaugas on 03/04/2016.

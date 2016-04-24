@@ -12,10 +12,20 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 
 @Controller("Admin")
 public class AdminController {
     final Logger logger = LogManager.getLogger(getClass().getName());
+
+    @PathMapping("")
+    public void adminIndex(WebContext ctx) throws Exception {
+        ctx.setVariable("pageTitle", "Admin");
+        ctx.setVariable("navbarSearch", false);
+        ctx.setVariable("layout","admin/shared/_adminLayout");
+
+        Sender.sendView(ctx, "admin/admin");
+    }
 
     @PathMapping("logs")
     public void logsIndex(WebContext ctx) throws Exception {
@@ -39,9 +49,12 @@ public class AdminController {
             logger.error(e);
         }
 
+        Collections.reverse(logs); // Reverse so the latest entries are on top
+
         ctx.setVariable("logs",logs);
         ctx.setVariable("pageTitle", "Logai");
-        ctx.setVariable("layout","shared/_noFooterLayout");
+        ctx.setVariable("navbarSearch", true);
+        ctx.setVariable("layout","admin/shared/_adminLayout");
 
         Sender.sendView(ctx, "admin/logs");
     }
@@ -59,7 +72,10 @@ public class AdminController {
     @PathMapping("swagger")
     public void swaggerIndex(WebContext ctx) throws Exception {
 
+        ctx.setVariable("pageTitle", "API Docs");
+        ctx.setVariable("navbarSearch", false);
+        ctx.setVariable("layout","admin/shared/_adminLayout");
+
         Sender.sendView(ctx, "admin/swagger");
     }
-
 }

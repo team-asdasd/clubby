@@ -1,6 +1,6 @@
-import {Api} from "../../services/api/api";
+import {UserApi} from "../../services/api/userApi";
 import {Component, OnInit} from 'angular2/core';
-import {User} from './user';
+import {User} from './../../models/user';
 
 @Component({
     selector: 'profile',
@@ -12,7 +12,7 @@ import {User} from './user';
 })
 export class Profile implements OnInit {
     user: User;
-    constructor(userService: Api) {
+    constructor(userService: UserApi) {
         userService.getUserInfo().subscribe(user => this.user = user);
     }
 

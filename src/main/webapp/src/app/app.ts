@@ -4,9 +4,9 @@ import {FORM_PROVIDERS} from 'angular2/common';
 
 import '../style/app.scss';
 
-import {Api} from './services/api/api';
+import {UserApi} from './services/api/userApi';
 import {Home} from './components/home/home';
-import {Profile} from "./components/about/profile";
+import {Profile} from "./components/profile/profile";
 import {Cottages} from "./components/cottages/cottages";
 
 /*
@@ -15,7 +15,7 @@ import {Cottages} from "./components/cottages/cottages";
  */
 @Component({
     selector : 'app', // <app></app>
-    providers : [...FORM_PROVIDERS, Api],
+    providers : [...FORM_PROVIDERS, UserApi],
     directives : [...ROUTER_DIRECTIVES],
     pipes : [],
     styles : [require('./app.scss')],

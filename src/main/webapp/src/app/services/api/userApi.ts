@@ -2,10 +2,9 @@ import {Injectable} from 'angular2/core';
 import {User} from "../../components/about/user";
 import {Http, Response} from 'angular2/http';
 import {Observable} from "../../../../node_modules/rxjs/Observable";
-import {Subscription} from "../../../../node_modules/rxjs/Subscription";
 
 @Injectable()
-export class Api {
+export class UserApi {
     url: string = "/api"
 
     constructor(private http: Http) { }

@@ -19,10 +19,6 @@ public class UserResource {
     @EJB
     private GetUserInfoHandler getUserInfoHandler;
     @EJB
-    private FreeUsernameHandler freeUsernameHandler;
-    @EJB
-    private FreeEmailHandler freeEmailHandler;
-    @EJB
     private CreateUserHandler createUserHandler;
 
     private final HasPermissionHandler hasPermissionHandler;
@@ -75,36 +71,6 @@ public class UserResource {
         return Response.status(statusCode).entity(response.HasPermission).build();
     }
 
-    @GET
-    @Path("/freeUsername/{username}")
-    @ApiOperation(value = "Checks if provided user name is free", response = boolean.class)
-    public Response freeUsername(@PathParam("username") String username){
-        FreeUsernameRequest request = new FreeUsernameRequest();
-        request.UserName = username;
-
-        FreeUsernameResponse response = freeUsernameHandler.handle(request);
-
-        int statusCode = StatusResolver.getStatusCode(response);
-
-        return Response.status(statusCode).entity(response.FreeUserName).build();
-    }
-
-    @GET
-    @Path("/freeEmail/{email}")
-    @ApiOperation(value = "Checks if provided email is not used", response = boolean.class)
-    public Response freeEmail(@PathParam("email") String email){
-        FreeEmailRequest request = new FreeEmailRequest();
-        request.Email = email;
-
-        FreeEmailResponse response = freeEmailHandler.handle(request);
-
-        int statusCode = StatusResolver.getStatusCode(response);
-
-        return Response.status(statusCode).entity(response.FreeEmail).build();
-    }
-
-
-    @POST
     @Path("/create")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

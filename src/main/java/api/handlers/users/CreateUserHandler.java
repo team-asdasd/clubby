@@ -11,6 +11,8 @@ import api.contracts.responses.base.ErrorCodes;
 import api.contracts.responses.base.ErrorDto;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
+import org.apache.shiro.authc.credential.DefaultPasswordService;
+import org.apache.shiro.authc.credential.PasswordService;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -60,8 +62,11 @@ public class CreateUserHandler extends BaseHandler<CreateUserRequest, BaseRespon
         user.setName(request.firstName + " " + request.lastName);
         user.setLogin(login);
 
+        PasswordService passwordService = new DefaultPasswordService();
+        String encryptedPassword = passwordService.encryptPassword(request.password);
+
         login.setUsername(request.userName);
-        login.setPassword(request.password);
+        login.setPassword(encryptedPassword);
         login.setUser(user);
 
         userService.createUser(user, login);

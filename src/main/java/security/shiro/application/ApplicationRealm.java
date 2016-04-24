@@ -1,6 +1,8 @@
 package security.shiro.application;
 
 import org.apache.shiro.authc.*;
+import org.apache.shiro.authc.credential.DefaultPasswordService;
+import org.apache.shiro.authc.credential.PasswordService;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -20,6 +22,13 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class ApplicationRealm extends AuthorizingRealm {
+
+    private final PasswordService passwordService;
+
+    public ApplicationRealm(){
+        passwordService = new DefaultPasswordService();
+    }
+
     // TODO: Refactor this to our style
     protected static final String DEFAULT_AUTHENTICATION_QUERY = "select password from security.logins where username = ?";
 
@@ -28,17 +37,6 @@ public class ApplicationRealm extends AuthorizingRealm {
     protected static final String DEFAULT_USER_ROLES_QUERY = "select role_name from security.logins_roles where username = ?";
     protected static final String DEFAULT_PERMISSIONS_QUERY = "select permission from security.roles_permissions where role_name = ?";
 
-    /**
-     * Password hash salt configuration. <ul>
-     * <li>NO_SALT - password hashes are not salted.</li>
-     * <li>CRYPT - password hashes are stored in unix crypt format.</li>
-     * <li>COLUMN - salt is in a separate column in the database.</li>
-     * <li>EXTERNAL - salt is not stored in the database. {@link #getSaltForUser(String)} will be called
-     * to get the salt</li></ul>
-     */
-    public enum SaltStyle {
-        NO_SALT, CRYPT, COLUMN, EXTERNAL
-    }
 
     protected DataSource dataSource;
 
@@ -49,8 +47,6 @@ public class ApplicationRealm extends AuthorizingRealm {
     protected String permissionsQuery = DEFAULT_PERMISSIONS_QUERY;
 
     protected boolean permissionsLookupEnabled = true;
-
-    protected SaltStyle saltStyle = SaltStyle.NO_SALT;
 
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -72,13 +68,6 @@ public class ApplicationRealm extends AuthorizingRealm {
         this.permissionsLookupEnabled = permissionsLookupEnabled;
     }
 
-    public void setSaltStyle(SaltStyle saltStyle) {
-        this.saltStyle = saltStyle;
-        if (saltStyle == SaltStyle.COLUMN && authenticationQuery.equals(DEFAULT_AUTHENTICATION_QUERY)) {
-            authenticationQuery = DEFAULT_SALTED_AUTHENTICATION_QUERY;
-        }
-    }
-
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         UsernamePasswordToken upToken = (UsernamePasswordToken) token;
         String username = upToken.getUsername();
@@ -92,37 +81,18 @@ public class ApplicationRealm extends AuthorizingRealm {
         SimpleAuthenticationInfo info = null;
         try {
             conn = dataSource.getConnection();
-
-            String password = null;
-            String salt = null;
-            switch (saltStyle) {
-                case NO_SALT:
-                    password = getPasswordForUser(conn, username)[0];
-                    break;
-                case CRYPT:
-                    // TODO: separate password and hash from getPasswordForUser[0]
-                    throw new ConfigurationException("Not implemented yet");
-                    //break;
-                case COLUMN:
-                    String[] queryResults = getPasswordForUser(conn, username);
-                    password = queryResults[0];
-                    salt = queryResults[1];
-                    break;
-                case EXTERNAL:
-                    password = getPasswordForUser(conn, username)[0];
-                    salt = getSaltForUser(username);
-            }
+            String password = getPasswordForUser(conn, username)[0];
 
             if (password == null) {
                 throw new UnknownAccountException("No account found for user [" + username + "]");
             }
 
-            info = new SimpleAuthenticationInfo(username, password.toCharArray(), getName()); // TODO: Investigate Principals
-
-            if (salt != null) {
-                info.setCredentialsSalt(ByteSource.Util.bytes(salt));
+            //kind off hack check password with shiro password service
+            if(passwordService.passwordsMatch(upToken.getPassword(),password)){
+                upToken.setPassword(password.toCharArray());
             }
 
+            info = new SimpleAuthenticationInfo(username, password.toCharArray(), getName()); // TODO: Investigate Principals
         } catch (SQLException e) {
             final String message = "There was a SQL error while authenticating user [" + username + "]";
             throw new AuthenticationException(message, e);
@@ -134,18 +104,7 @@ public class ApplicationRealm extends AuthorizingRealm {
     }
 
     private String[] getPasswordForUser(Connection conn, String username) throws SQLException {
-        String[] result;
-        boolean returningSeparatedSalt = false;
-        switch (saltStyle) {
-            case NO_SALT:
-            case CRYPT:
-            case EXTERNAL:
-                result = new String[1];
-                break;
-            default:
-                result = new String[2];
-                returningSeparatedSalt = true;
-        }
+        String[] result = new String[1];
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -166,9 +125,6 @@ public class ApplicationRealm extends AuthorizingRealm {
                 }
 
                 result[0] = rs.getString(1);
-                if (returningSeparatedSalt) {
-                    result[1] = rs.getString(2);
-                }
 
                 foundResult = true;
             }
@@ -281,10 +237,6 @@ public class ApplicationRealm extends AuthorizingRealm {
         }
 
         return permissions;
-    }
-
-    protected String getSaltForUser(String username) {
-        return username;
     }
 
     @Override

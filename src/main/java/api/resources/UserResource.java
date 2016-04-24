@@ -71,6 +71,7 @@ public class UserResource {
         return Response.status(statusCode).entity(response.HasPermission).build();
     }
 
+    @POST
     @Path("/create")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

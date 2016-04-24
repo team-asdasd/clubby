@@ -1,4 +1,4 @@
-package api.contracts.responses.base;
+package api.contracts.base;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 

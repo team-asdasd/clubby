@@ -1,4 +1,4 @@
-package api.contracts.responses.base;
+package api.contracts.base;
 
 public enum ErrorCodes {
     GENERAL_ERROR,

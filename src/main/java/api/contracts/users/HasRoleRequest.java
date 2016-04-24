@@ -1,6 +1,6 @@
-package api.contracts.requests;
+package api.contracts.users;
 
-import api.contracts.requests.base.BaseRequest;
+import api.contracts.base.BaseRequest;
 
 public class HasRoleRequest extends BaseRequest {
     public String RoleName;

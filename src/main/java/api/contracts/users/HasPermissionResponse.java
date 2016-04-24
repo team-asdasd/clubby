@@ -1,6 +1,6 @@
-package api.contracts.responses;
+package api.contracts.users;
 
-import api.contracts.responses.base.BaseResponse;
+import api.contracts.base.BaseResponse;
 
 public class HasPermissionResponse extends BaseResponse {
     public boolean HasPermission;

@@ -1,6 +1,6 @@
-package api.contracts.requests;
+package api.contracts.login;
 
-import api.contracts.requests.base.BaseRequest;
+import api.contracts.base.BaseRequest;
 
 public class FacebookLoginRequest extends BaseRequest {
     public String Code;

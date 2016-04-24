@@ -1,6 +1,6 @@
-package api.contracts.responses;
+package api.contracts.users;
 
-import api.contracts.responses.base.BaseResponse;
+import api.contracts.base.BaseResponse;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 public class GetUserInfoResponse extends BaseResponse {

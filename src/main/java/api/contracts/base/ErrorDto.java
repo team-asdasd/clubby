@@ -1,4 +1,4 @@
-package api.contracts.responses.base;
+package api.contracts.base;
 
 public class ErrorDto {
     public String Message;

@@ -1,7 +1,7 @@
 package api.resources;
 
-import api.contracts.requests.FacebookLoginRequest;
-import api.contracts.responses.FacebookLoginResponse;
+import api.contracts.login.FacebookLoginRequest;
+import api.contracts.login.FacebookLoginResponse;
 import api.handlers.login.FacebookLoginHandler;
 import api.handlers.utilities.StatusResolver;
 
@@ -11,9 +11,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.net.URI;
 
 @Path("/login")
 public class LoginResource {

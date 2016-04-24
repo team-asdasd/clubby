@@ -1,7 +1,7 @@
 package api.handlers.utilities;
 
-import api.contracts.responses.base.BaseResponse;
-import api.contracts.responses.base.ErrorCodes;
+import api.contracts.base.BaseResponse;
+import api.contracts.base.ErrorCodes;
 import com.google.api.client.http.HttpStatusCodes;
 
 public class StatusResolver {

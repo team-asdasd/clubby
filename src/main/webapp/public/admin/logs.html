@@ -1,6 +1,5 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head th:include="shared/head::head">
     <meta charset="UTF-8">
     <title>Title</title>
@@ -8,27 +7,25 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/4.12.0/bootstrap-social.css">
-
 </head>
 <body>
 <a href="/admin/clearlogs" style="position: absolute;top: 100px;" class="btn btn-info" role="button">Clear logs</a>
-    <table class="table table-bordered" style="position: absolute;left: 0;top: 150px;width: 100vw;">
-        <thead>
-        <tr>
-            <th>#</th>
-            <th>Time</th>
-            <th>Level</th>
-            <th>Class</th>
-            <th>Message</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="log,iterationStatus  : ${logs}">
-            <td th:text="${iterationStatus.count}">1</td>
-            <td th:each="item  : ${log}" th:text="${item}">asdasd</td>
-        </tr>
-        </tbody>
-    </table>
+<table class="table table-bordered" style="position: absolute; left: 0; top: 150px; width: 100%;">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Time</th>
+        <th>Level</th>
+        <th>Class</th>
+        <th>Message</th>
+    </tr>
+    </thead>
+    <tbody class="searchable">
+    <tr th:each="log,iterationStatus  : ${logs}">
+        <td th:text="${iterationStatus.count}">1</td>
+        <td th:each="item  : ${log}" th:text="${item}">asdasd</td>
+    </tr>
+    </tbody>
+</table>
 </body>
-
 </html>

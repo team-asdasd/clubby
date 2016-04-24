@@ -25,7 +25,6 @@ public class UserResource {
 
 
     public UserResource() {
-
         hasPermissionHandler = new HasPermissionHandler();
         hasRoleHandler = new HasRoleHandler();
     }

@@ -12,7 +12,7 @@ import java.util.List;
 
 public abstract class BaseHandler<TRequest extends BaseRequest, TResponse extends BaseResponse> {
 
-    final Logger logger = LogManager.getLogger(getClass().getName());
+    protected final Logger logger = LogManager.getLogger(getClass().getName());
 
     public final TResponse handle(TRequest request) {
         try {

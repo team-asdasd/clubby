@@ -33,6 +33,7 @@ before_deploy:
 - git add src/main/webapp/node_modules/jquery/dist/jquery.js
 - git add src/main/webapp/node_modules/bootstrap/dist/js/bootstrap.js
 - git add src/main/webapp/node_modules/swagger-ui/dist/
+- git add src/main/webapp/node_modules/bootstrap-validator/dist/
 - git commit -am "Travis build $TRAVIS_BUILD_NUMBER"
 
 deploy:

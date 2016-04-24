@@ -1,23 +1,15 @@
 package api.resources;
 
-import api.contracts.requests.GetUserInfoRequest;
-import api.contracts.requests.HasPermissionRequest;
-import api.contracts.requests.HasRoleRequest;
-import api.contracts.responses.GetUserInfoResponse;
-import api.contracts.responses.HasPermissionResponse;
-import api.contracts.responses.HasRoleResponse;
-import api.handlers.users.GetUserInfoHandler;
-import api.handlers.users.HasPermissionHandler;
-import api.handlers.users.HasRoleHandler;
+import api.contracts.requests.*;
+import api.contracts.responses.*;
+import api.contracts.responses.base.BaseResponse;
+import api.handlers.users.*;
 import api.handlers.utilities.StatusResolver;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-
 import javax.ejb.EJB;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Api(value = "user")
@@ -26,9 +18,12 @@ import javax.ws.rs.core.Response;
 public class UserResource {
     @EJB
     private GetUserInfoHandler getUserInfoHandler;
+    @EJB
+    private CreateUserHandler createUserHandler;
 
     private final HasPermissionHandler hasPermissionHandler;
     private final HasRoleHandler hasRoleHandler;
+
 
     public UserResource() {
 
@@ -74,5 +69,18 @@ public class UserResource {
         int statusCode = StatusResolver.getStatusCode(response);
 
         return Response.status(statusCode).entity(response.HasPermission).build();
+    }
+
+    @POST
+    @Path("/create")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Creates user", response = boolean.class)
+    public Response createUser(CreateUserRequest request){
+        BaseResponse response = createUserHandler.handle(request);
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
     }
 }

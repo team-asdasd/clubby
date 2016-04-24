@@ -34,37 +34,30 @@ public class UserService implements IUserService {
             return null;
         }
     }
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void createUser(User user) {
-        try {
-            if (!em.contains(user)) {
-                em.persist(user);
-                em.flush();
-            }
-        } catch (Exception e) {
-            throw e;
-        }
-    }
 
-    @Override
     @Transactional
-    public void createFacebookUser(String name, String email) {
+    public void createUser(User user, Login login) {
         try {
-            User user = new User();
-            Login login = new Login();
-            user.setName(name);
-            user.setEmail(email);
-            user.setFacebookUser(true);
-            user.setLogin(login);
-            login.setUsername(email);
-            login.setUser(user);
-            login.setPassword(UUID.randomUUID().toString());
             em.persist(user);
             em.persist(login);
             em.flush();
         } catch (Exception e) {
-            //TODO log
             em.clear();
+            throw e;
         }
+    }
+    
+    public void createFacebookUser(String name, String email) {
+        User user = new User();
+        Login login = new Login();
+        user.setName(name);
+        user.setEmail(email);
+        user.setFacebookUser(true);
+        user.setLogin(login);
+        login.setUsername(email);
+        login.setUser(user);
+        login.setPassword(UUID.randomUUID().toString());
+
+        createUser(user, login);
     }
 }

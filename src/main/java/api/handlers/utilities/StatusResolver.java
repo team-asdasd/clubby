@@ -11,7 +11,10 @@ public class StatusResolver {
         if (response.Errors == null) {
             return HttpStatusCodes.STATUS_CODE_OK;
         } else {
-            if (response.Errors.stream().allMatch(errorDto -> errorDto.Code == ErrorCodes.VALIDATION_ERROR)) {
+            if (response.Errors.stream().allMatch(errorDto ->
+                    errorDto.Code.ordinal() >= ErrorCodes.VALIDATION_ERROR.ordinal() &&
+                    errorDto.Code.ordinal() <= ErrorCodes.DUPLICATE_USERNAME.ordinal()
+            )) {
                 return 400;
             }
 

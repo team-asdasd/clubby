@@ -1,14 +1,15 @@
 package web.helpers;
 
 import org.thymeleaf.context.WebContext;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Set;
-import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 
 /**
@@ -24,7 +25,7 @@ public class RequestsForwarder {
     }
 
     public Boolean forward(final HttpServletRequest request,final HttpServletResponse response,
-                           final ServletContext servletContext){
+                           final ServletContext servletContext) throws IOException {
 
         Boolean found = false;
         String path = getRequestPath(request).substring(1);
@@ -72,12 +73,14 @@ public class RequestsForwarder {
 
             Method[] allMethods = controllerClass.getDeclaredMethods();
             for (Method method : allMethods) {
-                String methodPath = method.getAnnotation(PathMapping.class).value().toLowerCase();
+                if(method.getModifiers() == 1) {
+                    String methodPath = method.getAnnotation(PathMapping.class).value().toLowerCase();
 
-                Function<WebContext,String> consumer = CreateConsumer(controller,method);
-                String stringKey = methodPath.isEmpty() ? ctrName : ctrName + "/" + methodPath;
+                    Function<WebContext,String> consumer = CreateConsumer(controller,method);
+                    String stringKey = methodPath.isEmpty() ? ctrName : ctrName + "/" + methodPath;
 
-                routesMap.put(stringKey.hashCode(),consumer);
+                    routesMap.put(stringKey.hashCode(),consumer);
+                }
             }
         }
     }

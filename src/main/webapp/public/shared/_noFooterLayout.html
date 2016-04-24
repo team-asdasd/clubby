@@ -29,6 +29,7 @@
                             <li th:if="${administrator}== true"><a href="/admin">Admin</a></li>
                             <li th:if="${authenticated}== true"><a href="/logout">Logout</a></li>
                             <li th:if="${authenticated}== false"><a href="/login">Login</a></li>
+                            <li th:if="${authenticated}== false"><a href="/register">Sign In</a></li>
                         </ul>
                     </nav>
                 </div>

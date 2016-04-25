@@ -2,6 +2,7 @@ package api.handlers.users;
 
 import api.business.entities.User;
 import api.business.services.interfaces.ILoginService;
+import api.business.services.EmailService;
 import api.business.services.interfaces.IUserService;
 import api.contracts.requests.GetUserInfoRequest;
 import api.contracts.responses.GetUserInfoResponse;
@@ -20,12 +21,11 @@ import java.util.ArrayList;
 
 @Stateless
 public class GetUserInfoHandler extends BaseHandler<GetUserInfoRequest, GetUserInfoResponse> {
+
     @Inject
     private IUserService userInfoService;
-
     @Inject
     private ILoginService loginService;
-
     @Inject
     private IFacebookClient facebookClient;
 
@@ -55,7 +55,6 @@ public class GetUserInfoHandler extends BaseHandler<GetUserInfoRequest, GetUserI
 
         User user = loginService.getByUserName(username).getUser();
         response.Email = user.getEmail();
-
         if (user == null) {
             logger.warn(String.format("User ? not found", username));
             return handleException(new Exception("User not found.")); // Todo Custom error for not found -> Handle(Error)
@@ -67,7 +66,6 @@ public class GetUserInfoHandler extends BaseHandler<GetUserInfoRequest, GetUserI
                 if (!userDetails.Picture.isSilhouette()) {
                     response.Picture = userDetails.Picture.getUrl();
                 }
-
             } catch (IOException e) {
                 handleException(e);
             }

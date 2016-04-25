@@ -17,7 +17,7 @@ import java.util.UUID;
 @RequestScoped
 public class UserService implements IUserService {
 
-    @PersistenceContext(type= PersistenceContextType.EXTENDED)
+    @PersistenceContext
     private EntityManager em;
 
     public User get(int id) {

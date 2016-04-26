@@ -3,8 +3,8 @@ package api.resources;
 import api.contracts.requests.*;
 import api.contracts.responses.*;
 import api.contracts.responses.base.BaseResponse;
-import api.handlers.Recommendation.ReceiveRecommendationHandler;
-import api.handlers.Recommendation.SendRecommendationRequestHandler;
+import api.handlers.Recommendation.ConfirmRecommendationHandler;
+import api.handlers.Recommendation.SendRecommendationHandler;
 import api.handlers.users.*;
 import api.handlers.utilities.StatusResolver;
 import io.swagger.annotations.Api;
@@ -24,9 +24,9 @@ public class UserResource {
     @EJB
     private CreateUserHandler createUserHandler;
     @Inject
-    private ReceiveRecommendationHandler receiveRecommendationHandler;
+    private ConfirmRecommendationHandler confirmRecommendationHandler;
     @Inject
-    private SendRecommendationRequestHandler sendRecommendationrequestHandler;
+    private SendRecommendationHandler sendRecommendationrequestHandler;
 
     private final HasPermissionHandler hasPermissionHandler;
     private final HasRoleHandler hasRoleHandler;
@@ -92,13 +92,13 @@ public class UserResource {
     }
 
     @GET
-    @Path("/recommend/{recommendationCode}")
+    @Path("/confirmRec/{recommendationCode}")
     @ApiOperation(value = "Recommends user by recommendation code", response = boolean.class)
     public Response recommend(@PathParam("recommendationCode") String recommendationCode) {
-        ReceiveRecommendationRequest request = new ReceiveRecommendationRequest();
+        ConfirmRecommendationRequest request = new ConfirmRecommendationRequest();
         request.recommendationCode = recommendationCode;
 
-        ReceiveRecommendationResponse response = receiveRecommendationHandler.handle(request);
+        ConfirmRecommendationResponse response = confirmRecommendationHandler.handle(request);
 
         int statusCode = StatusResolver.getStatusCode(response);
 

@@ -1,25 +1,26 @@
 package api.handlers.Recommendation;
 
 import api.business.services.interfaces.IRecommendationService;
-import api.contracts.requests.ReceiveRecommendationRequest;
-import api.contracts.requests.SendRecommendationRequest;
-import api.contracts.responses.ReceiveRecommendationResponse;
-import api.contracts.responses.SendRecommendationResponse;
+import api.contracts.requests.ConfirmRecommendationRequest;
+import api.contracts.responses.ConfirmRecommendationResponse;
 import api.contracts.responses.base.ErrorCodes;
 import api.contracts.responses.base.ErrorDto;
 import api.handlers.base.BaseHandler;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.ArrayList;
 
-public class SendRecommendationRequestHandler extends BaseHandler<SendRecommendationRequest, SendRecommendationResponse> {
+@Stateless
+public class ConfirmRecommendationHandler extends BaseHandler<ConfirmRecommendationRequest, ConfirmRecommendationResponse> {
+
     @Inject
     private IRecommendationService recommendationService;
 
     @Override
-    public ArrayList<ErrorDto> validate(SendRecommendationRequest request) {
+    public ArrayList<ErrorDto> validate(ConfirmRecommendationRequest request) {
         Subject currentUser = SecurityUtils.getSubject();
 
         ArrayList<ErrorDto> errors = new ArrayList<>();
@@ -31,7 +32,7 @@ public class SendRecommendationRequestHandler extends BaseHandler<SendRecommenda
         if (!currentUser.isAuthenticated()) {
             errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
         }
-        if(request.email.isEmpty()){
+        if(request.recommendationCode.isEmpty()){
             errors.add(new ErrorDto("Bad request", ErrorCodes.VALIDATION_ERROR));
         }
 
@@ -39,16 +40,22 @@ public class SendRecommendationRequestHandler extends BaseHandler<SendRecommenda
     }
 
     @Override
-    public SendRecommendationResponse handleBase(SendRecommendationRequest request) {
-        Subject currentUser = SecurityUtils.getSubject();
-        SendRecommendationResponse response = createResponse();
+    public ConfirmRecommendationResponse handleBase(ConfirmRecommendationRequest request) {
 
-        recommendationService.sendRecommendationRequest(request.email);
+        ConfirmRecommendationResponse response = createResponse();
+
+        try {
+            recommendationService.ConfirmRecommendation(request.recommendationCode);
+        }
+        catch (Exception e){
+            handleException(e);
+        }
+
         return response;
     }
 
     @Override
-    public SendRecommendationResponse createResponse() {
-        return new SendRecommendationResponse();
+    public ConfirmRecommendationResponse createResponse() {
+        return new ConfirmRecommendationResponse();
     }
 }

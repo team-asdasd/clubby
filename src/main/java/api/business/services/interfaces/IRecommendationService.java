@@ -1,6 +1,8 @@
 package api.business.services.interfaces;
 
+import javax.mail.MessagingException;
+
 public interface IRecommendationService {
-    void recommend(String recommendationCode);
-    void sendRecommendationRequest(String email);
+    void ConfirmRecommendation(String recommendationCode);
+    void sendRecommendationRequest(String email) throws MessagingException;
 }

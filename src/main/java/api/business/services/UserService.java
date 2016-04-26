@@ -7,10 +7,7 @@ import api.business.services.interfaces.IUserService;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.context.RequestScoped;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.util.UUID;
 
@@ -41,12 +38,15 @@ public class UserService implements IUserService {
             em.persist(user);
             em.persist(login);
             em.flush();
+            Query q = em.createNativeQuery("INSERT INTO security.logins_roles (role_name, username) VALUES ('candidate', :username)");
+            q.setParameter("username", login.getUsername());
+            q.executeUpdate();
         } catch (Exception e) {
             em.clear();
             throw e;
         }
     }
-    
+
     public void createFacebookUser(String name, String email) {
         User user = new User();
         Login login = new Login();

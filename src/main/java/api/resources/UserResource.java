@@ -4,6 +4,7 @@ import api.contracts.requests.*;
 import api.contracts.responses.*;
 import api.contracts.responses.base.BaseResponse;
 import api.handlers.Recommendation.ConfirmRecommendationHandler;
+import api.handlers.Recommendation.GetRecommendationsHandler;
 import api.handlers.Recommendation.SendRecommendationHandler;
 import api.handlers.users.*;
 import api.handlers.utilities.StatusResolver;
@@ -23,10 +24,7 @@ public class UserResource {
     private GetUserInfoHandler getUserInfoHandler;
     @EJB
     private CreateUserHandler createUserHandler;
-    @Inject
-    private ConfirmRecommendationHandler confirmRecommendationHandler;
-    @Inject
-    private SendRecommendationHandler sendRecommendationrequestHandler;
+
 
     private final HasPermissionHandler hasPermissionHandler;
     private final HasRoleHandler hasRoleHandler;
@@ -49,6 +47,7 @@ public class UserResource {
 
         return Response.status(statusCode).entity(response).build();
     }
+
 
     @GET
     @Path("/hasRole/{roleName}")
@@ -91,31 +90,4 @@ public class UserResource {
         return Response.status(statusCode).entity(response).build();
     }
 
-    @GET
-    @Path("/confirmRec/{recommendationCode}")
-    @ApiOperation(value = "Recommends user by recommendation code", response = boolean.class)
-    public Response recommend(@PathParam("recommendationCode") String recommendationCode) {
-        ConfirmRecommendationRequest request = new ConfirmRecommendationRequest();
-        request.recommendationCode = recommendationCode;
-
-        ConfirmRecommendationResponse response = confirmRecommendationHandler.handle(request);
-
-        int statusCode = StatusResolver.getStatusCode(response);
-
-        return Response.status(statusCode).build();
-    }
-
-    @GET
-    @Path("/sendrec/{email}")
-    @ApiOperation(value = "Sends recomendation request", response = boolean.class)
-    public Response sendRecommendRequest(@PathParam("email") String email) {
-        SendRecommendationRequest request = new SendRecommendationRequest();
-        request.email = email;
-
-        SendRecommendationResponse response = sendRecommendationrequestHandler.handle(request);
-
-        int statusCode = StatusResolver.getStatusCode(response);
-
-        return Response.status(statusCode).build();
-    }
 }

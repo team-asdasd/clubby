@@ -1,8 +1,9 @@
 package api.handlers.Recommendation;
 
+import api.business.services.RecommendationService;
 import api.business.services.interfaces.IRecommendationService;
-import api.contracts.requests.SendRecommendationRequest;
-import api.contracts.responses.SendRecommendationResponse;
+import api.contracts.requests.GetRecommendationsRequestsRequest;
+import api.contracts.responses.GetRecommendationsResponse;
 import api.contracts.responses.base.ErrorCodes;
 import api.contracts.responses.base.ErrorDto;
 import api.handlers.base.BaseHandler;
@@ -11,16 +12,15 @@ import org.apache.shiro.subject.Subject;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.mail.MessagingException;
 import java.util.ArrayList;
 
 @Stateless
-public class SendRecommendationHandler extends BaseHandler<SendRecommendationRequest, SendRecommendationResponse> {
+public class GetRecommendationsHandler extends BaseHandler<GetRecommendationsRequestsRequest, GetRecommendationsResponse> {
     @Inject
     private IRecommendationService recommendationService;
 
     @Override
-    public ArrayList<ErrorDto> validate(SendRecommendationRequest request) {
+    public ArrayList<ErrorDto> validate(GetRecommendationsRequestsRequest request) {
         Subject currentUser = SecurityUtils.getSubject();
 
         ArrayList<ErrorDto> errors = new ArrayList<>();
@@ -32,26 +32,20 @@ public class SendRecommendationHandler extends BaseHandler<SendRecommendationReq
         if (!currentUser.isAuthenticated()) {
             errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
         }
-        if(request.userId <= 0){
-            errors.add(new ErrorDto("Bad request", ErrorCodes.VALIDATION_ERROR));
-        }
+
         return errors;
     }
 
     @Override
-    public SendRecommendationResponse handleBase(SendRecommendationRequest request) {
+    public GetRecommendationsResponse handleBase(GetRecommendationsRequestsRequest request) {
+        GetRecommendationsResponse response = createResponse();
 
-        SendRecommendationResponse response = createResponse();
-        try {
-            recommendationService.sendRecommendationRequest(request.userId);
-        } catch (MessagingException e) {
-            handleException(e);
-        }
+        response.requests = recommendationService.getAllRecommendationRequests();
         return response;
     }
 
     @Override
-    public SendRecommendationResponse createResponse() {
-        return new SendRecommendationResponse();
+    public GetRecommendationsResponse createResponse() {
+        return new GetRecommendationsResponse();
     }
 }

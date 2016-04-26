@@ -1,5 +1,6 @@
 package api.business.services;
 
+import api.contracts.dto.RecommendationData;
 import api.business.entities.User;
 import api.business.services.interfaces.IEmailService;
 import api.business.services.interfaces.IRecommendationService;
@@ -13,10 +14,13 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.mail.MessagingException;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.ws.rs.BadRequestException;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Stateless
@@ -43,10 +47,18 @@ public class RecommendationService implements IRecommendationService {
                 "AND recommendations.status != 1", User.class);
         q1.setParameter("recommendationCode", recommendationCode);
         q2.setParameter("recommendationCode", recommendationCode);
-        User userTo = (User) q1.getSingleResult();
-        User userFrom = (User) q2.getSingleResult();
 
-        if (userFrom == null || userTo == null || !userFrom.getEmail().equals(email)) {
+        User userTo;
+        User userFrom;
+        try {
+            userTo = (User) q1.getSingleResult();
+            userFrom = (User) q2.getSingleResult();
+        }catch (NoResultException e)
+        {
+            throw new BadRequestException("Bad recommendation code");
+        }
+
+        if (!userFrom.getEmail().equals(email)) {
             throw new BadRequestException();
         }
 
@@ -71,26 +83,24 @@ public class RecommendationService implements IRecommendationService {
         logger.trace("User " + userTo.getEmail() + " received recommendation from " + userFrom.getEmail());
     }
 
-    public void sendRecommendationRequest(String email) throws MessagingException {
+    public void sendRecommendationRequest(int userId) throws MessagingException {
 
-        //TODO refactor to use username
-        User userFrom = userService.getByEmail(email);
-        Subject currentUser = SecurityUtils.getSubject();
+        User userFrom = userService.get(userId);
 
         if (userFrom == null) {
-            logger.trace("Wrong email: " + email);
+            logger.trace("Wrong id: " + userId);
             throw new BadRequestException("Bad request parameter");
         }
         String emailFrom = userFrom.getEmail();
-        String emailTo = currentUser.getPrincipal().toString();
+        String emailTo = SecurityUtils.getSubject().getPrincipal().toString();
         User userTo = userService.getByEmail(emailTo);
 
-        if (userTo.getEmail().equals(userFrom)) {
+        if (userTo.getId() == userFrom.getId()) {
             throw new BadRequestException("Can't send request to yourself");
         }
         //check if userTo is candidate
         Query q = em.createNativeQuery("SELECT role_name FROM security.logins_roles WHERE username = :username AND role_name = 'candidate'");
-        q.setParameter("username", userTo.getEmail());
+        q.setParameter("username", userTo.getLogin().getUsername());
         if (q.getResultList().size() != 1) {
             throw new BadRequestException("Already a member");
         }
@@ -125,4 +135,24 @@ public class RecommendationService implements IRecommendationService {
         logger.trace("Recommendation request from user " + userTo.getEmail() + " to " + userFrom.getEmail() + " has been sent");
     }
 
+    public List<RecommendationData> getAllRecommendationRequests() {
+
+        String currentUserEmail = SecurityUtils.getSubject().getPrincipal().toString();
+        User user = userService.getByEmail(currentUserEmail);
+
+        Query q = em.createNativeQuery("SELECT users.id, recommendation_code FROM main.recommendations, " +
+                "main.users WHERE user_from = :user_from AND users.id = user_to" +
+                " AND  status = 0");
+        q.setParameter("user_from", user.getId());
+        List<Object[]> list = q.getResultList();
+        List<RecommendationData> result = new ArrayList<>();
+        for (Object[] o : list) {
+            String recCode = (String) o[1];
+            int id =  (int) o[0];
+
+            RecommendationData res = new RecommendationData(id, recCode);
+            result.add(res);
+        }
+        return result;
+    }
 }

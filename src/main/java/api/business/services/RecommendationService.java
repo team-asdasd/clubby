@@ -29,6 +29,7 @@ public class RecommendationService implements IRecommendationService {
     @Inject
     IUserService userService;
     final Logger logger = LogManager.getLogger(getClass().getName());
+
     @Override
     public void ConfirmRecommendation(String recommendationCode) {
 
@@ -60,15 +61,14 @@ public class RecommendationService implements IRecommendationService {
         Query q5 = em.createNativeQuery("SELECT value FROM main.configurations WHERE key = 'min_recommendation_required'");
         String minReq = (String) q5.getSingleResult();
 
-        if(Integer.parseInt(minReq)<= value.intValue())
-        {
+        if (Integer.parseInt(minReq) <= value.intValue()) {
             //change role
             Query q6 = em.createNativeQuery("DELETE FROM security.logins_roles WHERE role_name = 'candidate' AND username = :username");
             q6.setParameter("username", userTo.getEmail());
             q6.executeUpdate();
-            logger.trace("User " + userTo.getEmail()+ " is not candidate anymore!");
+            logger.trace("User " + userTo.getEmail() + " is not candidate anymore");
         }
-        logger.trace("User " + userTo.getEmail()+ " received recommendation from " + userFrom.getEmail());
+        logger.trace("User " + userTo.getEmail() + " received recommendation from " + userFrom.getEmail());
     }
 
     public void sendRecommendationRequest(String email) throws MessagingException {
@@ -76,15 +76,53 @@ public class RecommendationService implements IRecommendationService {
         //TODO refactor to use username
         User userFrom = userService.getByEmail(email);
         Subject currentUser = SecurityUtils.getSubject();
-        String emailFrom = currentUser.getPrincipal().toString();
-        User userTo = userService.getByEmail(emailFrom);
-        Query q1 = em.createNativeQuery("INSERT INTO main.recommendations (user_from, user_to, recommendation_code)" +
-                "VALUES (:userFrom, :userTo, :recommendationCode)");
-        q1.setParameter("recommendationCode", UUID.randomUUID().toString().replaceAll("-",""));
-        q1.setParameter("userFrom", userFrom.getId());
-        q1.setParameter("userTo", userTo.getId());
-        q1.executeUpdate();
-        emailService.send(emailFrom,"Recommendation request", "You have received recommendation request from user " + userTo.getName());
+
+        if (userFrom == null) {
+            logger.trace("Wrong email: " + email);
+            throw new BadRequestException("Bad request parameter");
+        }
+        String emailFrom = userFrom.getEmail();
+        String emailTo = currentUser.getPrincipal().toString();
+        User userTo = userService.getByEmail(emailTo);
+
+        if (userTo.getEmail().equals(userFrom)) {
+            throw new BadRequestException("Can't send request to yourself");
+        }
+        //check if userTo is candidate
+        Query q = em.createNativeQuery("SELECT role_name FROM security.logins_roles WHERE username = :username AND role_name = 'candidate'");
+        q.setParameter("username", userTo.getEmail());
+        if (q.getResultList().size() != 1) {
+            throw new BadRequestException("Already a member");
+        }
+
+        //check if userFrom is member
+        Query q1 = em.createNativeQuery("SELECT role_name FROM security.logins_roles WHERE username = :username AND role_name = 'candidate'");
+        q1.setParameter("username", userFrom.getEmail());
+        if (q1.getResultList().size() != 0) {
+            throw new BadRequestException("Can't send request to candidate");
+        }
+
+        Query q2 = em.createNativeQuery("SELECT value FROM main.configurations WHERE key = 'max_recommendation_request'");
+        String maxReq = (String) q2.getSingleResult();
+
+        Query q3 = em.createNativeQuery("SELECT COUNT(*) FROM main.recommendations WHERE user_to = :userto ");
+        q3.setParameter("userto", userTo.getId());
+        BigInteger reqSent = (BigInteger) q3.getSingleResult();
+
+        if (reqSent.intValue() < Integer.parseInt(maxReq)) {
+            Query q4 = em.createNativeQuery("INSERT INTO main.recommendations (user_from, user_to, recommendation_code)" +
+                    "VALUES (:userFrom, :userTo, :recommendationCode)");
+            q4.setParameter("recommendationCode", UUID.randomUUID().toString().replaceAll("-", ""));
+            q4.setParameter("userFrom", userFrom.getId());
+            q4.setParameter("userTo", userTo.getId());
+            q4.executeUpdate();
+
+            emailService.send(emailFrom, "Recommendation request", "Hello dear friend! \nYou have received recommendation request from user "
+                    + userTo.getName());
+        } else {
+            //notify end user?
+        }
+        logger.trace("Recommendation request from user " + userTo.getEmail() + " to " + userFrom.getEmail() + " has been sent");
     }
 
 }

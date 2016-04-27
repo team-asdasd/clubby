@@ -3,6 +3,7 @@ package api.business.services;
 import api.business.entities.Login;
 import api.business.entities.User;
 import api.business.services.interfaces.IUserService;
+import clients.facebook.responses.FacebookUserDetails;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -47,14 +48,14 @@ public class UserService implements IUserService {
         }
     }
 
-    public void createFacebookUser(String name, String email) {
+    public void createFacebookUser(FacebookUserDetails details) {
         User user = new User();
         Login login = new Login();
-        user.setName(name);
-        user.setEmail(email);
-        user.setFacebookUser(true);
+        user.setName(details.Name);
+        user.setEmail(details.Email);
+        user.setFacebookId(details.Id);
         user.setLogin(login);
-        login.setUsername(email);
+        login.setUsername(details.Email);
         login.setUser(user);
         login.setPassword(UUID.randomUUID().toString());
 

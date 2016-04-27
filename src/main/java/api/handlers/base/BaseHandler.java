@@ -55,6 +55,18 @@ public abstract class BaseHandler<TRequest extends BaseRequest, TResponse extend
         return response;
     }
 
+    public TResponse handleException(String errorMessage, ErrorCodes errorCode) {
+        TResponse response = createResponse();
+
+        response.Errors = new ArrayList<>();
+
+        ErrorDto error = new ErrorDto(errorMessage, errorCode);
+
+        response.Errors.add(error);
+
+        return response;
+    }
+
     private String getMessage(Exception e) {
         String message = e.getMessage();
         if (message == null || message.isEmpty()) {

@@ -9,7 +9,7 @@ public class User {
     private String name;
     private String email;
     private Login login;
-    private boolean facebookUser;
+    private String facebookId;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -43,13 +43,18 @@ public class User {
     }
 
     @Basic
-    @Column(name = "isfacebook")
-    public boolean isFacebookUser() {
-        return facebookUser;
+    @Column(name = "facebook_id", nullable = true, length = -1)
+    public String getFacebookId() {
+        return facebookId;
     }
 
-    public void setFacebookUser(boolean facebookUser) {
-        this.facebookUser = facebookUser;
+    public void setFacebookId(String id) {
+        this.facebookId = id;
+    }
+
+    @Transient
+    public boolean isFacebookUser() {
+        return facebookId != null && !facebookId.isEmpty();
     }
 
     @Override

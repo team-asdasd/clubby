@@ -6,4 +6,5 @@ import java.io.IOException;
 
 public interface IFacebookClient {
     FacebookUserDetails getUserDetails() throws IOException;
+    FacebookUserDetails getUserDetailsById(String id) throws IOException;
 }

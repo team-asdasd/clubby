@@ -39,7 +39,7 @@ public class RecommendationResource {
 
         int statusCode = StatusResolver.getStatusCode(response);
 
-        return Response.status(statusCode).build();
+        return Response.status(statusCode).entity(response).build();
     }
 
     @POST
@@ -53,7 +53,7 @@ public class RecommendationResource {
 
         int statusCode = StatusResolver.getStatusCode(response);
 
-        return Response.status(statusCode).build();
+        return Response.status(statusCode).entity(response).build();
     }
 
     @GET

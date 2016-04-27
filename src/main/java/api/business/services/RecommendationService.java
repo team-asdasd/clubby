@@ -53,8 +53,7 @@ public class RecommendationService implements IRecommendationService {
         try {
             userTo = (User) q1.getSingleResult();
             userFrom = (User) q2.getSingleResult();
-        }catch (NoResultException e)
-        {
+        } catch (NoResultException e) {
             throw new BadRequestException("Bad recommendation code");
         }
 
@@ -148,7 +147,7 @@ public class RecommendationService implements IRecommendationService {
         List<RecommendationData> result = new ArrayList<>();
         for (Object[] o : list) {
             String recCode = (String) o[1];
-            int id =  (int) o[0];
+            int id = (int) o[0];
 
             RecommendationData res = new RecommendationData(id, recCode);
             result.add(res);

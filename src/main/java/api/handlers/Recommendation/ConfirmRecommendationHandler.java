@@ -11,6 +11,7 @@ import org.apache.shiro.subject.Subject;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.ws.rs.BadRequestException;
 import java.util.ArrayList;
 
 @Stateless
@@ -47,8 +48,8 @@ public class ConfirmRecommendationHandler extends BaseHandler<ConfirmRecommendat
         try {
             recommendationService.ConfirmRecommendation(request.recommendationCode);
         }
-        catch (Exception e){
-            handleException(e);
+        catch (BadRequestException e){
+            handleException(e.getMessage(), ErrorCodes.BAD_REQUEST);
         }
 
         return response;

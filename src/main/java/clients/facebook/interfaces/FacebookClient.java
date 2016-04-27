@@ -43,6 +43,34 @@ public class FacebookClient implements IFacebookClient {
         return fud;
     }
 
+    @Override
+    public FacebookUserDetails getUserDetailsById(String id) throws IOException {
+        HttpResponse userInfoResponse = null;
+        FacebookUserDetails fud = null;
+        try {
+            HttpTransport httpTransport = new ApacheHttpTransport();
+
+            HttpRequestFactory factory = httpTransport.createRequestFactory();
+
+            JsonObjectParser jsonObjectParser = new GsonFactory().createJsonObjectParser();
+
+            String accessToken = FacebookSettings.getAppAccessToken();
+            String urlString = String.format("https://graph.facebook.com/v2.5/%s?fields=name,email,picture&access_token=%s", id, accessToken);
+            URL url = new URL(urlString);
+
+            HttpRequest getUserInfoRequest = factory.buildGetRequest(new GenericUrl(url)).setParser(jsonObjectParser);
+            userInfoResponse = getUserInfoRequest.execute();
+
+            fud = userInfoResponse.parseAs(FacebookUserDetails.class);
+        } catch (Exception ignored) {
+
+        } finally {
+            userInfoResponse.disconnect();
+        }
+
+        return fud;
+    }
+
     private String GetAccessToken() {
         return SecurityUtils.getSubject().getSession().getAttribute(FacebookSettings.getAccessTokenKey()).toString();
     }

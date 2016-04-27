@@ -79,7 +79,7 @@ public class FacebookRealm extends AuthorizingRealm {
 
                         userService = BeanProvider.getDependent(UserService.class).get();
                         if (userService.getByEmail(fud.Email) == null) {
-                            userService.createFacebookUser(fud.Name, fud.Email);
+                            userService.createFacebookUser(fud);
                         }
                     } else {
                         throw new Exception("Facebook auth responded with status code: " + response.getStatusCode());

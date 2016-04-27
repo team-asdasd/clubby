@@ -57,7 +57,7 @@ public class GetUserInfoHandler extends BaseHandler<GetUserInfoRequest, GetUserI
         response.Email = user.getEmail();
         if (user == null) {
             logger.warn(String.format("User ? not found", username));
-            return handleException(new Exception("User not found.")); // Todo Custom error for not found -> Handle(Error)
+            return handleException("User not found", ErrorCodes.NOT_FOUND);
         }
 
         if (user.isFacebookUser()) {

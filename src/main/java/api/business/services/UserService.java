@@ -61,4 +61,27 @@ public class UserService implements IUserService {
 
         createUser(user, login);
     }
+
+    @Override
+    public User getByFacebookId(String id) {
+        try {
+            TypedQuery<User> users = em.createQuery("FROM User WHERE facebookId = :id", User.class).setParameter("id", id);
+            return users.getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    @Transactional
+    public void save(User user) {
+        try {
+            em.merge(user);
+            em.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
 }

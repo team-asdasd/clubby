@@ -1,5 +1,6 @@
 package security.shiro.facebook;
 
+import api.business.entities.User;
 import api.business.services.UserService;
 import api.business.services.interfaces.IUserService;
 import clients.facebook.FacebookSettings;
@@ -78,8 +79,13 @@ public class FacebookRealm extends AuthorizingRealm {
                         info = new FacebookAuthenticationInfo(fud, this.getName());
 
                         userService = BeanProvider.getDependent(UserService.class).get();
-                        if (userService.getByEmail(fud.Email) == null) {
+
+                        User user = userService.getByFacebookId(fud.Id);
+                        if (user == null) {
                             userService.createFacebookUser(fud);
+                        }else{
+                            user.setName(fud.Name);
+                            userService.save(user);
                         }
                     } else {
                         throw new Exception("Facebook auth responded with status code: " + response.getStatusCode());

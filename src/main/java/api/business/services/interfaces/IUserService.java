@@ -12,4 +12,8 @@ public interface IUserService {
     void createUser(User user, Login login);
 
     void createFacebookUser(FacebookUserDetails details);
+
+    User getByFacebookId(String id);
+
+    void save(User user);
 }

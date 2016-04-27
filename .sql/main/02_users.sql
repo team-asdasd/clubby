@@ -8,7 +8,7 @@ CREATE TABLE main.users
   name       TEXT,
   email      TEXT,
   login      INTEGER,
-  isfacebook BOOLEAN DEFAULT FALSE,
+  facebook_id TEXT DEFAULT FALSE,
   CONSTRAINT pk_users_id PRIMARY KEY (id),
   CONSTRAINT fk_users_logins FOREIGN KEY (login)
   REFERENCES security.logins (id) MATCH SIMPLE

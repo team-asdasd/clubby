@@ -1,13 +1,15 @@
 package api.business.services.interfaces;
 
+import api.business.entities.Login;
 import api.business.entities.User;
+import clients.facebook.responses.FacebookUserDetails;
 
 public interface IUserService {
     User get(int id);
 
     User getByEmail(String email);
 
-    void createUser(User user);
+    void createUser(User user, Login login);
 
-    void createFacebookUser(String name, String email);
+    void createFacebookUser(FacebookUserDetails details);
 }

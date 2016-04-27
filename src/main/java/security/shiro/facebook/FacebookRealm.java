@@ -1,8 +1,6 @@
 package security.shiro.facebook;
 
-import api.business.services.LoginService;
 import api.business.services.UserService;
-import api.business.services.interfaces.ILoginService;
 import api.business.services.interfaces.IUserService;
 import clients.facebook.FacebookSettings;
 import clients.facebook.responses.FacebookOauthResponse;
@@ -11,6 +9,7 @@ import com.google.api.client.http.*;
 import com.google.api.client.http.apache.ApacheHttpTransport;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.gson.GsonFactory;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -19,12 +18,12 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-
 import java.net.URL;
 
+
 public class FacebookRealm extends AuthorizingRealm {
-    private IUserService userService = new UserService();
-    private ILoginService loginService = new LoginService();
+
+    private IUserService userService;
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
@@ -78,8 +77,9 @@ public class FacebookRealm extends AuthorizingRealm {
 
                         info = new FacebookAuthenticationInfo(fud, this.getName());
 
+                        userService = BeanProvider.getDependent(UserService.class).get();
                         if (userService.getByEmail(fud.Email) == null) {
-                            userService.createFacebookUser(fud.Name, fud.Email);
+                            userService.createFacebookUser(fud);
                         }
                     } else {
                         throw new Exception("Facebook auth responded with status code: " + response.getStatusCode());

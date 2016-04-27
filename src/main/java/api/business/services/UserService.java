@@ -3,69 +3,62 @@ package api.business.services;
 import api.business.entities.Login;
 import api.business.entities.User;
 import api.business.services.interfaces.IUserService;
-import api.configuration.EntityManagerContainer;
+import clients.facebook.responses.FacebookUserDetails;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.enterprise.context.RequestScoped;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.util.UUID;
 
 @RequestScoped
 public class UserService implements IUserService {
-    private EntityManager em = EntityManagerContainer.getEntityManager(); // TODO: Fix freaking injecting with @PersistenceContext... or not if we want to use env vars?
+
+    @PersistenceContext
+    private EntityManager em;
 
     public User get(int id) {
         return em.find(User.class, id);
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public User getByEmail(String email) {
         try {
             TypedQuery<User> users = em.createQuery("FROM User WHERE email = :email", User.class).setParameter("email", email);
             return users.getSingleResult();
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
 
-    public void createUser(User user) {
+    @Transactional
+    public void createUser(User user, Login login) {
         try {
-            em.getTransaction().begin();
-            if (!em.contains(user)) {
-                em.persist(user);
-                em.flush();
-            }
-            em.getTransaction().commit();
+            em.persist(user);
+            em.persist(login);
+            em.flush();
+            Query q = em.createNativeQuery("INSERT INTO security.logins_roles (role_name, username) VALUES ('candidate', :username)");
+            q.setParameter("username", login.getUsername());
+            q.executeUpdate();
         } catch (Exception e) {
-            em.getTransaction().rollback();
+            em.clear();
             throw e;
         }
     }
 
-    @Override
-    public void createFacebookUser(String name, String email) {
-        EntityTransaction transaction = em.getTransaction();
-        try {
-            transaction.begin();
+    public void createFacebookUser(FacebookUserDetails details) {
+        User user = new User();
+        Login login = new Login();
+        user.setName(details.Name);
+        user.setEmail(details.Email);
+        user.setFacebookId(details.Id);
+        user.setLogin(login);
+        login.setUsername(details.Email);
+        login.setUser(user);
+        login.setPassword(UUID.randomUUID().toString());
 
-            User user = new User();
-            Login login = new Login();
-
-            user.setName(name);
-            user.setEmail(email);
-            user.setFacebookUser(true);
-            user.setLogin(login);
-
-            login.setUsername(email);
-            login.setUser(user);
-            login.setPassword(UUID.randomUUID().toString());
-
-            em.persist(user);
-            em.persist(login);
-
-            transaction.commit();
-        } catch (Exception e) {
-            transaction.rollback();
-        }
+        createUser(user, login);
     }
 }

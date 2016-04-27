@@ -12,7 +12,7 @@ import java.util.List;
 
 public abstract class BaseHandler<TRequest extends BaseRequest, TResponse extends BaseResponse> {
 
-    final Logger logger = LogManager.getLogger(getClass().getName());
+    protected final Logger logger = LogManager.getLogger(getClass().getName());
 
     public final TResponse handle(TRequest request) {
         try {
@@ -49,6 +49,18 @@ public abstract class BaseHandler<TRequest extends BaseRequest, TResponse extend
         response.Errors = new ArrayList<>();
 
         ErrorDto error = new ErrorDto(getMessage(e), ErrorCodes.GENERAL_ERROR);
+
+        response.Errors.add(error);
+
+        return response;
+    }
+
+    public TResponse handleException(String errorMessage, ErrorCodes errorCode) {
+        TResponse response = createResponse();
+
+        response.Errors = new ArrayList<>();
+
+        ErrorDto error = new ErrorDto(errorMessage, errorCode);
 
         response.Errors.add(error);
 

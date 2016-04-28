@@ -54,6 +54,16 @@ From here you can go two ways:
     - Find `<datasources>` tag and replace [with] (https://gist.github.com/elpaulas/214bc090b742abbbad95b389e47214d5)
     - Find and remove `default-bindings` tag.
 
+####Email service configuration
+1. Edit `%WILDFLY_HOME%\standalone\configuration\standalone.xml`
+    - Find `<remote-destination` tag and replace with `<remote-destination host="smtp.gmail.com" port="465"/>`
+    - Find `<mail-session` tag and replace with
+```xml
+<mail-session name="Gmail" jndi-name="java:jboss/mail/Gmail">
+    <smtp-server password="${env.OPENSHIFT_GMAIL_PASSWORD}" username="${env.OPENSHIFT_GMAIL_USERNAME}" ssl="true" outbound-socket-binding-ref="mail-smtp"/>
+</mail-session>
+```
+
 ## UI Project
 
 Based on `https://github.com/preboot/angular2-webpack`
@@ -110,6 +120,9 @@ To access database you will need to use RedHat Client a.k.a. OpenShift client to
   * `FACEBOOK_CLUBBY_SECRET`
   * `FACEBOOK_CLUBBY_REDIRECT_URL`
   * `FACEBOOK_CLUBBY_APP_ID`
+5. Set environment variables for mail service (ask team for values):
+  * 'OPENSHIFT_GMAIL_PASSWORD'
+  * 'OPENSHIFT_GMAIL_USERNAME'
 
 ## More notes
 

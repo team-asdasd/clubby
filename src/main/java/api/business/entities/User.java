@@ -1,6 +1,7 @@
 package api.business.entities;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @Table(name = "users", schema = "main", catalog = "clubby")
@@ -82,5 +83,16 @@ public class User {
 
     public void setLogin(Login login) {
         this.login = login;
+    }
+
+    private Collection<MoneyTransaction> transactions;
+
+    @OneToMany(mappedBy = "user")
+    public Collection<MoneyTransaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(Collection<MoneyTransaction> transactions) {
+        this.transactions = transactions;
     }
 }

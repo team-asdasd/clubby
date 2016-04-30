@@ -37,7 +37,7 @@ public class LoginResource {
         if (statusCode == 200) {
             response.sendRedirect(response.encodeRedirectURL("/"));
         } else {
-            response.sendRedirect(response.encodeRedirectURL("/errors/401.html"));
+            response.sendRedirect(response.encodeRedirectURL("/error/401"));
         }
     }
 }

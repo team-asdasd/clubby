@@ -17,8 +17,10 @@ public class CottageService implements ICottageService {
     private EntityManager em;
 
     @Override
-    public List<Cottage> getAllCottages() {
-        TypedQuery<Cottage> cottages = em.createQuery("FROM Cottage", Cottage.class);
+    public List<Cottage> getAllCottages(String title, int beds) {
+        TypedQuery<Cottage> cottages = em.createQuery("SELECT C FROM Cottage C WHERE (:title is null OR title = :title) AND (:beds = 0 OR bedcount = :beds)", Cottage.class)
+                .setParameter("title", title)
+                .setParameter("beds", beds);
 
         return cottages.getResultList();
     }

@@ -33,7 +33,7 @@ public class LoginResource {
 
         int statusCode = StatusResolver.getStatusCode(resp);
         if (statusCode == 200) {
-            response.sendRedirect(response.encodeRedirectURL("/"));
+            response.sendRedirect(response.encodeRedirectURL("/app"));
         } else {
             response.sendRedirect(response.encodeRedirectURL("/errors/401.html"));
         }

@@ -27,7 +27,7 @@ public class GetCottagesHandler extends BaseHandler<GetCottagesRequest, GetCotta
     public ArrayList<ErrorDto> validate(GetCottagesRequest request) {
         Subject currentUser = SecurityUtils.getSubject();
 
-        ArrayList<ErrorDto> errors = Validator.checkAllNotNull(request);
+        ArrayList<ErrorDto> errors = new ArrayList<>();
 
         if (!currentUser.isAuthenticated()) {
             errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
@@ -40,7 +40,7 @@ public class GetCottagesHandler extends BaseHandler<GetCottagesRequest, GetCotta
     public GetCottagesResponse handleBase(GetCottagesRequest request) {
         GetCottagesResponse response = createResponse();
 
-        List<Cottage> allCottages = cottageService.getAllCottages();
+        List<Cottage> allCottages = cottageService.getAllCottages(request.title, request.bedcount);
 
         response.Cottages = allCottages.stream().map(cottage -> new CottageDto(cottage.getId(), cottage.getTitle(), cottage.getBedcount(), cottage.getImageurl())).collect(Collectors.toList());
 

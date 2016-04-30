@@ -12,7 +12,7 @@ describe('UserApi Service', () => {
   beforeEachProviders(() => [UserApi]);
 
   it('should ...', inject([UserApi], (api:UserApi) => {
-    expect(api.url).toBe('/api');
+    expect(api.url).toBe('/api/user');
   }));
 
 });

@@ -1,5 +1,9 @@
 <div class="card card-block">
     <div *ngIf="!cottages" class="row loader"></div>
+    <div *ngIf="isAdministrator">
+        <button type="button" class="btn btn-primary pull-right" style="margin: 5px;">Add Cottage</button>
+    </div>
+
     <div *ngIf="cottages" class="row">
         <table class="table table-hover">
             <thead>

@@ -46,7 +46,8 @@ public class UserService implements IUserService {
             throw e;
         }
     }
-    
+
+    @Transactional
     public void createFacebookUser(String name, String email) {
         User user = new User();
         Login login = new Login();

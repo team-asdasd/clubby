@@ -5,27 +5,38 @@ import {Observable} from "../../../../node_modules/rxjs/Observable";
 
 @Injectable()
 export class UserApi {
-    url: string = "/api";
+    url:string = "/api/user";
 
-    constructor(private http: Http) { }
-
-    public getUserInfo(): Observable<User> {
-        return this.http.get(this.url + '/user').map(this.parseUser).catch(this.handleError);
+    constructor(private http:Http) {
     }
 
-    private parseUser(res: Response): User {
+    public getUserInfo():Observable<User> {
+        return this.http.get(this.url).map(UserApi.parse).catch(UserApi.handleError);
+    }
+
+    public hasRole(role:string):Observable<boolean> {
+        return this.http.get(`${this.url}/hasRole/${role}`).map(UserApi.parse).catch(UserApi.handleError);
+    }
+
+    public hasPermission(permission:string):Observable<boolean> {
+        return this.http.get(`${this.url}/hasPermission/${permission}`).map(UserApi.parse).catch(UserApi.handleError);
+    }
+
+    private static parse<T>(res:Response):T {
+        UserApi.ensureSuccess(res);
+
+        return res.json();
+    }
+
+    private static ensureSuccess(res:Response) {
         if (res.status < 200 || res.status >= 300) {
             throw new Error('Bad response status: ' + res.status);
         }
-
-        let user : User = res.json();
-        return user;
     }
 
-    private handleError(error: any) {
-        // In a real world app, we might send the error to remote logging infrastructure
+    private static handleError(error:any) {
         let errMsg = error.message || 'Server error';
-        console.error(errMsg); // log to console instead
+        console.error(errMsg);
         return Observable.throw(errMsg);
     }
 }

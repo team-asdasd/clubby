@@ -18,8 +18,10 @@ public class CottageService implements ICottageService {
 
     @Override
     public List<Cottage> getAllCottages(String title, int beds) {
-        TypedQuery<Cottage> cottages = em.createQuery("SELECT C FROM Cottage C WHERE (:title is null OR title = :title) AND (:beds = 0 OR bedcount = :beds)", Cottage.class)
-                .setParameter("title", title)
+        String titleFilter = '%' + title + '%';
+
+        TypedQuery<Cottage> cottages = em.createQuery("SELECT C FROM Cottage C WHERE (:title is null OR lower(title) LIKE lower(:title)) AND (:beds = 0 OR bedcount = :beds)", Cottage.class)
+                .setParameter("title", titleFilter)
                 .setParameter("beds", beds);
 
         return cottages.getResultList();

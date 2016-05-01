@@ -8,4 +8,8 @@ public interface ICottageService {
     List<Cottage> getAllCottages(String title, int beds);
 
     void createCottage(Cottage cottage);
+
+    Cottage getCottage(int id);
+
+    void deleteCottage(int id);
 }

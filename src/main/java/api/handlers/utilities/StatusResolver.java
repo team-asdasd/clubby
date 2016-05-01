@@ -11,12 +11,17 @@ public class StatusResolver {
         if (response.Errors == null) {
             return HttpStatusCodes.STATUS_CODE_OK;
         } else {
+            if (response.Errors.stream().anyMatch(errorDto -> errorDto.Code.ordinal() == ErrorCodes.NOT_FOUND.ordinal())) {
+                return 404;
+            }
+
             if (response.Errors.stream().allMatch(errorDto ->
                     errorDto.Code.ordinal() >= ErrorCodes.VALIDATION_ERROR.ordinal() &&
-                    errorDto.Code.ordinal() <= ErrorCodes.DUPLICATE_USERNAME.ordinal()
+                            errorDto.Code.ordinal() <= ErrorCodes.DUPLICATE_USERNAME.ordinal()
             )) {
                 return 400;
             }
+
 
             return HttpStatusCodes.STATUS_CODE_SERVER_ERROR;
         }

@@ -1,11 +1,10 @@
 package api.resources;
 
-import api.contracts.base.BaseRequest;
 import api.contracts.base.BaseResponse;
-import api.contracts.cottages.CreateCottageRequest;
-import api.contracts.cottages.GetCottagesRequest;
-import api.contracts.cottages.GetCottagesResponse;
+import api.contracts.cottages.*;
 import api.handlers.cottages.CreateCottageHandler;
+import api.handlers.cottages.DeleteCottageHandler;
+import api.handlers.cottages.GetCottageHandler;
 import api.handlers.cottages.GetCottagesHandler;
 import api.handlers.utilities.StatusResolver;
 import io.swagger.annotations.Api;
@@ -22,16 +21,19 @@ import javax.ws.rs.core.Response;
 @Consumes({"application/json"})
 public class CottageResource {
     @EJB
+    private GetCottageHandler getCottageHandler;
+    @EJB
     private GetCottagesHandler getCottagesHandler;
-
     @EJB
     private CreateCottageHandler createCottagesHandler;
+    @EJB
+    private DeleteCottageHandler deleteCottageHandler;
 
     @GET
     @Path("")
-    @ApiOperation(value = "Returns all Cottages.", response = GetCottagesResponse.class)
-    public Response getCottages(@QueryParam("title") @ApiParam(value = "Filters results by title") String title,
-                                @QueryParam("beds") @ApiParam(value = "Filters results by number of beds") int beds) {
+    @ApiOperation(value = "Returns all Cottages.", notes = "Specific roles: []</br>The results can be filtered using optional parameters.</br>See parameters for more details.", response = GetCottagesResponse.class)
+    public Response getCottages(@QueryParam("title") @ApiParam(value = "Filters results by title, returns every cottage with given string in the title. Empty string means the filter is not set. Case insensitive.") String title,
+                                @QueryParam("beds") @ApiParam(value = "Filters results by number of beds, returns every cottage with given bed count. 0 means the filter is not set") int beds) {
         GetCottagesRequest request = new GetCottagesRequest();
         request.title = title;
         request.bedcount = beds;
@@ -45,11 +47,12 @@ public class CottageResource {
 
     @GET
     @Path("{cottageId}")
-    @ApiOperation(value = "Returns selected Cottage.", response = GetCottagesResponse.class)
-    public Response getSingleCottage() {
-        GetCottagesRequest request = new GetCottagesRequest();
+    @ApiOperation(value = "Returns selected Cottage.", notes = "Specific roles: []", response = GetCottageResponse.class)
+    public Response getSingleCottage(@PathParam("cottageId") @ApiParam(value = "Id of selected cottage", required = true) int cottageId) {
+        GetCottageRequest request = new GetCottageRequest();
+        request.Id = cottageId;
 
-        GetCottagesResponse response = getCottagesHandler.handle(request);
+        GetCottageResponse response = getCottageHandler.handle(request);
 
         int statusCode = StatusResolver.getStatusCode(response);
 
@@ -58,7 +61,7 @@ public class CottageResource {
 
     @POST
     @Path("")
-    @ApiOperation(value = "Creates Cottage", notes = "Roles: [administrator]", response = BaseResponse.class)
+    @ApiOperation(value = "Creates Cottage", notes = "Specific roles: [administrator]", response = BaseResponse.class)
     public Response createCottage(CreateCottageRequest request) {
         BaseResponse response = createCottagesHandler.handle(request);
 
@@ -69,13 +72,15 @@ public class CottageResource {
 
     @DELETE
     @Path("{cottageId}")
-    @ApiOperation(value = "Removes selected Cottage.", notes = "Roles: [administrator]", response = BaseResponse.class)
-    public Response deleteCottage(@PathParam("cottageId") @ApiParam(value = "Id of cottage for deletion", required = true) String cottageId) {
-        GetCottagesRequest request = new GetCottagesRequest();
-        BaseResponse response = getCottagesHandler.handle(request);
+    @ApiOperation(value = "Removes selected Cottage.", notes = "Specific roles: [administrator]")
+    public Response deleteCottage(@PathParam("cottageId") @ApiParam(value = "Id of cottage for deletion", required = true) int cottageId) {
+        DeleteCottageRequest request = new DeleteCottageRequest();
+        request.Id = cottageId;
+
+        BaseResponse response = deleteCottageHandler.handle(request);
 
         int statusCode = StatusResolver.getStatusCode(response);
 
-        return Response.status(statusCode).entity(response).build();
+        return Response.status(statusCode).build();
     }
 }

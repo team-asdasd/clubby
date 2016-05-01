@@ -6,6 +6,8 @@ import api.contracts.base.BaseResponse;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.contracts.cottages.CreateCottageRequest;
+import api.contracts.cottages.CreateCottageResponse;
+import api.contracts.dto.CottageDto;
 import api.handlers.base.BaseHandler;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -15,7 +17,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 
 @Stateless
-public class CreateCottageHandler extends BaseHandler<CreateCottageRequest, BaseResponse> {
+public class CreateCottageHandler extends BaseHandler<CreateCottageRequest, CreateCottageResponse> {
     @Inject
     private ICottageService cottageService;
 
@@ -41,19 +43,21 @@ public class CreateCottageHandler extends BaseHandler<CreateCottageRequest, Base
     }
 
     @Override
-    public BaseResponse handleBase(CreateCottageRequest request) {
+    public CreateCottageResponse handleBase(CreateCottageRequest request) {
         Cottage cottage = new Cottage();
         cottage.setTitle(request.title);
         cottage.setBedcount(request.bedcount);
         cottage.setImageurl(request.imageurl);
 
         cottageService.createCottage(cottage);
+        CreateCottageResponse response = createResponse();
+        response.Cottage = new CottageDto(cottage.getId(), cottage.getTitle(), cottage.getBedcount(), cottage.getImageurl());
 
-        return createResponse();
+        return response;
     }
 
     @Override
-    public BaseResponse createResponse() {
-        return new BaseResponse();
+    public CreateCottageResponse createResponse() {
+        return new CreateCottageResponse();
     }
 }

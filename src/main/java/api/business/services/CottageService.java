@@ -35,4 +35,15 @@ public class CottageService implements ICottageService {
             throw e;
         }
     }
+
+    @Override
+    public Cottage getCottage(int id) {
+        return em.find(Cottage.class, id);
+    }
+
+    @Override
+    public void deleteCottage(int id) {
+        Cottage cottage = getCottage(id);
+        em.remove(cottage);
+    }
 }

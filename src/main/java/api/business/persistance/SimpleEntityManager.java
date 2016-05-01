@@ -1,5 +1,7 @@
 package api.business.persistance;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,6 +17,8 @@ public class SimpleEntityManager implements ISimpleEntityManager {
 
     @PersistenceContext
     private EntityManager em;
+
+    private final Logger logger = LogManager.getLogger(getClass().getName());
 
     @Transactional
     public<T> T insert(T entity){
@@ -55,7 +59,14 @@ public class SimpleEntityManager implements ISimpleEntityManager {
 
     @Transactional
     public<T> T getById(Class<T> entityClass, Object primaryKey){
-        return em.find(entityClass, primaryKey);
+        T entity = null;
+        try{
+            entity = em.find(entityClass, primaryKey);
+        }catch (Exception e){
+            logger.error(e);
+        }
+
+        return entity;
     }
 
     @Transactional

@@ -1,5 +1,6 @@
 package api.configuration;
 
+import api.resources.CottageResource;
 import api.resources.LoginResource;
 import api.resources.UserResource;
 import io.swagger.jaxrs.config.BeanConfig;
@@ -14,7 +15,6 @@ public class ApplicationConfiguration extends Application {
     private Set<Class<?>> classes = new HashSet<>();
 
     public ApplicationConfiguration() {
-        EntityManagerContainer.initialize();
 
         BeanConfig beanConfig = new BeanConfig();
         beanConfig.setVersion("1.0.0");
@@ -32,6 +32,7 @@ public class ApplicationConfiguration extends Application {
 
         classes.add(UserResource.class);
         classes.add(LoginResource.class);
+        classes.add(CottageResource.class);
 
         classes.add(io.swagger.jaxrs.listing.ApiListingResource.class);
         classes.add(io.swagger.jaxrs.listing.SwaggerSerializers.class);

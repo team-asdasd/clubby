@@ -1,5 +1,27 @@
 <div class="card card-block">
-    <h4 class="card-title">Boot Polish</h4>
-    <p class="card-text">Boot polish is a waxy paste, cream, or liquid used to polish, shine, and waterproof leather shoes or boots to extend the footwear's life, and restore, maintain and improve their appearance.</p>
-    <a href="#" class="btn btn-primary">More</a>
+    <div *ngIf="!cottages" class="loader"></div>
+    <div *ngIf="cottages">
+        <div *ngIf="isAdministrator">
+            <button type="button" class="btn btn-primary pull-right" style="margin: 5px;">Add Cottage</button>
+        </div>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Title</th>
+                <th>Number of Beds</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="#cottage of cottages; #i = index">
+                <td>
+                    <img src="{{cottage.Image}}" class="img-thumbnail" style="margin-left: 15px; max-width: 200px;">
+                </td>
+                <td>{{cottage.Title}}</td>
+                <td>{{cottage.Beds}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
 </div>

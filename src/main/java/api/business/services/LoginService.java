@@ -2,26 +2,39 @@ package api.business.services;
 
 import api.business.entities.Login;
 import api.business.services.interfaces.ILoginService;
-import api.configuration.EntityManagerContainer;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
+import javax.persistence.TypedQuery;
 
 @RequestScoped
 public class LoginService implements ILoginService {
-    private EntityManager em = EntityManagerContainer.getEntityManager(); // TODO: Fix freaking injecting with @PersistenceContext... or not if we want to use env vars?
+    @PersistenceContext(type= PersistenceContextType.EXTENDED)
+    private EntityManager em;
 
     public void createLogin(Login login) {
         try {
-            em.getTransaction().begin();
             if (!em.contains(login)) {
                 em.persist(login);
                 em.flush();
             }
-            em.getTransaction().commit();
         } catch (Exception e) {
-            em.getTransaction().rollback();
             throw e;
         }
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public Login getByUserName(String username) {
+        try {
+            TypedQuery<Login> logins = em.createQuery("FROM Login WHERE username = :username", Login.class).setParameter("username", username);
+            return logins.getSingleResult();
+        }catch (Exception e) {
+            return null;
+        }
+
     }
 }

@@ -75,6 +75,7 @@ mvn.properties
 *.asc
 *.jj
 *.tmp
+*.log
 maven-ant-tasks-*.jar
 thumbs.db
 Thumbs.db

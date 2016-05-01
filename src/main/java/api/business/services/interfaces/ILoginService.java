@@ -4,4 +4,6 @@ import api.business.entities.Login;
 
 public interface ILoginService {
     void createLogin(Login login);
+
+    Login getByUserName(String username);
 }

@@ -1,11 +1,12 @@
 package api.handlers.users;
 
 import api.business.entities.User;
+import api.business.services.interfaces.ILoginService;
 import api.business.services.interfaces.IUserService;
-import api.contracts.requests.GetUserInfoRequest;
-import api.contracts.responses.GetUserInfoResponse;
-import api.contracts.responses.base.ErrorCodes;
-import api.contracts.responses.base.ErrorDto;
+import api.contracts.users.GetUserInfoRequest;
+import api.contracts.users.GetUserInfoResponse;
+import api.contracts.base.ErrorCodes;
+import api.contracts.base.ErrorDto;
 import api.handlers.base.BaseHandler;
 import clients.facebook.interfaces.IFacebookClient;
 import clients.facebook.responses.FacebookUserDetails;
@@ -21,6 +22,9 @@ import java.util.ArrayList;
 public class GetUserInfoHandler extends BaseHandler<GetUserInfoRequest, GetUserInfoResponse> {
     @Inject
     private IUserService userInfoService;
+
+    @Inject
+    private ILoginService loginService;
 
     @Inject
     private IFacebookClient facebookClient;
@@ -47,10 +51,13 @@ public class GetUserInfoHandler extends BaseHandler<GetUserInfoRequest, GetUserI
         Subject currentUser = SecurityUtils.getSubject();
 
         GetUserInfoResponse response = createResponse();
-        response.Email = currentUser.getPrincipal().toString();
+        String username = currentUser.getPrincipal().toString();
 
-        User user = userInfoService.getByEmail(response.Email);
+        User user = loginService.getByUserName(username).getUser();
+        response.Email = user.getEmail();
+
         if (user == null) {
+            logger.warn(String.format("User ? not found", username));
             return handleException(new Exception("User not found.")); // Todo Custom error for not found -> Handle(Error)
         }
 

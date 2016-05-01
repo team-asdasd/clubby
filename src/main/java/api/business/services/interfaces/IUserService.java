@@ -1,5 +1,6 @@
 package api.business.services.interfaces;
 
+import api.business.entities.Login;
 import api.business.entities.User;
 
 public interface IUserService {
@@ -7,7 +8,7 @@ public interface IUserService {
 
     User getByEmail(String email);
 
-    void createUser(User user);
+    void createUser(User user, Login login);
 
     void createFacebookUser(String name, String email);
 }

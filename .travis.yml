@@ -30,9 +30,10 @@ before_deploy:
 - sed -i '/src\/main\/webapp\/public\/app\//d' .gitignore
 - git add src/main/webapp/public/app/
 - git add src/main/webapp/node_modules/angular2/bundles/angular2-polyfills.js
-- git add src/main/webapp/node_modules/jquery/dist/jquery.js
+- git add src/main/webapp/node_modules/jquery/dist/
 - git add src/main/webapp/node_modules/bootstrap/dist/js/bootstrap.js
 - git add src/main/webapp/node_modules/swagger-ui/dist/
+- git add src/main/webapp/node_modules/bootstrap-validator/dist/
 - git commit -am "Travis build $TRAVIS_BUILD_NUMBER"
 
 deploy:

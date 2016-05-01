@@ -2,12 +2,15 @@ package api.handlers.cottages;
 
 import api.business.entities.Cottage;
 import api.business.services.interfaces.ICottageService;
+import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.contracts.cottages.GetCottageRequest;
 import api.contracts.cottages.GetCottageResponse;
 import api.contracts.dto.CottageDto;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -20,7 +23,19 @@ public class GetCottageHandler extends BaseHandler<GetCottageRequest, GetCottage
 
     @Override
     public ArrayList<ErrorDto> validate(GetCottageRequest request) {
-        return Validator.checkAllNotNull(request);
+        Subject currentUser = SecurityUtils.getSubject();
+
+        ArrayList<ErrorDto> errors = Validator.checkAllNotNull(request);
+
+        if (!currentUser.isAuthenticated()) {
+            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
+        }
+
+        if (cottageService.getCottage(request.Id) == null) {
+            errors.add(new ErrorDto("Cottage not found", ErrorCodes.NOT_FOUND));
+        }
+
+        return errors;
     }
 
     @Override

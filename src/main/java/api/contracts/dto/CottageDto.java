@@ -6,7 +6,12 @@ public class CottageDto {
     public int Beds;
     public String Image;
 
+    public CottageDto() {
+    }
+
     public CottageDto(int id, String title, int bedcount, String imageurl) {
+        this();
+        
         Id = id;
         Title = title;
         Beds = bedcount;

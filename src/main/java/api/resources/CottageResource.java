@@ -2,6 +2,7 @@ package api.resources;
 
 import api.contracts.base.BaseResponse;
 import api.contracts.cottages.*;
+import api.handlers.cottages.UpdateCottageHandler;
 import api.handlers.cottages.CreateCottageHandler;
 import api.handlers.cottages.DeleteCottageHandler;
 import api.handlers.cottages.GetCottageHandler;
@@ -26,6 +27,8 @@ public class CottageResource {
     private GetCottagesHandler getCottagesHandler;
     @EJB
     private CreateCottageHandler createCottagesHandler;
+    @EJB
+    private UpdateCottageHandler updateCottageHandler;
     @EJB
     private DeleteCottageHandler deleteCottageHandler;
 
@@ -70,9 +73,20 @@ public class CottageResource {
         return Response.status(statusCode).entity(response).build();
     }
 
+    @PUT
+    @Path("")
+    @ApiOperation(value = "Updates selected Cottage.", notes = "Specific roles: [administrator]", response = UpdateCottageResponse.class)
+    public Response deleteCottage(UpdateCottageRequest request) {
+        UpdateCottageResponse response = updateCottageHandler.handle(request);
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
+    }
+
     @DELETE
     @Path("{cottageId}")
-    @ApiOperation(value = "Removes selected Cottage.", notes = "Specific roles: [administrator]")
+    @ApiOperation(value = "Removes selected Cottage.", notes = "Specific roles: [administrator]", response = BaseResponse.class)
     public Response deleteCottage(@PathParam("cottageId") @ApiParam(value = "Id of cottage for deletion", required = true) int cottageId) {
         DeleteCottageRequest request = new DeleteCottageRequest();
         request.Id = cottageId;
@@ -81,6 +95,6 @@ public class CottageResource {
 
         int statusCode = StatusResolver.getStatusCode(response);
 
-        return Response.status(statusCode).build();
+        return Response.status(statusCode).entity(response).build();
     }
 }

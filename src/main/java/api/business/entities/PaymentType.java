@@ -65,15 +65,4 @@ public class PaymentType {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         return result;
     }
-
-    private Collection<Payment> payments;
-
-    @OneToMany(mappedBy = "paymentType")
-    public Collection<Payment> getPayments() {
-        return payments;
-    }
-
-    public void setPayments(Collection<Payment> payments) {
-        this.payments = payments;
-    }
 }

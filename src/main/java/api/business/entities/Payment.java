@@ -10,10 +10,9 @@ import javax.persistence.*;
 @Table(name = "payments", schema = "payment", catalog = "clubby")
 public class Payment {
     private int paymentid;
-   // private int paymenttypeid;
+    private int paymenttypeid;
     private int amount;
     private String paytext;
-   // private int paymentsettingsid;
     private boolean active;
 
     @Id
@@ -25,7 +24,7 @@ public class Payment {
     public void setPaymentid(int paymentid) {
         this.paymentid = paymentid;
     }
-/*
+
     @Basic
     @Column(name = "paymenttypeid")
     public int getPaymenttypeid() {
@@ -35,7 +34,7 @@ public class Payment {
     public void setPaymenttypeid(int paymenttypeid) {
         this.paymenttypeid = paymenttypeid;
     }
-*/
+
     @Basic
     @Column(name = "amount")
     public int getAmount() {
@@ -55,17 +54,7 @@ public class Payment {
     public void setPaytext(String paytext) {
         this.paytext = paytext;
     }
-/*
-    @Basic
-    @Column(name = "paymentsettingsid")
-    public int getPaymentsettingsid() {
-        return paymentsettingsid;
-    }
 
-    public void setPaymentsettingsid(int paymentsettingsid) {
-        this.paymentsettingsid = paymentsettingsid;
-    }
-*/
     @Basic
     @Column(name = "active")
     public boolean getActive() {
@@ -95,22 +84,10 @@ public class Payment {
         return result;
     }
 
-    private PaymentType paymentType;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "paymenttypeid", referencedColumnName = "paymenttypeid")
-    public PaymentType getPaymentType() {
-        return paymentType;
-    }
-
-    public void setPaymentType(PaymentType paymentType) {
-        this.paymentType = paymentType;
-    }
-
     private PaymentsSettings settings;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "paymentsettingsid", referencedColumnName = "paymentsettingsid")
+    @JoinColumn(name = "paymentSettingsId", referencedColumnName = "paymentSettingsId")
     public PaymentsSettings getSettings() {
         return settings;
     }

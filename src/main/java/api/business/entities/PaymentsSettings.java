@@ -7,6 +7,7 @@ import java.util.Collection;
  * Created by Mindaugas on 30/04/2016.
  */
 @Entity
+@Table(name = "paymentsSettings", schema = "payment", catalog = "clubby")
 public class PaymentsSettings {
     private int paymentsettingsid;
     private String projectid;

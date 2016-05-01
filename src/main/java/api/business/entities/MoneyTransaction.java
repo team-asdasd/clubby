@@ -10,6 +10,8 @@ import javax.persistence.*;
 @Table(name = "moneytransactions", schema = "payment", catalog = "clubby")
 public class MoneyTransaction {
     private String transactionid;
+    private int transactiontypeid;
+    private int status;
     private int ammount;
     private int ammountclubby;
 
@@ -21,6 +23,26 @@ public class MoneyTransaction {
 
     public void setTransactionid(String transactionid) {
         this.transactionid = transactionid;
+    }
+
+    @Basic
+    @Column(name = "transactiontypeid")
+    public int getTransactiontypeid() {
+        return transactiontypeid;
+    }
+
+    public void setTransactiontypeid(int transactiontypeid) {
+        this.transactiontypeid = transactiontypeid;
+    }
+
+    @Basic
+    @Column(name = "status")
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     @Basic
@@ -60,30 +82,6 @@ public class MoneyTransaction {
     public int hashCode() {
         int result = transactionid != null ? transactionid.hashCode() : 0;
         return result;
-    }
-
-    private TransactionStatus transactionStatus;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "status", referencedColumnName = "status")
-    public TransactionStatus getTransactionStatus() {
-        return transactionStatus;
-    }
-
-    public void setTransactionStatus(TransactionStatus transactionStatus) {
-        this.transactionStatus = transactionStatus;
-    }
-
-    private TransactionType transactionType;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "transactiontypeid", referencedColumnName = "transactiontypeid")
-    public TransactionType getTransactionType() {
-        return transactionType;
-    }
-
-    public void setTransactionType(TransactionType transactionType) {
-        this.transactionType = transactionType;
     }
 
     private Payment payment;

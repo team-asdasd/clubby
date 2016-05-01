@@ -50,15 +50,4 @@ public class TransactionStatus {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
     }
-
-    private Collection<MoneyTransaction> transactions;
-
-    @OneToMany(mappedBy = "transactionStatus")
-    public Collection<MoneyTransaction> getTransactions() {
-        return transactions;
-    }
-
-    public void setTransactions(Collection<MoneyTransaction> transactions) {
-        this.transactions = transactions;
-    }
 }

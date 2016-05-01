@@ -6,6 +6,7 @@ import api.contracts.responses.SendRecommendationResponse;
 import api.contracts.responses.base.ErrorCodes;
 import api.contracts.responses.base.ErrorDto;
 import api.handlers.base.BaseHandler;
+import api.helpers.Validator;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -23,20 +24,8 @@ public class SendRecommendationHandler extends BaseHandler<SendRecommendationReq
 
     @Override
     public ArrayList<ErrorDto> validate(SendRecommendationRequest request) {
-        Subject currentUser = SecurityUtils.getSubject();
+        ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
 
-        ArrayList<ErrorDto> errors = new ArrayList<>();
-
-        if (request == null) {
-            errors.add(new ErrorDto("Request missing.", ErrorCodes.VALIDATION_ERROR));
-        }
-
-        if (!currentUser.isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
-        }
-        if (request.userId <= 0) {
-            errors.add(new ErrorDto("Bad request", ErrorCodes.VALIDATION_ERROR));
-        }
         return errors;
     }
 

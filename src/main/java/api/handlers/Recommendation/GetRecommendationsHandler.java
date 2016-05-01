@@ -7,6 +7,7 @@ import api.contracts.responses.GetRecommendationsResponse;
 import api.contracts.responses.base.ErrorCodes;
 import api.contracts.responses.base.ErrorDto;
 import api.handlers.base.BaseHandler;
+import api.helpers.Validator;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -21,17 +22,7 @@ public class GetRecommendationsHandler extends BaseHandler<GetRecommendationsReq
 
     @Override
     public ArrayList<ErrorDto> validate(GetRecommendationsRequestsRequest request) {
-        Subject currentUser = SecurityUtils.getSubject();
-
-        ArrayList<ErrorDto> errors = new ArrayList<>();
-
-        if (request == null) {
-            errors.add(new ErrorDto("Request missing.", ErrorCodes.VALIDATION_ERROR));
-        }
-
-        if (!currentUser.isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
-        }
+        ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
 
         return errors;
     }

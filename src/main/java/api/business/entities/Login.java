@@ -1,6 +1,7 @@
 package api.business.entities;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "logins", schema = "security", catalog = "clubby")
@@ -9,6 +10,7 @@ public class Login {
     private String username;
     private String password;
     private User user;
+    private List<LoginRole> Role;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -70,5 +72,14 @@ public class Login {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @OneToMany
+    public List<LoginRole> getRole() {
+        return Role;
+    }
+
+    public void setRole(List<LoginRole> role) {
+        Role = role;
     }
 }

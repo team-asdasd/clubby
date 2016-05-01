@@ -44,15 +44,8 @@ public abstract class BaseHandler<TRequest extends BaseRequest, TResponse extend
     public abstract TResponse createResponse();
 
     public TResponse handleException(Exception e) {
-        TResponse response = createResponse();
 
-        response.Errors = new ArrayList<>();
-
-        ErrorDto error = new ErrorDto(getMessage(e), ErrorCodes.GENERAL_ERROR);
-
-        response.Errors.add(error);
-
-        return response;
+        return handleException(getMessage(e), ErrorCodes.GENERAL_ERROR);
     }
 
     public TResponse handleException(String errorMessage, ErrorCodes errorCode) {

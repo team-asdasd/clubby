@@ -1,13 +1,11 @@
 package api.business.services;
 
 import api.business.entities.Cottage;
-import api.business.entities.User;
 import api.business.services.interfaces.ICottageService;
 
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -18,9 +16,9 @@ public class CottageService implements ICottageService {
 
     @Override
     public List<Cottage> getAllCottages(String title, int beds) {
-        String titleFilter = '%' + title + '%';
+        String titleFilter = title != null ? '%' + title + '%' : "";
 
-        TypedQuery<Cottage> cottages = em.createQuery("SELECT C FROM Cottage C WHERE (:title is null OR lower(title) LIKE lower(:title)) AND (:beds = 0 OR bedcount = :beds)", Cottage.class)
+        TypedQuery<Cottage> cottages = em.createQuery("SELECT C FROM Cottage C WHERE (:title = '' OR lower(title) LIKE lower(:title)) AND (:beds = 0 OR bedcount = :beds)", Cottage.class)
                 .setParameter("title", titleFilter)
                 .setParameter("beds", beds);
 

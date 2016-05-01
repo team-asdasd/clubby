@@ -5,6 +5,7 @@
         <jta-data-source>java:jboss/datasources/PostgreSQLDS</jta-data-source>
         <class>api.business.entities.User</class>
         <class>api.business.entities.Login</class>
+        <class>api.business.entities.Cottage</class>
         <properties>
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>

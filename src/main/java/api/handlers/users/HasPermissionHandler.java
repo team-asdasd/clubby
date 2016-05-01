@@ -1,9 +1,9 @@
 package api.handlers.users;
 
-import api.contracts.requests.HasPermissionRequest;
-import api.contracts.responses.HasPermissionResponse;
-import api.contracts.responses.base.ErrorCodes;
-import api.contracts.responses.base.ErrorDto;
+import api.contracts.users.HasPermissionRequest;
+import api.contracts.users.HasPermissionResponse;
+import api.contracts.base.ErrorCodes;
+import api.contracts.base.ErrorDto;
 import api.handlers.base.BaseHandler;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;

@@ -15,7 +15,7 @@ public class CottageService implements ICottageService {
     private EntityManager em;
 
     @Override
-    public List<Cottage> getAllCottages(String title, int beds) {
+    public List<Cottage> getByFilters(String title, int beds) {
         String titleFilter = title != null ? '%' + title + '%' : "";
 
         TypedQuery<Cottage> cottages = em.createQuery("SELECT C FROM Cottage C WHERE (:title = '' OR lower(title) LIKE lower(:title)) AND (:beds = 0 OR bedcount = :beds)", Cottage.class)
@@ -26,7 +26,7 @@ public class CottageService implements ICottageService {
     }
 
     @Override
-    public void createCottage(Cottage cottage) {
+    public void save(Cottage cottage) {
         try {
             em.persist(cottage);
             em.flush();
@@ -37,13 +37,13 @@ public class CottageService implements ICottageService {
     }
 
     @Override
-    public Cottage getCottage(int id) {
+    public Cottage get(int id) {
         return em.find(Cottage.class, id);
     }
 
     @Override
-    public void deleteCottage(int id) {
-        Cottage cottage = getCottage(id);
+    public void delete(int id) {
+        Cottage cottage = get(id);
         em.remove(cottage);
     }
 }

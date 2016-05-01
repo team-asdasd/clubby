@@ -40,7 +40,7 @@ public class UpdateCottageHandler extends BaseHandler<UpdateCottageRequest, Upda
             errors.add(new ErrorDto("Insufficient permissions.", ErrorCodes.AUTHENTICATION_ERROR));
         }
 
-        if (cottageService.getCottage(request.Cottage.Id) == null) {
+        if (cottageService.get(request.Cottage.Id) == null) {
             errors.add(new ErrorDto("Cottage not found", ErrorCodes.NOT_FOUND));
         }
 
@@ -51,15 +51,15 @@ public class UpdateCottageHandler extends BaseHandler<UpdateCottageRequest, Upda
     public UpdateCottageResponse handleBase(UpdateCottageRequest request) {
         UpdateCottageResponse response = createResponse();
 
-        Cottage cottage = cottageService.getCottage(request.Cottage.Id);
+        Cottage cottage = cottageService.get(request.Cottage.Id);
 
         cottage.setTitle(request.Cottage.Title);
         cottage.setBedcount(request.Cottage.Beds);
         cottage.setImageurl(request.Cottage.Image);
 
-        cottageService.createCottage(cottage);
+        cottageService.save(cottage);
 
-        response.Cottage = new CottageDto(cottage.getId(), cottage.getTitle(), cottage.getBedcount(), cottage.getImageurl());
+        response.Cottage = new CottageDto(cottage);
 
         return response;
     }

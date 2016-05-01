@@ -8,7 +8,6 @@ import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.contracts.dto.CottageDto;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -40,9 +39,9 @@ public class GetCottagesHandler extends BaseHandler<GetCottagesRequest, GetCotta
     public GetCottagesResponse handleBase(GetCottagesRequest request) {
         GetCottagesResponse response = createResponse();
 
-        List<Cottage> allCottages = cottageService.getAllCottages(request.title, request.bedcount);
+        List<Cottage> allCottages = cottageService.getByFilters(request.title, request.bedcount);
 
-        response.Cottages = allCottages.stream().map(cottage -> new CottageDto(cottage.getId(), cottage.getTitle(), cottage.getBedcount(), cottage.getImageurl())).collect(Collectors.toList());
+        response.Cottages = allCottages.stream().map(CottageDto::new).collect(Collectors.toList());
 
         return response;
     }

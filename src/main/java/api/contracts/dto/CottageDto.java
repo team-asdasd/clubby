@@ -1,5 +1,7 @@
 package api.contracts.dto;
 
+import api.business.entities.Cottage;
+
 public class CottageDto {
     public int Id;
     public String Title;
@@ -9,12 +11,12 @@ public class CottageDto {
     public CottageDto() {
     }
 
-    public CottageDto(int id, String title, int bedcount, String imageurl) {
+    public CottageDto(Cottage cottage) {
         this();
-        
-        Id = id;
-        Title = title;
-        Beds = bedcount;
-        Image = imageurl;
+
+        Id = cottage.getId();
+        Title = cottage.getTitle();
+        Beds = cottage.getBedcount();
+        Image = cottage.getImageurl();
     }
 }

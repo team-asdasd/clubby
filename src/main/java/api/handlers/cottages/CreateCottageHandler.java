@@ -2,7 +2,6 @@ package api.handlers.cottages;
 
 import api.business.entities.Cottage;
 import api.business.services.interfaces.ICottageService;
-import api.contracts.base.BaseResponse;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.contracts.cottages.CreateCottageRequest;
@@ -46,9 +45,9 @@ public class CreateCottageHandler extends BaseHandler<CreateCottageRequest, Crea
         cottage.setBedcount(request.bedcount);
         cottage.setImageurl(request.imageurl);
 
-        cottageService.createCottage(cottage);
+        cottageService.save(cottage);
         CreateCottageResponse response = createResponse();
-        response.Cottage = new CottageDto(cottage.getId(), cottage.getTitle(), cottage.getBedcount(), cottage.getImageurl());
+        response.Cottage = new CottageDto(cottage);
 
         return response;
     }

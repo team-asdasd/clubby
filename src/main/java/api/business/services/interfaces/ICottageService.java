@@ -5,11 +5,11 @@ import api.business.entities.Cottage;
 import java.util.List;
 
 public interface ICottageService {
-    List<Cottage> getAllCottages(String title, int beds);
+    void save(Cottage cottage);
 
-    void createCottage(Cottage cottage);
+    Cottage get(int id);
 
-    Cottage getCottage(int id);
+    List<Cottage> getByFilters(String title, int beds);
 
-    void deleteCottage(int id);
+    void delete(int id);
 }

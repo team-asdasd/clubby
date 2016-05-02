@@ -140,7 +140,7 @@ public class RecommendationService implements IRecommendationService {
 
         List<RecommendationDto> result = new ArrayList<>();
         for (Recommendation r : recommendations) {
-            RecommendationDto res = new RecommendationDto(r.getUserTo().getId(), r.getRecommendationCode());
+            RecommendationDto res = new RecommendationDto(r);
             result.add(res);
         }
         return result;

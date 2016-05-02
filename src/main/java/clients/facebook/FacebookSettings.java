@@ -5,6 +5,7 @@ public class FacebookSettings {
     private static String redirectUrlCache;
     private static String appIdCache;
     private static String accessTokenKey = "FACEBOOK_ACCESS_TOKEN";
+    private static String appAccessToken;
 
     public static String getSecret() {
         if (secretCache == null) {
@@ -26,6 +27,13 @@ public class FacebookSettings {
             appIdCache = System.getenv("FACEBOOK_CLUBBY_APP_ID");
         }
         return appIdCache;
+    }
+
+    public static String getAppAccessToken() {
+        if (appAccessToken == null) {
+            appAccessToken = getAppId() + "|" + getSecret();
+        }
+        return appAccessToken;
     }
 
     public static String getAccessTokenKey() {

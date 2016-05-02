@@ -2,6 +2,7 @@ package api.configuration;
 
 import api.resources.CottageResource;
 import api.resources.LoginResource;
+import api.resources.RecommendationResource;
 import api.resources.UserResource;
 import io.swagger.jaxrs.config.BeanConfig;
 
@@ -32,6 +33,7 @@ public class ApplicationConfiguration extends Application {
 
         classes.add(UserResource.class);
         classes.add(LoginResource.class);
+        classes.add(RecommendationResource.class);
         classes.add(CottageResource.class);
 
         classes.add(io.swagger.jaxrs.listing.ApiListingResource.class);

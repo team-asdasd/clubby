@@ -1,18 +1,15 @@
 package api.handlers.users;
 
 import api.business.entities.User;
-import api.business.services.interfaces.ILoginService;
 import api.business.services.interfaces.IUserService;
-import api.contracts.users.GetUserInfoRequest;
-import api.contracts.users.GetUserInfoResponse;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
+import api.contracts.requests.GetUserByIdRequest;
+import api.contracts.responses.GetUserByIdResponse;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
 import clients.facebook.interfaces.IFacebookClient;
 import clients.facebook.responses.FacebookUserDetails;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -20,17 +17,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 @Stateless
-public class GetUserInfoHandler extends BaseHandler<GetUserInfoRequest, GetUserInfoResponse> {
+public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserByIdResponse> {
 
     @Inject
     private IUserService userInfoService;
     @Inject
-    private ILoginService loginService;
-    @Inject
     private IFacebookClient facebookClient;
 
     @Override
-    public ArrayList<ErrorDto> validate(GetUserInfoRequest request) {
+    public ArrayList<ErrorDto> validate(GetUserByIdRequest request) {
 
         ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
 
@@ -38,22 +33,20 @@ public class GetUserInfoHandler extends BaseHandler<GetUserInfoRequest, GetUserI
     }
 
     @Override
-    public GetUserInfoResponse handleBase(GetUserInfoRequest request) {
-        Subject currentUser = SecurityUtils.getSubject();
+    public GetUserByIdResponse handleBase(GetUserByIdRequest request) {
 
-        GetUserInfoResponse response = createResponse();
-        String username = currentUser.getPrincipal().toString();
+        GetUserByIdResponse response = createResponse();
 
-        User user = loginService.getByUserName(username).getUser();
-        response.Email = user.getEmail();
+        User user = userInfoService.get(request.Id);
+
         if (user == null) {
-            logger.warn(String.format("User ? not found", username));
+            logger.warn(String.format("User ? not found", request.Id));
             return handleException("User not found", ErrorCodes.NOT_FOUND);
         }
 
         if (user.isFacebookUser()) {
             try {
-                FacebookUserDetails userDetails = facebookClient.getMyDetails();
+                FacebookUserDetails userDetails = facebookClient.getUserDetailsById(user.getFacebookId());
                 if (!userDetails.Picture.isSilhouette()) {
                     response.Picture = userDetails.Picture.getUrl();
                 }
@@ -68,7 +61,7 @@ public class GetUserInfoHandler extends BaseHandler<GetUserInfoRequest, GetUserI
     }
 
     @Override
-    public GetUserInfoResponse createResponse() {
-        return new GetUserInfoResponse();
+    public GetUserByIdResponse createResponse() {
+        return new GetUserByIdResponse();
     }
 }

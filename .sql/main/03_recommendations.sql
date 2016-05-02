@@ -19,5 +19,3 @@ CREATE TABLE main.recommendations
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE main.recommendations
-  OWNER TO adminu6davmr;

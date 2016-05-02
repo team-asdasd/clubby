@@ -1,7 +1,7 @@
 package api.business.services;
 
-import api.contracts.dto.RecommendationData;
-import api.business.entities.User;
+import api.business.entities.*;
+import api.contracts.dto.RecommendationDTO;
 import api.business.services.interfaces.IEmailService;
 import api.business.services.interfaces.IRecommendationService;
 import api.business.services.interfaces.IUserService;
@@ -13,12 +13,8 @@ import org.apache.shiro.subject.Subject;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.mail.MessagingException;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.persistence.*;
 import javax.ws.rs.BadRequestException;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -37,46 +33,45 @@ public class RecommendationService implements IRecommendationService {
     @Override
     public void ConfirmRecommendation(String recommendationCode) {
 
-        Subject currentUser = SecurityUtils.getSubject();
-        String email = currentUser.getPrincipal().toString();
-        Query q1 = em.createNativeQuery("SELECT *  FROM main.users, main.recommendations WHERE users.id" +
-                " = recommendations.user_to AND recommendations.recommendation_code = :recommendationCode " +
-                "AND recommendations.status != 1", User.class);
-        Query q2 = em.createNativeQuery("SELECT *  FROM main.users, main.recommendations WHERE users.id" +
-                " = recommendations.user_from AND recommendations.recommendation_code = :recommendationCode " +
-                "AND recommendations.status != 1", User.class);
-        q1.setParameter("recommendationCode", recommendationCode);
-        q2.setParameter("recommendationCode", recommendationCode);
+        List<User> usersTo = em.createQuery("SELECT u FROM User u, Recommendation r WHERE u.id = r.userTo.id AND" +
+                " r.recommendationCode = :recommendationCode AND r.status <> 1", User.class)
+                .setParameter("recommendationCode", recommendationCode)
+                .getResultList();
+        List<User> usersFrom = em.createQuery("SELECT u FROM User u, Recommendation r WHERE u.id = r.userFrom.id AND" +
+                " r.recommendationCode = :recommendationCode AND r.status <> 1", User.class)
+                .setParameter("recommendationCode", recommendationCode)
+                .getResultList();
 
-        User userTo;
-        User userFrom;
-        try {
-            userTo = (User) q1.getSingleResult();
-            userFrom = (User) q2.getSingleResult();
-        } catch (NoResultException e) {
+        if (usersFrom.size() == 0 || usersTo.size() == 0) {
             throw new BadRequestException("Bad recommendation code");
         }
+        User userTo = usersTo.get(0);
+        User userFrom = usersFrom.get(0);
 
-        if (!userFrom.getEmail().equals(email)) {
+        String currentUsername = SecurityUtils.getSubject().getPrincipal().toString();
+        User currentUser = userService.getByUsername(currentUsername);
+
+        if (!userFrom.getEmail().equals(currentUser.getEmail())) {
             throw new BadRequestException();
         }
 
-        Query q3 = em.createNativeQuery("UPDATE main.recommendations SET status = 1 WHERE recommendation_code = :recommendationCode");
-        q3.setParameter("recommendationCode", recommendationCode);
-        q3.executeUpdate();
-        Query q4 = em.createNativeQuery("SELECT COUNT(status) FROM main.recommendations WHERE status = 1 AND user_to = :userto ");
-        q4.setParameter("userto", userTo.getId());
-        BigInteger value = (BigInteger) q4.getSingleResult();
+        Recommendation recommendation = em.createQuery("SELECT r FROM Recommendation r WHERE r.recommendationCode = :recommendationCode", Recommendation.class)
+                .setParameter("recommendationCode", recommendationCode)
+                .getResultList()
+                .get(0);
+        recommendation.setStatus(1);
 
+        long count = em.createQuery("SELECT COUNT(r) FROM Recommendation r WHERE r.status = 1 AND r.userTo = :userTo", Long.class)
+                .setParameter("userTo", userTo)
+                .getSingleResult();
+        Configuration minRec = em.find(Configuration.class, "min_recommendation_required");
 
-        Query q5 = em.createNativeQuery("SELECT value FROM main.configurations WHERE key = 'min_recommendation_required'");
-        String minReq = (String) q5.getSingleResult();
-
-        if (Integer.parseInt(minReq) <= value.intValue()) {
+        if (Integer.parseInt(minRec.getValue()) <= count) {
             //change role
-            Query q6 = em.createNativeQuery("DELETE FROM security.logins_roles WHERE role_name = 'candidate' AND username = :username");
-            q6.setParameter("username", userTo.getEmail());
-            q6.executeUpdate();
+            LoginRole lr = em.createQuery("SELECT lr FROM LoginRole lr WHERE lr.roleName = 'candidate' AND lr.username = :username", LoginRole.class)
+                    .setParameter("username", userTo.getLogin().getUsername())
+                    .getSingleResult();
+            em.remove(lr);
             logger.trace("User " + userTo.getEmail() + " is not candidate anymore");
         }
         logger.trace("User " + userTo.getEmail() + " received recommendation from " + userFrom.getEmail());
@@ -91,65 +86,74 @@ public class RecommendationService implements IRecommendationService {
             throw new BadRequestException("Bad request parameter");
         }
         String emailFrom = userFrom.getEmail();
-        String emailTo = SecurityUtils.getSubject().getPrincipal().toString();
-        User userTo = userService.getByEmail(emailTo);
+        String usernameTo = SecurityUtils.getSubject().getPrincipal().toString();
+        User userTo = userService.getByUsername(usernameTo);
 
         if (userTo.getId() == userFrom.getId()) {
             throw new BadRequestException("Can't send request to yourself");
         }
         //check if userTo is candidate
-        Query q = em.createNativeQuery("SELECT role_name FROM security.logins_roles WHERE username = :username AND role_name = 'candidate'");
-        q.setParameter("username", userTo.getLogin().getUsername());
-        if (q.getResultList().size() != 1) {
+        List<LoginRole> lrcList = em.createQuery("SELECT lr FROM LoginRole lr WHERE lr.username = :username AND lr.roleName = 'candidate'", LoginRole.class)
+                .setParameter("username", userTo.getLogin().getUsername())
+                .getResultList();
+
+        if (lrcList.size() != 1) {
             throw new BadRequestException("Already a member");
         }
 
         //check if userFrom is member
-        Query q1 = em.createNativeQuery("SELECT role_name FROM security.logins_roles WHERE username = :username AND role_name = 'candidate'");
-        q1.setParameter("username", userFrom.getEmail());
-        if (q1.getResultList().size() != 0) {
+        List<LoginRole> lrmList = em.createQuery("SELECT lr FROM LoginRole lr WHERE lr.username = :username AND lr.roleName = 'candidate'", LoginRole.class)
+                .setParameter("username", userFrom.getLogin().getUsername())
+                .getResultList();
+
+        if (lrmList.size() != 0) {
             throw new BadRequestException("Can't send request to candidate");
         }
 
-        Query q2 = em.createNativeQuery("SELECT value FROM main.configurations WHERE key = 'max_recommendation_request'");
-        String maxReq = (String) q2.getSingleResult();
+        //check for multiple requests to same member
+        List<Recommendation> recList = em.createQuery("SELECT r FROM Recommendation r WHERE r.userFrom = :userFrom " +
+                "AND r.userTo = :userTo", Recommendation.class)
+                .setParameter("userFrom", userFrom)
+                .setParameter("userTo", userTo)
+                .getResultList();
+        if (recList.size() != 0) {
+            throw new BadRequestException("Can't send multiple request to same member");
+        }
+        Configuration maxReq = em.find(Configuration.class, "max_recommendation_request");
 
-        Query q3 = em.createNativeQuery("SELECT COUNT(*) FROM main.recommendations WHERE user_to = :userto ");
-        q3.setParameter("userto", userTo.getId());
-        BigInteger reqSent = (BigInteger) q3.getSingleResult();
+        long requestCount = em.createQuery("SELECT COUNT(r) FROM Recommendation r WHERE r.userTo = :userto", Long.class)
+                .setParameter("userto", userTo)
+                .getSingleResult();
 
-        if (reqSent.intValue() < Integer.parseInt(maxReq)) {
-            Query q4 = em.createNativeQuery("INSERT INTO main.recommendations (user_from, user_to, recommendation_code)" +
-                    "VALUES (:userFrom, :userTo, :recommendationCode)");
-            q4.setParameter("recommendationCode", UUID.randomUUID().toString().replaceAll("-", ""));
-            q4.setParameter("userFrom", userFrom.getId());
-            q4.setParameter("userTo", userTo.getId());
-            q4.executeUpdate();
+        if (requestCount < Integer.parseInt(maxReq.getValue())) {
+
+            Recommendation r = new Recommendation();
+            r.setRecommendationCode(UUID.randomUUID().toString().replaceAll("-", ""));
+            r.setUserFrom(userFrom);
+            r.setUserTo(userTo);
+
+            em.persist(r);
 
             emailService.send(emailFrom, "Recommendation request", "Hello dear friend! \nYou have received recommendation request from user "
                     + userTo.getName());
         } else {
-            //notify end user?
+            //notify about reached request limit
         }
-        logger.trace("Recommendation request from user " + userTo.getEmail() + " to " + userFrom.getEmail() + " has been sent");
+        logger.trace("Recommendation request from user " + userTo.getLogin().getUsername() + " to " + userFrom.getLogin().getUsername() + " has been sent");
     }
 
-    public List<RecommendationData> getAllRecommendationRequests() {
+    public List<RecommendationDTO> getAllRecommendationRequests() {
 
-        String currentUserEmail = SecurityUtils.getSubject().getPrincipal().toString();
-        User user = userService.getByEmail(currentUserEmail);
+        String currentUsername = SecurityUtils.getSubject().getPrincipal().toString();
+        User user = userService.getByUsername(currentUsername);
 
-        Query q = em.createNativeQuery("SELECT users.id, recommendation_code FROM main.recommendations, " +
-                "main.users WHERE user_from = :user_from AND users.id = user_to" +
-                " AND  status = 0");
-        q.setParameter("user_from", user.getId());
-        List<Object[]> list = q.getResultList();
-        List<RecommendationData> result = new ArrayList<>();
-        for (Object[] o : list) {
-            String recCode = (String) o[1];
-            int id = (int) o[0];
+        List<Recommendation> recommendations = em.createQuery("SELECT r FROM Recommendation r WHERE r.userFrom = :userFrom AND r.status = 0", Recommendation.class)
+                .setParameter("userFrom", user)
+                .getResultList();
 
-            RecommendationData res = new RecommendationData(id, recCode);
+        List<RecommendationDTO> result = new ArrayList<>();
+        for (Recommendation r : recommendations) {
+            RecommendationDTO res = new RecommendationDTO(r.getUserTo().getId(), r.getRecommendationCode());
             result.add(res);
         }
         return result;

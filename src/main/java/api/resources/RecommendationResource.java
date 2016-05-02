@@ -57,8 +57,7 @@ public class RecommendationResource {
     }
 
     @GET
-    @Path("/recommendations")
-    @ApiOperation(value = "Returns recommendations requests list", response = boolean.class)
+    @ApiOperation(value = "Returns recommendations requests list", response = GetRecommendationsResponse.class)
     public Response sendRecommendRequest() {
         GetRecommendationsRequestsRequest request = new GetRecommendationsRequestsRequest();
 

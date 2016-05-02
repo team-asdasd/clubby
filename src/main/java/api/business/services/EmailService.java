@@ -19,12 +19,12 @@ public class EmailService implements IEmailService{
     private Session session;
     final Logger logger = LogManager.getLogger(getClass().getName());
 
-    public void send(String addresses, String Subject, String textMessage) throws MessagingException {
+    public void send(String addresses, String subject, String textMessage) throws MessagingException {
 
         try {
             Message message = new MimeMessage(session);
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(addresses));
-            message.setSubject(Subject);
+            message.setSubject(subject);
             message.setText(textMessage);
             Transport.send(message);
             logger.trace("Email sent to "+ addresses);

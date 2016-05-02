@@ -1,6 +1,7 @@
 package api.business.services;
 
 import api.business.entities.Login;
+import api.business.entities.LoginRole;
 import api.business.entities.User;
 import api.business.services.interfaces.IUserService;
 import clients.facebook.responses.FacebookUserDetails;
@@ -10,6 +11,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.*;
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.UUID;
 
 @RequestScoped
@@ -39,9 +41,10 @@ public class UserService implements IUserService {
             em.persist(user);
             em.persist(login);
             em.flush();
-            Query q = em.createNativeQuery("INSERT INTO security.logins_roles (role_name, username) VALUES ('candidate', :username)");
-            q.setParameter("username", login.getUsername());
-            q.executeUpdate();
+            LoginRole lr = new LoginRole();
+            lr.setRoleName("candidate");
+            lr.setUsername(login.getUsername());
+            em.persist(lr);
         } catch (Exception e) {
             em.clear();
             throw e;
@@ -83,5 +86,15 @@ public class UserService implements IUserService {
             e.printStackTrace();
             throw e;
         }
+    }
+
+    @Override
+    public User getByUsername(String username) {
+        List<User> userList = em.createQuery("SELECT u FROM User u WHERE u.login.username = :username", User.class)
+                .setParameter("username", username)
+                .getResultList();
+        if(userList.size() == 0)
+            return null;
+        return userList.get(0);
     }
 }

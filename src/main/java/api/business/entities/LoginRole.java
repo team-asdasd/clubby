@@ -1,15 +1,15 @@
 package api.business.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "logins_roles", schema = "security", catalog = "clubby")
-public class LoginRole {
+public class LoginRole implements Serializable{
     private String roleName;
     private String username;
-    private String id;//because jpa
 
-    @Basic
+    @Id
     @Column(name = "role_name")
     public String getRoleName() {
         return roleName;
@@ -19,7 +19,7 @@ public class LoginRole {
         this.roleName = roleName;
     }
 
-    @Basic
+    @Id
     @Column(name = "username")
     public String getUsername() {
         return username;
@@ -49,12 +49,4 @@ public class LoginRole {
         return result;
     }
 
-    @Id
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 }

@@ -16,4 +16,6 @@ public interface IUserService {
     User getByFacebookId(String id);
 
     void save(User user);
+
+    User getByUsername(String username);
 }

@@ -1,11 +1,9 @@
 package api.business.entities;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "configuration", schema = "main", catalog = "clubby")
 public class Configuration {
     private String key;
     private String value;

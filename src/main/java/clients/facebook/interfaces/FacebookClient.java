@@ -15,7 +15,7 @@ import java.net.URL;
 @RequestScoped
 public class FacebookClient implements IFacebookClient {
     @Override
-    public FacebookUserDetails getUserDetails() throws IOException {
+    public FacebookUserDetails getMyDetails() throws IOException {
         HttpResponse userInfoResponse = null;
         FacebookUserDetails fud = null;
         try {

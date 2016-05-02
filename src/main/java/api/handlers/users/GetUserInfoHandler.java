@@ -2,7 +2,6 @@ package api.handlers.users;
 
 import api.business.entities.User;
 import api.business.services.interfaces.ILoginService;
-import api.business.services.EmailService;
 import api.business.services.interfaces.IUserService;
 import api.contracts.requests.GetUserInfoRequest;
 import api.contracts.responses.GetUserInfoResponse;
@@ -54,7 +53,7 @@ public class GetUserInfoHandler extends BaseHandler<GetUserInfoRequest, GetUserI
 
         if (user.isFacebookUser()) {
             try {
-                FacebookUserDetails userDetails = facebookClient.getUserDetails();
+                FacebookUserDetails userDetails = facebookClient.getMyDetails();
                 if (!userDetails.Picture.isSilhouette()) {
                     response.Picture = userDetails.Picture.getUrl();
                 }

@@ -21,32 +21,29 @@ import java.util.stream.Collectors;
 
 @Stateless
 public class RecommendationService implements IRecommendationService {
-
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
     @Inject
-    IEmailService emailService;
+    private IEmailService emailService;
     @Inject
-    IUserService userService;
-    final Logger logger = LogManager.getLogger(getClass().getName());
+    private IUserService userService;
+
+    private final Logger logger = LogManager.getLogger(getClass().getName());
 
     @Override
     public void ConfirmRecommendation(String recommendationCode) {
-
-        List<User> usersTo = em.createQuery("SELECT u FROM User u, Recommendation r WHERE u.id = r.userTo.id AND" +
-                " r.recommendationCode = :recommendationCode AND r.status <> 1", User.class)
-                .setParameter("recommendationCode", recommendationCode)
-                .getResultList();
-        List<User> usersFrom = em.createQuery("SELECT u FROM User u, Recommendation r WHERE u.id = r.userFrom.id AND" +
-                " r.recommendationCode = :recommendationCode AND r.status <> 1", User.class)
+        List<Recommendation> recommendations = em.createQuery("SELECT r FROM Recommendation r JOIN r.userTo u WHERE r.recommendationCode = :recommendationCode AND r.status <> 1", Recommendation.class)
                 .setParameter("recommendationCode", recommendationCode)
                 .getResultList();
 
-        if (usersFrom.size() == 0 || usersTo.size() == 0) {
+        if (recommendations.size() != 1) {
             throw new BadRequestException("Bad recommendation code");
         }
-        User userTo = usersTo.get(0);
-        User userFrom = usersFrom.get(0);
+
+        Recommendation recommendation = recommendations.get(0);
+
+        User userTo = recommendation.getUserTo();
+        User userFrom = recommendation.getUserFrom();
 
         String currentUsername = SecurityUtils.getSubject().getPrincipal().toString();
         User currentUser = userService.getByUsername(currentUsername);
@@ -55,10 +52,6 @@ public class RecommendationService implements IRecommendationService {
             throw new BadRequestException();
         }
 
-        Recommendation recommendation = em.createQuery("SELECT r FROM Recommendation r WHERE r.recommendationCode = :recommendationCode", Recommendation.class)
-                .setParameter("recommendationCode", recommendationCode)
-                .getResultList()
-                .get(0);
         recommendation.setStatus(1);
 
         long count = em.createQuery("SELECT COUNT(r) FROM Recommendation r WHERE r.status = 1 AND r.userTo = :userTo", Long.class)

@@ -1,9 +1,9 @@
 package api.handlers.base;
 
-import api.contracts.requests.base.BaseRequest;
-import api.contracts.responses.base.BaseResponse;
-import api.contracts.responses.base.ErrorCodes;
-import api.contracts.responses.base.ErrorDto;
+import api.contracts.base.BaseRequest;
+import api.contracts.base.BaseResponse;
+import api.contracts.base.ErrorCodes;
+import api.contracts.base.ErrorDto;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,11 +44,16 @@ public abstract class BaseHandler<TRequest extends BaseRequest, TResponse extend
     public abstract TResponse createResponse();
 
     public TResponse handleException(Exception e) {
+
+        return handleException(getMessage(e), ErrorCodes.GENERAL_ERROR);
+    }
+
+    public TResponse handleException(String errorMessage, ErrorCodes errorCode) {
         TResponse response = createResponse();
 
         response.Errors = new ArrayList<>();
 
-        ErrorDto error = new ErrorDto(getMessage(e), ErrorCodes.GENERAL_ERROR);
+        ErrorDto error = new ErrorDto(errorMessage, errorCode);
 
         response.Errors.add(error);
 

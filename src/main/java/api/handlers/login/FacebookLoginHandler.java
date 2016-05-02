@@ -1,9 +1,9 @@
 package api.handlers.login;
 
-import api.contracts.requests.FacebookLoginRequest;
-import api.contracts.responses.FacebookLoginResponse;
-import api.contracts.responses.base.ErrorCodes;
-import api.contracts.responses.base.ErrorDto;
+import api.contracts.login.FacebookLoginRequest;
+import api.contracts.login.FacebookLoginResponse;
+import api.contracts.base.ErrorCodes;
+import api.contracts.base.ErrorDto;
 import api.handlers.base.BaseHandler;
 import org.apache.shiro.SecurityUtils;
 import security.shiro.facebook.FacebookToken;

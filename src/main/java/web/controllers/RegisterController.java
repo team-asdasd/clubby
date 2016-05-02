@@ -1,8 +1,8 @@
 package web.controllers;
 
-import api.contracts.responses.base.BaseResponse;
-import api.contracts.responses.base.ErrorCodes;
 import api.helpers.Parser;
+import api.contracts.base.BaseResponse;
+import api.contracts.base.ErrorCodes;
 import org.thymeleaf.context.WebContext;
 import web.contracts.RegistrationRequest;
 import web.helpers.*;

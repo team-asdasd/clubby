@@ -1,10 +1,10 @@
 package api.contracts.dto;
 
-public class RecommendationDTO {
+public class RecommendationDto {
     public String RequestCode;
     public int UserId;
 
-    public RecommendationDTO(int userId, String requestCode) {
+    public RecommendationDto(int userId, String requestCode) {
         UserId = userId;
         RequestCode = requestCode;
     }

@@ -1,7 +1,7 @@
 package api.business.services;
 
 import api.business.entities.Login;
-import api.business.entities.LoginRole;
+import api.business.entities.Role;
 import api.business.entities.User;
 import api.business.services.interfaces.IUserService;
 import clients.facebook.responses.FacebookUserDetails;
@@ -40,17 +40,18 @@ public class UserService implements IUserService {
         try {
             em.persist(user);
             em.persist(login);
-            em.flush();
-            LoginRole lr = new LoginRole();
-            lr.setRoleName("candidate");
+            Role lr = new Role();
+            lr.setRoleName("potentialCandidate");
             lr.setUsername(login.getUsername());
             em.persist(lr);
+            em.flush();
         } catch (Exception e) {
             em.clear();
             throw e;
         }
     }
 
+    @Transactional
     public void createFacebookUser(FacebookUserDetails details) {
         User user = new User();
         Login login = new Login();

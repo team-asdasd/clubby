@@ -3,8 +3,8 @@ package api.handlers.Recommendation;
 import api.business.services.interfaces.IRecommendationService;
 import api.contracts.requests.SendRecommendationRequest;
 import api.contracts.responses.SendRecommendationResponse;
-import api.contracts.responses.base.ErrorCodes;
-import api.contracts.responses.base.ErrorDto;
+import api.contracts.base.ErrorCodes;
+import api.contracts.base.ErrorDto;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -34,7 +34,7 @@ public class SendRecommendationHandler extends BaseHandler<SendRecommendationReq
 
         SendRecommendationResponse response = createResponse();
         try {
-            recommendationService.sendRecommendationRequest(request.userId);
+            recommendationService.sendRecommendationRequest(request.UserEmail);
         } catch (Exception e) {
             Throwable er = ExceptionUtils.getRootCause(e);
             if (er instanceof BadRequestException)

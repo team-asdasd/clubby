@@ -1,8 +1,9 @@
 package api.resources;
 
-import api.contracts.requests.*;
-import api.contracts.responses.*;
-import api.contracts.responses.base.BaseResponse;
+import api.contracts.requests.GetUserByIdRequest;
+import api.contracts.responses.GetUserByIdResponse;
+import api.contracts.users.*;
+import api.contracts.base.BaseResponse;
 import api.handlers.users.*;
 import api.handlers.utilities.StatusResolver;
 import io.swagger.annotations.Api;
@@ -31,7 +32,6 @@ public class UserResource {
 
 
     public UserResource() {
-
         hasPermissionHandler = new HasPermissionHandler();
         hasRoleHandler = new HasRoleHandler();
     }

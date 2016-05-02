@@ -1,14 +1,13 @@
 package api.business.services;
 
 import api.business.entities.*;
-import api.contracts.dto.RecommendationDTO;
+import api.contracts.dto.RecommendationDto;
 import api.business.services.interfaces.IEmailService;
 import api.business.services.interfaces.IRecommendationService;
 import api.business.services.interfaces.IUserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -18,6 +17,7 @@ import javax.ws.rs.BadRequestException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Stateless
 public class RecommendationService implements IRecommendationService {
@@ -68,7 +68,7 @@ public class RecommendationService implements IRecommendationService {
 
         if (Integer.parseInt(minRec.getValue()) <= count) {
             //change role
-            LoginRole lr = em.createQuery("SELECT lr FROM LoginRole lr WHERE lr.roleName = 'candidate' AND lr.username = :username", LoginRole.class)
+            Role lr = em.createQuery("SELECT lr FROM Role lr WHERE lr.roleName = 'candidate' AND lr.username = :username", Role.class)
                     .setParameter("username", userTo.getLogin().getUsername())
                     .getSingleResult();
             em.remove(lr);
@@ -77,15 +77,15 @@ public class RecommendationService implements IRecommendationService {
         logger.trace("User " + userTo.getEmail() + " received recommendation from " + userFrom.getEmail());
     }
 
-    public void sendRecommendationRequest(int userId) throws MessagingException {
+    public void sendRecommendationRequest(String userEmail) throws MessagingException {
 
-        User userFrom = userService.get(userId);
+        User userFrom = userService.getByEmail(userEmail);
 
         if (userFrom == null) {
-            logger.trace("Wrong id: " + userId);
+            logger.trace("Wrong email: " + userEmail);
             throw new BadRequestException("Bad request parameter");
         }
-        String emailFrom = userFrom.getEmail();
+
         String usernameTo = SecurityUtils.getSubject().getPrincipal().toString();
         User userTo = userService.getByUsername(usernameTo);
 
@@ -93,20 +93,14 @@ public class RecommendationService implements IRecommendationService {
             throw new BadRequestException("Can't send request to yourself");
         }
         //check if userTo is candidate
-        List<LoginRole> lrcList = em.createQuery("SELECT lr FROM LoginRole lr WHERE lr.username = :username AND lr.roleName = 'candidate'", LoginRole.class)
-                .setParameter("username", userTo.getLogin().getUsername())
-                .getResultList();
-
-        if (lrcList.size() != 1) {
+        List<Role> userToRoles = userTo.getLogin().getRoles();
+        if (!userToRoles.stream().map(x -> x.getRoleName()).collect(Collectors.toList()).contains("candidate")) {
             throw new BadRequestException("Already a member");
         }
 
         //check if userFrom is member
-        List<LoginRole> lrmList = em.createQuery("SELECT lr FROM LoginRole lr WHERE lr.username = :username AND lr.roleName = 'candidate'", LoginRole.class)
-                .setParameter("username", userFrom.getLogin().getUsername())
-                .getResultList();
-
-        if (lrmList.size() != 0) {
+        List<Role> userFromRoles = userFrom.getLogin().getRoles();
+        if (userFromRoles.stream().map(x -> x.getRoleName()).collect(Collectors.toList()).contains("candidate")) {
             throw new BadRequestException("Can't send request to candidate");
         }
 
@@ -134,7 +128,7 @@ public class RecommendationService implements IRecommendationService {
 
             em.persist(r);
 
-            emailService.send(emailFrom, "Recommendation request", "Hello dear friend! \nYou have received recommendation request from user "
+            emailService.send(userEmail, "Recommendation request", "Hello dear friend! \nYou have received recommendation request from user "
                     + userTo.getName());
         } else {
             //notify about reached request limit
@@ -142,7 +136,7 @@ public class RecommendationService implements IRecommendationService {
         logger.trace("Recommendation request from user " + userTo.getLogin().getUsername() + " to " + userFrom.getLogin().getUsername() + " has been sent");
     }
 
-    public List<RecommendationDTO> getAllRecommendationRequests() {
+    public List<RecommendationDto> getAllRecommendationRequests() {
 
         String currentUsername = SecurityUtils.getSubject().getPrincipal().toString();
         User user = userService.getByUsername(currentUsername);
@@ -151,9 +145,9 @@ public class RecommendationService implements IRecommendationService {
                 .setParameter("userFrom", user)
                 .getResultList();
 
-        List<RecommendationDTO> result = new ArrayList<>();
+        List<RecommendationDto> result = new ArrayList<>();
         for (Recommendation r : recommendations) {
-            RecommendationDTO res = new RecommendationDTO(r.getUserTo().getId(), r.getRecommendationCode());
+            RecommendationDto res = new RecommendationDto(r.getUserTo().getId(), r.getRecommendationCode());
             result.add(res);
         }
         return result;

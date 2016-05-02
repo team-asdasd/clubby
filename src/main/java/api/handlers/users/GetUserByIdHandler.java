@@ -2,16 +2,14 @@ package api.handlers.users;
 
 import api.business.entities.User;
 import api.business.services.interfaces.IUserService;
+import api.contracts.base.ErrorCodes;
+import api.contracts.base.ErrorDto;
 import api.contracts.requests.GetUserByIdRequest;
 import api.contracts.responses.GetUserByIdResponse;
-import api.contracts.responses.base.ErrorCodes;
-import api.contracts.responses.base.ErrorDto;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
 import clients.facebook.interfaces.IFacebookClient;
 import clients.facebook.responses.FacebookUserDetails;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;

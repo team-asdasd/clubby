@@ -30,7 +30,7 @@ public class RecommendationResource {
 
     @POST
     @Path("/confirm/{recommendationCode}")
-    @ApiOperation(value = "Recommends user by recommendation code", response = boolean.class)
+    @ApiOperation(value = "Recommends user by recommendation code", response = ConfirmRecommendationResponse.class)
     public Response recommend(@PathParam("recommendationCode") String recommendationCode) {
         ConfirmRecommendationRequest request = new ConfirmRecommendationRequest();
         request.recommendationCode = recommendationCode;
@@ -43,11 +43,11 @@ public class RecommendationResource {
     }
 
     @POST
-    @Path("/send/{userId}")
-    @ApiOperation(value = "Sends recommendation request", response = boolean.class)
-    public Response sendRecommendRequest(@PathParam("userId") int userId) {
+    @Path("/send/{userEmail}")
+    @ApiOperation(value = "Sends recommendation request", response = SendRecommendationResponse.class)
+    public Response sendRecommendRequest(@PathParam("userEmail") String userEmail) {
         SendRecommendationRequest request = new SendRecommendationRequest();
-        request.userId = userId;
+        request.UserEmail = userEmail;
 
         SendRecommendationResponse response = sendRecommendationHandler.handle(request);
 
@@ -57,7 +57,7 @@ public class RecommendationResource {
     }
 
     @GET
-    @ApiOperation(value = "Returns recommendations requests list", response = GetRecommendationsResponse.class)
+    @ApiOperation(value = "Gets recommendation requests list", response = GetRecommendationsResponse.class)
     public Response sendRecommendRequest() {
         GetRecommendationsRequestsRequest request = new GetRecommendationsRequestsRequest();
 

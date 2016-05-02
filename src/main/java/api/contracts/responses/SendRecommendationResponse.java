@@ -1,6 +1,6 @@
 package api.contracts.responses;
 
-import api.contracts.responses.base.BaseResponse;
+import api.contracts.base.BaseResponse;
 
 public class SendRecommendationResponse extends BaseResponse {
 }

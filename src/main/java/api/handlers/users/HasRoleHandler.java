@@ -1,9 +1,9 @@
 package api.handlers.users;
 
-import api.contracts.requests.HasRoleRequest;
-import api.contracts.responses.HasRoleResponse;
-import api.contracts.responses.base.ErrorCodes;
-import api.contracts.responses.base.ErrorDto;
+import api.contracts.users.HasRoleRequest;
+import api.contracts.users.HasRoleResponse;
+import api.contracts.base.ErrorCodes;
+import api.contracts.base.ErrorDto;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
 import org.apache.shiro.SecurityUtils;

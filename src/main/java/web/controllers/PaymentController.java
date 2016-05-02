@@ -1,10 +1,8 @@
 package web.controllers;
 
-import api.contracts.requests.PayseraCallbackRequest;
-import api.contracts.responses.GetPaymentInfoResponse;
-import api.contracts.responses.GetPayseraParamsResponse;
+import api.contracts.payments.GetPaymentInfoResponse;
+import api.contracts.payments.GetPayseraParamsResponse;
 import api.contracts.responses.base.BaseResponse;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.thymeleaf.context.WebContext;
@@ -13,7 +11,6 @@ import web.helpers.HttpClient;
 import web.helpers.PathMapping;
 import web.helpers.Sender;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 /**

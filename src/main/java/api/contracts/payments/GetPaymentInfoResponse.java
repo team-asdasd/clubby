@@ -1,7 +1,8 @@
-package api.contracts.responses;
+package api.contracts.payments;
 
-import api.business.entities.PaymentInfoDto;
-import api.contracts.responses.base.BaseResponse;
+import api.contracts.dto.PaymentInfoDto;
+import api.contracts.base.BaseResponse;
+
 
 /**
  * Created by Mindaugas on 01/05/2016.

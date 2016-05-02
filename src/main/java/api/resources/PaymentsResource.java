@@ -1,12 +1,12 @@
 package api.resources;
 
-import api.contracts.requests.GetPaymentInfoRequest;
-import api.contracts.requests.GetPayseraParamsRequest;
-import api.contracts.requests.PayseraCallbackRequest;
-import api.contracts.responses.GetPaymentInfoResponse;
-import api.contracts.responses.GetPayseraParamsResponse;
-import api.contracts.responses.PayseraCallbackResponse;
-import api.contracts.responses.base.ErrorDto;
+import api.contracts.base.ErrorDto;
+import api.contracts.payments.GetPaymentInfoRequest;
+import api.contracts.payments.GetPayseraParamsRequest;
+import api.contracts.payments.PayseraCallbackRequest;
+import api.contracts.payments.GetPaymentInfoResponse;
+import api.contracts.payments.GetPayseraParamsResponse;
+import api.contracts.payments.PayseraCallbackResponse;
 import api.handlers.payments.GetPaymentInfoHandler;
 import api.handlers.payments.GetPayseraParamsHandler;
 import api.handlers.payments.PayseraCallbackHandler;
@@ -23,8 +23,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by Mindaugas on 29/04/2016.

@@ -1,4 +1,4 @@
-package api.business.entities;
+package api.contracts.dto;
 
 /**
  * Created by Mindaugas on 01/05/2016.

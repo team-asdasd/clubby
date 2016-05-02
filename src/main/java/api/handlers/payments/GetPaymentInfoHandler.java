@@ -1,12 +1,12 @@
 package api.handlers.payments;
 
 import api.business.entities.Payment;
-import api.business.entities.PaymentInfoDto;
+import api.contracts.dto.PaymentInfoDto;
 import api.business.services.interfaces.IPaymentsService;
-import api.contracts.requests.GetPaymentInfoRequest;
-import api.contracts.responses.GetPaymentInfoResponse;
-import api.contracts.responses.base.ErrorCodes;
-import api.contracts.responses.base.ErrorDto;
+import api.contracts.base.ErrorCodes;
+import api.contracts.base.ErrorDto;
+import api.contracts.payments.GetPaymentInfoRequest;
+import api.contracts.payments.GetPaymentInfoResponse;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
 import org.apache.shiro.SecurityUtils;

@@ -1,6 +1,7 @@
-package api.contracts.requests;
+package api.contracts.payments;
 
-import api.contracts.requests.base.BaseRequest;
+
+import api.contracts.base.BaseRequest;
 
 /**
  * Created by Mindaugas on 23/04/2016.

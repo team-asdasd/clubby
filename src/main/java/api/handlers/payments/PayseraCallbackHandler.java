@@ -1,22 +1,16 @@
 package api.handlers.payments;
 
 import api.business.entities.MoneyTransaction;
-import api.business.entities.Payment;
-import api.business.entities.PaymentInfoDto;
-import api.business.entities.TransactionStatus;
 import api.business.services.interfaces.IPaymentsService;
-import api.contracts.requests.GetPaymentInfoRequest;
-import api.contracts.requests.PayseraCallbackRequest;
-import api.contracts.responses.GetPaymentInfoResponse;
-import api.contracts.responses.PayseraCallbackResponse;
-import api.contracts.responses.base.ErrorCodes;
-import api.contracts.responses.base.ErrorDto;
+import api.contracts.base.ErrorCodes;
+import api.contracts.base.ErrorDto;
+import api.contracts.enums.TransactionStatus;
+import api.contracts.payments.PayseraCallbackRequest;
+import api.contracts.payments.PayseraCallbackResponse;
 import api.handlers.base.BaseHandler;
 import api.helpers.Parser;
 import api.helpers.Validator;
-import api.models.payments.PayseraCallbackParams;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
+import api.contracts.dto.PayseraCallbackParamsDto;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -50,7 +44,7 @@ public class PayseraCallbackHandler extends BaseHandler<PayseraCallbackRequest, 
 
         PayseraCallbackResponse response = createResponse();
         String decoded = paymentsService.decodePayseraData(request.data);
-        PayseraCallbackParams callbackParams = Parser.fromQueryString(decoded, PayseraCallbackParams.class);
+        PayseraCallbackParamsDto callbackParams = Parser.fromQueryString(decoded, PayseraCallbackParamsDto.class);
 
         MoneyTransaction mt = paymentsService.getMoneyTransaction(callbackParams.Orderid);
 
@@ -72,7 +66,7 @@ public class PayseraCallbackHandler extends BaseHandler<PayseraCallbackRequest, 
         }
 
         if(callbackParams.Status == 0){
-            mt.setStatus(api.models.payments.TransactionStatus.cancelled.getValue());
+            mt.setStatus(TransactionStatus.cancelled.getValue());
             paymentsService.updateMoneyTransaction(mt);
         }
 
@@ -82,7 +76,7 @@ public class PayseraCallbackHandler extends BaseHandler<PayseraCallbackRequest, 
         }
 
         if(callbackParams.Status == 1){
-            mt.setStatus(api.models.payments.TransactionStatus.approved.getValue());
+            mt.setStatus(TransactionStatus.approved.getValue());
             response.success = true;
         }
 

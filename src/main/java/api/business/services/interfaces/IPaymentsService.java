@@ -22,6 +22,10 @@ public interface IPaymentsService {
 
     String encodeUrl(Map<String,String> map);
 
+    boolean checkWithMd5(String data, String ss1);
+
+    String decodePayseraData(String data);
+
     int createPaymentsSettings(PaymentsSettings paymentsSettings);
 
     PaymentsSettings updatePaymentsSettings(PaymentsSettings paymentsSettings);
@@ -48,5 +52,5 @@ public interface IPaymentsService {
 
     MoneyTransaction updateMoneyTransaction(MoneyTransaction transaction);
 
-    MoneyTransaction getMoneyTransaction(StringUtils id);
+    MoneyTransaction getMoneyTransaction(String id);
 }

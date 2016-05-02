@@ -45,7 +45,7 @@ WHERE paymentSettingsId = 1);
 
 /* insert payment types */
 INSERT INTO payment.paymenttypes
-SELECT * FROM (SELECT 1, 'payYearlyMembership', 'Yearly membership payment for club members') a
+SELECT * FROM (SELECT 1, 'yearly', 'only one time in years') a
 WHERE NOT EXISTS (
 SELECT * FROM payment.paymenttypes
 WHERE paymentTypeId = 1);

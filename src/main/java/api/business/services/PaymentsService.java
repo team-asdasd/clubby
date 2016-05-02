@@ -29,6 +29,11 @@ public class PaymentsService implements IPaymentsService {
 
     //region encryptions
 
+    public boolean checkWithMd5(String data, String ss1){
+        String md5 = md5WithPayseraPassword(data);
+        return md5.equals(ss1);
+    }
+
     @Override
     public String getPassword() {
         return System.getenv("PAYSERAPASS");
@@ -47,6 +52,12 @@ public class PaymentsService implements IPaymentsService {
         base64 = base64.replace("+","-");
 
         return base64;
+    }
+
+    public String decodePayseraData(String data){
+        data = data.replace("_","/");
+        data = data.replace("-","+");
+        return new String(Base64.decodeBase64(data.getBytes()));
     }
 
     @Override
@@ -157,7 +168,7 @@ public class PaymentsService implements IPaymentsService {
         return em.update(transaction);
     }
 
-    public MoneyTransaction getMoneyTransaction(StringUtils id){
+    public MoneyTransaction getMoneyTransaction(String id){
         return em.getById(MoneyTransaction.class, id);
     }
 

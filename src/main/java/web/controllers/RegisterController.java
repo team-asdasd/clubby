@@ -2,8 +2,7 @@ package web.controllers;
 
 import api.contracts.responses.base.BaseResponse;
 import api.contracts.responses.base.ErrorCodes;
-import com.google.api.client.http.HttpResponse;
-import com.google.api.client.util.SecurityUtils;
+import api.helpers.Parser;
 import org.thymeleaf.context.WebContext;
 import web.contracts.RegistrationRequest;
 import web.helpers.*;

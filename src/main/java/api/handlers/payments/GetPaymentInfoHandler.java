@@ -12,12 +12,14 @@ import api.helpers.Validator;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.ArrayList;
 
 /**
  * Created by Mindaugas on 01/05/2016.
  */
+@Stateless
 public class GetPaymentInfoHandler extends BaseHandler<GetPaymentInfoRequest, GetPaymentInfoResponse> {
 
     @Inject
@@ -42,6 +44,7 @@ public class GetPaymentInfoHandler extends BaseHandler<GetPaymentInfoRequest, Ge
         Payment payment = paymentsService.getPayment(request.PaymentId);
 
         if(payment == null){
+            response.Errors = new ArrayList<>();
             response.Errors.add(new ErrorDto(String.format("Payment %s not found",request.PaymentId), ErrorCodes.VALIDATION_ERROR));
             return response;
         }

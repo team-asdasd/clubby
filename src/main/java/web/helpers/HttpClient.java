@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by Mindaugas on 22/04/2016.
@@ -33,13 +34,24 @@ public  class HttpClient {
 
     }
 
-    public static<T> T sendGetRequest(String url, Class<T> entityClass){
+    public static<T> T sendGetRequest(String url, Class<T> entityClass, String cookie){
+        GenericUrl ur = new GenericUrl("http://"+_baseUrl);
+        ur.setRawPath(url);
+
         T entity = null;
         try {
-            HttpRequest request = _requestFactory.buildGetRequest(new GenericUrl(url)).setParser(_jsonObjectParser);
-            entity = request.execute().parseAs(entityClass);
+            HttpRequest request = _requestFactory.buildGetRequest(ur).setParser(_jsonObjectParser);
+            setCookie(request,cookie);
+
+            HttpResponse response = request.execute();
+            entity  = _gson.fromJson(response.parseAsString(), entityClass);
         } catch (IOException e) {
-            logger.error(e);
+            try {
+                entity = _gson.fromJson(((HttpResponseException) e).getContent(), entityClass);
+            }catch (Exception ex){
+                logger.error(ex);
+            }
+
         }
 
         return entity;
@@ -52,12 +64,7 @@ public  class HttpClient {
             ur.setRawPath(url);
 
             HttpRequest request = _requestFactory.buildPostRequest(ur, new ClubbyJsonHttpContent(entity));
-
-            if(cookie != null){
-                HttpHeaders headers = request.getHeaders();
-                headers.set("Cookie", cookie);
-                request.setHeaders(headers);
-            }
+            setCookie(request,cookie);
             HttpResponse httpResp = request.execute();
             response = _gson.fromJson(httpResp.parseAsString(), entityClass);
         } catch (IOException e) {
@@ -70,6 +77,16 @@ public  class HttpClient {
         }
 
         return response;
+    }
+
+    private static void setCookie(HttpRequest request,String cookie){
+        if(cookie != null){
+            ArrayList cookieList = new ArrayList();
+            cookieList.add(cookie);
+            HttpHeaders headers = request.getHeaders();
+            headers.set("Cookie", cookieList);
+            request.setHeaders(headers);
+        }
     }
 
 }

@@ -80,7 +80,7 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
         String lastName = names[0];
         if(names.length > 1){
             String[] lastNames = Arrays.copyOfRange(names, 1, names.length);
-            String.join(" ", Arrays.asList(lastNames));
+            lastName = String.join(" ", Arrays.asList(lastNames));
         }
 
         queryParams.put("projectid", paymentsSettings.getProjectid());

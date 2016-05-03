@@ -79,7 +79,6 @@ public class PaymentController {
 
     @PathMapping("cancelled")
     public void cancelled(WebContext ctx) throws Exception {
-        sendInfoToCallback(ctx);
         ctx.setVariable("pageTitle", "Failed");
         ctx.setVariable("layout","_baseLayout");
 

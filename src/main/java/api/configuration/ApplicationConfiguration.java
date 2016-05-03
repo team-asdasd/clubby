@@ -1,10 +1,6 @@
 package api.configuration;
 
-import api.resources.CottageResource;
-import api.resources.LoginResource;
-import api.resources.PaymentsResource;
-import api.resources.RecommendationResource;
-import api.resources.UserResource;
+import api.resources.*;
 import io.swagger.jaxrs.config.BeanConfig;
 
 import java.util.Set;
@@ -37,6 +33,7 @@ public class ApplicationConfiguration extends Application {
         classes.add(PaymentsResource.class);
         classes.add(RecommendationResource.class);
         classes.add(CottageResource.class);
+        classes.add(PayseraResource.class);
 
         classes.add(io.swagger.jaxrs.listing.ApiListingResource.class);
         classes.add(io.swagger.jaxrs.listing.SwaggerSerializers.class);

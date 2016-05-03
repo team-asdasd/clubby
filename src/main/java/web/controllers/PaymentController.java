@@ -30,7 +30,7 @@ public class PaymentController {
             ctx.getResponse().sendRedirect(ctx.getResponse().encodeRedirectURL("/"));
         }
         String cookie = ctx.getRequest().getHeader("Cookie");
-        GetPaymentInfoResponse response = HttpClient.sendGetRequest("/api/payments/payment/"+paymentId, GetPaymentInfoResponse.class, cookie);
+        GetPaymentInfoResponse response = HttpClient.sendGetRequest("/api/payments/"+paymentId, GetPaymentInfoResponse.class, cookie);
 
         ctx.setVariable("payment", response.paymentInfoDto);
         ctx.setVariable("pageTitle", "Pay");
@@ -50,7 +50,7 @@ public class PaymentController {
         }
 
         String cookie = ctx.getRequest().getHeader("Cookie");
-        GetPayseraParamsResponse response = HttpClient.sendGetRequest("/api/payments/parameters/"+paymentId, GetPayseraParamsResponse.class, cookie);
+        GetPayseraParamsResponse response = HttpClient.sendGetRequest("/api/paysera/parameters/"+paymentId, GetPayseraParamsResponse.class, cookie);
 
         HttpServletResponse httpResp = ctx.getResponse();
 

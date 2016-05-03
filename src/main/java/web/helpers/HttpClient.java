@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by Mindaugas on 22/04/2016.
@@ -34,9 +35,10 @@ public  class HttpClient {
 
     }
 
-    public static<T> T sendGetRequest(String url, Class<T> entityClass, String cookie){
+    public static<T> T sendGetRequest(String url, Class<T> entityClass,Map<String,String> params, String cookie){
         GenericUrl ur = new GenericUrl("http://"+_baseUrl);
         ur.setRawPath(url);
+        setParams(ur, params);
 
         T entity = null;
         try {
@@ -86,6 +88,14 @@ public  class HttpClient {
             HttpHeaders headers = request.getHeaders();
             headers.set("Cookie", cookieList);
             request.setHeaders(headers);
+        }
+    }
+
+    private static void setParams(GenericUrl url, Map<String,String> params){
+        if(params != null){
+            for(String name : params.keySet()){
+                url.set(name, params.get(name));
+            }
         }
     }
 

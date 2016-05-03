@@ -19,10 +19,7 @@ import org.apache.shiro.subject.Subject;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by Mindaugas on 29/04/2016.
@@ -77,14 +74,22 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
         }
         baseUrl = "http://" + baseUrl;
 
+        //hack to resolve potential last name
+        String[] names = user.getName().split(" ");
+        String firstName = names[0];
+        String lastName = names[0];
+        if(names.length > 1){
+            String[] lastNames = Arrays.copyOfRange(names, 1, names.length);
+            String.join(" ", Arrays.asList(lastNames));
+        }
+
         queryParams.put("projectid", paymentsSettings.getProjectid());
         queryParams.put("orderid", mt.getTransactionid());
         queryParams.put("version", paymentsSettings.getVersion());
         queryParams.put("currency", paymentsSettings.getCurrency());
         queryParams.put("paytext", payment.getPaytext());
-        queryParams.put("p_firstname", user.getName());
-        //todo add columns firstName and last name in users table
-        queryParams.put("p_lastname", "");
+        queryParams.put("p_firstname", firstName);
+        queryParams.put("p_lastname", lastName);
         queryParams.put("p_email", user.getEmail());
         queryParams.put("amount", Integer.toString(payment.getAmount()));
         queryParams.put("test", "1");

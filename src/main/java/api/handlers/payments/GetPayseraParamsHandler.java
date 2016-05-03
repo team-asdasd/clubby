@@ -84,9 +84,9 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
         queryParams.put("paytext", payment.getPaytext());
         queryParams.put("amount", Integer.toString(payment.getAmount()));
         queryParams.put("test", "1");
-        queryParams.put("accepturl", baseUrl+"/pay/accept");
-        queryParams.put("cancelurl", baseUrl+"/pay/cancel");
-        queryParams.put("callbackurl", baseUrl+"/pay/success");
+        queryParams.put("accepturl", baseUrl+"/pay/accepted");
+        queryParams.put("cancelurl", baseUrl+"/pay/cancelled");
+        queryParams.put("callbackurl", baseUrl+"/api/payments/payseraCallback");
 
         String urlEncoded = paymentsService.encodeUrl(queryParams);
         String base64PreparedUrl = paymentsService.prepareUrlEncoded(urlEncoded);

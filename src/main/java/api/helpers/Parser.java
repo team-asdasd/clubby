@@ -21,7 +21,14 @@ public class Parser {
 
             for(Field field : entityClass.getFields()){
                 if(map.containsKey(field.getName().toLowerCase())){
-                    field.set(entity, map.get(field.getName().toLowerCase()));
+                    Object value = map.get(field.getName().toLowerCase());
+                    switch (field.getType().getTypeName()){
+                        case "int" :
+                            value = Integer.parseInt((String) value);
+                            break;
+                    }
+
+                    field.set(entity, value);
                 }
             }
         } catch (InstantiationException e) {

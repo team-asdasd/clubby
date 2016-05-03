@@ -1,6 +1,7 @@
 package api.business.entities;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 /**
  * Created by Mindaugas on 30/04/2016.
@@ -96,14 +97,14 @@ public class Payment {
         this.settings = settings;
     }
 
-    private MoneyTransaction transaction;
+    private Collection<MoneyTransaction> transactions;
 
-    @OneToOne(mappedBy = "payment")
-    public MoneyTransaction getTransaction() {
-        return transaction;
+    @OneToMany(mappedBy = "payment")
+    public Collection<MoneyTransaction> getTransactions() {
+        return transactions;
     }
 
-    public void setTransaction(MoneyTransaction transaction) {
-        this.transaction = transaction;
+    public void setTransactions(Collection<MoneyTransaction> transactions) {
+        this.transactions = transactions;
     }
 }

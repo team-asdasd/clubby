@@ -82,6 +82,10 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
         queryParams.put("version", paymentsSettings.getVersion());
         queryParams.put("currency", paymentsSettings.getCurrency());
         queryParams.put("paytext", payment.getPaytext());
+        queryParams.put("p_firstname", user.getName());
+        //todo add columns firstName and last name in users table
+        queryParams.put("p_lastname", "");
+        queryParams.put("p_email", user.getEmail());
         queryParams.put("amount", Integer.toString(payment.getAmount()));
         queryParams.put("test", "1");
         queryParams.put("accepturl", baseUrl+"/pay/accepted");

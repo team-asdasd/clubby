@@ -49,17 +49,20 @@ public class PayseraCallbackHandler extends BaseHandler<PayseraCallbackRequest, 
         MoneyTransaction mt = paymentsService.getMoneyTransaction(callbackParams.Orderid);
 
         if(mt == null){
+            response.Errors = new ArrayList<>();
             response.Errors.add(new ErrorDto(String.format("Order not found. id : %s", callbackParams.Orderid), ErrorCodes.VALIDATION_ERROR));
             return response;
         }
 
         if(callbackParams.Amount != mt.getAmmount()){
+            response.Errors = new ArrayList<>();
             response.Errors.add(new ErrorDto(String.format("Not equal money amount. Paysera : %s, clubby : %s"
                     ,callbackParams.Amount, mt.getAmmount()), ErrorCodes.VALIDATION_ERROR));
             return response;
         }
 
         if(!callbackParams.Currency.equals(mt.getPayment().getSettings().getCurrency())){
+            response.Errors = new ArrayList<>();
             response.Errors.add(new ErrorDto(String.format("Not equal money currency. Paysera : %s, clubby : %s"
                     ,callbackParams.Amount, mt.getAmmount()), ErrorCodes.VALIDATION_ERROR));
             return response;
@@ -71,6 +74,7 @@ public class PayseraCallbackHandler extends BaseHandler<PayseraCallbackRequest, 
         }
 
         if(callbackParams.Status != 1){
+            response.Errors = new ArrayList<>();
             response.Errors.add(new ErrorDto(String.format("Wrong status %s", callbackParams.Status), ErrorCodes.VALIDATION_ERROR));
             return response;
         }

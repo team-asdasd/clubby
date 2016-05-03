@@ -86,7 +86,7 @@ public class MoneyTransaction {
 
     private Payment payment;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "paymentid", referencedColumnName = "paymentid")
     public Payment getPayment() {
         return payment;

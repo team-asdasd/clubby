@@ -14,6 +14,7 @@ import api.handlers.utilities.StatusResolver;
 import io.swagger.annotations.ApiOperation;
 
 import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
@@ -29,11 +30,11 @@ import java.io.IOException;
  */
 @Path("/payments")
 public class PaymentsResource {
-    @EJB
+    @Inject
     private GetPayseraParamsHandler getPayseraParamsHandler;
-    @EJB
+    @Inject
     private GetPaymentInfoHandler getPaymentInfoHandler;
-    @EJB
+    @Inject
     private PayseraCallbackHandler payseraCallbackHandler;
 
     @GET

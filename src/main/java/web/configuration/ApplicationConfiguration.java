@@ -24,6 +24,7 @@ public class ApplicationConfiguration {
         classes.add(ErrorController.class);
         classes.add(AdminController.class);
         classes.add(RegisterController.class);
+        classes.add(PaymentController.class);
 
         try {
             requestsForwarder = new RequestsForwarder(classes);

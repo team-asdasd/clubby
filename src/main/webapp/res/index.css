@@ -162,3 +162,17 @@ body {
         width: 700px;
     }
 }
+.no-break{
+    white-space: nowrap;
+}
+.border-white-round{
+    border:1px solid white;
+    border-radius: 12px;
+}
+.pad24{
+    padding: 24px;
+}
+.avoid-header{
+    margin-bottom: 90px;
+    margin-top: 90px;
+}

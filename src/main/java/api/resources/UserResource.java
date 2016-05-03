@@ -19,9 +19,9 @@ import javax.ws.rs.core.Response;
 @Path("/user")
 @Produces({"application/json"})
 public class UserResource {
-    @EJB
+    @Inject
     private GetUserInfoHandler getUserInfoHandler;
-    @EJB
+    @Inject
     private CreateUserHandler createUserHandler;
     @Inject
     private GetUserByIdHandler getUserByIdHandler;

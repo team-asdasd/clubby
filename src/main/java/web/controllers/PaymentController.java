@@ -32,11 +32,15 @@ public class PaymentController {
         String cookie = ctx.getRequest().getHeader("Cookie");
         GetPaymentInfoResponse response = HttpClient.sendGetRequest("/api/payments/"+paymentId, GetPaymentInfoResponse.class, cookie);
 
-        ctx.setVariable("payment", response.paymentInfoDto);
-        ctx.setVariable("pageTitle", "Pay");
-        ctx.setVariable("layout","_baseLayout");
+        if(response.Errors == null || response.Errors.size() == 0){
+            ctx.setVariable("payment", response.paymentInfoDto);
+            ctx.setVariable("pageTitle", "Pay");
+            ctx.setVariable("layout","_baseLayout");
 
-        Sender.sendView(ctx, "payment/index");
+            Sender.sendView(ctx, "payment/index");
+        }else{
+            ctx.getResponse().setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
     }
 
 

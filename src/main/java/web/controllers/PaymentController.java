@@ -2,7 +2,6 @@ package web.controllers;
 
 import api.contracts.payments.GetPaymentInfoResponse;
 import api.contracts.payments.GetPayseraParamsResponse;
-import api.contracts.responses.base.BaseResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.thymeleaf.context.WebContext;

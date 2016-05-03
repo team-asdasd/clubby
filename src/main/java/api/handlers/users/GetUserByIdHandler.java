@@ -40,7 +40,7 @@ public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserB
         User user = userInfoService.get(request.Id);
 
         if (user == null) {
-            logger.warn(String.format("User ? not found", request.Id));
+            logger.warn(String.format("User %s not found", request.Id));
             return handleException("User not found", ErrorCodes.NOT_FOUND);
         }
 

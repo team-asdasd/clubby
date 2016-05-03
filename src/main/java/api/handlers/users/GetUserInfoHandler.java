@@ -47,7 +47,7 @@ public class GetUserInfoHandler extends BaseHandler<GetUserInfoRequest, GetUserI
         User user = loginService.getByUserName(username).getUser();
         response.Email = user.getEmail();
         if (user == null) {
-            logger.warn(String.format("User ? not found", username));
+            logger.warn(String.format("User %s not found", username));
             return handleException("User not found", ErrorCodes.NOT_FOUND);
         }
 

@@ -3,5 +3,5 @@ CREATE TABLE main.configuration (
   value TEXT
 );
   
-INSERT INTO main.configurations(key, value) VALUES ('min_recommendation_required', '2');
-INSERT INTO main.configurations(key, value) VALUES ('max_recommendation_request', '5');
+INSERT INTO main.configuration(key, value) VALUES ('min_recommendation_required', '2');
+INSERT INTO main.configuration(key, value) VALUES ('max_recommendation_request', '5');

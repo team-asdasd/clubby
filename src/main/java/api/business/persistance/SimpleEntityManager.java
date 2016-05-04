@@ -73,8 +73,8 @@ public class SimpleEntityManager implements ISimpleEntityManager {
     public<T> List<T> getAll(Class<T> entityClass){
         CriteriaQuery<T> criteria = em.getCriteriaBuilder().createQuery(entityClass);
         criteria.select(criteria.from(entityClass));
-        List<T> listOfEntities = em.createQuery(criteria).getResultList();
-        return listOfEntities;
+
+        return em.createQuery(criteria).getResultList();
     }
 
 }

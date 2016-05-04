@@ -25,11 +25,11 @@ public class UserResource {
     private CreateUserHandler createUserHandler;
     @Inject
     private GetUserByIdHandler getUserByIdHandler;
-
+    @Inject
+    private GetAllUsersHandler getAllUsersHandler;
 
     private final HasPermissionHandler hasPermissionHandler;
     private final HasRoleHandler hasRoleHandler;
-
 
     public UserResource() {
         hasPermissionHandler = new HasPermissionHandler();
@@ -38,7 +38,20 @@ public class UserResource {
 
     @GET
     @ApiOperation(value = "Gets user information for current user.", response = GetUserInfoResponse.class)
-    public Response getUserInfo() {
+    public Response getAllUsers() {
+        GetAllUsersRequest request = new GetAllUsersRequest();
+
+        GetAllUsersResponse response = getAllUsersHandler.handle(request);
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
+    }
+
+    @GET
+    @Path("/me")
+    @ApiOperation(value = "Gets user information for current user.", response = GetUserInfoResponse.class)
+    public Response getCurrentUser() {
         GetUserInfoRequest request = new GetUserInfoRequest();
 
         GetUserInfoResponse response = getUserInfoHandler.handle(request);
@@ -51,7 +64,7 @@ public class UserResource {
     @GET
     @Path("/{id}")
     @ApiOperation(value = "Gets user information by id.", response = GetUserByIdResponse.class)
-    public Response getUserInfoById(@PathParam("id") int id) {
+    public Response getUserById(@PathParam("id") int id) {
         GetUserByIdRequest request = new GetUserByIdRequest();
         request.Id = id;
         GetUserByIdResponse response = getUserByIdHandler.handle(request);
@@ -63,7 +76,7 @@ public class UserResource {
 
 
     @GET
-    @Path("/hasRole/{roleName}")
+    @Path("/me/hasRole/{roleName}")
     @ApiOperation(value = "Checks if current user has specified role.", response = boolean.class)
     public Response hasRole(@PathParam("roleName") String roleName) {
         HasRoleRequest request = new HasRoleRequest();
@@ -77,7 +90,7 @@ public class UserResource {
     }
 
     @GET
-    @Path("/hasPermission/{permissionName}")
+    @Path("/me/hasPermission/{permissionName}")
     @ApiOperation(value = "Checks if current user has specified permission.", response = boolean.class)
     public Response hasPermission(@PathParam("permissionName") String permissionName) {
         HasPermissionRequest request = new HasPermissionRequest();

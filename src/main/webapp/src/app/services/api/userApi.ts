@@ -11,15 +11,15 @@ export class UserApi {
     }
 
     public getUserInfo():Observable<User> {
-        return this.http.get(this.url).map(UserApi.parse).catch(UserApi.handleError);
+        return this.http.get(`${this.url}/me`).map(UserApi.parse).catch(UserApi.handleError);
     }
 
     public hasRole(role:string):Observable<boolean> {
-        return this.http.get(`${this.url}/hasRole/${role}`).map(UserApi.parse).catch(UserApi.handleError);
+        return this.http.get(`${this.url}/me/hasRole/${role}`).map(UserApi.parse).catch(UserApi.handleError);
     }
 
     public hasPermission(permission:string):Observable<boolean> {
-        return this.http.get(`${this.url}/hasPermission/${permission}`).map(UserApi.parse).catch(UserApi.handleError);
+        return this.http.get(`${this.url}/me/hasPermission/${permission}`).map(UserApi.parse).catch(UserApi.handleError);
     }
 
     private static parse<T>(res:Response):T {

@@ -1,0 +1,27 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="shared/head::head">
+    <meta charset="utf-8">
+</head>
+<body>
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <table class="table table-bordered table-responsive" style="position: absolute; left: 0; top: 150px; width: 100%;">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+            </tr>
+            </thead>
+            <tbody class="searchable">
+            <tr th:each="user,iterationStatus : ${users}">
+                <td th:text="${user.Name}"></td>
+                <td th:text="${user.Email}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script src="/public/admin/shared/scripts/users.js"></script>
+</body>
+</html>

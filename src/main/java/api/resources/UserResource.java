@@ -37,7 +37,7 @@ public class UserResource {
     }
 
     @GET
-    @ApiOperation(value = "Gets user information for current user.", response = GetUserInfoResponse.class)
+    @ApiOperation(value = "Gets user information for all users.", response = GetUserInfoResponse.class)
     public Response getAllUsers() {
         GetAllUsersRequest request = new GetAllUsersRequest();
 

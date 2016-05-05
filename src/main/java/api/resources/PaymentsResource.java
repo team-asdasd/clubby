@@ -4,6 +4,7 @@ import api.contracts.payments.GetPaymentInfoRequest;
 import api.contracts.payments.GetPaymentInfoResponse;
 import api.handlers.payments.GetPaymentInfoHandler;
 import api.handlers.utilities.StatusResolver;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 import javax.inject.Inject;
@@ -16,6 +17,7 @@ import javax.ws.rs.core.Response;
 /**
  * Created by Mindaugas on 29/04/2016.
  */
+@Api(value = "payments")
 @Path("/payments")
 public class PaymentsResource {
     @Inject

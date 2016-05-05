@@ -1,6 +1,7 @@
 package api.business.entities;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by Mindaugas on 30/04/2016.
@@ -14,6 +15,7 @@ public class MoneyTransaction {
     private int status;
     private int ammount;
     private int ammountclubby;
+    private Date creationTime;
 
     @Id
     @Column(name = "transactionid")
@@ -63,6 +65,16 @@ public class MoneyTransaction {
 
     public void setAmmountclubby(int ammountclubby) {
         this.ammountclubby = ammountclubby;
+    }
+
+    @Basic
+    @Column(name = "creationTime")
+    public Date getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(Date creationTime) {
+        this.creationTime = creationTime;
     }
 
     @Override

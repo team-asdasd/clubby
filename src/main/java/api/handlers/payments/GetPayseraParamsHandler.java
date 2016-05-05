@@ -64,6 +64,7 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
         mt.setUser(user);
         mt.setTransactiontypeid(TransactionTypes.in.getValue());
         mt.setTransactionid(UUID.randomUUID().toString());
+        mt.setCreationTime(new Date());
 
         paymentsService.createMoneyTransaction(mt);
 

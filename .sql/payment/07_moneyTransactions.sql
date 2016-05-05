@@ -6,6 +6,7 @@ CREATE TABLE payment.moneyTransactions
   status INT NOT NULL,
   ammount INT NOT NULL,
   ammountClubby INT NOT NULL,
+  creationTime TIMESTAMP NOT NULL,
   paymentId INT,
   CONSTRAINT moneyTransactions_pkey PRIMARY KEY (transactionId),
   CONSTRAINT fk_money_transactions_transaction_types FOREIGN KEY (transactionTypeId)

@@ -8,6 +8,7 @@ import api.contracts.payments.PayseraCallbackResponse;
 import api.handlers.payments.GetPayseraParamsHandler;
 import api.handlers.payments.PayseraCallbackHandler;
 import api.handlers.utilities.StatusResolver;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 import javax.inject.Inject;
@@ -24,6 +25,7 @@ import java.io.IOException;
 /**
  * Created by Mindaugas on 03/05/2016.
  */
+@Api(value = "paysera")
 @Path("/paysera")
 public class PayseraResource {
     @Inject

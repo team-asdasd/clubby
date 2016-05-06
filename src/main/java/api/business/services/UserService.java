@@ -16,7 +16,6 @@ import java.util.UUID;
 
 @RequestScoped
 public class UserService implements IUserService {
-
     @PersistenceContext
     private EntityManager em;
 
@@ -27,7 +26,7 @@ public class UserService implements IUserService {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public User getByEmail(String email) {
         try {
-            TypedQuery<User> users = em.createQuery("FROM User WHERE email = :email", User.class).setParameter("email", email);
+            TypedQuery<User> users = em.createQuery("SELECT U FROM User U WHERE U.email = :email", User.class).setParameter("email", email);
             return users.getSingleResult();
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,14 +68,14 @@ public class UserService implements IUserService {
     @Override
     public User getByFacebookId(String id) {
         try {
-            TypedQuery<User> users = em.createQuery("FROM User WHERE facebookId = :id", User.class).setParameter("id", id);
+            TypedQuery<User> users = em.createQuery("SELECT U FROM User U WHERE U.facebookId = :id", User.class).setParameter("id", id);
             return users.getSingleResult();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
-
+    
     @Override
     @Transactional
     public void save(User user) {
@@ -94,7 +93,7 @@ public class UserService implements IUserService {
         List<User> userList = em.createQuery("SELECT u FROM User u WHERE u.login.username = :username", User.class)
                 .setParameter("username", username)
                 .getResultList();
-        if(userList.size() == 0)
+        if (userList.size() == 0)
             return null;
         return userList.get(0);
     }

@@ -17,12 +17,8 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.ArrayList;
 
-/**
- * Created by Mindaugas on 23/04/2016.
- */
 @Stateless
 public class CreateUserHandler extends BaseHandler<CreateUserRequest, BaseResponse> {
-
     @Inject
     private IUserService userService;
 

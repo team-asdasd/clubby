@@ -12,9 +12,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
-/**
- * Created by Mindaugas on 22/04/2016.
- */
 public class HttpClient {
     private static HttpRequestFactory _requestFactory;
     private static JsonObjectParser _jsonObjectParser;
@@ -32,7 +29,6 @@ public class HttpClient {
         if (_baseUrl == null || _baseUrl.isEmpty()) {
             _baseUrl = "localhost:8080";
         }
-
     }
 
     public static <T> T sendGetRequest(String url, Class<T> entityClass, Map<String, String> params, String cookie) {
@@ -84,7 +80,7 @@ public class HttpClient {
 
     private static void setCookie(HttpRequest request, String cookie) {
         if (cookie != null) {
-            ArrayList cookieList = new ArrayList();
+            ArrayList<String> cookieList = new ArrayList<>();
             cookieList.add(cookie);
             HttpHeaders headers = request.getHeaders();
             headers.setContentEncoding("utf-8");

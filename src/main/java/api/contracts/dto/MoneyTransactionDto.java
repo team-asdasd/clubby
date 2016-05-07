@@ -10,7 +10,7 @@ public class MoneyTransactionDto {
     public Double Amount;
     public String Currency;
     public Date CreationDate;
-    public boolean Add;
+    public int TransactionType;
     public int Status;
 
     public MoneyTransactionDto(){}
@@ -20,7 +20,7 @@ public class MoneyTransactionDto {
         Currency = mt.getPayment().getSettings().getCurrency();
         Amount = mt.getAmmount() / 100d;
         CreationDate = mt.getCreationTime();
-        Add = mt.getTransactiontypeid() == TransactionTypes.in.getValue();
+        TransactionType = mt.getTransactiontypeid();
         Status = mt.getStatus();
     }
 

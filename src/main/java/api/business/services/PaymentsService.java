@@ -1,9 +1,6 @@
 package api.business.services;
 
-import api.business.entities.MoneyTransaction;
-import api.business.entities.Payment;
-import api.business.entities.PaymentsSettings;
-import api.business.entities.TransactionStatus;
+import api.business.entities.*;
 import api.business.persistance.ISimpleEntityManager;
 import api.business.services.interfaces.IPaymentsService;
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
@@ -11,16 +8,16 @@ import com.google.api.client.repackaged.org.apache.commons.codec.binary.StringUt
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.persistence.TypedQuery;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Mindaugas on 30/04/2016.
- */
 @ApplicationScoped
 public class PaymentsService implements IPaymentsService {
 
@@ -170,6 +167,14 @@ public class PaymentsService implements IPaymentsService {
 
     public MoneyTransaction getMoneyTransaction(String id){
         return em.getById(MoneyTransaction.class, id);
+    }
+
+    @Override
+    public List<MoneyTransaction> getMoneyTransactionsByUserId(int id) {
+        TypedQuery<MoneyTransaction> moneytransactions = em.getEntityManager().createQuery("SELECT m FROM MoneyTransaction m WHERE userid = :userid  ORDER BY creationTime DESC", MoneyTransaction.class)
+                .setParameter("userid", id);
+
+        return moneytransactions.getResultList();
     }
 
     //endregion

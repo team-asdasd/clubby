@@ -16,9 +16,6 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.ArrayList;
 
-/**
- * Created by Mindaugas on 01/05/2016.
- */
 @Stateless
 public class PayseraCallbackHandler extends BaseHandler<PayseraCallbackRequest, PayseraCallbackResponse> {
 

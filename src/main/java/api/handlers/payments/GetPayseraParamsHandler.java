@@ -21,9 +21,6 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.*;
 
-/**
- * Created by Mindaugas on 29/04/2016.
- */
 @Stateless
 public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest,GetPayseraParamsResponse> {
     @Inject

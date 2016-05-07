@@ -1,7 +1,10 @@
 package api.resources;
 
+import api.contracts.payments.GetMyHistoryPaymetsRequest;
+import api.contracts.payments.GetMyHistoryPaymetsResponse;
 import api.contracts.payments.GetPaymentInfoRequest;
 import api.contracts.payments.GetPaymentInfoResponse;
+import api.handlers.payments.GetMyHistoryPamentsHandler;
 import api.handlers.payments.GetPaymentInfoHandler;
 import api.handlers.utilities.StatusResolver;
 import io.swagger.annotations.Api;
@@ -14,14 +17,13 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-/**
- * Created by Mindaugas on 29/04/2016.
- */
 @Api(value = "payments")
 @Path("/payments")
 public class PaymentsResource {
     @Inject
     private GetPaymentInfoHandler getPaymentInfoHandler;
+    @Inject
+    private GetMyHistoryPamentsHandler getMyHistoryPamentsHandler;
 
     @GET
     @Produces("application/json")
@@ -33,6 +35,20 @@ public class PaymentsResource {
         request.PaymentId = paymentId;
 
         GetPaymentInfoResponse response = getPaymentInfoHandler.handle(request);
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
+    }
+
+    @GET
+    @Produces("application/json")
+    @Path("my/history")
+    @ApiOperation(value = "Get mybpayments", response = GetMyHistoryPaymetsResponse.class)
+    public Response getMyHistoryPaments() {
+        GetMyHistoryPaymetsRequest request = new GetMyHistoryPaymetsRequest();
+
+        GetMyHistoryPaymetsResponse response = getMyHistoryPamentsHandler.handle(request);
 
         int statusCode = StatusResolver.getStatusCode(response);
 

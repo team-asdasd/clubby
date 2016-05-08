@@ -7,7 +7,7 @@ CREATE TABLE payment.moneyTransactions
   ammount INT NOT NULL,
   ammountClubby INT NOT NULL,
   creationTime TIMESTAMP NOT NULL,
-  paymentId INT,
+  paymentId INT NOT NULL,
   CONSTRAINT moneyTransactions_pkey PRIMARY KEY (transactionId),
   CONSTRAINT fk_money_transactions_transaction_types FOREIGN KEY (transactionTypeId)
   REFERENCES payment.transactionTypes (transactionTypeId) MATCH SIMPLE,

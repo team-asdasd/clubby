@@ -3,8 +3,9 @@ CREATE TABLE payment.payments
   paymentId SERIAL NOT NULL,
   paymentTypeId INT  NOT NULL,
   amount INT  NOT NULL,
+  currency TEXT  NOT NULL,
   paytext TEXT  NOT NULL,
-  paymentSettingsId INT NOT NULL,
+  paymentSettingsId INT,
   active BOOLEAN DEFAULT TRUE,
   CONSTRAINT payments_pkey PRIMARY KEY (paymentId),
   CONSTRAINT fk_payments_payments_settings FOREIGN KEY (paymentSettingsId)

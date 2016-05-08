@@ -38,7 +38,7 @@ WHERE status = 4 AND name = 'approved');
 
 /* insert payment setting */
 INSERT INTO payment.paymentssettings
-SELECT * FROM (SELECT 1, '82223', '1.6', 'EUR') a
+SELECT * FROM (SELECT 1, '82223', '1.6') a
 WHERE NOT EXISTS (
 SELECT * FROM payment.paymentssettings
 WHERE paymentSettingsId = 1);
@@ -52,7 +52,7 @@ WHERE paymentTypeId = 1);
 
 /* insert payments*/
 INSERT INTO payment.payments
-SELECT * FROM (SELECT 1, 1, 100, 'Yearly membership payment', 1, true) a
+SELECT * FROM (SELECT 1, 1, 100,'EUR', 'Yearly membership payment', 1, true) a
 WHERE NOT EXISTS (
 SELECT * FROM payment.payments
 WHERE paymentId = 1);

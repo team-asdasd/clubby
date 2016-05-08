@@ -20,6 +20,7 @@ public class Role implements Serializable{
     }
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "username")
     public String getUsername() {
         return username;

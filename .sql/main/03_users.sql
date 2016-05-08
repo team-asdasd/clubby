@@ -9,10 +9,13 @@ CREATE TABLE main.users
   email      TEXT,
   login      INTEGER,
   facebook_id TEXT,
+  form INTEGER,
   CONSTRAINT pk_users_id PRIMARY KEY (id),
   CONSTRAINT fk_users_logins FOREIGN KEY (login)
   REFERENCES security.logins (id) MATCH SIMPLE
   ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT u_users_email UNIQUE (email)
+  CONSTRAINT u_users_email UNIQUE (email),
+  FOREIGN KEY (form) REFERENCES main.form (id)
+  MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (OIDS =FALSE);

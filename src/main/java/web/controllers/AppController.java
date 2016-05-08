@@ -1,5 +1,6 @@
 package web.controllers;
 
+import org.apache.shiro.SecurityUtils;
 import org.thymeleaf.context.WebContext;
 import web.helpers.Controller;
 import web.helpers.PathMapping;
@@ -12,6 +13,11 @@ import web.helpers.Sender;
 public class AppController {
     @PathMapping("")
     public void test(WebContext ctx) throws Exception {
+
+        if(SecurityUtils.getSubject().hasRole("potentialCandidate")) {
+            ctx.getResponse().sendRedirect(ctx.getResponse().encodeRedirectURL("/form"));
+            return;
+        }
         Sender.sendView(ctx, "app/index");
     }
 

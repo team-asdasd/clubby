@@ -1,15 +1,16 @@
 package api.resources;
 
 import api.contracts.requests.GetUserByIdRequest;
+import api.contracts.requests.SubmitFormRequest;
 import api.contracts.responses.GetUserByIdResponse;
 import api.contracts.users.*;
 import api.contracts.base.BaseResponse;
+import api.handlers.form.SubmitFormHandler;
 import api.handlers.users.*;
 import api.handlers.utilities.StatusResolver;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

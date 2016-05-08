@@ -1,7 +1,8 @@
 <div class="wraper">
     <div class="card card-block">
-        <div *ngIf="!payment" class="loader"></div>
-        <div *ngIf="payment" class="payment">
+        <div *ngIf="!payment && !failed" class="loader"></div>
+        <cb-error *ngIf="failed"></cb-error>
+        <div *ngIf="payment && !failed" class="payment">
             <div class="row">
                 <div class="col-xs-6 col-sm-6 col-md-6">
                     <address>
@@ -31,14 +32,14 @@
                     <tr>
                         <td class="col-md-9"><em >{{payment.InfoText}}</em></td>
                         <td class="col-md-1" style="text-align: center"> 1 </td>
-                        <td class="col-md-1 text-center no-break">{{payment.Amount | currency:'EUR':true:'1.2-2'}}</td>
-                        <td class="col-md-1 text-center no-break">{{payment.Amount | currency:'EUR':true:'1.2-2'}}</td>
+                        <td class="col-md-1 text-center no-break">{{payment.Amount | currency:payment.Currency:true:'1.2-2'}}</td>
+                        <td class="col-md-1 text-center no-break">{{payment.Amount | currency:payment.Currency:true:'1.2-2'}}</td>
                     </tr>
                     <tr>
                         <td></td>
                         <td></td>
                         <td class="text-right"><h4><strong>Total:</strong></h4></td>
-                        <td class="text-center text-danger no-break"><h4><strong >{{payment.Amount | currency:'EUR':true:'1.2-2'}}</strong></h4></td>
+                        <td class="text-center text-danger no-break"><h4><strong >{{payment.Amount | currency:payment.Currency:true:'1.2-2'}}</strong></h4></td>
                     </tr>
                     </tbody>
                 </table>

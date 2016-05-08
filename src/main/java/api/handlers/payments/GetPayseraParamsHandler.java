@@ -52,6 +52,14 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
         Payment payment = paymentsService.getPayment(request.PaymentId);
         String username = currentUser.getPrincipal().toString();
         User user = loginService.getByUserName(username).getUser();
+        PaymentsSettings paymentsSettings = payment.getSettings();
+
+        if(paymentsSettings == null){
+            response.Errors = new ArrayList<>();
+            response.Errors.add(new ErrorDto(String.format("Payment %s does not have payments settings"
+                    ,request.PaymentId), ErrorCodes.VALIDATION_ERROR));
+            return response;
+        }
 
         MoneyTransaction mt = new MoneyTransaction();
         mt.setAmmount(payment.getAmount());
@@ -65,7 +73,6 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
 
         paymentsService.createMoneyTransaction(mt);
 
-        PaymentsSettings paymentsSettings = payment.getSettings();
         String baseUrl = System.getenv("OPENSHIFT_GEAR_DNS");
         if(baseUrl == null){
             baseUrl = "localhost:8080";
@@ -84,7 +91,7 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
         queryParams.put("projectid", paymentsSettings.getProjectid());
         queryParams.put("orderid", mt.getTransactionid());
         queryParams.put("version", paymentsSettings.getVersion());
-        queryParams.put("currency", paymentsSettings.getCurrency());
+        queryParams.put("currency", payment.getCurrency());
         queryParams.put("paytext", payment.getPaytext());
         queryParams.put("p_firstname", firstName);
         queryParams.put("p_lastname", lastName);

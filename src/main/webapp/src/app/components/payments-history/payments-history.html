@@ -1,1 +1,29 @@
-History payments
+<div class="card card-block">
+    <div *ngIf="!transactions && !failed" class="loader"></div>
+    <cb-error *ngIf="failed"></cb-error>
+    <div *ngIf="transactions && !failed">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Currency</th>
+                <th>Info</th>
+                <th>Transaction type</th>
+                <th>Transaction status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="#trans of transactions; #i = index">
+                <td>{{trans.CreationDate | date:'yyyy-MMM-dd HH:mm:ss'}}</td>
+                <td>{{trans.Amount | number:'1.2-2'}}</td>
+                <td>{{trans.Currency}}</td>
+                <td>{{trans.InfoText}}</td>
+                <td cb-transactionType="{{trans.TransactionType}}"></td>
+                <td cb-transactionStatus="{{trans.Status}}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

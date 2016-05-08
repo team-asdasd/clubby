@@ -12,7 +12,6 @@ public class PaymentsSettings {
     private int paymentsettingsid;
     private String projectid;
     private String version;
-    private String currency;
 
     @Id
     @Column(name = "paymentsettingsid")
@@ -44,16 +43,6 @@ public class PaymentsSettings {
         this.version = version;
     }
 
-    @Basic
-    @Column(name = "currency")
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -65,7 +54,6 @@ public class PaymentsSettings {
             return false;
         if (projectid != null ? !projectid.equals(that.projectid) : that.projectid != null) return false;
         if (version != null ? !version.equals(that.version) : that.version != null) return false;
-        if (currency != null ? !currency.equals(that.currency) : that.currency != null) return false;
 
         return true;
     }
@@ -75,7 +63,6 @@ public class PaymentsSettings {
         int result = paymentsettingsid;
         result = 31 * result + (projectid != null ? projectid.hashCode() : 0);
         result = 31 * result + (version != null ? version.hashCode() : 0);
-        result = 31 * result + (currency != null ? currency.hashCode() : 0);
         return result;
     }
 

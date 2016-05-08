@@ -58,7 +58,7 @@ public class PayseraCallbackHandler extends BaseHandler<PayseraCallbackRequest, 
             return response;
         }
 
-        if(!callbackParams.Currency.equals(mt.getPayment().getSettings().getCurrency())){
+        if(!callbackParams.Currency.equals(mt.getPayment().getCurrency())){
             response.Errors = new ArrayList<>();
             response.Errors.add(new ErrorDto(String.format("Not equal money currency. Paysera : %s, clubby : %s"
                     ,callbackParams.Amount, mt.getAmmount()), ErrorCodes.VALIDATION_ERROR));

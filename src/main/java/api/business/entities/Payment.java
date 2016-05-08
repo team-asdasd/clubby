@@ -13,6 +13,7 @@ public class Payment {
     private int paymentid;
     private int paymenttypeid;
     private int amount;
+    private String currency;
     private String paytext;
     private boolean active;
 
@@ -44,6 +45,16 @@ public class Payment {
 
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    @Basic
+    @Column(name = "currency")
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 
     @Basic
@@ -87,7 +98,7 @@ public class Payment {
 
     private PaymentsSettings settings;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = true)
     @JoinColumn(name = "paymentSettingsId", referencedColumnName = "paymentSettingsId")
     public PaymentsSettings getSettings() {
         return settings;

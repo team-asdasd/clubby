@@ -3,6 +3,9 @@ import {Http, Response} from 'angular2/http';
 import {Observable} from "../../../../node_modules/rxjs/Observable";
 import {Payment} from "../../models/payment";
 import {PaymentResponse} from "../responses/paymentResponse";
+import {MoneyTransaction} from "../../models/moneyTransaction";
+import {HistoryPaymentsResponse} from "../responses/historyPaymentsResponse";
+import {ApiHelper} from "./helpers/apiHelper"
 
 @Injectable()
 export class PaymentsApi {
@@ -13,24 +16,14 @@ export class PaymentsApi {
     }
 
     public getPaymentInfo(id:string):Observable<Payment> {
-        return this.http.get(`${this.url}/${id}`).map(this.parse).catch(this.handleError);
+        return this.http.get(`${this.url}/${id}`)
+            .map(resp => ApiHelper.parse<PaymentResponse>(resp).paymentInfoDto)
+            .catch(ApiHelper.handleError);
     }
 
-    private parse(res:Response):Payment {
-        if (res.status < 200 || res.status >= 300) {
-            throw new Error('Bad response status: ' + res.status);
-        }
-
-        let response:PaymentResponse = res.json();
-        let result:Payment = response.paymentInfoDto;
-
-        return result;
-    }
-
-    private handleError(error:any) {
-        // In a real world app, we might send the error to remote logging infrastructure
-        let errMsg = error.message || 'Server error';
-        console.error(errMsg); // log to console instead
-        return Observable.throw(errMsg);
+    public getHistroyPayments():Observable<Array<MoneyTransaction>>{
+        return this.http.get(`${this.url}/my/history`)
+            .map(resp => ApiHelper.parse<HistoryPaymentsResponse>(resp).payments)
+            .catch(ApiHelper.handleError);
     }
 }

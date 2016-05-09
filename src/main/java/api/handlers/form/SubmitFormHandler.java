@@ -15,14 +15,11 @@ import web.helpers.FormStateHelper;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Stateless
@@ -43,13 +40,13 @@ public class SubmitFormHandler extends BaseHandler<SubmitFormRequest, BaseRespon
         if (!SecurityUtils.getSubject().isAuthenticated()) {
             errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
         }
-        if (state.address && request.Address == null) {
+        if (state.Address && request.Address == null) {
             errors.add(new ErrorDto("Address is empty", ErrorCodes.VALIDATION_ERROR));
         }
-        if (state.phoneNumber && request.PhoneNumber == null) {
+        if (state.PhoneNumber && request.PhoneNumber == null) {
             errors.add(new ErrorDto("Phone number is empty", ErrorCodes.VALIDATION_ERROR));
         }
-        if (state.birthDate && request.Birthdate == null) {
+        if (state.BirthDate && request.Birthdate == null) {
             errors.add(new ErrorDto("Birthdate is empty", ErrorCodes.VALIDATION_ERROR));
         }
 
@@ -70,7 +67,7 @@ public class SubmitFormHandler extends BaseHandler<SubmitFormRequest, BaseRespon
         form.setBirthdate(Date.valueOf(request.Birthdate));
         form.setPhoneNumber(request.PhoneNumber);
         form.setPhotoUrl(request.Photo);
-        em.persist(form);
+        form = em.merge(form);
         user.setForm(form);
 
         Optional<Role> role = user.getLogin().getRoles().stream().filter(u -> u.getRoleName().equals("potentialCandidate")).findFirst();
@@ -78,10 +75,8 @@ public class SubmitFormHandler extends BaseHandler<SubmitFormRequest, BaseRespon
             Role r = new Role();
             r.setRoleName("candidate");
             r.setUsername(user.getLogin().getUsername());
-            r = em.merge(r);
-            user.getLogin().getRoles().add(r);
-            em.flush();
-            user.getLogin().getRoles().remove(role.get());
+            em.persist(r);
+            em.remove(role.get());
         }
         em.flush();
         return response;

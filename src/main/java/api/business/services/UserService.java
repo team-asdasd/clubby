@@ -30,7 +30,6 @@ public class UserService implements IUserService {
             TypedQuery<User> users = em.createQuery("FROM User WHERE email = :email", User.class).setParameter("email", email);
             return users.getSingleResult();
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }

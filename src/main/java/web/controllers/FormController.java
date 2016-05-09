@@ -46,12 +46,12 @@ public class FormController {
 
     private void setVariables(SubmitFormRequest request, WebContext ctx) {
 
-        ctx.setVariable("isPhoneNumber", state.phoneNumber);
-        ctx.setVariable("isAddress", state.address);
-        ctx.setVariable("isBirthDate", state.birthDate);
-        ctx.setVariable("isAbout", state.about);
+        ctx.setVariable("isPhoneNumber", state.PhoneNumber);
+        ctx.setVariable("isAddress", state.Address);
+        ctx.setVariable("isBirthDate", state.BirthDate);
+        ctx.setVariable("isAbout", state.About);
         if (!user.isFacebookUser())
-            ctx.setVariable("isPhoto", state.photo);
+            ctx.setVariable("isPhoto", state.Photo);
         else  ctx.setVariable("isPhoto", false);
         ctx.setVariable("phoneNumber", request.PhoneNumber);
         ctx.setVariable("address", request.Address);
@@ -61,9 +61,9 @@ public class FormController {
     }
 
     private boolean validate(SubmitFormRequest request) {
-        if ((state.phoneNumber && request.PhoneNumber == null) ||
-                (state.address && request.Address == null) ||
-                (state.birthDate && request.Birthdate == null))
+        if ((state.PhoneNumber && request.PhoneNumber == null) ||
+                (state.Address && request.Address == null) ||
+                (state.BirthDate && request.Birthdate == null))
             return false;
         return true;
     }

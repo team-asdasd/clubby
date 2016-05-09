@@ -76,11 +76,16 @@
                                class="form-control input-sm">
                     </div>
                 </div>
-                <div class="row">
-                    <div th:if="${isPhoto}" class="col-xs-6 col-sm-6 col-md-6">
+                <div th:if="${isPhoto}" class="row">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
                         <input value="" type="hidden" name="photo" id="photo" class="form-control input-sm">
                         <div class="uploadinput btn btn-default">
                             <span>Add your photo</span>
+                        </div>
+                        <div class="progress" style="display: none">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                                 aria-valuemax="100" style="width: 0%;">
+                            </div>
                         </div>
                     </div>
                     <div class="thumbnail col-xs-6 col-sm-6 col-md-6" style="border: none"></div>
@@ -102,8 +107,12 @@
                                     crop: 'thumb', gravity: 'face', radius: 'max'
                                 }))
                         $('#photo').attr('value', data.result.url);
+                        $('.progress').hide();
                     }
-            )
+            ).bind('fileuploadprogress', function (e, data) {
+        $('.progress').show();
+        $('.progress-bar').css('width', Math.round((data.loaded * 100.0) / data.total) + '%');
+    });
 
     function onEmailKeyDown(e) {
         $('#email').off('keydown', onEmailKeyDown);

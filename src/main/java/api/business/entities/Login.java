@@ -75,7 +75,7 @@ public class Login implements Serializable{
         this.user = user;
     }
 
-    @OneToMany(cascade = {CascadeType.MERGE})
+    @OneToMany
     @JoinColumn(name="username", referencedColumnName = "username")
     public List<Role> getRoles() {
         return roles;

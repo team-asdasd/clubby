@@ -13,7 +13,6 @@ import api.contracts.payments.GetPayseraParamsResponse;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
 import api.contracts.enums.TransactionStatus;
-import api.contracts.enums.TransactionTypes;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -65,7 +64,6 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
         mt.setStatus(TransactionStatus.pending.getValue());
         mt.setPayment(payment);
         mt.setUser(user);
-        mt.setTransactiontypeid(TransactionTypes.in.getValue());
         mt.setTransactionid(UUID.randomUUID().toString());
         mt.setCreationTime(new Date());
 

@@ -9,7 +9,6 @@
                 <th>Amount</th>
                 <th>Currency</th>
                 <th>Info</th>
-                <th>Transaction type</th>
                 <th>Transaction status</th>
             </tr>
             </thead>
@@ -19,7 +18,6 @@
                 <td>{{trans.Amount | number:'1.2-2'}}</td>
                 <td>{{trans.Currency}}</td>
                 <td>{{trans.InfoText}}</td>
-                <td cb-transactionType="{{trans.TransactionType}}"></td>
                 <td cb-transactionStatus="{{trans.Status}}"></td>
             </tr>
             </tbody>

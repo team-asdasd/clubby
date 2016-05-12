@@ -11,7 +11,6 @@ import java.util.Date;
 @Table(name = "moneytransactions", schema = "payment", catalog = "clubby")
 public class MoneyTransaction {
     private String transactionid;
-    private int transactiontypeid;
     private int status;
     private Date creationTime;
 
@@ -23,16 +22,6 @@ public class MoneyTransaction {
 
     public void setTransactionid(String transactionid) {
         this.transactionid = transactionid;
-    }
-
-    @Basic
-    @Column(name = "transactiontypeid")
-    public int getTransactiontypeid() {
-        return transactiontypeid;
-    }
-
-    public void setTransactiontypeid(int transactiontypeid) {
-        this.transactiontypeid = transactiontypeid;
     }
 
     @Basic

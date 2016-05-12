@@ -4,6 +4,5 @@ export class MoneyTransaction {
     Amount:number;
     Currency:string;
     CreationDate:Date;
-    TransactionType:number;
     Status:number;
 }

@@ -1,5 +1,6 @@
 package web.controllers;
 
+import api.contracts.cottages.GetCottagesResponse;
 import api.contracts.users.GetAllUsersResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -82,7 +83,6 @@ public class AdminController {
         } else {
             ctx.getResponse().setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
-
     }
 
     @PathMapping("clearlogs")
@@ -97,7 +97,6 @@ public class AdminController {
 
     @PathMapping("swagger")
     public void swaggerIndex(WebContext ctx) throws Exception {
-
         ctx.setVariable("pageTitle", "API Docs");
         ctx.setVariable("navbarSearch", false);
         ctx.setVariable("layout", "admin/shared/_adminLayout");
@@ -107,17 +106,23 @@ public class AdminController {
 
     @PathMapping("cottages")
     public void cottages(WebContext ctx) throws Exception {
+        String cookie = ctx.getRequest().getHeader("Cookie");
+        GetCottagesResponse response = HttpClient.sendGetRequest("/api/cottage", GetCottagesResponse.class, null, cookie);
 
-        ctx.setVariable("pageTitle", "Cottages");
-        ctx.setVariable("navbarSearch", false);
-        ctx.setVariable("layout", "admin/shared/_adminLayout");
+        if (response.Errors == null || response.Errors.size() == 0) {
+            ctx.setVariable("cottages", response.Cottages);
+            ctx.setVariable("pageTitle", "Cottages");
+            ctx.setVariable("navbarSearch", false);
+            ctx.setVariable("layout", "admin/shared/_adminLayout");
 
-        Sender.sendView(ctx, "admin/cottages");
+            Sender.sendView(ctx, "admin/cottages");
+        } else {
+            ctx.getResponse().setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
     }
 
     @PathMapping("settings")
     public void settings(WebContext ctx) throws Exception {
-
         ctx.setVariable("pageTitle", "Settings");
         ctx.setVariable("navbarSearch", false);
         ctx.setVariable("layout", "admin/shared/_adminLayout");

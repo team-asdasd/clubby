@@ -16,12 +16,16 @@
             <table class="table table-striped table-bordered table-hover">
                 <thead>
                 <tr>
+                    <th>Id</th>
+                    <th>Username</th>
                     <th>Name</th>
                     <th>Email</th>
                 </tr>
                 </thead>
                 <tbody class="searchable">
                 <tr th:each="user,iterationStatus : ${users}">
+                    <td th:text="${user.Id}"></td>
+                    <td th:text="${user.Username}"></td>
                     <td th:text="${user.Name}"></td>
                     <td th:text="${user.Email}"></td>
                 </tr>

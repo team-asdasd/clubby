@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public class UserDto {
     public int Id;
     public String Name;
+    public String Username;
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     public boolean FacebookUser;
@@ -18,5 +19,6 @@ public class UserDto {
         Name = u.getName();
         Email = u.getEmail();
         FacebookUser = u.isFacebookUser();
+        Username = u.getLogin().getUsername();
     }
 }

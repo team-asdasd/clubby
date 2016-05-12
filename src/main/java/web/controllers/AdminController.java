@@ -112,7 +112,7 @@ public class AdminController {
         if (response.Errors == null || response.Errors.size() == 0) {
             ctx.setVariable("cottages", response.Cottages);
             ctx.setVariable("pageTitle", "Cottages");
-            ctx.setVariable("navbarSearch", false);
+            ctx.setVariable("navbarSearch", true);
             ctx.setVariable("layout", "admin/shared/_adminLayout");
 
             Sender.sendView(ctx, "admin/cottages");

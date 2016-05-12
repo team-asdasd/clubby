@@ -49,6 +49,13 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
         Map<String, String> queryParams = new HashMap<>();
 
         Payment payment = paymentsService.getPayment(request.PaymentId);
+
+        if(payment == null){
+            response.Errors = new ArrayList<>();
+            response.Errors.add(new ErrorDto(String.format("Payment %s not found",request.PaymentId), ErrorCodes.VALIDATION_ERROR));
+            return response;
+        }
+        
         String username = currentUser.getPrincipal().toString();
         User user = loginService.getByUserName(username).getUser();
         PaymentsSettings paymentsSettings = payment.getSettings();

@@ -1,13 +1,13 @@
 import {Component} from 'angular2/core';
 import {Router, RouterOutlet, RouteConfig, ROUTER_DIRECTIVES, RouteData} from 'angular2/router';
-import {CottagesList} from "../cottages-list/cottages-list";
-import {Tabs} from "../tabs/tabs";
-import {Reservations} from '../reservations/reservations';
+import {CottagesList} from "./cottages-list/cottages-list.component";
+import {Tabs} from "../shared/tabs/tabs.component";
+import {Reservations} from './reservations/reservations.component';
 
 @Component({
     selector : 'cottages',
-    template : require('./cottages.html'),
-    styleUrls : [require('./cottages.scss')],
+    template : require('./cottages.component.html'),
+    styleUrls : [require('./cottages.component.scss')],
     providers : [],
     directives : [RouterOutlet, Tabs],
     pipes : []

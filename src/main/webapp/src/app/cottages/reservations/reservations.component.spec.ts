@@ -10,7 +10,7 @@ import {
   beforeEachProviders
 } from 'angular2/testing';
 import {provide} from 'angular2/core';
-import {Reservations} from './reservations';
+import {Reservations} from './reservations.component';
 
 
 describe('Reservations Component', () => {

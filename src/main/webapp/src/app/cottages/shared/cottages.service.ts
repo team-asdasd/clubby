@@ -1,11 +1,10 @@
 import {Injectable} from 'angular2/core';
 import {Http, Response} from 'angular2/http';
 import {Observable} from "../../../../node_modules/rxjs/Observable";
-import {Cottage} from "../../models/cottage";
-import {CottagesResponse} from "../responses/cottagesResponse";
+import {Cottage} from "./cottage.model.ts";
 
 @Injectable()
-export class CottageApi {
+export class CottageService {
     url:string = "/api/cottage";
 
     constructor(private http:Http) {
@@ -20,8 +19,7 @@ export class CottageApi {
             throw new Error('Bad response status: ' + res.status);
         }
 
-        let response:CottagesResponse = res.json();
-        let result:Array<Cottage> = response.Cottages;
+        let result:Array<Cottage> = res.json().Cottages;
 
         return result;
     }

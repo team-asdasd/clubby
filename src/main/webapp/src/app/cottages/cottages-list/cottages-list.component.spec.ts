@@ -10,10 +10,9 @@ import {
   beforeEachProviders
 } from 'angular2/testing';
 import {provide} from 'angular2/core';
-import {CottagesList} from './cottages-list';
+import {CottagesList} from './cottages-list.component';
 
-
-describe('CottagesList Component', () => {
+describe('Cottages-list Component', () => {
 
   beforeEachProviders((): any[] => []);
 

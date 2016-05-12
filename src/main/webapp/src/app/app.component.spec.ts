@@ -10,8 +10,8 @@ import {MockBackend} from 'angular2/http/testing';
 import {provide} from "angular2/core";
 
 // Load the implementations that should be tested
-import {UserApi} from './services/api/userApi';
-import {App} from './app';
+import {UserApi} from './shared/user.service.ts';
+import {App} from './app.component';
 
 describe('App', () => {
   // provide our implementations or mocks to the dependency injector

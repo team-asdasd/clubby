@@ -4,11 +4,11 @@ import {FORM_PROVIDERS} from 'angular2/common';
 
 import '../style/app.scss';
 
-import {UserApi} from './services/api/userApi';
-import {Home} from './components/home/home';
-import {Profile} from "./components/profile/profile";
-import {Cottages} from "./components/cottages/cottages";
-import {CottageApi} from "./services/api/cottageApi";
+import {UserApi} from './shared/user.service.ts';
+import {Home} from './home/home.component';
+import {Profile} from "./profile/profile.component";
+import {Cottages} from "./cottages/cottages.component";
+import {CottageService} from "./cottages/shared/cottages.service.ts";
 
 /*
  * App Component
@@ -16,11 +16,11 @@ import {CottageApi} from "./services/api/cottageApi";
  */
 @Component({
     selector: 'app', // <app></app>
-    providers: [...FORM_PROVIDERS, UserApi, CottageApi],
+    providers: [...FORM_PROVIDERS, UserApi, CottageService],
     directives: [...ROUTER_DIRECTIVES],
     pipes: [],
-    styles: [require('./app.scss')],
-    template: require('./app.html')
+    styles: [require('./app.component.scss')],
+    template: require('./app.component.html')
 })
 @RouteConfig([
     {path: '/', component: Home, as: 'Home', useAsDefault: true},

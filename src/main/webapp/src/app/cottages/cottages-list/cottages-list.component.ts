@@ -1,13 +1,13 @@
 import {Component} from 'angular2/core';
-import {Cottage} from "../../models/cottage";
-import {CottageApi} from "../../services/api/cottageApi";
-import {UserApi} from "../../services/api/userApi";
+import {Cottage} from "../shared/cottage.model.ts";
+import {CottageService} from "../shared/cottages.service.ts";
+import {UserApi} from "../../shared/user.service.ts";
 
 
 @Component({
     selector: 'cottages-list',
-    template: require('./cottages-list.html'),
-    styles: [require('./cottages-list.scss')],
+    template: require('./cottages-list.component.html'),
+    styles: [require('./cottages-list.component.scss')],
     providers: [],
     directives: [],
     pipes: []
@@ -16,7 +16,7 @@ export class CottagesList {
     cottages:Array<Cottage>;
     isAdministrator:boolean;
 
-    constructor(private cottageService:CottageApi, private userService:UserApi) {
+    constructor(private cottageService:CottageService, private userService:UserApi) {
         cottageService.getAllCottages().subscribe(resp => this.cottages = resp);
         userService.hasRole('administrator').subscribe(resp => this.isAdministrator = resp);
     }

@@ -5,8 +5,8 @@ import {FORM_DIRECTIVES} from 'angular2/common';
   selector: 'home',
   directives: [...FORM_DIRECTIVES],
   pipes: [],
-  styles: [require('./home.scss')],
-  template: require('./home.html')
+  styles: [require('./home.component.scss')],
+  template: require('./home.component.html')
 })
 export class Home implements OnInit {
 

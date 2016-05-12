@@ -42,7 +42,7 @@ public class GetPaymentInfoHandler extends BaseHandler<GetPaymentInfoRequest, Ge
 
         if(payment == null){
             response.Errors = new ArrayList<>();
-            response.Errors.add(new ErrorDto(String.format("Payment %s not found",request.PaymentId), ErrorCodes.VALIDATION_ERROR));
+            response.Errors.add(new ErrorDto(String.format("Payment %s not found",request.PaymentId), ErrorCodes.NOT_FOUND));
             return response;
         }
 

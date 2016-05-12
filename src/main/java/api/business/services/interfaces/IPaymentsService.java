@@ -54,4 +54,10 @@ public interface IPaymentsService {
     MoneyTransaction getMoneyTransaction(String id);
 
     List<MoneyTransaction> getMoneyTransactionsByUserId(int id);
+
+    int getMyDebit(int userId);
+
+    int getMyCredit(int userId);
+
+    int getMyBalance(int userId);
 }

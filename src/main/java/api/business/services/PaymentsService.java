@@ -3,6 +3,7 @@ package api.business.services;
 import api.business.entities.*;
 import api.business.persistance.ISimpleEntityManager;
 import api.business.services.interfaces.IPaymentsService;
+import api.contracts.enums.PaymentTypes;
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.StringUtils;
 
@@ -175,6 +176,31 @@ public class PaymentsService implements IPaymentsService {
                 .setParameter("userid", id);
 
         return moneytransactions.getResultList();
+    }
+
+    //endregion
+
+    //region clubby payments
+
+    public int getMyCredit(int userId){
+        return (int)em.getEntityManager()
+                .createNativeQuery("SELECT COALESCE(SUM(amount),0) FROM payment.moneytransactions INNER JOIN payment.payments p ON moneytransactions.paymentid = p.paymentid WHERE paymenttypeid = :paymentTypeId AND userid = :userId")
+                .setParameter("userId", userId)
+                .setParameter("paymentTypeId", PaymentTypes.clubby)
+                .getSingleResult();
+    }
+
+    public int getMyDebit(int userId){
+        return (int)em.getEntityManager()
+                .createNativeQuery("SELECT COALESCE(SUM(amount),0) FROM payment.moneytransactions INNER JOIN payment.payments p ON moneytransactions.paymentid = p.paymentid WHERE (paymenttypeid = :paymentTypeId1 OR paymenttypeid = :paymentTypeId2) AND userid = :userId")
+                .setParameter("userId", userId)
+                .setParameter("paymentTypeId1", PaymentTypes.buycb)
+                .setParameter("paymentTypeId2", PaymentTypes.free)
+                .getSingleResult();
+    }
+
+    public int getMyBalance(int userId){
+        return getMyDebit(userId) - getMyCredit(userId);
     }
 
     //endregion

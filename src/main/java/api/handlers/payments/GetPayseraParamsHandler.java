@@ -52,10 +52,10 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
 
         if(payment == null){
             response.Errors = new ArrayList<>();
-            response.Errors.add(new ErrorDto(String.format("Payment %s not found",request.PaymentId), ErrorCodes.VALIDATION_ERROR));
+            response.Errors.add(new ErrorDto(String.format("Payment %s not found",request.PaymentId), ErrorCodes.NOT_FOUND));
             return response;
         }
-        
+
         String username = currentUser.getPrincipal().toString();
         User user = loginService.getByUserName(username).getUser();
         PaymentsSettings paymentsSettings = payment.getSettings();

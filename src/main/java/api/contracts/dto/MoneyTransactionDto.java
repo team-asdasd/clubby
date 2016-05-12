@@ -18,7 +18,7 @@ public class MoneyTransactionDto {
     public MoneyTransactionDto(MoneyTransaction mt){
         InfoText = mt.getPayment().getPaytext();
         Currency = mt.getPayment().getCurrency();
-        Amount = mt.getAmmount() / 100d;
+        Amount = mt.getPayment().getAmount() / 100d;
         CreationDate = mt.getCreationTime();
         TransactionType = mt.getTransactiontypeid();
         Status = mt.getStatus();

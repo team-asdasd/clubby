@@ -62,8 +62,6 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
         }
 
         MoneyTransaction mt = new MoneyTransaction();
-        mt.setAmmount(payment.getAmount());
-        mt.setAmmountclubby(payment.getAmount());
         mt.setStatus(TransactionStatus.pending.getValue());
         mt.setPayment(payment);
         mt.setUser(user);

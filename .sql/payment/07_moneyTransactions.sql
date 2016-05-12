@@ -4,8 +4,6 @@ CREATE TABLE payment.moneyTransactions
   transactionTypeId INT NOT NULL,
   userId INT NOT NULL,
   status INT NOT NULL,
-  ammount INT NOT NULL,
-  ammountClubby INT NOT NULL,
   creationTime TIMESTAMP NOT NULL,
   paymentId INT NOT NULL,
   CONSTRAINT moneyTransactions_pkey PRIMARY KEY (transactionId),

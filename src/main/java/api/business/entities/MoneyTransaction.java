@@ -13,8 +13,6 @@ public class MoneyTransaction {
     private String transactionid;
     private int transactiontypeid;
     private int status;
-    private int ammount;
-    private int ammountclubby;
     private Date creationTime;
 
     @Id
@@ -45,26 +43,6 @@ public class MoneyTransaction {
 
     public void setStatus(int status) {
         this.status = status;
-    }
-
-    @Basic
-    @Column(name = "ammount")
-    public int getAmmount() {
-        return ammount;
-    }
-
-    public void setAmmount(int ammount) {
-        this.ammount = ammount;
-    }
-
-    @Basic
-    @Column(name = "ammountclubby")
-    public int getAmmountclubby() {
-        return ammountclubby;
-    }
-
-    public void setAmmountclubby(int ammountclubby) {
-        this.ammountclubby = ammountclubby;
     }
 
     @Basic

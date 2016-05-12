@@ -14,17 +14,14 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-/**
- * Created by Mindaugas on 29/04/2016.
- */
 @Api(value = "payments")
 @Path("/payments")
+@Produces({"application/json; charset=UTF-8"})
 public class PaymentsResource {
     @Inject
     private GetPaymentInfoHandler getPaymentInfoHandler;
 
     @GET
-    @Produces("application/json")
     @Path("{paymentId}")
     @ApiOperation(value = "Get payment info", response = GetPaymentInfoResponse.class)
     public Response getPaymentInfo(@PathParam("paymentId") int paymentId) {

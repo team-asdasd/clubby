@@ -19,8 +19,7 @@ import javax.ws.rs.core.Response;
 
 @Api(value = "cottage")
 @Path("/cottage")
-@Produces({"application/json"})
-@Consumes({"application/json"})
+@Produces({"application/json; charset=UTF-8"})
 public class CottageResource {
     @Inject
     private GetCottageHandler getCottageHandler;

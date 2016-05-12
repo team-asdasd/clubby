@@ -7,9 +7,6 @@ import org.thymeleaf.context.WebContext;
 import web.contracts.RegistrationRequest;
 import web.helpers.*;
 
-/**
- * Created by Mindaugas on 22/04/2016.
- */
 @Controller("Register")
 public class RegisterController {
     @PathMapping("")

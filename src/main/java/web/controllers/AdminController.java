@@ -52,7 +52,7 @@ public class AdminController {
         Collections.reverse(logs); // Reverse so the latest entries are on top
 
         ctx.setVariable("logs",logs);
-        ctx.setVariable("pageTitle", "Logai");
+        ctx.setVariable("pageTitle", "Logs");
         ctx.setVariable("navbarSearch", true);
         ctx.setVariable("layout","admin/shared/_adminLayout");
 
@@ -78,4 +78,23 @@ public class AdminController {
 
         Sender.sendView(ctx, "admin/swagger");
     }
+    @PathMapping("cottages")
+    public void cottages(WebContext ctx) throws Exception {
+
+        ctx.setVariable("pageTitle", "Cottages");
+        ctx.setVariable("navbarSearch", false);
+        ctx.setVariable("layout","admin/shared/_adminLayout");
+
+        Sender.sendView(ctx, "admin/cottages");
+    }
+    @PathMapping("settings")
+    public void settings(WebContext ctx) throws Exception {
+
+        ctx.setVariable("pageTitle", "Settings");
+        ctx.setVariable("navbarSearch", false);
+        ctx.setVariable("layout","admin/shared/_adminLayout");
+
+        Sender.sendView(ctx, "admin/settings");
+    }
+
 }

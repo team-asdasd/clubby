@@ -23,11 +23,16 @@ public class AdminController {
 
     @PathMapping("")
     public void adminIndex(WebContext ctx) throws Exception {
+        ctx.getResponse().sendRedirect("dashboard");
+    }
+
+    @PathMapping("dashboard")
+    public void dashboardIndex(WebContext ctx) throws Exception {
         ctx.setVariable("pageTitle", "Admin");
         ctx.setVariable("navbarSearch", false);
         ctx.setVariable("layout", "admin/shared/_adminLayout");
 
-        Sender.sendView(ctx, "admin/admin");
+        Sender.sendView(ctx, "admin/dashboard");
     }
 
     @PathMapping("logs")

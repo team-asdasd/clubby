@@ -9,15 +9,17 @@ import api.helpers.Validator;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
+import javax.ejb.Stateless;
 import java.util.ArrayList;
 
+@Stateless
 public class HasPermissionHandler extends BaseHandler<HasPermissionRequest, HasPermissionResponse> {
     @Override
     public ArrayList<ErrorDto> validate(HasPermissionRequest request) {
 
         ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
 
-        if(request.PermissionName.isEmpty()){
+        if (request.PermissionName.isEmpty()) {
             errors.add(new ErrorDto("PermissionName empty.", ErrorCodes.VALIDATION_ERROR));
             return errors;
         }

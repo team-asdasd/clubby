@@ -9,19 +9,20 @@ import api.helpers.Validator;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
+import javax.ejb.Stateless;
 import java.util.ArrayList;
 
+@Stateless
 public class HasRoleHandler extends BaseHandler<HasRoleRequest, HasRoleResponse> {
     @Override
     public ArrayList<ErrorDto> validate(HasRoleRequest request) {
 
         ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
 
-        if(request.RoleName.isEmpty()){
+        if (request.RoleName.isEmpty()) {
             errors.add(new ErrorDto("RoleName empty.", ErrorCodes.VALIDATION_ERROR));
             return errors;
         }
-
 
         return errors;
     }

@@ -18,7 +18,6 @@ import java.util.ArrayList;
 
 @Stateless
 public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserByIdResponse> {
-
     @Inject
     private IUserService userInfoService;
     @Inject
@@ -34,9 +33,7 @@ public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserB
 
     @Override
     public GetUserByIdResponse handleBase(GetUserByIdRequest request) {
-
         GetUserByIdResponse response = createResponse();
-
         User user = userInfoService.get(request.Id);
 
         if (user == null) {

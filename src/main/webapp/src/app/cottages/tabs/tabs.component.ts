@@ -4,8 +4,8 @@ import {RouteData, Router, ROUTER_DIRECTIVES} from 'angular2/router';
 
 @Component({
     selector : 'tabs',
-    template : require('./tabs.html'),
-    styles : [require('./tabs.scss')],
+    template : require('./tabs.component.html'),
+    styles : [require('./tabs.component.scss')],
     inputs : ['options'],
     directives: [ROUTER_DIRECTIVES]
 })

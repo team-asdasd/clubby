@@ -45,4 +45,9 @@ public class FormService implements IFormService {
         return em.createQuery("SELECT F FROM FormResult F WHERE F.user = :user", FormResult.class).setParameter("user", user).getResultList();
     }
 
+    @Override
+    public List<Field> getVisibleFields() {
+        return em.createQuery("SELECT F FROM Field F WHERE F.visible = true", Field.class).getResultList();
+    }
+
 }

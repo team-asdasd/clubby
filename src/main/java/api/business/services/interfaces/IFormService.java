@@ -11,4 +11,5 @@ public interface IFormService {
     Field getFieldByName(String name);
 
     List<FormResult> getMyFields();
+    List<Field> getVisibleFields();
 }

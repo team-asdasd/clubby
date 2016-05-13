@@ -8,7 +8,7 @@ import api.contracts.form.GetFormRequest;
 import api.contracts.form.GetFormResponse;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
-import web.helpers.FormStateHelper;
+import org.apache.shiro.SecurityUtils;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -20,6 +20,7 @@ public class GetFormHandler extends BaseHandler<GetFormRequest, GetFormResponse>
     IFormService formService;
     @Inject
     ISimpleEntityManager simpleEntityManager;
+
     @Override
     public ArrayList<ErrorDto> validate(GetFormRequest request) {
         return Validator.checkAllNotNullAndIsAuthenticated(request);
@@ -28,7 +29,12 @@ public class GetFormHandler extends BaseHandler<GetFormRequest, GetFormResponse>
     @Override
     public GetFormResponse handleBase(GetFormRequest request) {
         GetFormResponse response = createResponse();
-        response.fields = simpleEntityManager.getAll(Field.class);
+        if (SecurityUtils.getSubject().hasRole("administrator")) {
+            response.fields = simpleEntityManager.getAll(Field.class);
+        } else {
+            response.fields = formService.getVisibleFields();
+        }
+
         return response;
     }
 

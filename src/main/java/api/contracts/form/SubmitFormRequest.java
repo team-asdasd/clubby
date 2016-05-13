@@ -1,13 +1,10 @@
 package api.contracts.form;
 
 import api.contracts.base.BaseRequest;
+import api.contracts.dto.FormDto;
 
-import java.sql.Date;
+import java.util.List;
 
 public class SubmitFormRequest extends BaseRequest {
-    public String PhoneNumber;
-    public String Address;
-    public String Birthdate;
-    public String About;
-    public String Photo;
+    public List<FormDto> fields;
 }

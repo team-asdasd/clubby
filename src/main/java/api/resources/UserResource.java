@@ -1,9 +1,12 @@
 package api.resources;
 
+import api.contracts.base.BaseRequest;
+import api.contracts.form.GetMyFormResponse;
 import api.contracts.requests.GetUserByIdRequest;
 import api.contracts.responses.GetUserByIdResponse;
 import api.contracts.users.*;
 import api.contracts.base.BaseResponse;
+import api.handlers.form.GetMyFormHandler;
 import api.handlers.users.*;
 import api.handlers.utilities.StatusResolver;
 import io.swagger.annotations.Api;
@@ -26,9 +29,12 @@ public class UserResource {
     private GetUserByIdHandler getUserByIdHandler;
     @Inject
     private GetAllUsersHandler getAllUsersHandler;
+    @Inject
+    private GetMyFormHandler getMyFormHandler;
 
     private final HasPermissionHandler hasPermissionHandler;
     private final HasRoleHandler hasRoleHandler;
+
 
     public UserResource() {
         hasPermissionHandler = new HasPermissionHandler();
@@ -114,4 +120,17 @@ public class UserResource {
 
         return Response.status(statusCode).entity(response).build();
     }
+
+    @GET
+    @Path("me/form")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Get my form with values", response = GetMyFormResponse.class)
+    public Response getUserForm(){
+        GetMyFormResponse response = getMyFormHandler.handle(new BaseRequest());
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
+    }
+
 }

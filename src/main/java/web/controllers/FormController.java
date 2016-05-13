@@ -54,18 +54,18 @@ public class FormController {
         if (!user.isFacebookUser())
             ctx.setVariable("isPhoto", state.Photo);
         else  ctx.setVariable("isPhoto", false);
-        ctx.setVariable("phoneNumber", request.PhoneNumber);
-        ctx.setVariable("address", request.Address);
-        ctx.setVariable("birthDate", request.Birthdate);
-        ctx.setVariable("photoUrl", request.Photo);
-        ctx.setVariable("about", request.About);
+//        ctx.setVariable("phoneNumber", request.PhoneNumber);
+//        ctx.setVariable("address", request.Address);
+//        ctx.setVariable("birthDate", request.Birthdate);
+//        ctx.setVariable("photoUrl", request.Photo);
+//        ctx.setVariable("about", request.About);
     }
 
     private boolean validate(SubmitFormRequest request) {
-        if ((state.PhoneNumber && request.PhoneNumber == null) ||
-                (state.Address && request.Address == null) ||
-                (state.BirthDate && request.Birthdate == null))
+//        if ((state.PhoneNumber && request.PhoneNumber == null) ||
+//                (state.Address && request.Address == null) ||
+//                (state.BirthDate && request.Birthdate == null))
             return false;
-        return true;
+
     }
 }

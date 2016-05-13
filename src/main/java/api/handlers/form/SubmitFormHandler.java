@@ -1,24 +1,22 @@
 package api.handlers.form;
 
-import api.business.entities.Form;
+import api.business.entities.FormResult;
 import api.business.entities.Role;
 import api.business.entities.User;
-import api.business.services.UserService;
+import api.business.services.interfaces.IFormService;
 import api.business.services.interfaces.IUserService;
 import api.contracts.base.BaseResponse;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
-import api.contracts.dto.FormState;
+import api.contracts.dto.FormDto;
 import api.contracts.form.SubmitFormRequest;
 import api.handlers.base.BaseHandler;
 import org.apache.shiro.SecurityUtils;
-import web.helpers.FormStateHelper;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -26,32 +24,19 @@ import java.util.Optional;
 @Stateless
 public class SubmitFormHandler extends BaseHandler<SubmitFormRequest, BaseResponse> {
     @Inject
-    FormStateHelper st;
+    private IFormService formService;
     @Inject
-    IUserService userService;
+    private IUserService userService;
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
 
     @Override
     public ArrayList<ErrorDto> validate(SubmitFormRequest request) {
-
-        FormState state = st.getFormState();
 
         ArrayList<ErrorDto> errors = new ArrayList<>();
         if (!SecurityUtils.getSubject().isAuthenticated()) {
             errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
         }
-        if (state.Address && request.Address == null) {
-            errors.add(new ErrorDto("ShowAddress is empty", ErrorCodes.VALIDATION_ERROR));
-        }
-        if (state.PhoneNumber && request.PhoneNumber == null) {
-            errors.add(new ErrorDto("Phone number is empty", ErrorCodes.VALIDATION_ERROR));
-        }
-        if (state.BirthDate && request.Birthdate == null) {
-            errors.add(new ErrorDto("Birthdate is empty", ErrorCodes.VALIDATION_ERROR));
-        }
-
-
         return errors;
     }
 
@@ -62,14 +47,13 @@ public class SubmitFormHandler extends BaseHandler<SubmitFormRequest, BaseRespon
         User user = userService.getByUsername(SecurityUtils.getSubject().getPrincipal().toString());
         user = em.merge(user);
 
-        Form form = new Form();
-        form.setAbout(request.About);
-        form.setAddress(request.Address);
-        form.setBirthdate(Date.valueOf(request.Birthdate));
-        form.setPhoneNumber(request.PhoneNumber);
-        form.setPhotoUrl(request.Photo);
-        form = em.merge(form);
-        user.setForm(form);
+        for (FormDto dto : request.fields) {
+            FormResult fr = new FormResult();
+            fr.setUser(user);
+            fr.setField(formService.getFieldByName(dto.name));
+            fr.setValue(dto.value);
+            em.merge(fr);
+        }
 
         Optional<Role> role = user.getLogin().getRoles().stream().filter(u -> u.getRoleName().equals("potentialCandidate")).findFirst();
         if (role.isPresent()) {

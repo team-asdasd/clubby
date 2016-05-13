@@ -24,7 +24,7 @@ public class AdminController {
 
     @PathMapping("")
     public void adminIndex(WebContext ctx) throws Exception {
-        ctx.getResponse().sendRedirect("dashboard");
+        ctx.getResponse().sendRedirect("/admin/dashboard");
     }
 
     @PathMapping("dashboard")

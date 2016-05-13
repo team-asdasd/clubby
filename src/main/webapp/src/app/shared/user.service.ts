@@ -4,37 +4,36 @@ import {Http, Response} from 'angular2/http';
 import {Observable} from "../../../node_modules/rxjs/Observable";
 
 @Injectable()
-export class UserApi {
-    url:string = "/api/user";
+export class UserService {
+    url: string = "/api/user";
 
-    constructor(private http:Http) {
+    constructor(private http: Http) {
     }
 
-    public getUserInfo():Observable<User> {
-        return this.http.get(`${this.url}/me`).map(UserApi.parse).catch(UserApi.handleError);
+    public getUserInfo(): Observable<User> {
+        return this.http.get(`${this.url}/me`).map(UserService.parse).catch(UserService.handleError);
     }
 
-    public hasRole(role:string):Observable<boolean> {
-        return this.http.get(`${this.url}/me/hasRole/${role}`).map(UserApi.parse).catch(UserApi.handleError);
+    public hasRole(role: string): Observable<boolean> {
+        return this.http.get(`${this.url}/me/hasRole/${role}`).map(UserService.parse).catch(UserService.handleError);
     }
 
-    public hasPermission(permission:string):Observable<boolean> {
-        return this.http.get(`${this.url}/me/hasPermission/${permission}`).map(UserApi.parse).catch(UserApi.handleError);
+    public hasPermission(permission: string): Observable<boolean> {
+        return this.http.get(`${this.url}/me/hasPermission/${permission}`).map(UserService.parse).catch(UserService.handleError);
     }
 
-    private static parse<T>(res:Response):T {
-        UserApi.ensureSuccess(res);
-
+    private static parse<T>(res: Response): T {
+        UserService.ensureSuccess(res);
         return res.json();
     }
 
-    private static ensureSuccess(res:Response) {
+    private static ensureSuccess(res: Response) {
         if (res.status < 200 || res.status >= 300) {
             throw new Error('Bad response status: ' + res.status);
         }
     }
 
-    private static handleError(error:any) {
+    private static handleError(error: any) {
         let errMsg = error.message || 'Server error';
         console.error(errMsg);
         return Observable.throw(errMsg);

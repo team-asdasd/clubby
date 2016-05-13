@@ -1,7 +1,7 @@
 import {Component} from 'angular2/core';
 import {Cottage} from "../shared/cottage.model.ts";
 import {CottageService} from "../shared/cottages.service.ts";
-import {UserApi} from "../../shared/user.service.ts";
+import {UserService} from "../../shared/user.service.ts";
 
 
 @Component({
@@ -13,10 +13,10 @@ import {UserApi} from "../../shared/user.service.ts";
     pipes: []
 })
 export class CottagesList {
-    cottages:Array<Cottage>;
-    isAdministrator:boolean;
+    cottages: Array<Cottage>;
+    isAdministrator: boolean;
 
-    constructor(private cottageService:CottageService, private userService:UserApi) {
+    constructor(private cottageService: CottageService, private userService: UserService) {
         cottageService.getAllCottages().subscribe(resp => this.cottages = resp);
         userService.hasRole('administrator').subscribe(resp => this.isAdministrator = resp);
     }

@@ -5,13 +5,13 @@ import {
   inject,
   beforeEachProviders
 } from 'angular2/testing';
-import {UserApi} from './user.service.ts';
+import {UserService} from './user.service.ts';
 
 describe('UserApi Service', () => {
 
-  beforeEachProviders(() => [UserApi]);
+  beforeEachProviders(() => [UserService]);
 
-  it('should ...', inject([UserApi], (api:UserApi) => {
+  it('should ...', inject([UserService], (api:UserService) => {
     expect(api.url).toBe('/api/user');
   }));
 

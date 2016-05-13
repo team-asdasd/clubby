@@ -4,7 +4,7 @@ import {FORM_PROVIDERS} from 'angular2/common';
 
 import '../style/app.scss';
 
-import {UserApi} from './shared/user.service.ts';
+import {UserService} from './shared/user.service.ts';
 import {Home} from './home/home.component';
 import {Profile} from "./profile/profile.component";
 import {Cottages} from "./cottages/cottages.component";
@@ -16,7 +16,7 @@ import {CottageService} from "./cottages/shared/cottages.service.ts";
  */
 @Component({
     selector: 'app', // <app></app>
-    providers: [...FORM_PROVIDERS, UserApi, CottageService],
+    providers: [...FORM_PROVIDERS, UserService, CottageService],
     directives: [...ROUTER_DIRECTIVES],
     pipes: [],
     styles: [require('./app.component.scss')],
@@ -28,9 +28,9 @@ import {CottageService} from "./cottages/shared/cottages.service.ts";
     {path: '/Cottages/...', component: Cottages, as: 'Cottages'}
 ])
 export class App {
-    url:string = 'https://github.com/preboot/angular2-webpack';
+    url: string = 'https://github.com/preboot/angular2-webpack';
 
-    constructor(private router:Router) {
+    constructor(private router: Router) {
     }
 
     public isRouteActive(route) {

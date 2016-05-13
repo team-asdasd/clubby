@@ -1,6 +1,6 @@
 import {Component} from 'angular2/core';
 import {User} from './../shared/user.model.ts';
-import {UserApi} from "./../shared/user.service.ts";
+import {UserService} from "./../shared/user.service.ts";
 
 @Component({
     selector: 'profile',
@@ -11,9 +11,9 @@ import {UserApi} from "./../shared/user.service.ts";
     pipes: []
 })
 export class Profile {
-    user:User;
+    user: User;
 
-    constructor(userService:UserApi) {
+    constructor(userService: UserService) {
         userService.getUserInfo().subscribe(user => this.user = user);
     }
 }

@@ -4,11 +4,11 @@ import {FORM_PROVIDERS} from 'angular2/common';
 
 import '../style/app.scss';
 
-import {UserService} from './shared/user.service.ts';
+import {UserService} from './shared/user.service';
 import {Home} from './home/home.component';
 import {Profile} from "./profile/profile.component";
 import {Cottages} from "./cottages/cottages.component";
-import {CottageService} from "./cottages/shared/cottages.service.ts";
+import {CottageService} from "./cottages/shared/cottages.service";
 
 /*
  * App Component

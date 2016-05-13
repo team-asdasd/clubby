@@ -17,11 +17,9 @@ describe('CottagesHome Component', () => {
 
     beforeEachProviders((): any[] => []);
 
-
     it('should ...', injectAsync([TestComponentBuilder], (tcb: TestComponentBuilder) => {
         return tcb.createAsync(Cottages).then((fixture) => {
             fixture.detectChanges();
         });
     }));
-
 });

@@ -1,7 +1,7 @@
 import {
-  it,
-  inject,
-  beforeEachProviders
+    it,
+    inject,
+    beforeEachProviders
 } from 'angular2/testing';
 
 // to use Translate Service, we need Http, and to test Http we need to mock the backend
@@ -14,23 +14,22 @@ import {UserService} from './shared/user.service.ts';
 import {App} from './app.component';
 
 describe('App', () => {
-  // provide our implementations or mocks to the dependency injector
-  beforeEachProviders(() => [
-    App,
-    UserService,
-    BaseRequestOptions,
-    MockBackend,
-    // Provide a mocked (fake) backend for Http
-    provide(Http, {
-      useFactory: function useFactory(backend, defaultOptions) {
-        return new Http(backend, defaultOptions);
-      },
-      deps: [MockBackend, BaseRequestOptions]
-    })
-  ]);
+    // provide our implementations or mocks to the dependency injector
+    beforeEachProviders(() => [
+        App,
+        UserService,
+        BaseRequestOptions,
+        MockBackend,
+        // Provide a mocked (fake) backend for Http
+        provide(Http, {
+        useFactory: function useFactory(backend, defaultOptions) {
+            return new Http(backend, defaultOptions);
+        },
+        deps: [MockBackend, BaseRequestOptions]
+        })
+    ]);
 
-  it('should have an url', inject([App], (app: App) => {
-    expect(app.url).toEqual('https://github.com/preboot/angular2-webpack');
-  }));
-
+    it('should have an url', inject([App], (app: App) => {
+        expect(app.url).toEqual('https://github.com/preboot/angular2-webpack');
+    }));
 });

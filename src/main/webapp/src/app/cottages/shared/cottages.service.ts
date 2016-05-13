@@ -1,7 +1,7 @@
 import {Injectable} from 'angular2/core';
 import {Http, Response} from 'angular2/http';
 import {Observable} from "../../../../node_modules/rxjs/Observable";
-import {Cottage} from "./cottage.model.ts";
+import {Cottage} from "./cottage.model";
 
 @Injectable()
 export class CottageService {

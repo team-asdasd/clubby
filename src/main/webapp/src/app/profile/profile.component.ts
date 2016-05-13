@@ -1,6 +1,6 @@
 import {Component} from 'angular2/core';
-import {User} from './../shared/user.model.ts';
-import {UserService} from "./../shared/user.service.ts";
+import {User} from './../shared/user.model';
+import {UserService} from "./../shared/user.service";
 
 @Component({
     selector: 'profile',

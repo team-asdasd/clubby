@@ -19,7 +19,7 @@ import javax.ws.rs.core.Response;
 
 @Api(value = "recommendation")
 @Path("/recommendation")
-@Produces({"application/json"})
+@Produces({"application/json; charset=UTF-8"})
 public class RecommendationResource {
     @Inject
     private ConfirmRecommendationHandler confirmRecommendationHandler;

@@ -1,12 +1,16 @@
 package web.controllers;
 
+import api.contracts.cottages.GetCottagesResponse;
+import api.contracts.users.GetAllUsersResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.thymeleaf.context.WebContext;
 import web.helpers.Controller;
+import web.helpers.HttpClient;
 import web.helpers.PathMapping;
 import web.helpers.Sender;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -20,11 +24,16 @@ public class AdminController {
 
     @PathMapping("")
     public void adminIndex(WebContext ctx) throws Exception {
+        ctx.getResponse().sendRedirect("dashboard");
+    }
+
+    @PathMapping("dashboard")
+    public void dashboardIndex(WebContext ctx) throws Exception {
         ctx.setVariable("pageTitle", "Admin");
         ctx.setVariable("navbarSearch", false);
-        ctx.setVariable("layout","admin/shared/_adminLayout");
+        ctx.setVariable("layout", "admin/shared/_adminLayout");
 
-        Sender.sendView(ctx, "admin/admin");
+        Sender.sendView(ctx, "admin/dashboard");
     }
 
     @PathMapping("logs")
@@ -45,18 +54,35 @@ public class AdminController {
             for (String line : lines) {
                 logs.add(line.split("\\$sep\\$"));
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
 
         Collections.reverse(logs); // Reverse so the latest entries are on top
 
-        ctx.setVariable("logs",logs);
+        ctx.setVariable("logs", logs);
         ctx.setVariable("pageTitle", "Logs");
         ctx.setVariable("navbarSearch", true);
-        ctx.setVariable("layout","admin/shared/_adminLayout");
+        ctx.setVariable("layout", "admin/shared/_adminLayout");
 
         Sender.sendView(ctx, "admin/logs");
+    }
+
+    @PathMapping("users")
+    public void usersIndex(WebContext ctx) throws Exception {
+        String cookie = ctx.getRequest().getHeader("Cookie");
+        GetAllUsersResponse response = HttpClient.sendGetRequest("/api/user", GetAllUsersResponse.class, null, cookie);
+
+        if (response.Errors == null || response.Errors.size() == 0) {
+            ctx.setVariable("users", response.Users);
+            ctx.setVariable("pageTitle", "Users");
+            ctx.setVariable("navbarSearch", true);
+            ctx.setVariable("layout", "admin/shared/_adminLayout");
+
+            Sender.sendView(ctx, "admin/users");
+        } else {
+            ctx.getResponse().setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
     }
 
     @PathMapping("clearlogs")
@@ -71,28 +97,35 @@ public class AdminController {
 
     @PathMapping("swagger")
     public void swaggerIndex(WebContext ctx) throws Exception {
-
         ctx.setVariable("pageTitle", "API Docs");
         ctx.setVariable("navbarSearch", false);
-        ctx.setVariable("layout","admin/shared/_adminLayout");
+        ctx.setVariable("layout", "admin/shared/_adminLayout");
 
         Sender.sendView(ctx, "admin/swagger");
     }
+
     @PathMapping("cottages")
     public void cottages(WebContext ctx) throws Exception {
+        String cookie = ctx.getRequest().getHeader("Cookie");
+        GetCottagesResponse response = HttpClient.sendGetRequest("/api/cottage", GetCottagesResponse.class, null, cookie);
 
-        ctx.setVariable("pageTitle", "Cottages");
-        ctx.setVariable("navbarSearch", false);
-        ctx.setVariable("layout","admin/shared/_adminLayout");
+        if (response.Errors == null || response.Errors.size() == 0) {
+            ctx.setVariable("cottages", response.Cottages);
+            ctx.setVariable("pageTitle", "Cottages");
+            ctx.setVariable("navbarSearch", true);
+            ctx.setVariable("layout", "admin/shared/_adminLayout");
 
-        Sender.sendView(ctx, "admin/cottages");
+            Sender.sendView(ctx, "admin/cottages");
+        } else {
+            ctx.getResponse().setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
     }
+
     @PathMapping("settings")
     public void settings(WebContext ctx) throws Exception {
-
         ctx.setVariable("pageTitle", "Settings");
         ctx.setVariable("navbarSearch", false);
-        ctx.setVariable("layout","admin/shared/_adminLayout");
+        ctx.setVariable("layout", "admin/shared/_adminLayout");
 
         Sender.sendView(ctx, "admin/settings");
     }

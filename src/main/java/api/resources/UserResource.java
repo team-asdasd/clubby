@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response;
 
 @Api(value = "user")
 @Path("/user")
-@Produces({"application/json"})
+@Produces({"application/json; charset=UTF-8"})
 public class UserResource {
     @Inject
     private GetUserInfoHandler getUserInfoHandler;
@@ -27,17 +27,13 @@ public class UserResource {
     private GetUserByIdHandler getUserByIdHandler;
     @Inject
     private GetAllUsersHandler getAllUsersHandler;
-
-    private final HasPermissionHandler hasPermissionHandler;
-    private final HasRoleHandler hasRoleHandler;
-
-    public UserResource() {
-        hasPermissionHandler = new HasPermissionHandler();
-        hasRoleHandler = new HasRoleHandler();
-    }
+    @Inject
+    private HasPermissionHandler hasPermissionHandler;
+    @Inject
+    private HasRoleHandler hasRoleHandler;
 
     @GET
-    @ApiOperation(value = "Gets user information for current user.", response = GetUserInfoResponse.class)
+    @ApiOperation(value = "Gets user information for all users.", response = GetAllUsersResponse.class)
     public Response getAllUsers() {
         GetAllUsersRequest request = new GetAllUsersRequest();
 
@@ -105,9 +101,7 @@ public class UserResource {
 
     @POST
     @Path("/create")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Creates user", response = boolean.class)
+    @ApiOperation(value = "Creates user", response = BaseResponse.class)
     public Response createUser(CreateUserRequest request) {
         BaseResponse response = createUserHandler.handle(request);
 

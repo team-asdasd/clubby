@@ -8,10 +8,12 @@ import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
 import org.apache.shiro.SecurityUtils;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+@Stateless
 public class GetAllUsersHandler extends BaseHandler<GetAllUsersRequest, GetAllUsersResponse> {
     @Inject
     private ISimpleEntityManager entityManager;

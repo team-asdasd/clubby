@@ -8,17 +8,15 @@ import web.helpers.Controller;
 import web.helpers.PathMapping;
 import web.helpers.Sender;
 
-/**
- * Created by Mindaugas on 03/04/2016.
- */
 @Controller("Login")
 public class LoginController {
     @PathMapping("")
     public void login(WebContext ctx) throws Exception {
         Subject sub = SecurityUtils.getSubject();
-        if(sub.isAuthenticated() == true){
-            ctx.getResponse().sendRedirect(ctx.getResponse().encodeRedirectURL("/"));
-        }else{
+
+        if (sub.isAuthenticated()) {
+            ctx.getResponse().sendRedirect(ctx.getResponse().encodeRedirectURL("/app"));
+        } else {
             ctx.setVariable("fbAppId", FacebookSettings.getAppId());
             ctx.setVariable("fbRedirect", FacebookSettings.getRedirectUrl());
             ctx.setVariable("pageTitle", "Prisijungti");

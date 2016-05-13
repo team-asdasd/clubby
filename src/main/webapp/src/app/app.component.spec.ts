@@ -10,7 +10,7 @@ import {MockBackend} from 'angular2/http/testing';
 import {provide} from "angular2/core";
 
 // Load the implementations that should be tested
-import {UserService} from './shared/user.service.ts';
+import {UserService} from './shared/user.service';
 import {App} from './app.component';
 
 describe('App', () => {

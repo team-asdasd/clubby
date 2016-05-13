@@ -6,6 +6,7 @@ import api.business.entities.User;
 import api.business.services.interfaces.IUserService;
 import clients.facebook.responses.FacebookUserDetails;
 
+import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.context.RequestScoped;
@@ -14,7 +15,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
 
-@RequestScoped
+@Stateless
 public class UserService implements IUserService {
 
     @PersistenceContext
@@ -24,7 +25,6 @@ public class UserService implements IUserService {
         return em.find(User.class, id);
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public User getByEmail(String email) {
         try {
             TypedQuery<User> users = em.createQuery("FROM User WHERE email = :email", User.class).setParameter("email", email);
@@ -34,7 +34,6 @@ public class UserService implements IUserService {
         }
     }
 
-    @Transactional
     public void createUser(User user, Login login) {
         try {
             em.persist(user);
@@ -50,7 +49,6 @@ public class UserService implements IUserService {
         }
     }
 
-    @Transactional
     public void createFacebookUser(FacebookUserDetails details) {
         User user = new User();
         Login login = new Login();
@@ -77,7 +75,6 @@ public class UserService implements IUserService {
     }
 
     @Override
-    @Transactional
     public void save(User user) {
         try {
             em.merge(user);

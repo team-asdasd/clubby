@@ -4,11 +4,12 @@ import api.business.entities.Form;
 import api.business.entities.Role;
 import api.business.entities.User;
 import api.business.services.UserService;
+import api.business.services.interfaces.IUserService;
 import api.contracts.base.BaseResponse;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.contracts.dto.FormState;
-import api.contracts.requests.SubmitFormRequest;
+import api.contracts.form.SubmitFormRequest;
 import api.handlers.base.BaseHandler;
 import org.apache.shiro.SecurityUtils;
 import web.helpers.FormStateHelper;
@@ -27,7 +28,7 @@ public class SubmitFormHandler extends BaseHandler<SubmitFormRequest, BaseRespon
     @Inject
     FormStateHelper st;
     @Inject
-    UserService userService;
+    IUserService userService;
     @PersistenceContext
     EntityManager em;
 
@@ -41,7 +42,7 @@ public class SubmitFormHandler extends BaseHandler<SubmitFormRequest, BaseRespon
             errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
         }
         if (state.Address && request.Address == null) {
-            errors.add(new ErrorDto("Address is empty", ErrorCodes.VALIDATION_ERROR));
+            errors.add(new ErrorDto("ShowAddress is empty", ErrorCodes.VALIDATION_ERROR));
         }
         if (state.PhoneNumber && request.PhoneNumber == null) {
             errors.add(new ErrorDto("Phone number is empty", ErrorCodes.VALIDATION_ERROR));

@@ -1,11 +1,9 @@
 package api.resources;
 
 import api.contracts.requests.GetUserByIdRequest;
-import api.contracts.requests.SubmitFormRequest;
 import api.contracts.responses.GetUserByIdResponse;
 import api.contracts.users.*;
 import api.contracts.base.BaseResponse;
-import api.handlers.form.SubmitFormHandler;
 import api.handlers.users.*;
 import api.handlers.utilities.StatusResolver;
 import io.swagger.annotations.Api;

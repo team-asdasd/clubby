@@ -2,9 +2,10 @@ package web.controllers;
 
 import api.business.entities.User;
 import api.business.services.UserService;
+import api.business.services.interfaces.IUserService;
 import api.contracts.base.BaseResponse;
 import api.contracts.dto.FormState;
-import api.contracts.requests.SubmitFormRequest;
+import api.contracts.form.SubmitFormRequest;
 import api.helpers.Parser;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.shiro.SecurityUtils;
@@ -26,7 +27,7 @@ public class FormController {
             ctx.getResponse().sendRedirect(ctx.getResponse().encodeRedirectURL("/app"));
             return;
         }
-        user = BeanProvider.getDependent(UserService.class).get().getByUsername(sub.getPrincipal().toString());
+        user = BeanProvider.getContextualReference(IUserService.class, true).getByUsername(sub.getPrincipal().toString());
         SubmitFormRequest request = Parser.fromQueryString(ctx.getRequest().getReader().readLine(), SubmitFormRequest.class);
         formState = BeanProvider.getDependent(FormStateHelper.class).get();
         state = formState.getFormState();

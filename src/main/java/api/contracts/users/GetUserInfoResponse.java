@@ -9,4 +9,8 @@ public class GetUserInfoResponse extends BaseResponse {
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     public String Picture;
+    public String PhoneNumber;
+    public String About;
+    public String BirthDate;
+    public String Address;
 }

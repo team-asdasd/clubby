@@ -1,17 +1,16 @@
 package api.resources;
 
 import api.contracts.base.BaseResponse;
-import api.contracts.requests.SubmitFormRequest;
+import api.contracts.form.GetFormRequest;
+import api.contracts.form.SubmitFormRequest;
+import api.handlers.form.GetFormHandler;
 import api.handlers.form.SubmitFormHandler;
 import api.handlers.utilities.StatusResolver;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -21,6 +20,9 @@ import javax.ws.rs.core.Response;
 public class FormResource {
     @Inject
     private SubmitFormHandler submitFormHandler;
+    @Inject
+    private GetFormHandler getFormHandler;
+    @Inject
 
     @POST
     @Path("")
@@ -29,6 +31,20 @@ public class FormResource {
     @ApiOperation(value = "Submit membership form", response = BaseResponse.class)
     public Response submitForm(SubmitFormRequest request) {
         BaseResponse response = submitFormHandler.handle(request);
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
+    }
+
+    @GET
+    @Path("")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Get current form", response = BaseResponse.class)
+    public Response getForm() {
+
+        GetFormRequest request = new GetFormRequest();
+        BaseResponse response = getFormHandler.handle(request);
 
         int statusCode = StatusResolver.getStatusCode(response);
 

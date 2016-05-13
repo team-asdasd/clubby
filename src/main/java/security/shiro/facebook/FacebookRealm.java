@@ -78,7 +78,7 @@ public class FacebookRealm extends AuthorizingRealm {
 
                         info = new FacebookAuthenticationInfo(fud, this.getName());
 
-                        userService = BeanProvider.getDependent(UserService.class).get();
+                        userService = BeanProvider.getContextualReference(IUserService.class, true);
 
                         User user = userService.getByFacebookId(fud.Id);
                         if (user == null) {

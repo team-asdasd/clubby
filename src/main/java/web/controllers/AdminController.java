@@ -98,19 +98,11 @@ public class AdminController {
 
     @PathMapping("cottages")
     public void cottages(WebContext ctx) throws Exception {
-        String cookie = ctx.getRequest().getHeader("Cookie");
-        GetCottagesResponse response = HttpClient.sendGetRequest("/api/cottage", GetCottagesResponse.class, null, cookie);
+        ctx.setVariable("pageTitle", "Cottages");
+        ctx.setVariable("navbarSearch", true);
+        ctx.setVariable("layout", "admin/shared/_adminLayout");
 
-        if (response.Errors == null || response.Errors.size() == 0) {
-            ctx.setVariable("cottages", response.Cottages);
-            ctx.setVariable("pageTitle", "Cottages");
-            ctx.setVariable("navbarSearch", true);
-            ctx.setVariable("layout", "admin/shared/_adminLayout");
-
-            Sender.sendView(ctx, "admin/cottages");
-        } else {
-            ctx.getResponse().setStatus(HttpServletResponse.SC_NOT_FOUND);
-        }
+        Sender.sendView(ctx, "admin/cottages");
     }
 
     @PathMapping("settings")

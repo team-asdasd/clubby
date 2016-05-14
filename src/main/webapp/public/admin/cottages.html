@@ -32,26 +32,8 @@
 <div class="row">
     <div class="col-md-10 col-md-offset-1">
         <h2 class="sub-header">Cottages </h2>
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered table-hover">
-                <thead>
-                <tr>
-                    <th></th>
-                    <th>Id</th>
-                    <th>Title</th>
-                    <th>Beds</th>
-                </tr>
-                </thead>
-                <tbody class="searchable">
-                <tr th:each="cottage,iterationStatus : ${cottages}">
-                    <td><img th:src="${cottage.Image}" style="max-width: 150px; max-height: 150px;"/></td>
-                    <td th:text="${cottage.Id}"></td>
-                    <td th:text="${cottage.Title}"></td>
-                    <td th:text="${cottage.Beds}"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+        <div id="dashboard-message-box"></div>
+        <div id="cottages-table"></div>
     </div>
 </div>
 
@@ -73,5 +55,34 @@
                     }
             )
 </script>
+
+<script id="cottages-table-template" type="text/template">
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Beds</th>
+            </tr>
+            </thead>
+            <tbody class="searchable">
+            <% _.each(Cottages, function(cottage){ %>
+            <tr>
+                <td><img src="<%= cottage.Image %>" style="max-width: 150px; max-height: 150px;"/></td>
+                <td><%= cottage.Id %></td>
+                <td><%= cottage.Title %></td>
+                <td><%= cottage.Beds %></td>
+            </tr>
+            <% }); %>
+            </tbody>
+        </table>
+    </div>
+</script>
+
+<script src="/public/admin/shared/scripts/clubby/alert.js"></script>
+<script src="/public/admin/shared/scripts/cottages.js"></script>
+
 </body>
 </html>

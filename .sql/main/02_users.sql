@@ -13,6 +13,6 @@ CREATE TABLE main.users
   CONSTRAINT fk_users_logins FOREIGN KEY (login)
   REFERENCES security.logins (id) MATCH SIMPLE
   ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT u_users_email UNIQUE (email),
+  CONSTRAINT u_users_email UNIQUE (email)
 )
 WITH (OIDS =FALSE);

@@ -3,7 +3,6 @@ package api.business.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "form_fields", schema = "main", catalog = "clubby")

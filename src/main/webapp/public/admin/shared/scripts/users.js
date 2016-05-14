@@ -1,4 +1,4 @@
-var alertDialog = _.template($("#alert-template").html());
+var alertDialog = window.Clubby.Alert();
 var dashboardMessage = $("#dashboard-message-box");
 
 $(function () {

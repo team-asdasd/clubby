@@ -23,12 +23,12 @@ public class AdminController {
     final Logger logger = LogManager.getLogger(getClass().getName());
 
     @PathMapping("")
-    public void adminIndex(WebContext ctx) throws Exception {
+    public void admin(WebContext ctx) throws Exception {
         ctx.getResponse().sendRedirect("/admin/dashboard");
     }
 
     @PathMapping("dashboard")
-    public void dashboardIndex(WebContext ctx) throws Exception {
+    public void dashboard(WebContext ctx) throws Exception {
         ctx.setVariable("pageTitle", "Admin");
         ctx.setVariable("navbarSearch", false);
         ctx.setVariable("layout", "admin/shared/_adminLayout");
@@ -37,7 +37,7 @@ public class AdminController {
     }
 
     @PathMapping("logs")
-    public void logsIndex(WebContext ctx) throws Exception {
+    public void logs(WebContext ctx) throws Exception {
         ArrayList<String[]> logs = new ArrayList<>();
 
         try {
@@ -69,7 +69,7 @@ public class AdminController {
     }
 
     @PathMapping("users")
-    public void usersIndex(WebContext ctx) throws Exception {
+    public void users(WebContext ctx) throws Exception {
         ctx.setVariable("pageTitle", "Users");
         ctx.setVariable("navbarSearch", true);
         ctx.setVariable("layout", "admin/shared/_adminLayout");
@@ -88,7 +88,7 @@ public class AdminController {
     }
 
     @PathMapping("swagger")
-    public void swaggerIndex(WebContext ctx) throws Exception {
+    public void swagger(WebContext ctx) throws Exception {
         ctx.setVariable("pageTitle", "API Docs");
         ctx.setVariable("navbarSearch", false);
         ctx.setVariable("layout", "admin/shared/_adminLayout");

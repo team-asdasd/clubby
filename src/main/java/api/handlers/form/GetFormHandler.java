@@ -13,6 +13,7 @@ import org.apache.shiro.SecurityUtils;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collections;
 
 @Stateless
 public class GetFormHandler extends BaseHandler<GetFormRequest, GetFormResponse> {
@@ -34,7 +35,7 @@ public class GetFormHandler extends BaseHandler<GetFormRequest, GetFormResponse>
         } else {
             response.fields = formService.getVisibleFields();
         }
-
+        Collections.sort(response.fields, (a, b) -> Integer.compare(b.getId(),a.getId()));
         return response;
     }
 

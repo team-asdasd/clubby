@@ -2,7 +2,6 @@ package api.contracts.form;
 
 import api.business.entities.Field;
 import api.contracts.base.BaseResponse;
-import api.contracts.dto.FormState;
 
 import java.util.List;
 

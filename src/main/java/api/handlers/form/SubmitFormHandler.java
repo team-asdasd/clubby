@@ -1,5 +1,6 @@
 package api.handlers.form;
 
+import api.business.entities.Field;
 import api.business.entities.FormResult;
 import api.business.entities.Role;
 import api.business.entities.User;
@@ -8,7 +9,7 @@ import api.business.services.interfaces.IUserService;
 import api.contracts.base.BaseResponse;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
-import api.contracts.dto.FormDto;
+import api.contracts.dto.SubmitFormDto;
 import api.contracts.form.SubmitFormRequest;
 import api.handlers.base.BaseHandler;
 import org.apache.shiro.SecurityUtils;
@@ -37,6 +38,14 @@ public class SubmitFormHandler extends BaseHandler<SubmitFormRequest, BaseRespon
         if (!SecurityUtils.getSubject().isAuthenticated()) {
             errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
         }
+        for (SubmitFormDto dto : request.fields) {
+            Field field = formService.getFieldByName(dto.name);
+            if (field == null)
+                errors.add(new ErrorDto("Field " + dto.name + " not found", ErrorCodes.BAD_REQUEST));
+            else if (field.getValidationRegex() != null && !field.getValidationRegex().isEmpty() && !dto.value.matches(field.getValidationRegex())) {
+                errors.add(new ErrorDto("Field " + dto.name + "does not match pattern", ErrorCodes.VALIDATION_ERROR));
+            }
+        }
         return errors;
     }
 
@@ -47,12 +56,19 @@ public class SubmitFormHandler extends BaseHandler<SubmitFormRequest, BaseRespon
         User user = userService.getByUsername(SecurityUtils.getSubject().getPrincipal().toString());
         user = em.merge(user);
 
-        for (FormDto dto : request.fields) {
-            FormResult fr = new FormResult();
-            fr.setUser(user);
-            fr.setField(formService.getFieldByName(dto.name));
-            fr.setValue(dto.value);
-            em.merge(fr);
+        for (SubmitFormDto dto : request.fields) {
+            if (!dto.value.isEmpty()) {
+                FormResult fr = formService.getFormResult(dto.name, user.getId());
+                if (fr != null)
+                    fr = em.merge(fr);
+                else {
+                    fr = new FormResult();
+                }
+                fr.setUser(user);
+                fr.setField(formService.getFieldByName(dto.name));
+                fr.setValue(dto.value);
+                em.merge(fr);
+            }
         }
 
         Optional<Role> role = user.getLogin().getRoles().stream().filter(u -> u.getRoleName().equals("potentialCandidate")).findFirst();

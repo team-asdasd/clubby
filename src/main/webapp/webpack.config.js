@@ -214,6 +214,9 @@ module.exports = function makeWebpackConfig(){
             // Reference: http://webpack.github.io/docs/list-of-plugins.html#uglifyjsplugin
             // Minify all javascript, switch loaders to minimizing mode
             new webpack.optimize.UglifyJsPlugin({
+                compress: {
+                    warnings: false
+                },
                 // Angular 2 is broken again, disabling mangle until beta 6 that should fix the thing
                 // Todo: remove this with beta 6
                 mangle: false

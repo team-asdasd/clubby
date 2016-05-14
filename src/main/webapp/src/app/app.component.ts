@@ -4,11 +4,11 @@ import {FORM_PROVIDERS} from 'angular2/common';
 
 import '../style/app.scss';
 
-import {UserApi} from './services/api/userApi';
-import {Home} from './components/home/home';
-import {Profile} from "./components/profile/profile";
-import {Cottages} from "./components/cottages/cottages";
-import {CottageApi} from "./services/api/cottageApi";
+import {UserService} from './shared/user.service';
+import {Home} from './home/home.component';
+import {Profile} from "./profile/profile.component";
+import {Cottages} from "./cottages/cottages.component";
+import {CottageService} from "./cottages/shared/cottages.service";
 
 /*
  * App Component
@@ -16,11 +16,11 @@ import {CottageApi} from "./services/api/cottageApi";
  */
 @Component({
     selector: 'app', // <app></app>
-    providers: [...FORM_PROVIDERS, UserApi, CottageApi],
+    providers: [...FORM_PROVIDERS, UserService, CottageService],
     directives: [...ROUTER_DIRECTIVES],
     pipes: [],
-    styles: [require('./app.scss')],
-    template: require('./app.html')
+    styles: [require('./app.component.scss')],
+    template: require('./app.component.html')
 })
 @RouteConfig([
     {path: '/', component: Home, as: 'Home', useAsDefault: true},
@@ -28,9 +28,9 @@ import {CottageApi} from "./services/api/cottageApi";
     {path: '/Cottages/...', component: Cottages, as: 'Cottages'}
 ])
 export class App {
-    url:string = 'https://github.com/preboot/angular2-webpack';
+    url: string = 'https://github.com/preboot/angular2-webpack';
 
-    constructor(private router:Router) {
+    constructor(private router: Router) {
     }
 
     public isRouteActive(route) {

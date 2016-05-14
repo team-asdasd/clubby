@@ -3,7 +3,7 @@ var dashboardMessage = $("#dashboard-message-box");
 
 $(function () {
     loadUsers();
-    $("#create-user-modal").find("#save-user").click(createUser);
+    $("#create-user-modal").find("#save").click(createUser);
 });
 
 function createUser() {

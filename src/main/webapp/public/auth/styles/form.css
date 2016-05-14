@@ -1,9 +1,11 @@
 .uploadinput {
-    position: relative;
-    overflow: hidden;
-    margin: 10px;
+     position: relative;
+     overflow: hidden;
+ }
+.form-group.required .control-label:after {
+    content:"*";
+    color:red;
 }
-
 .uploadinput input {
     position: absolute;
     top: 0;
@@ -34,11 +36,15 @@
 
 .progress-bar {
     width: 0%;
+    opacity: 0;
+    filter: alpha(opacity=0);
 }
 .photo {
     display: none;
 }
-
+form{
+    color: #0A0A0A;
+}
 /*loader*/
 .loader {
     margin: 60px auto;

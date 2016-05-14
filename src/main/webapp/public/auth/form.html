@@ -28,12 +28,12 @@
     <div class="loader">Loading...</div>
     <div id="message-box" class="alert hidden" role="alert"></div>
     <div class="panel-body">
-        <form role="form">
-            <div class="photo row">
-                <div class="col-xs-6 col-sm-6 col-md-6">
+        <form class="form-horizontal">
+            <div class="photo form-group">
+                <div class="photo-input">
                     <input value="" type="hidden" name="photo" id="photo" class="form-control input-sm">
-                    <div class="uploadinput btn btn-default">
-                        <span>Add your photo</span>
+                    <div class="uploadinput btn btn-info">
+                        <label for="photo" class="col-sm-2 control-label">Add photo</label>
                     </div>
                     <div class="progress" style="display: none">
                         <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0"
@@ -41,9 +41,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="thumbnail col-xs-6 col-sm-6 col-md-6"></div>
+                <div class="thumbnail"></div>
             </div>
-            <button type="button" class="btn btn-info btn-block" id="submit">Save</button>
+            <button type="submit" class="btn btn-primary btn-block" id="submit">Save</button>
         </form>
     </div>
 </div>

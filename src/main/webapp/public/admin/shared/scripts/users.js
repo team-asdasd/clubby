@@ -1,4 +1,5 @@
 var alertDialog = _.template($("#alert-template").html());
+var dashboardMessage = $("#dashboard-message-box");
 
 $(function () {
     loadUsers();
@@ -9,7 +10,6 @@ function createUser() {
     var modal = $("#create-user-modal");
 
     var modalMessage = modal.find("#modal-message-box");
-    var dashboardMessage = modal.find("#dashboard-message-box");
 
     var username = modal.find("#username");
     var email = modal.find("#email");
@@ -33,7 +33,7 @@ function createUser() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         data: JSON.stringify(request)
-    }).done(function (response) {
+    }).done(function () {
         modalMessage.html("");
         dashboardMessage.html(alertDialog({title: "Success!", message: "User created.", severity: "success"}));
 
@@ -50,16 +50,7 @@ function createUser() {
     }).fail(function (response) {
         modalMessage.html("");
 
-        var message = "Error creating user!";
-
-        if (response && response.responseJSON && response.responseJSON.Errors) {
-            message = _.reduce(response.responseJSON.Errors, function (memo, error) {
-                return memo + "<li>" + error.Message + "</li>";
-            }, "<ul>");
-
-            message += "</ul>";
-        }
-
+        var message = getErrorMessageFromResponse(response) || "Error creating user!";
         modalMessage.html(alertDialog({title: "Error!", message: message, severity: "danger"}));
     });
 }
@@ -77,8 +68,24 @@ function loadUsers() {
     }).done(function (response) {
         table.html(template(response));
     }).fail(function (response) {
-        debugger
+        table.html("");
+        var message = getErrorMessageFromResponse(response) || "Unknown error.";
+
+        dashboardMessage.html(alertDialog({title: "Error!", message: message, severity: "danger"}));
     });
 }
 
+function getErrorMessageFromResponse(response) {
+    var message;
+
+    if (response && response.responseJSON && response.responseJSON.Errors) {
+        message = _.reduce(response.responseJSON.Errors, function (memo, error) {
+            return memo + "<li>" + error.Message + "</li>";
+        }, "<ul>");
+
+        message += "</ul>";
+    }
+
+    return message;
+}
 

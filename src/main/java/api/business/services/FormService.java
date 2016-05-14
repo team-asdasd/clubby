@@ -29,10 +29,6 @@ public class FormService implements IFormService {
         return simpleEntityManager.getAll(Field.class);
     }
 
-    void addField(Field field) {
-        simpleEntityManager.insert(field);
-    }
-
     public Field getFieldByName(String name) {
         try {
             return em.createQuery("SELECT F FROM Field F WHERE F.name = :name", Field.class).setParameter("name", name).getSingleResult();

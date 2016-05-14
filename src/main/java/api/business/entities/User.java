@@ -11,7 +11,6 @@ public class User {
     private String email;
     private Login login;
     private String facebookId;
-    private Form form;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -89,16 +88,6 @@ public class User {
 
     public void setLogin(Login login) {
         this.login = login;
-    }
-
-    @OneToOne
-    @JoinColumn(name = "form", referencedColumnName = "id")
-    public Form getForm() {
-        return form;
-    }
-
-    public void setForm(Form form) {
-        this.form = form;
     }
 
     private Collection<MoneyTransaction> transactions;

@@ -1,9 +1,19 @@
 <div class="card card-block">
     <div *ngIf="!cottages" class="loader"></div>
     <div *ngIf="cottages">
-        <div *ngIf="isAdministrator">
-            <button type="button" class="btn btn-primary pull-right" style="margin: 5px;">Add Cottage</button>
-        </div>
+        <form class="form-inline" role="form">
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="input-group-addon">Title:</div>
+                    <input type="text" class="form-control" style="width: 140px" #titleInput>
+                </div>
+                <div class="input-group" style="margin-left: 10px">
+                    <div class="input-group-addon">Beds:</div>
+                    <rooms-selector class="form-control" style="padding:6px;" [cottages]="cottages" #roomsInput></rooms-selector>
+                </div>
+            </div>
+            <button id="filter-button" type="submit" (click)="filterCottages(titleInput.value, roomsInput.selector.value)" class="btn btn-primary">Filter</button>
+        </form>
         <table class="table table-hover">
             <thead>
             <tr>
@@ -13,9 +23,9 @@
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="#cottage of cottages; #i = index">
+            <tr *ngFor="#cottage of cottages">
                 <td>
-                    <img src="{{cottage.Image}}" class="img-thumbnail" style="margin-left: 15px; max-width: 200px;">
+                    <img src="{{cottage.Image}}" class="img-thumbnail">
                 </td>
                 <td>{{cottage.Title}}</td>
                 <td>{{cottage.Beds}}</td>

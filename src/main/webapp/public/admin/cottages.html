@@ -81,7 +81,11 @@
                 <td><%= cottage.Id %></td>
                 <td><%= cottage.Title %></td>
                 <td><%= cottage.Beds %></td>
-                <td></td>
+                <td>
+                    <a class="btn btn-default remove-cottage" data-cottage-id="<%= cottage.Id %>">
+                        <span class="glyphicon glyphicon-remove" data-cottage-id="<%= cottage.Id %>" aria-hidden="true"></span>
+                        <span style="font-size: 16px;" data-cottage-id="<%= cottage.Id %>"> Delete</span></a>
+                </td>
             </tr>
             <% }); %>
             </tbody>
@@ -94,6 +98,7 @@
 <script src="/node_modules/blueimp-file-upload/js/jquery.fileupload.js" type="text/javascript"></script>
 <script src="/node_modules/cloudinary-jquery-file-upload/cloudinary-jquery-file-upload.min.js"></script>
 
+<script src="/public/admin/shared/scripts/clubby/dialog.js"></script>
 <script src="/public/admin/shared/scripts/clubby/alert.js"></script>
 <script src="/public/admin/shared/scripts/cottages.js"></script>
 

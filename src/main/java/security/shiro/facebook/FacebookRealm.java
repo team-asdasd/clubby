@@ -19,12 +19,17 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+
 import java.net.URL;
 
 
 public class FacebookRealm extends AuthorizingRealm {
 
     private IUserService userService;
+
+    public FacebookRealm() {
+        super.setAuthorizationCachingEnabled(false);
+    }
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
@@ -83,7 +88,7 @@ public class FacebookRealm extends AuthorizingRealm {
                         User user = userService.getByFacebookId(fud.Id);
                         if (user == null) {
                             userService.createFacebookUser(fud);
-                        }else{
+                        } else {
                             user.setName(fud.Name);
                             userService.save(user);
                         }

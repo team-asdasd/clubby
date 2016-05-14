@@ -18,7 +18,7 @@ import java.util.ArrayList;
 @Stateless
 public class UpdateFieldHandler extends BaseHandler<AddFieldRequest, BaseResponse> {
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
     @Inject
     private IFormService formService;
 

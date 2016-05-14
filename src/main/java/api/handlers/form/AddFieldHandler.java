@@ -18,7 +18,7 @@ import java.util.ArrayList;
 @Stateless
 public class AddFieldHandler extends BaseHandler<AddFieldRequest, BaseResponse> {
     @Inject
-    ISimpleEntityManager simpleEntityManager;
+    private ISimpleEntityManager simpleEntityManager;
     @Inject
     private IFormService formService;
 

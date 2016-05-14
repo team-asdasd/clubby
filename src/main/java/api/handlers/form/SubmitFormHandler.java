@@ -43,7 +43,10 @@ public class SubmitFormHandler extends BaseHandler<SubmitFormRequest, BaseRespon
             if (field == null)
                 errors.add(new ErrorDto("Field " + dto.name + " not found", ErrorCodes.BAD_REQUEST));
             else if (field.getValidationRegex() != null && !field.getValidationRegex().isEmpty() && !dto.value.matches(field.getValidationRegex())) {
-                errors.add(new ErrorDto("Field " + dto.name + "does not match pattern", ErrorCodes.VALIDATION_ERROR));
+                errors.add(new ErrorDto("Field " + field.getDescription() + " does not match pattern", ErrorCodes.VALIDATION_ERROR));
+            }
+            if (field != null && field.getRequired() && dto.value.isEmpty()) {
+                errors.add(new ErrorDto("Required field " + field.getDescription() + " is empty", ErrorCodes.VALIDATION_ERROR));
             }
         }
         return errors;

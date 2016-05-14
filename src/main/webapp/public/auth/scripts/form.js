@@ -1,3 +1,6 @@
+var alertDialog = window.Clubby.Alert();
+var dashboardMessage = $("#message-box");
+
 $.cloudinary.config({cloud_name: 'teamasdasd'})
 function insertPhotoField() {
     $("div[class^='uploadinput']").append($.cloudinary.unsigned_upload_tag("syjxlwur"))
@@ -40,8 +43,13 @@ $('#submit').click(function () {
     var isValid = true
     $('input').each(function () {
         var input = $(this);
-        if(input.attr('required') != null && input.val() === ""){
+        if (input.attr('required') != null && input.val() === "") {
             isValid = false;
+            dashboardMessage.html(alertDialog({
+                title: "Error!",
+                message: "Please fill required fields",
+                severity: "danger"
+            }));
             return
         }
         if (input.attr('name') != 'file') {
@@ -51,7 +59,7 @@ $('#submit').click(function () {
             request.fields.push(field);
         }
     })
-    if(!isValid) return false;
+    if (!isValid) return false;
     $.ajax({
         type: "POST",
         url: "/api/form",
@@ -59,28 +67,22 @@ $('#submit').click(function () {
         dataType: "json",
         data: JSON.stringify(request)
     })
-        .done(function (response) {
-            var messageBox = $('#message-box');
-            messageBox.removeClass("hidden alert-danger alert-success");
-            messageBox.addClass("alert-success");
-            messageBox.html("Success!");
-
+        .done(function () {
+            dashboardMessage.html(alertDialog({title: "Success!", message: "", severity: "success"}));
+            window.location = "/app";
         }).fail(function (response) {
-        var messageBox = $('#message-box');
-        messageBox.removeClass("hidden alert-danger alert-success");
-        messageBox.addClass("alert-danger");
-
-        var message = "Error submitting form!";
-
-        if (response && response.responseJSON && response.responseJSON.Errors) {
-            var errors = response.responseJSON.Errors;
-            message = "<ul>";
-
-            for (var i = 0; i < errors.length; i++) {
-                message += "<li>" + errors[i].Message + "</li>";
-            }
-            message += "</ul>";
-        }
-        messageBox.html(message);
+        var message = getErrorMessageFromResponse(response) || "Unknown error.";
+        dashboardMessage.html(alertDialog({title: "Error!", message: message, severity: "danger"}));
     })
 })
+
+function getErrorMessageFromResponse(response) {
+    var message;
+    if (response && response.responseJSON && response.responseJSON.Errors) {
+        message = _.reduce(response.responseJSON.Errors, function (memo, error) {
+            return memo + "<li>" + error.Message + "</li>";
+        }, "<ul>");
+        message += "</ul>";
+    }
+    return message;
+}

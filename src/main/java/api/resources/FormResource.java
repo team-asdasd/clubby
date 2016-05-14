@@ -34,7 +34,7 @@ public class FormResource {
     @Path("")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Submit membership form", response = BaseResponse.class)
+    @ApiOperation(value = "Submit or update membership form", response = BaseResponse.class)
     public Response submitForm(SubmitFormRequest request) {
         BaseResponse response = submitFormHandler.handle(request);
 
@@ -46,7 +46,7 @@ public class FormResource {
     @GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Get current form", response = BaseResponse.class)
+    @ApiOperation(value = "Get form fields", response = BaseResponse.class)
     public Response getForm() {
 
         GetFormRequest request = new GetFormRequest();

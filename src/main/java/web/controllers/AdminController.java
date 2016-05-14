@@ -70,19 +70,11 @@ public class AdminController {
 
     @PathMapping("users")
     public void usersIndex(WebContext ctx) throws Exception {
-        String cookie = ctx.getRequest().getHeader("Cookie");
-        GetAllUsersResponse response = HttpClient.sendGetRequest("/api/user", GetAllUsersResponse.class, null, cookie);
+        ctx.setVariable("pageTitle", "Users");
+        ctx.setVariable("navbarSearch", true);
+        ctx.setVariable("layout", "admin/shared/_adminLayout");
 
-        if (response.Errors == null || response.Errors.size() == 0) {
-            ctx.setVariable("users", response.Users);
-            ctx.setVariable("pageTitle", "Users");
-            ctx.setVariable("navbarSearch", true);
-            ctx.setVariable("layout", "admin/shared/_adminLayout");
-
-            Sender.sendView(ctx, "admin/users");
-        } else {
-            ctx.getResponse().setStatus(HttpServletResponse.SC_NOT_FOUND);
-        }
+        Sender.sendView(ctx, "admin/users");
     }
 
     @PathMapping("clearlogs")

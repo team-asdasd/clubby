@@ -5,33 +5,15 @@
 </head>
 <body>
 <div class="row">
-    <div class="col-md-10 col-md-offset-1">
+    <div id="users-dashboard" class="col-md-10 col-md-offset-1">
         <h2 class="sub-header">Users
             <button type="button" data-toggle="modal" data-target="#create-user-modal"
                     class="btn btn-success pull-right">
                 Add User
             </button>
         </h2>
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered table-hover">
-                <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Username</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                </tr>
-                </thead>
-                <tbody class="searchable">
-                <tr th:each="user,iterationStatus : ${users}">
-                    <td th:text="${user.Id}"></td>
-                    <td th:text="${user.Username}"></td>
-                    <td th:text="${user.Name}"></td>
-                    <td th:text="${user.Email}"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+        <div id="dashboard-message-box"></div>
+        <div id="users-table"></div>
     </div>
 
     <!-- Modal -->
@@ -44,7 +26,7 @@
                     <h4 class="modal-title" id="myModalLabel">Add User</h4>
                 </div>
                 <div class="modal-body">
-                    <div id="message-box" class="alert hidden" role="alert"></div>
+                    <div id="modal-message-box"></div>
                     <form class="form-horizontal">
                         <div class="form-group">
                             <label for="username" class="col-sm-2 control-label">Username</label>
@@ -96,6 +78,39 @@
             </div>
         </div>
     </div>
+
+    <script id="users-table-template" type="text/template">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Username</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                </tr>
+                </thead>
+                <tbody class="searchable">
+                <% _.each(Users, function(user){ %>
+                <tr>
+                    <td><%= user.Id %></td>
+                    <td><%= user.Username %></td>
+                    <td><%= user.Name %></td>
+                    <td><%= user.Email %></td>
+                </tr>
+                <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </script>
+
+    <script id="alert-template" type="text/template">
+        <div class="alert alert-<%= severity %> alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
+            <strong><%= title %></strong> <%= message %>
+        </div>
+    </script>
 </div>
 <script src="/public/admin/shared/scripts/users.js"></script>
 </body>

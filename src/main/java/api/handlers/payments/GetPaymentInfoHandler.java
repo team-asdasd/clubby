@@ -52,6 +52,7 @@ public class GetPaymentInfoHandler extends BaseHandler<GetPaymentInfoRequest, Ge
         paymentInfoDto.Currency = payment.getCurrency();
         paymentInfoDto.InfoText = payment.getPaytext();
         paymentInfoDto.PaymentId = payment.getPaymentid();
+        paymentInfoDto.PaymentTypeId = payment.getPaymenttypeid();
 
         response.paymentInfoDto = paymentInfoDto;
 

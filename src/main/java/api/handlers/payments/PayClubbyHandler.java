@@ -10,6 +10,7 @@ import api.contracts.base.ErrorDto;
 import api.contracts.dto.PaymentInfoDto;
 import api.contracts.enums.PaymentTypes;
 import api.contracts.enums.TransactionStatus;
+import api.contracts.enums.TransactionTypes;
 import api.contracts.payments.GetPaymentInfoRequest;
 import api.contracts.payments.GetPaymentInfoResponse;
 import api.contracts.payments.PayClubbyRequest;
@@ -57,9 +58,9 @@ public class PayClubbyHandler extends BaseHandler<PayClubbyRequest, PayClubbyRes
             return response;
         }
 
-        if (payment.getPaymenttypeid() != PaymentTypes.clubby.getValue()) {
+        if (payment.getPaymenttypeid() != PaymentTypes.pay.getValue()) {
             response.Errors = new ArrayList<>();
-            response.Errors.add(new ErrorDto(String.format("Payment %s is not clubby payment type", request.PaymentId), ErrorCodes.BAD_REQUEST));
+            response.Errors.add(new ErrorDto(String.format("Payment %s cannot bee paid with clubby coins", request.PaymentId), ErrorCodes.BAD_REQUEST));
             return response;
         }
 
@@ -82,6 +83,7 @@ public class PayClubbyHandler extends BaseHandler<PayClubbyRequest, PayClubbyRes
         mt.setUser(user);
         mt.setTransactionid(UUID.randomUUID().toString());
         mt.setCreationTime(new Date());
+        mt.setTransactionTypeId(TransactionTypes.clubby.getValue());
 
         response.success = true;
 

@@ -1,9 +1,10 @@
 package api.business.services;
 
 import api.business.entities.*;
+import api.business.entities.TransactionStatus;
 import api.business.persistance.ISimpleEntityManager;
 import api.business.services.interfaces.IPaymentsService;
-import api.contracts.enums.PaymentTypes;
+import api.contracts.enums.*;
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.StringUtils;
 
@@ -183,20 +184,25 @@ public class PaymentsService implements IPaymentsService {
     //region clubby payments
 
     public int getMyCredit(int userId){
-        return (int)em.getEntityManager()
-                .createNativeQuery("SELECT COALESCE(SUM(amount),0) FROM payment.moneytransactions INNER JOIN payment.payments p ON moneytransactions.paymentid = p.paymentid WHERE paymenttypeid = :paymentTypeId AND userid = :userId")
+        BigInteger credit = (BigInteger)em.getEntityManager()
+                .createNativeQuery("SELECT COALESCE(SUM(amount),0) FROM payment.moneytransactions INNER JOIN payment.payments p ON moneytransactions.paymentid = p.paymentid WHERE paymenttypeid = :paymentTypeId AND userid = :userId AND moneytransactions.transactiontypeid = :transactionTypeId AND moneytransactions.status = :status")
                 .setParameter("userId", userId)
-                .setParameter("paymentTypeId", PaymentTypes.clubby)
+                .setParameter("paymentTypeId", PaymentTypes.pay.getValue())
+                .setParameter("transactionTypeId", TransactionTypes.clubby.getValue())
+                .setParameter("status", api.contracts.enums.TransactionStatus.approved.getValue())
                 .getSingleResult();
+        return credit.intValue();
     }
 
     public int getMyDebit(int userId){
-        return (int)em.getEntityManager()
-                .createNativeQuery("SELECT COALESCE(SUM(amount),0) FROM payment.moneytransactions INNER JOIN payment.payments p ON moneytransactions.paymentid = p.paymentid WHERE (paymenttypeid = :paymentTypeId1 OR paymenttypeid = :paymentTypeId2) AND userid = :userId")
+        BigInteger debit = (BigInteger)em.getEntityManager()
+                .createNativeQuery("SELECT COALESCE(SUM(amount),0) FROM payment.moneytransactions INNER JOIN payment.payments p ON moneytransactions.paymentid = p.paymentid WHERE (paymenttypeid = :paymentTypeId1 OR paymenttypeid = :paymentTypeId2) AND userid = :userId AND moneytransactions.status = :status")
                 .setParameter("userId", userId)
-                .setParameter("paymentTypeId1", PaymentTypes.buycb)
-                .setParameter("paymentTypeId2", PaymentTypes.free)
+                .setParameter("paymentTypeId1", PaymentTypes.buy.getValue())
+                .setParameter("paymentTypeId2", PaymentTypes.free.getValue())
+                .setParameter("status", api.contracts.enums.TransactionStatus.approved.getValue())
                 .getSingleResult();
+        return debit.intValue();
     }
 
     public int getMyBalance(int userId){

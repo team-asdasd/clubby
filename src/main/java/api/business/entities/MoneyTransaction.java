@@ -3,16 +3,13 @@ package api.business.entities;
 import javax.persistence.*;
 import java.util.Date;
 
-/**
- * Created by Mindaugas on 30/04/2016.
- */
-
 @Entity
 @Table(name = "moneytransactions", schema = "payment", catalog = "clubby")
 public class MoneyTransaction {
     private String transactionid;
     private int status;
     private Date creationTime;
+    private int transactionTypeId;
 
     @Id
     @Column(name = "transactionid")
@@ -42,6 +39,16 @@ public class MoneyTransaction {
 
     public void setCreationTime(Date creationTime) {
         this.creationTime = creationTime;
+    }
+
+    @Basic
+    @Column(name = "transactionTypeId")
+    public int getTransactionTypeId() {
+        return transactionTypeId;
+    }
+
+    public void setTransactionTypeId(int transactionTypeId) {
+        this.transactionTypeId = transactionTypeId;
     }
 
     @Override

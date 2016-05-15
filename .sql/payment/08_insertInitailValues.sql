@@ -1,16 +1,3 @@
-/* insert transaction types */
-INSERT INTO payment.transactiontypes
-SELECT * FROM (SELECT 1, 'in') a
-WHERE NOT EXISTS (
-SELECT * FROM payment.transactiontypes
-WHERE transactiontypeid = 1 AND name = 'in');
-
-INSERT INTO payment.transactiontypes
-SELECT * FROM (SELECT 2, 'out') a
-WHERE NOT EXISTS (
-SELECT * FROM payment.transactiontypes
-WHERE transactiontypeid = 2 AND name = 'out');
-
 /* insert transaction status */
 INSERT INTO payment.transactionstatus
 SELECT * FROM (SELECT 1, 'pending') a
@@ -43,12 +30,45 @@ WHERE NOT EXISTS (
 SELECT * FROM payment.paymentssettings
 WHERE paymentSettingsId = 1);
 
+
 /* insert payment types */
 INSERT INTO payment.paymenttypes
-SELECT * FROM (SELECT 1, 'yearly', 'only one time in years') a
+SELECT * FROM (SELECT 1, 'direct', 'Direct payment with money') a
 WHERE NOT EXISTS (
 SELECT * FROM payment.paymenttypes
 WHERE paymentTypeId = 1);
+
+INSERT INTO payment.paymenttypes
+SELECT * FROM (SELECT 2, 'pay', 'Pay with money or CB') a
+WHERE NOT EXISTS (
+SELECT * FROM payment.paymenttypes
+WHERE paymentTypeId = 2);
+
+INSERT INTO payment.paymenttypes
+SELECT * FROM (SELECT 3, 'free', 'Free gift from admin or etc') a
+WHERE NOT EXISTS (
+SELECT * FROM payment.paymenttypes
+WHERE paymentTypeId = 3);
+
+/*insert transaction types*/
+INSERT INTO payment.transactiontypes
+SELECT * FROM (SELECT 1, 'direct') a
+WHERE NOT EXISTS (
+SELECT * FROM payment.transactiontypes
+WHERE transactionTypeId = 1);
+
+INSERT INTO payment.transactiontypes
+SELECT * FROM (SELECT 2, 'clubby') a
+WHERE NOT EXISTS (
+SELECT * FROM payment.transactiontypes
+WHERE transactionTypeId = 2);
+
+
+INSERT INTO payment.transactiontypes
+SELECT * FROM (SELECT 3, 'free') a
+WHERE NOT EXISTS (
+SELECT * FROM payment.transactiontypes
+WHERE transactionTypeId = 3);
 
 /* insert payments*/
 INSERT INTO payment.payments

@@ -26,4 +26,10 @@ export class PaymentsApi {
             .map(resp => ApiHelper.parse<HistoryPaymentsResponse>(resp).payments)
             .catch(ApiHelper.handleError);
     }
+
+    public pay(paymentId:number):Observable<Array<MoneyTransaction>>{
+        return this.http.get(`${this.url}/pay/${paymentId}`)
+            .map(resp => ApiHelper.parse<HistoryPaymentsResponse>(resp).payments)
+            .catch(ApiHelper.handleError);
+    }
 }

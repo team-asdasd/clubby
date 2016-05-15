@@ -8,6 +8,8 @@ import api.business.services.interfaces.ILoginService;
 import api.business.services.interfaces.IPaymentsService;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
+import api.contracts.enums.PaymentTypes;
+import api.contracts.enums.TransactionTypes;
 import api.contracts.payments.GetPayseraParamsRequest;
 import api.contracts.payments.GetPayseraParamsResponse;
 import api.handlers.base.BaseHandler;
@@ -56,6 +58,12 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
             return response;
         }
 
+        if(payment.getPaymenttypeid() == PaymentTypes.free.getValue()){
+            response.Errors = new ArrayList<>();
+            response.Errors.add(new ErrorDto("This is free payment", ErrorCodes.VALIDATION_ERROR));
+            return response;
+        }
+
         String username = currentUser.getPrincipal().toString();
         User user = loginService.getByUserName(username).getUser();
         PaymentsSettings paymentsSettings = payment.getSettings();
@@ -73,6 +81,7 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
         mt.setUser(user);
         mt.setTransactionid(UUID.randomUUID().toString());
         mt.setCreationTime(new Date());
+        mt.setTransactionTypeId(TransactionTypes.direct.getValue());
 
         paymentsService.createMoneyTransaction(mt);
 

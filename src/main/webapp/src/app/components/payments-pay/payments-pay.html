@@ -1,8 +1,13 @@
 <div class="wraper">
     <div class="card card-block">
-        <div *ngIf="!payment && !failed" class="loader"></div>
-        <cb-error *ngIf="failed"></cb-error>
-        <div *ngIf="payment && !failed" class="payment">
+        <div *ngIf="(!payment && !failed) || loading" class="loader"></div>
+        <cb-error *ngIf="failed && !loading"></cb-error>
+        <div *ngIf="payment && !failed && !loading" class="payment">
+            <ul *ngIf="errors" class="text-danger">
+                <li *ngFor="#err of errors; #i = index">
+                {{err.Message}}
+                </li>
+            </ul>
             <div class="row">
                 <div class="col-xs-6 col-sm-6 col-md-6">
                     <address>
@@ -43,9 +48,16 @@
                     </tr>
                     </tbody>
                 </table>
-                <a href="/pay/paysera?payment={{payment.PaymentId}}" class="btn btn-success btn-lg btn-block">
-                    Pay Now<span class="glyphicon glyphicon-chevron-right"></span>
-                </a>
+                <div class="btn-group btn-group-justified">
+                    <a *ngIf="payment.PaymentTypeId != 3" href="/pay/paysera?payment={{payment.PaymentId}}" class="btn btn-success btn-lg btn-block">
+                        Pay through bank<span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
+                    <a *ngIf="payment.PaymentTypeId == 1" (click)="payClubby(payment)" class="btn btn-success btn-lg btn-block">
+                        Pay with clubby coins<span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
+
+                </div>
+
             </div>
         </div>
     </div>

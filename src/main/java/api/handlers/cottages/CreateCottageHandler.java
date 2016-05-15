@@ -35,6 +35,18 @@ public class CreateCottageHandler extends BaseHandler<CreateCottageRequest, Crea
             errors.add(new ErrorDto("Insufficient permissions.", ErrorCodes.AUTHENTICATION_ERROR));
         }
 
+        if (request.title.length() < 5) {
+            errors.add(new ErrorDto("Title must be at least 5 characters long", ErrorCodes.VALIDATION_ERROR));
+        }
+
+        if (request.imageurl.length() < 1) {
+            errors.add(new ErrorDto("Image url must be provided", ErrorCodes.VALIDATION_ERROR));
+        }
+
+        if (request.bedcount <= 0) {
+            errors.add(new ErrorDto("Bed count must be higher than zero.", ErrorCodes.VALIDATION_ERROR));
+        }
+
         return errors;
     }
 

@@ -27,6 +27,7 @@ public class ApplicationRealm extends AuthorizingRealm {
 
     public ApplicationRealm(){
         passwordService = new DefaultPasswordService();
+        super.setAuthorizationCachingEnabled(false);
     }
 
     // TODO: Refactor this to our style

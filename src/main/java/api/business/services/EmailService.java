@@ -10,6 +10,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -31,6 +32,15 @@ public class EmailService implements IEmailService {
         } catch (MessagingException e) {
             logger.error(e);
             throw e;
+        }
+    }
+    public static boolean isValidEmailAddress(String email) {
+        try {
+            InternetAddress emailAddr = new InternetAddress(email);
+            emailAddr.validate();
+            return true;
+        } catch (AddressException e) {
+            return false;
         }
     }
 }

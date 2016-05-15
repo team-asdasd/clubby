@@ -25,7 +25,7 @@ public class Login implements Serializable{
     }
 
     @Basic
-    @Column(name = "username", nullable = true, length = -1)
+    @Column(name = "username", length = -1)
     public String getUsername() {
         return username;
     }

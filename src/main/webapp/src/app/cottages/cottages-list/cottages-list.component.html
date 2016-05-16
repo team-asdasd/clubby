@@ -1,19 +1,21 @@
 <div class="card card-block">
     <div *ngIf="!cottages" class="loader"></div>
     <div *ngIf="cottages">
-        <form class="form-inline" role="form">
-            <div class="form-group">
-                <div class="input-group">
-                    <div class="input-group-addon">Title:</div>
-                    <input type="text" class="form-control" style="width: 140px" #titleInput>
-                </div>
-                <div class="input-group" style="margin-left: 10px">
-                    <div class="input-group-addon">Beds:</div>
-                    <rooms-selector class="form-control" style="padding:6px;" [cottages]="cottages" #roomsInput></rooms-selector>
-                </div>
+
+        <div id="filters-container">
+            <div id="title-filter-group" class="input-group">
+                <div class="input-group-addon">Title:</div>
+                <input type="text" class="form-control" style="width: 140px" #titleInput>
             </div>
-            <button id="filter-button" type="submit" (click)="filterCottages(titleInput.value, roomsInput.selector.value)" class="btn btn-primary">Filter</button>
-        </form>
+
+            <div id="beds-filter-group" class="input-group">
+                <div class="input-group-addon">Beds:</div>
+                <rooms-selector class="form-control" style="padding:6px;" [cottages]="cottages" #roomsInput></rooms-selector>
+            </div>
+
+            <button id="filter-button" (click)="filterCottages(titleInput.value, roomsInput.selector.value)" class="btn btn-primary">Filter</button>
+        </div>
+
         <table class="table table-hover">
             <thead>
             <tr>
@@ -32,6 +34,7 @@
             </tr>
             </tbody>
         </table>
+
     </div>
 
 </div>

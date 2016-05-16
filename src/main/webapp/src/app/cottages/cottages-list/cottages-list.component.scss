@@ -1,15 +1,34 @@
+#filters-container {
+  width: 100%;
+  padding: 10px 25px 10px 25px;
+}
+
+@media only screen and (max-width: 480px) {
+  #filters-container > *:not(:last-child) {
+    margin-bottom: 5px;
+  }
+}
+
+@media only screen and (min-width: 480px) {
+  #filters-container > *:not(:last-child) {
+    margin-right: 10px;
+    float: left;
+  }
+}
+
+#title-filter-group {
+  width: 150px;
+}
+
+#beds-filter-group {
+  width: 50px;
+}
+
 #filter-button {
-  margin-top: 10px;
-  margin-left:10px;
   outline:none;
 }
 
 .img-thumbnail {
   margin-left: 15px;
   max-width: 200px;
-}
-
-.form-group {
-  margin-top: 10px;
-  margin-left: 25px;
 }

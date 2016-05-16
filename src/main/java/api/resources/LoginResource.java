@@ -14,6 +14,7 @@ import javax.ws.rs.core.Context;
 import java.io.IOException;
 
 @Path("/login")
+@Produces({"application/json; charset=UTF-8"})
 public class LoginResource {
     private FacebookLoginHandler facebookLoginHandler;
 
@@ -23,7 +24,6 @@ public class LoginResource {
 
     @GET
     @Path("facebook")
-    @Produces("application/json")
     public void facebook(@Context HttpServletRequest request, @Context HttpServletResponse response) throws IOException {
         String code = request.getParameter("code");
         FacebookLoginRequest req = new FacebookLoginRequest();

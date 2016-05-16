@@ -34,6 +34,8 @@ before_deploy:
 - git add src/main/webapp/node_modules/bootstrap/dist/js/bootstrap.js
 - git add src/main/webapp/node_modules/swagger-ui/dist/
 - git add src/main/webapp/node_modules/bootstrap-validator/dist/
+- git add src/main/webapp/node_modules/blueimp-file-upload/js/
+- git add src/main/webapp/node_modules/cloudinary-jquery-file-upload/
 - git commit -am "Travis build $TRAVIS_BUILD_NUMBER"
 
 deploy:

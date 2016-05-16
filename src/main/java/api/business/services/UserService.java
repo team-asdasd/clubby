@@ -6,6 +6,7 @@ import api.business.entities.User;
 import api.business.services.interfaces.IUserService;
 import clients.facebook.responses.FacebookUserDetails;
 
+import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.context.RequestScoped;
@@ -14,9 +15,8 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
 
-@RequestScoped
+@Stateless
 public class UserService implements IUserService {
-
     @PersistenceContext
     private EntityManager em;
 
@@ -24,18 +24,15 @@ public class UserService implements IUserService {
         return em.find(User.class, id);
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public User getByEmail(String email) {
         try {
-            TypedQuery<User> users = em.createQuery("FROM User WHERE email = :email", User.class).setParameter("email", email);
+            TypedQuery<User> users = em.createQuery("SELECT U FROM User U WHERE U.email = :email", User.class).setParameter("email", email);
             return users.getSingleResult();
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
 
-    @Transactional
     public void createUser(User user, Login login) {
         try {
             em.persist(user);
@@ -51,7 +48,6 @@ public class UserService implements IUserService {
         }
     }
 
-    @Transactional
     public void createFacebookUser(FacebookUserDetails details) {
         User user = new User();
         Login login = new Login();
@@ -69,16 +65,15 @@ public class UserService implements IUserService {
     @Override
     public User getByFacebookId(String id) {
         try {
-            TypedQuery<User> users = em.createQuery("FROM User WHERE facebookId = :id", User.class).setParameter("id", id);
+            TypedQuery<User> users = em.createQuery("SELECT U FROM User U WHERE U.facebookId = :id", User.class).setParameter("id", id);
             return users.getSingleResult();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
-
+    
     @Override
-    @Transactional
     public void save(User user) {
         try {
             em.merge(user);
@@ -94,7 +89,7 @@ public class UserService implements IUserService {
         List<User> userList = em.createQuery("SELECT u FROM User u WHERE u.login.username = :username", User.class)
                 .setParameter("username", username)
                 .getResultList();
-        if(userList.size() == 0)
+        if (userList.size() == 0)
             return null;
         return userList.get(0);
     }

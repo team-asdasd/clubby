@@ -22,11 +22,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 
-/**
- * Created by Mindaugas on 03/05/2016.
- */
 @Api(value = "paysera")
 @Path("/paysera")
+@Produces({"application/json; charset=UTF-8"})
 public class PayseraResource {
     @Inject
     private GetPayseraParamsHandler getPayseraParamsHandler;
@@ -34,7 +32,6 @@ public class PayseraResource {
     private PayseraCallbackHandler payseraCallbackHandler;
 
     @GET
-    @Produces("application/json")
     @Path("parameters/{paymentId}")
     @ApiOperation(value = "Get paysera params for payment", response = GetPayseraParamsResponse.class)
     public Response getPayseraParams(@PathParam("paymentId") int paymentId){
@@ -50,7 +47,6 @@ public class PayseraResource {
     }
 
     @GET
-    @Produces("application/json")
     @Path("callback")
     @ApiOperation(value = "Paysera callback url")
     public void payseraCallback(@Context HttpServletRequest request, @Context HttpServletResponse response) throws IOException {

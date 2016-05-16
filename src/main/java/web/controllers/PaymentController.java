@@ -31,19 +31,19 @@ public class PaymentController {
         //todo check if user can pay (ex: membership payment only ones in year)
         String paymentId = ctx.getRequest().getParameter("payment");
 
-        if(paymentId == null || paymentId.isEmpty()){
+        if (paymentId == null || paymentId.isEmpty()) {
             ctx.getResponse().sendRedirect(ctx.getResponse().encodeRedirectURL("/"));
         }
         String cookie = ctx.getRequest().getHeader("Cookie");
-        GetPaymentInfoResponse response = HttpClient.sendGetRequest("/api/payments/"+paymentId, GetPaymentInfoResponse.class, null, cookie);
+        GetPaymentInfoResponse response = HttpClient.sendGetRequest("/api/payments/" + paymentId, GetPaymentInfoResponse.class, null, cookie);
 
-        if(response.Errors == null || response.Errors.size() == 0){
+        if (response.Errors == null || response.Errors.size() == 0) {
             ctx.setVariable("payment", response.paymentInfoDto);
             ctx.setVariable("pageTitle", "Pay");
-            ctx.setVariable("layout","_baseLayout");
+            ctx.setVariable("layout", "_baseLayout");
 
             Sender.sendView(ctx, "payment/index");
-        }else{
+        } else {
             ctx.getResponse().setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
     }
@@ -54,25 +54,25 @@ public class PaymentController {
         //todo check if user can pay (ex: membership payment only ones in year)
         String paymentId = ctx.getRequest().getParameter("payment");
 
-        if(paymentId == null || paymentId.isEmpty()){
+        if (paymentId == null || paymentId.isEmpty()) {
             ctx.getResponse().sendRedirect(ctx.getResponse().encodeRedirectURL("/"));
         }
 
         String cookie = ctx.getRequest().getHeader("Cookie");
-        GetPayseraParamsResponse response = HttpClient.sendGetRequest("/api/paysera/parameters/"+paymentId, GetPayseraParamsResponse.class, null, cookie);
+        GetPayseraParamsResponse response = HttpClient.sendGetRequest("/api/paysera/parameters/" + paymentId, GetPayseraParamsResponse.class, null, cookie);
 
         HttpServletResponse httpResp = ctx.getResponse();
 
-        String body = String.format("data=%s&sign=%s",response.Data, response.Sign);
+        String body = String.format("data=%s&sign=%s", response.Data, response.Sign);
 
-        httpResp.sendRedirect("https://www.paysera.com/pay?"+body);
+        httpResp.sendRedirect("https://www.paysera.com/pay?" + body);
     }
 
     @PathMapping("accepted")
     public void accepted(WebContext ctx) throws Exception {
         sendInfoToCallback(ctx);
         ctx.setVariable("pageTitle", "Success");
-        ctx.setVariable("layout","_baseLayout");
+        ctx.setVariable("layout", "_baseLayout");
 
         Sender.sendView(ctx, "payment/accept");
     }
@@ -80,23 +80,23 @@ public class PaymentController {
     @PathMapping("cancelled")
     public void cancelled(WebContext ctx) throws Exception {
         ctx.setVariable("pageTitle", "Failed");
-        ctx.setVariable("layout","_baseLayout");
+        ctx.setVariable("layout", "_baseLayout");
 
         Sender.sendView(ctx, "payment/cancel");
     }
 
-    private void sendInfoToCallback(WebContext ctx){
-        try{
+    private void sendInfoToCallback(WebContext ctx) {
+        try {
             HttpServletRequest request = ctx.getRequest();
             Map<String, String> params = new HashMap<>();
             //to list :)
-            for(String name : Collections.list(request.getParameterNames())){
+            for (String name : Collections.list(request.getParameterNames())) {
                 params.put(name, request.getParameter(name));
             }
 
             HttpClient.sendGetRequest("/api/paysera/callback", String.class, params, null);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             //do nothing just log
             logger.info(e);
         }

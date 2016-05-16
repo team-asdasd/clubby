@@ -34,6 +34,7 @@ public class ApplicationConfiguration extends Application {
         classes.add(RecommendationResource.class);
         classes.add(CottageResource.class);
         classes.add(PayseraResource.class);
+        classes.add(FormResource.class);
 
         classes.add(io.swagger.jaxrs.listing.ApiListingResource.class);
         classes.add(io.swagger.jaxrs.listing.SwaggerSerializers.class);

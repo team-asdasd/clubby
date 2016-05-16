@@ -1,8 +1,7 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-
 <head>
-    <title>Clubby - Team ASDASD</title>
+    <title th:text="${pageTitle}"></title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,8 +11,10 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/4.12.0/bootstrap-social.css">
+    <link rel="stylesheet" href="/public/admin/shared/styles/dashboard.css"/>
 </head>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script>
@@ -33,7 +34,23 @@
 <body>
 <div th:include="/admin/shared/_navbar::body"></div>
 <div>
-    <div th:include="${view}::body"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3 col-md-2 sidebar">
+                <ul class="nav nav-sidebar">
+                    <li th:classappend="${#httpServletRequest.getRequestURI().contains('/users') ? 'active':''}"><a
+                            href="/admin/users">Users</a></li>
+                    <li th:classappend="${#httpServletRequest.getRequestURI().contains('/cottages') ? 'active':''}">
+                        <a href="/admin/cottages">Cottages</a></li>
+                    <li th:classappend="${#httpServletRequest.getRequestURI().contains('/settings') ? 'active':''}">
+                        <a href="/admin/settings">Settings</a></li>
+                </ul>
+            </div>
+            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                <div th:include="${view}::body"></div>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

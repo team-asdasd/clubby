@@ -6,9 +6,8 @@ import api.business.persistance.ISimpleEntityManager;
 import api.business.services.interfaces.IPaymentsService;
 import api.contracts.enums.*;
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
-import com.google.api.client.repackaged.org.apache.commons.codec.binary.StringUtils;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.TypedQuery;
 import java.io.UnsupportedEncodingException;
@@ -20,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@ApplicationScoped
+@Stateless
 public class PaymentsService implements IPaymentsService {
 
     @Inject
@@ -28,7 +27,7 @@ public class PaymentsService implements IPaymentsService {
 
     //region encryptions
 
-    public boolean checkWithMd5(String data, String ss1){
+    public boolean checkWithMd5(String data, String ss1) {
         String md5 = md5WithPayseraPassword(data);
         return md5.equals(ss1);
     }
@@ -39,28 +38,28 @@ public class PaymentsService implements IPaymentsService {
     }
 
     @Override
-    public String md5WithPayseraPassword(String input){
+    public String md5WithPayseraPassword(String input) {
         String password = getPassword();
 
         return toMd5(input + password);
     }
 
-    public String prepareUrlEncoded(String input){
+    public String prepareUrlEncoded(String input) {
         String base64 = new String(Base64.encodeBase64(input.getBytes()));
-        base64 = base64.replace("/","_");
-        base64 = base64.replace("+","-");
+        base64 = base64.replace("/", "_");
+        base64 = base64.replace("+", "-");
 
         return base64;
     }
 
-    public String decodePayseraData(String data){
-        data = data.replace("_","/");
-        data = data.replace("-","+");
+    public String decodePayseraData(String data) {
+        data = data.replace("_", "/");
+        data = data.replace("-", "+");
         return new String(Base64.decodeBase64(data.getBytes()));
     }
 
     @Override
-    public String toMd5(String input){
+    public String toMd5(String input) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] messageDigest = md.digest(input.getBytes());
@@ -71,24 +70,23 @@ public class PaymentsService implements IPaymentsService {
                 hashtext = "0" + hashtext;
             }
             return hashtext;
-        }
-        catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public String encodeUrl(Map<String,String> map){
+    public String encodeUrl(Map<String, String> map) {
         final String[] url = {""};
 
         map.forEach((s, s2) -> {
             try {
-                url[0] += s+"="+ URLEncoder.encode(s2, "UTF-8")+"&";
+                url[0] += s + "=" + URLEncoder.encode(s2, "UTF-8") + "&";
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
         });
 
-        String encodedUrl = url[0].substring(0,url[0].length()-1);
+        String encodedUrl = url[0].substring(0, url[0].length() - 1);
 
         return encodedUrl;
     }
@@ -98,17 +96,17 @@ public class PaymentsService implements IPaymentsService {
     //region payments settings
 
     @Override
-    public int createPaymentsSettings(PaymentsSettings paymentsSettings){
+    public int createPaymentsSettings(PaymentsSettings paymentsSettings) {
         return em.insert(paymentsSettings).getPaymentsettingsid();
     }
 
     @Override
-    public PaymentsSettings updatePaymentsSettings(PaymentsSettings paymentsSettings){
+    public PaymentsSettings updatePaymentsSettings(PaymentsSettings paymentsSettings) {
         return em.update(paymentsSettings);
     }
 
     @Override
-    public void removePaymentsSettings(PaymentsSettings paymentsSettings){
+    public void removePaymentsSettings(PaymentsSettings paymentsSettings) {
         em.delete(paymentsSettings);
     }
     //endregion
@@ -116,22 +114,22 @@ public class PaymentsService implements IPaymentsService {
     // region payments
 
     @Override
-    public int createPayment(Payment payment){
+    public int createPayment(Payment payment) {
         return em.insert(payment).getPaymentid();
     }
 
     @Override
-    public Payment updatePayment(Payment payment){
+    public Payment updatePayment(Payment payment) {
         return em.update(payment);
     }
 
     @Override
-    public void removePayment(Payment payment){
+    public void removePayment(Payment payment) {
         em.delete(payment);
     }
 
     @Override
-    public Payment getPayment(int id){
+    public Payment getPayment(int id) {
         return em.getById(Payment.class, id);
     }
 
@@ -139,19 +137,19 @@ public class PaymentsService implements IPaymentsService {
 
     // region payments
 
-    public int createTransactionStatus(TransactionStatus status){
+    public int createTransactionStatus(TransactionStatus status) {
         return em.insert(status).getStatus();
     }
 
-    public TransactionStatus updateTransactionStatus(TransactionStatus status){
+    public TransactionStatus updateTransactionStatus(TransactionStatus status) {
         return em.update(status);
     }
 
-    public void removeTransactionStatus(TransactionStatus status){
+    public void removeTransactionStatus(TransactionStatus status) {
         em.delete(status);
     }
 
-    public TransactionStatus getTransactionStatus(int status){
+    public TransactionStatus getTransactionStatus(int status) {
         return em.getById(TransactionStatus.class, status);
     }
 
@@ -159,15 +157,15 @@ public class PaymentsService implements IPaymentsService {
 
     // region transaction
 
-    public String createMoneyTransaction(MoneyTransaction transaction){
+    public String createMoneyTransaction(MoneyTransaction transaction) {
         return em.insert(transaction).getTransactionid();
     }
 
-    public MoneyTransaction updateMoneyTransaction(MoneyTransaction transaction){
+    public MoneyTransaction updateMoneyTransaction(MoneyTransaction transaction) {
         return em.update(transaction);
     }
 
-    public MoneyTransaction getMoneyTransaction(String id){
+    public MoneyTransaction getMoneyTransaction(String id) {
         return em.getById(MoneyTransaction.class, id);
     }
 
@@ -210,6 +208,4 @@ public class PaymentsService implements IPaymentsService {
     }
 
     //endregion
-
-
 }

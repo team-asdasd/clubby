@@ -1,6 +1,7 @@
 package api.handlers.users;
 
 import api.business.entities.User;
+import api.business.services.interfaces.IFormService;
 import api.business.services.interfaces.IUserService;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
@@ -18,11 +19,12 @@ import java.util.ArrayList;
 
 @Stateless
 public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserByIdResponse> {
-
     @Inject
     private IUserService userInfoService;
     @Inject
     private IFacebookClient facebookClient;
+    @Inject
+    private IFormService formService;
 
     @Override
     public ArrayList<ErrorDto> validate(GetUserByIdRequest request) {
@@ -34,9 +36,7 @@ public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserB
 
     @Override
     public GetUserByIdResponse handleBase(GetUserByIdRequest request) {
-
         GetUserByIdResponse response = createResponse();
-
         User user = userInfoService.get(request.Id);
 
         if (user == null) {
@@ -54,7 +54,7 @@ public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserB
                 handleException(e);
             }
         }
-
+        response.formInfo = formService.getFormByUserId(request.Id);
         response.Name = user.getName();
 
         return response;

@@ -19,6 +19,7 @@ import javax.ws.rs.core.Response;
 
 @Api(value = "payments")
 @Path("/payments")
+@Produces({"application/json; charset=UTF-8"})
 public class PaymentsResource {
     @Inject
     private GetPaymentInfoHandler getPaymentInfoHandler;
@@ -28,7 +29,6 @@ public class PaymentsResource {
     private PayClubbyHandler payClubbyHandler;
 
     @GET
-    @Produces("application/json")
     @Path("{paymentId}")
     @ApiOperation(value = "Get payment info", response = GetPaymentInfoResponse.class)
     public Response getPaymentInfo(@PathParam("paymentId") int paymentId) {

@@ -2,17 +2,17 @@ package api.business.persistance;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import javax.enterprise.context.ApplicationScoped;
+
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.transaction.Transactional;
 import java.util.List;
 
 /**
  * Created by Mindaugas on 30/04/2016.
  */
-@ApplicationScoped
+@Stateless
 public class SimpleEntityManager implements ISimpleEntityManager {
 
     @PersistenceContext
@@ -20,11 +20,6 @@ public class SimpleEntityManager implements ISimpleEntityManager {
 
     private final Logger logger = LogManager.getLogger(getClass().getName());
 
-    public EntityManager getEntityManager(){
-        return em;
-    }
-
-    @Transactional
     public<T> T insert(T entity){
         try {
             em.persist(entity);
@@ -37,7 +32,6 @@ public class SimpleEntityManager implements ISimpleEntityManager {
         return entity;
     }
 
-    @Transactional
     public<T> T update(T entity){
         T updated;
         try {
@@ -50,7 +44,6 @@ public class SimpleEntityManager implements ISimpleEntityManager {
         return updated;
     }
 
-    @Transactional
     public<T> void delete(T entity){
         try {
             em.remove(entity);
@@ -61,7 +54,6 @@ public class SimpleEntityManager implements ISimpleEntityManager {
         }
     }
 
-    @Transactional
     public<T> T getById(Class<T> entityClass, Object primaryKey){
         T entity = null;
         try{
@@ -73,7 +65,6 @@ public class SimpleEntityManager implements ISimpleEntityManager {
         return entity;
     }
 
-    @Transactional
     public<T> List<T> getAll(Class<T> entityClass){
         CriteriaQuery<T> criteria = em.getCriteriaBuilder().createQuery(entityClass);
         criteria.select(criteria.from(entityClass));

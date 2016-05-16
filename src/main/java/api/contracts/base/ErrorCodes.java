@@ -8,5 +8,6 @@ public enum ErrorCodes {
     LOW_BALANCE,
     DUPLICATE_EMAIL,
     DUPLICATE_USERNAME,
-    BAD_REQUEST
+    BAD_REQUEST,
+    INCORRECT_EMAIL
 }

@@ -1,15 +1,14 @@
 package api.contracts.users;
 
 import api.contracts.base.BaseRequest;
+import api.contracts.dto.SubmitFormDto;
 
-/**
- * Created by Mindaugas on 23/04/2016.
- */
+import java.util.List;
+
 public class CreateUserRequest extends BaseRequest {
-    public String userName;
     public String email;
-    public String firstName;
-    public String lastName;
+    public String name;
     public String password;
     public String passwordConfirm;
+    public List<SubmitFormDto> fields;
 }

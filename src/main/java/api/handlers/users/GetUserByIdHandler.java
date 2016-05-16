@@ -5,8 +5,8 @@ import api.business.services.interfaces.IFormService;
 import api.business.services.interfaces.IUserService;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
-import api.contracts.requests.GetUserByIdRequest;
-import api.contracts.responses.GetUserByIdResponse;
+import api.contracts.users.GetUserByIdRequest;
+import api.contracts.users.GetUserInfoResponse;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
 import clients.facebook.interfaces.IFacebookClient;
@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 @Stateless
-public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserByIdResponse> {
+public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserInfoResponse> {
     @Inject
     private IUserService userInfoService;
     @Inject
@@ -35,8 +35,8 @@ public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserB
     }
 
     @Override
-    public GetUserByIdResponse handleBase(GetUserByIdRequest request) {
-        GetUserByIdResponse response = createResponse();
+    public GetUserInfoResponse handleBase(GetUserByIdRequest request) {
+        GetUserInfoResponse response = createResponse();
         User user = userInfoService.get(request.Id);
 
         if (user == null) {
@@ -54,14 +54,17 @@ public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserB
                 handleException(e);
             }
         }
-        response.formInfo = formService.getFormByUserId(request.Id);
+
+        response.Fields = formService.getFormByUserId(request.Id);
+        response.Id = user.getId();
+        response.Email = user.getLogin().getUsername();
         response.Name = user.getName();
 
         return response;
     }
 
     @Override
-    public GetUserByIdResponse createResponse() {
-        return new GetUserByIdResponse();
+    public GetUserInfoResponse createResponse() {
+        return new GetUserInfoResponse();
     }
 }

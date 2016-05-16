@@ -29,16 +29,8 @@ public class CreateUserHandler extends BaseHandler<CreateUserRequest, BaseRespon
     public ArrayList<ErrorDto> validate(CreateUserRequest request) {
         ArrayList<ErrorDto> errors = Validator.checkAllNotNull(request);
 
-        if (request.firstName.length() < 1) {
-            errors.add(new ErrorDto("First name must be provided", ErrorCodes.VALIDATION_ERROR));
-        }
-
-        if (request.lastName.length() < 1) {
-            errors.add(new ErrorDto("Last name must be provided", ErrorCodes.VALIDATION_ERROR));
-        }
-
-        if (request.userName.length() < 6) {
-            errors.add(new ErrorDto("Username must be at least 6 characters length", ErrorCodes.VALIDATION_ERROR));
+        if (request.name.length() < 1) {
+            errors.add(new ErrorDto("Name must be provided", ErrorCodes.VALIDATION_ERROR));
         }
 
         if (request.password.length() < 6) {
@@ -57,10 +49,6 @@ public class CreateUserHandler extends BaseHandler<CreateUserRequest, BaseRespon
             errors.add(new ErrorDto("Email already taken", ErrorCodes.DUPLICATE_EMAIL));
         }
 
-        if (loginService.getByUserName(request.userName) != null) {
-            errors.add(new ErrorDto("User name already taken", ErrorCodes.DUPLICATE_USERNAME));
-        }
-
         return errors;
     }
 
@@ -69,14 +57,13 @@ public class CreateUserHandler extends BaseHandler<CreateUserRequest, BaseRespon
         Login login = new Login();
         User user = new User();
 
-        user.setEmail(request.email);
-        user.setName(request.firstName + " " + request.lastName);
+        user.setName(request.name);
         user.setLogin(login);
 
         PasswordService passwordService = new DefaultPasswordService();
         String encryptedPassword = passwordService.encryptPassword(request.password);
 
-        login.setUsername(request.userName);
+        login.setUsername(request.email);
         login.setPassword(encryptedPassword);
         login.setUser(user);
 

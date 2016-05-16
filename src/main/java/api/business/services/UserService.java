@@ -52,9 +52,9 @@ public class UserService implements IUserService {
         User user = new User();
         Login login = new Login();
         user.setName(details.Name);
-        user.setEmail(details.Email);
         user.setFacebookId(details.Id);
         user.setLogin(login);
+
         login.setUsername(details.Email);
         login.setUser(user);
         login.setPassword(UUID.randomUUID().toString());

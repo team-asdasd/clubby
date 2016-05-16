@@ -48,7 +48,7 @@ public class RecommendationService implements IRecommendationService {
         String currentUsername = SecurityUtils.getSubject().getPrincipal().toString();
         User currentUser = userService.getByUsername(currentUsername);
 
-        if (!userFrom.getEmail().equals(currentUser.getEmail())) {
+        if (!userFrom.getLogin().getUsername().equals(currentUser.getLogin().getUsername())) {
             throw new BadRequestException();
         }
 
@@ -65,9 +65,9 @@ public class RecommendationService implements IRecommendationService {
                     .setParameter("username", userTo.getLogin().getUsername())
                     .getSingleResult();
             em.remove(lr);
-            logger.trace("User " + userTo.getEmail() + " is not candidate anymore");
+            logger.trace("User " + userTo.getLogin().getUsername() + " is not candidate anymore");
         }
-        logger.trace("User " + userTo.getEmail() + " received recommendation from " + userFrom.getEmail());
+        logger.trace("User " + userTo.getLogin().getUsername() + " received recommendation from " + userFrom.getLogin().getUsername());
     }
 
     public void sendRecommendationRequest(String userEmail) throws MessagingException {
@@ -97,7 +97,7 @@ public class RecommendationService implements IRecommendationService {
             throw new BadRequestException("Can't send request to candidate");
         }
 
-        //check for multiple requests to same member
+        //check for multiple recommendations to same member
         List<Recommendation> recList = em.createQuery("SELECT r FROM Recommendation r WHERE r.userFrom = :userFrom " +
                 "AND r.userTo = :userTo", Recommendation.class)
                 .setParameter("userFrom", userFrom)

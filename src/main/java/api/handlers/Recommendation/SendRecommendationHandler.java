@@ -1,19 +1,16 @@
 package api.handlers.Recommendation;
 
 import api.business.services.interfaces.IRecommendationService;
-import api.contracts.requests.SendRecommendationRequest;
-import api.contracts.responses.SendRecommendationResponse;
+import api.contracts.recommendations.SendRecommendationRequest;
+import api.contracts.recommendations.SendRecommendationResponse;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.mail.MessagingException;
 import javax.ws.rs.BadRequestException;
 import java.util.ArrayList;
 

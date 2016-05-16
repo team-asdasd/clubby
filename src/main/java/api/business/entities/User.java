@@ -8,9 +8,8 @@ import java.util.Collection;
 public class User {
     private int id;
     private String name;
-    private String email;
     private Login login;
-    private String facebookId;
+    private String facebookId; //TODO: Try to move to Login
 
     @Id
     @Column(name = "id", nullable = false)
@@ -31,16 +30,6 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Basic
-    @Column(name = "email", nullable = true, length = -1)
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     @Basic
@@ -67,7 +56,6 @@ public class User {
 
         if (id != user.id) return false;
         if (name != null ? !name.equals(user.name) : user.name != null) return false;
-        if (email != null ? !email.equals(user.email) : user.email != null) return false;
 
         return true;
     }
@@ -76,7 +64,6 @@ public class User {
     public int hashCode() {
         int result = id;
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (email != null ? email.hashCode() : 0);
         return result;
     }
 

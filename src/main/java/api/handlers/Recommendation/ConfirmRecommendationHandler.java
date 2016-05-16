@@ -1,14 +1,12 @@
 package api.handlers.Recommendation;
 
 import api.business.services.interfaces.IRecommendationService;
-import api.contracts.requests.ConfirmRecommendationRequest;
-import api.contracts.responses.ConfirmRecommendationResponse;
+import api.contracts.recommendations.ConfirmRecommendationRequest;
+import api.contracts.recommendations.ConfirmRecommendationResponse;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;

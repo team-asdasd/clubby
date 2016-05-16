@@ -2,8 +2,8 @@ package api.resources;
 
 import api.contracts.base.BaseRequest;
 import api.contracts.form.GetMyFormResponse;
-import api.contracts.requests.GetUserByIdRequest;
-import api.contracts.responses.GetUserByIdResponse;
+import api.contracts.users.GetUserByIdRequest;
+import api.contracts.users.GetUserInfoResponse;
 import api.contracts.users.*;
 import api.contracts.base.BaseResponse;
 import api.handlers.form.GetMyFormHandler;
@@ -22,7 +22,7 @@ import javax.ws.rs.core.Response;
 @Produces({"application/json; charset=UTF-8"})
 public class UserResource {
     @Inject
-    private GetUserInfoHandler getUserInfoHandler;
+    private GetCurrentUserHandler getCurrentUserHandler;
     @Inject
     private CreateUserHandler createUserHandler;
     @Inject
@@ -53,9 +53,9 @@ public class UserResource {
     @Path("/me")
     @ApiOperation(value = "Gets user information for current user.", response = GetUserInfoResponse.class)
     public Response getCurrentUser() {
-        GetUserInfoRequest request = new GetUserInfoRequest();
+        BaseRequest request = new BaseRequest();
 
-        GetUserInfoResponse response = getUserInfoHandler.handle(request);
+        GetUserInfoResponse response = getCurrentUserHandler.handle(request);
 
         int statusCode = StatusResolver.getStatusCode(response);
 
@@ -64,11 +64,11 @@ public class UserResource {
 
     @GET
     @Path("/{id}")
-    @ApiOperation(value = "Gets user information by id.", response = GetUserByIdResponse.class)
+    @ApiOperation(value = "Gets user information by id.", response = GetUserInfoResponse.class)
     public Response getUserById(@PathParam("id") int id) {
         GetUserByIdRequest request = new GetUserByIdRequest();
         request.Id = id;
-        GetUserByIdResponse response = getUserByIdHandler.handle(request);
+        GetUserInfoResponse response = getUserByIdHandler.handle(request);
 
         int statusCode = StatusResolver.getStatusCode(response);
 
@@ -119,7 +119,7 @@ public class UserResource {
     @Path("me/form")
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Get my form with values", response = GetMyFormResponse.class)
-    public Response getUserForm(){
+    public Response getUserForm() {
         GetMyFormResponse response = getMyFormHandler.handle(new BaseRequest());
 
         int statusCode = StatusResolver.getStatusCode(response);

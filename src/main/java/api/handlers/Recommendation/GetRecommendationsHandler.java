@@ -1,8 +1,8 @@
 package api.handlers.Recommendation;
 
 import api.business.services.interfaces.IRecommendationService;
-import api.contracts.requests.GetRecommendationsRequest;
-import api.contracts.responses.GetRecommendationsResponse;
+import api.contracts.recommendations.GetRecommendationsRequest;
+import api.contracts.recommendations.GetRecommendationsResponse;
 import api.contracts.base.ErrorDto;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;

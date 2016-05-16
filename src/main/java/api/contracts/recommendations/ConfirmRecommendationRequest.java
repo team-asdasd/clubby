@@ -1,4 +1,4 @@
-package api.contracts.requests;
+package api.contracts.recommendations;
 
 import api.contracts.base.BaseRequest;
 

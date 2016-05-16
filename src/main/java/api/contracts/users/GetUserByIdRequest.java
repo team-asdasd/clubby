@@ -1,4 +1,4 @@
-package api.contracts.requests;
+package api.contracts.users;
 
 import api.contracts.base.BaseRequest;
 

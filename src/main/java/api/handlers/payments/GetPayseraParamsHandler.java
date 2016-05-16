@@ -21,11 +21,8 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.*;
 
-/**
- * Created by Mindaugas on 29/04/2016.
- */
 @Stateless
-public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest,GetPayseraParamsResponse> {
+public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest, GetPayseraParamsResponse> {
     @Inject
     private IPaymentsService paymentsService;
 
@@ -70,7 +67,7 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
 
         PaymentsSettings paymentsSettings = payment.getSettings();
         String baseUrl = System.getenv("OPENSHIFT_GEAR_DNS");
-        if(baseUrl == null){
+        if (baseUrl == null) {
             baseUrl = "localhost:8080";
         }
         baseUrl = "http://" + baseUrl;
@@ -79,7 +76,7 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
         String[] names = user.getName().split(" ");
         String firstName = names[0];
         String lastName = names[0];
-        if(names.length > 1){
+        if (names.length > 1) {
             String[] lastNames = Arrays.copyOfRange(names, 1, names.length);
             lastName = String.join(" ", Arrays.asList(lastNames));
         }
@@ -91,12 +88,12 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
         queryParams.put("paytext", payment.getPaytext());
         queryParams.put("p_firstname", firstName);
         queryParams.put("p_lastname", lastName);
-        queryParams.put("p_email", user.getEmail());
+        queryParams.put("p_email", user.getLogin().getUsername());
         queryParams.put("amount", Integer.toString(payment.getAmount()));
         queryParams.put("test", "1");
-        queryParams.put("accepturl", baseUrl+"/pay/accepted");
-        queryParams.put("cancelurl", baseUrl+"/pay/cancelled");
-        queryParams.put("callbackurl", baseUrl+"/api/paysera/callback");
+        queryParams.put("accepturl", baseUrl + "/pay/accepted");
+        queryParams.put("cancelurl", baseUrl + "/pay/cancelled");
+        queryParams.put("callbackurl", baseUrl + "/api/paysera/callback");
 
         String urlEncoded = paymentsService.encodeUrl(queryParams);
         String base64PreparedUrl = paymentsService.prepareUrlEncoded(urlEncoded);

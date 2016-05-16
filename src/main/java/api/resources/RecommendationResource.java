@@ -1,11 +1,11 @@
 package api.resources;
 
-import api.contracts.requests.ConfirmRecommendationRequest;
-import api.contracts.requests.GetRecommendationsRequest;
-import api.contracts.requests.SendRecommendationRequest;
-import api.contracts.responses.ConfirmRecommendationResponse;
-import api.contracts.responses.GetRecommendationsResponse;
-import api.contracts.responses.SendRecommendationResponse;
+import api.contracts.recommendations.ConfirmRecommendationRequest;
+import api.contracts.recommendations.GetRecommendationsRequest;
+import api.contracts.recommendations.SendRecommendationRequest;
+import api.contracts.recommendations.ConfirmRecommendationResponse;
+import api.contracts.recommendations.GetRecommendationsResponse;
+import api.contracts.recommendations.SendRecommendationResponse;
 import api.handlers.Recommendation.ConfirmRecommendationHandler;
 import api.handlers.Recommendation.GetRecommendationsHandler;
 import api.handlers.Recommendation.SendRecommendationHandler;
@@ -57,7 +57,7 @@ public class RecommendationResource {
     }
 
     @GET
-    @ApiOperation(value = "Gets recommendation requests list", response = GetRecommendationsResponse.class)
+    @ApiOperation(value = "Gets recommendation recommendations list", response = GetRecommendationsResponse.class)
     public Response getRecommendations() {
         GetRecommendationsRequest request = new GetRecommendationsRequest();
 

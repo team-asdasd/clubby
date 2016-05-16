@@ -1,9 +1,11 @@
-package api.contracts.users;
+package api.handlers.users;
 
 import api.business.entities.User;
 import api.business.persistance.ISimpleEntityManager;
 import api.contracts.base.ErrorDto;
 import api.contracts.dto.UserDto;
+import api.contracts.users.GetAllUsersRequest;
+import api.contracts.users.GetAllUsersResponse;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
 import org.apache.shiro.SecurityUtils;
@@ -28,10 +30,6 @@ public class GetAllUsersHandler extends BaseHandler<GetAllUsersRequest, GetAllUs
         GetAllUsersResponse response = createResponse();
 
         response.Users = entityManager.getAll(User.class).stream().map(UserDto::new).collect(Collectors.toList());
-
-        if (!SecurityUtils.getSubject().hasRole("administrator")) {
-            response.Users.forEach(u -> u.Email = null);
-        }
 
         return response;
     }

@@ -10,7 +10,7 @@ import {
   beforeEachProviders
 } from 'angular2/testing';
 import {provide} from 'angular2/core';
-import {PayPayment} from './payments-pay';
+import {PendingPayments} from './payments-pending.component';
 
 
 describe('Payments Component', () => {
@@ -19,7 +19,7 @@ describe('Payments Component', () => {
 
 
   it('should ...', injectAsync([TestComponentBuilder], (tcb:TestComponentBuilder) => {
-    return tcb.createAsync(PayPayment).then((fixture) => {
+    return tcb.createAsync(PendingPayments).then((fixture) => {
       fixture.detectChanges();
     });
   }));

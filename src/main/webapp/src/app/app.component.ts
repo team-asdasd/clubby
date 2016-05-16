@@ -9,6 +9,8 @@ import {Home} from './home/home.component';
 import {Profile} from "./profile/profile.component";
 import {Cottages} from "./cottages/cottages.component";
 import {CottageService} from "./cottages/shared/cottages.service";
+import {PaymentsService} from "./payments/shared/payments.service";
+import {PaymentsCentral} from "./payments/payments.component";
 
 /*
  * App Component
@@ -16,7 +18,7 @@ import {CottageService} from "./cottages/shared/cottages.service";
  */
 @Component({
     selector: 'app', // <app></app>
-    providers: [...FORM_PROVIDERS, UserService, CottageService],
+    providers: [...FORM_PROVIDERS, UserService, CottageService, PaymentsService],
     directives: [...ROUTER_DIRECTIVES],
     pipes: [],
     styles: [require('./app.component.scss')],
@@ -25,7 +27,8 @@ import {CottageService} from "./cottages/shared/cottages.service";
 @RouteConfig([
     {path: '/', component: Home, as: 'Home', useAsDefault: true},
     {path: '/Profile', component: Profile, as: 'Profile'},
-    {path: '/Cottages/...', component: Cottages, as: 'Cottages'}
+    {path: '/Cottages/...', component: Cottages, as: 'Cottages'},
+    {path: '/Payments/...', component: PaymentsCentral, as: 'Payments'}
 ])
 export class App {
     url: string = 'https://github.com/preboot/angular2-webpack';

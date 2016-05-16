@@ -1,15 +1,14 @@
 import {Component} from 'angular2/core';
-import {Router, RouterOutlet, RouteConfig, RouteParams, ROUTER_DIRECTIVES, RouteData} from 'angular2/router';
-import {Tabs} from "../tabs/tabs";
-import {PaymentsApi} from "../../services/api/paymentsApi";
-import {PendingPayments} from '../payments-pending/payments-pending';
-import {PayPayment} from '../payments-pay/payments-pay';
-import {HistoryPayments} from '../payments-history/payments-history';
+import {RouterOutlet, RouteConfig} from 'angular2/router';
+import {Tabs} from "./tabs/tabs.component.ts";
+import {PendingPayments} from './payments-pending/payments-pending.component.ts';
+import {PayPayment} from './payments-pay/payments-pay.component.ts';
+import {HistoryPayments} from './payments-history/payments-history.component.ts';
 
 @Component({
     selector: 'payments',
-    template: require('./payments.html'),
-    styles: [require('./payments.scss')],
+    template: require('./payments.component.html'),
+    styles: [require('./payments.component.scss')],
     providers: [],
     directives : [RouterOutlet, Tabs],
     pipes: []
@@ -22,9 +21,9 @@ import {HistoryPayments} from '../payments-history/payments-history';
 export class PaymentsCentral {
     options: any;
 
-    constructor(){
+    constructor() {
         this.options = [{
-            name : 'Pending payments',
+            name: 'Pending payments',
             link: 'Pending'
         }, {
             name: 'History payments',

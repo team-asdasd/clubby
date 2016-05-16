@@ -10,7 +10,7 @@ import {
   beforeEachProviders
 } from 'angular2/testing';
 import {provide} from 'angular2/core';
-import {HistoryPayments} from './payments-history';
+import {PaymentsCentral} from './payments.component';
 
 
 describe('Payments Component', () => {
@@ -19,7 +19,7 @@ describe('Payments Component', () => {
 
 
   it('should ...', injectAsync([TestComponentBuilder], (tcb:TestComponentBuilder) => {
-    return tcb.createAsync(HistoryPayments).then((fixture) => {
+    return tcb.createAsync(PaymentsCentral).then((fixture) => {
       fixture.detectChanges();
     });
   }));

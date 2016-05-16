@@ -20,6 +20,11 @@ public class SimpleEntityManager implements ISimpleEntityManager {
 
     private final Logger logger = LogManager.getLogger(getClass().getName());
 
+    @Override
+    public EntityManager getEntityManager() {
+        return em;
+    }
+
     public<T> T insert(T entity){
         try {
             em.persist(entity);

@@ -13,7 +13,8 @@ $(function () {
 });
 
 function handleCreate() {
-    var modal = $("#create-cottage-modal");
+    var modal = $("#cottage-modal");
+    modal.find("#modal-title").html("Add Cottage");
 
     var modalMessage = modal.find("#modal-message-box");
 
@@ -51,6 +52,40 @@ function handleCreate() {
         var message = getErrorMessageFromResponse(response) || "Error creating cottage!";
         modalMessage.html(alertComponent({title: "Error!", message: message, severity: "danger"}));
     });
+}
+
+function handleEdit(event) {
+    var id = $(event.target).attr("data-cottage-id");
+
+    var dialog = $(dialogComponent({title: "Delete cottage?", body: "Are you sure you want to delete cottage?"}));
+
+    dialog.find(".dialog-yes").click(function () {
+        return $.ajax({
+            type: "DELETE",
+            url: "/api/cottage/" + id
+        }).done(function () {
+            dialog.modal("hide");
+
+            load().done(function () {
+                dashboardMessage.html(alertComponent({
+                    title: "Success!",
+                    message: "Cottage deleted.",
+                    severity: "success"
+                }));
+            });
+        }).fail(function (response) {
+            dialog.modal("hide");
+
+            var message = getErrorMessageFromResponse(response) || "Unknown error.";
+            dashboardMessage.html(alertComponent({title: "Error!", message: message, severity: "danger"}));
+        });
+    });
+
+    dialog.find(".dialog-no").click(function () {
+        dialog.modal("hide");
+    });
+
+    dialog.modal("show");
 }
 
 function handleDelete(event) {
@@ -100,6 +135,7 @@ function load() {
     }).done(function (response) {
         table.html(template(response));
         $("#cottages-table").find(".remove-cottage").click(handleDelete);
+        $("#cottages-table").find(".edit-cottage").click(handleEdit);
     }).fail(function (response) {
         table.html("");
         var message = getErrorMessageFromResponse(response) || "Unknown error.";

@@ -1,18 +1,17 @@
 package api.contracts.dto;
 
 import api.business.entities.User;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 public class UserDto {
-    public int Id;
-    public String Name;
-    public String Email;
-    public String Picture;
+    public int id;
+    public String name;
+    public String email;
+    public String picture;
 
     public UserDto(User u) {
-        Id = u.getId();
-        Name = u.getName();
-        Email = u.getLogin().getUsername();
-        Picture = ""; // TODO: Add picture
+        id = u.getId();
+        name = u.getName();
+        email = u.getLogin().getUsername();
+        picture = ""; // TODO: Add picture
     }
 }

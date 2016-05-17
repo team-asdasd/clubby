@@ -82,18 +82,16 @@
             <thead>
             <tr>
                 <th>Id</th>
-                <th>Username</th>
                 <th>Name</th>
                 <th>Email</th>
             </tr>
             </thead>
             <tbody class="searchable">
-            <% _.each(Users, function(user){ %>
+            <% _.each(users, function(user){ %>
             <tr>
-                <td><%= user.Id %></td>
-                <td><%= user.Username %></td>
-                <td><%= user.Name %></td>
-                <td><%= user.Email %></td>
+                <td><%= user.id %></td>
+                <td><%= user.name %></td>
+                <td><%= user.email %></td>
             </tr>
             <% }); %>
             </tbody>

@@ -10,6 +10,7 @@ public class User {
     private String name;
     private Login login;
     private String facebookId; //TODO: Try to move to Login
+    private String picture;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -87,4 +88,15 @@ public class User {
     public void setTransactions(Collection<MoneyTransaction> transactions) {
         this.transactions = transactions;
     }
+
+    @Basic
+    @Column(name = "picture", length = -1)
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
 }

@@ -8,6 +8,7 @@ import java.util.List;
 public class CreateUserRequest extends BaseRequest {
     public String email;
     public String name;
+    public String picture;
     public String password;
     public String passwordConfirm;
     public List<SubmitFormDto> fields;

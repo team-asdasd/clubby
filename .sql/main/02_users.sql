@@ -9,6 +9,7 @@ CREATE TABLE main.users
   email      TEXT,
   login      INTEGER,
   facebook_id TEXT,
+  picture 	 TEXT,
   CONSTRAINT pk_users_id PRIMARY KEY (id),
   CONSTRAINT fk_users_logins FOREIGN KEY (login)
   REFERENCES security.logins (id) MATCH SIMPLE

@@ -12,7 +12,7 @@ public class Login implements Serializable{
     private String password;
     private User user;
     private List<Role> roles;
-
+    private String facebookId;
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -83,5 +83,20 @@ public class Login implements Serializable{
 
     public void setRoles(List<Role> role) {
         this.roles = role;
+    }
+
+    @Basic
+    @Column(name = "facebook_id", nullable = true, length = -1)
+    public String getFacebookId() {
+        return facebookId;
+    }
+
+    public void setFacebookId(String id) {
+        this.facebookId = id;
+    }
+
+    @Transient
+    public boolean isFacebookUser() {
+        return facebookId != null && !facebookId.isEmpty();
     }
 }

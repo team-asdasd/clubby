@@ -2,11 +2,13 @@ package api.business.services;
 
 import api.business.entities.Field;
 import api.business.entities.FormResult;
+import api.business.entities.Role;
 import api.business.entities.User;
 import api.business.persistance.ISimpleEntityManager;
 import api.business.services.interfaces.IFormService;
 import api.business.services.interfaces.IUserService;
 import api.contracts.dto.FormInfoDto;
+import api.contracts.dto.SubmitFormDto;
 import org.apache.shiro.SecurityUtils;
 
 import javax.ejb.Stateless;
@@ -15,6 +17,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Stateless
 public class FormService implements IFormService {
@@ -73,5 +76,32 @@ public class FormService implements IFormService {
             return null;
         }
     }
+
+    public void saveFormResults(List<SubmitFormDto> formDtos, User user){
+        for (SubmitFormDto dto : formDtos) {
+            if (!dto.value.isEmpty()) {
+                FormResult fr = getFormResult(dto.name, user.getId());
+                if (fr != null)
+                    fr = em.merge(fr);
+                else {
+                    fr = new FormResult();
+                }
+                fr.setUser(user);
+                fr.setField(getFieldByName(dto.name));
+                fr.setValue(dto.value);
+                em.merge(fr);
+            }
+        }
+        Optional<Role> role = user.getLogin().getRoles().stream().filter(u -> u.getRoleName().equals("potentialCandidate")).findFirst();
+        if (role.isPresent()) {
+            Role r = new Role();
+            r.setRoleName("candidate");
+            r.setUsername(user.getLogin().getUsername());
+            em.persist(r);
+            em.remove(role.get());
+        }
+        em.flush();
+    }
+
 
 }

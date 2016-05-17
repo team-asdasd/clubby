@@ -12,6 +12,8 @@ import api.contracts.users.UpdateUserRequest;
 import api.contracts.users.UpdateUserResponse;
 import api.handlers.base.BaseHandler;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.credential.DefaultPasswordService;
+import org.apache.shiro.authc.credential.PasswordService;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -62,7 +64,7 @@ public class UpdateUserHandler extends BaseHandler<UpdateUserRequest, UpdateUser
             errors.add(new ErrorDto("Password must bee at least 6 characters length", ErrorCodes.VALIDATION_ERROR));
         }
 
-        if (request.password != null && !request.password.equals(request.passwordConfirm)) {
+        if (request.password != null && request.passwordConfirm != null && !request.password.equals(request.passwordConfirm)) {
             errors.add(new ErrorDto("Passwords does not match", ErrorCodes.VALIDATION_ERROR));
         }
 
@@ -101,7 +103,22 @@ public class UpdateUserHandler extends BaseHandler<UpdateUserRequest, UpdateUser
             user.setName(request.name);
         }
 
+        if (request.email != null) {
+            user.getLogin().setUsername(request.email);
+        }
 
+        if (request.picture != null) {
+            user.setPicture(request.picture);
+        }
+
+        if (request.password != null) {
+            PasswordService passwordService = new DefaultPasswordService();
+            String encryptedPassword = passwordService.encryptPassword(request.password);
+
+            user.getLogin().setPassword(encryptedPassword);
+        }
+
+        // TODO: Fields
 
         return response;
     }

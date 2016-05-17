@@ -5,6 +5,8 @@ import api.business.entities.Role;
 import api.business.entities.User;
 import api.business.services.interfaces.IUserService;
 import clients.facebook.responses.FacebookUserDetails;
+import org.apache.shiro.authc.credential.DefaultPasswordService;
+import org.apache.shiro.authc.credential.PasswordService;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -51,13 +53,19 @@ public class UserService implements IUserService {
     public void createFacebookUser(FacebookUserDetails details) {
         User user = new User();
         Login login = new Login();
+
         user.setName(details.Name);
         user.setFacebookId(details.Id);
+        user.setPicture(details.Picture.getUrl());
         user.setLogin(login);
 
         login.setUsername(details.Email);
         login.setUser(user);
-        login.setPassword(UUID.randomUUID().toString());
+
+        PasswordService passwordService = new DefaultPasswordService();
+        String encryptedPassword = passwordService.encryptPassword(UUID.randomUUID().toString());
+
+        login.setPassword(encryptedPassword);
 
         createUser(user, login);
     }
@@ -72,7 +80,7 @@ public class UserService implements IUserService {
             return null;
         }
     }
-    
+
     @Override
     public void save(User user) {
         try {

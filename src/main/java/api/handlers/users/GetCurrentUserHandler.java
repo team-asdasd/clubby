@@ -52,21 +52,10 @@ public class GetCurrentUserHandler extends BaseHandler<BaseRequest, GetUserInfoR
             logger.warn(String.format("User %s not found", username));
             return handleException("User not found", ErrorCodes.NOT_FOUND);
         }
-
-        // TODO: Do decent pictures later
-        if (user.isFacebookUser()) {
-            try {
-                FacebookUserDetails userDetails = facebookClient.getMyDetails();
-                if (!userDetails.Picture.isSilhouette()) {
-                    response.picture = userDetails.Picture.getUrl();
-                }
-            } catch (IOException e) {
-                handleException(e);
-            }
-        }
-
+        
         response.id = user.getId();
         response.name = user.getName();
+        response.picture = user.getPicture();
         response.fields = formService.getFormByUserId(user.getId());
 
         return response;

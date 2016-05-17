@@ -16,6 +16,8 @@ public class Payment {
     private String currency;
     private String paytext;
     private boolean active;
+    private boolean required;
+    private int frequencyId;
 
     @Id
     @Column(name = "paymentid")
@@ -35,6 +37,26 @@ public class Payment {
 
     public void setPaymenttypeid(int paymenttypeid) {
         this.paymenttypeid = paymenttypeid;
+    }
+
+    @Basic
+    @Column(name = "frequencyId")
+    public int getFrequencyId() {
+        return frequencyId;
+    }
+
+    public void setFrequencyId(int frequencyId) {
+        this.frequencyId = frequencyId;
+    }
+
+    @Basic
+    @Column(name = "required")
+    public boolean getRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
     }
 
     @Basic

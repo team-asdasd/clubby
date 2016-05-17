@@ -23,6 +23,43 @@ WHERE NOT EXISTS (
 SELECT * FROM payment.transactionstatus
 WHERE status = 4 AND name = 'approved');
 
+/* insert frequency*/
+INSERT INTO payment.paymentFrequency
+SELECT * FROM (SELECT 0, 'any') a
+WHERE NOT EXISTS (
+SELECT * FROM payment.paymentFrequency
+WHERE freqencyId = 0 AND name = 'any');
+
+INSERT INTO payment.paymentFrequency
+SELECT * FROM (SELECT 1, 'daily') a
+WHERE NOT EXISTS (
+SELECT * FROM payment.paymentFrequency
+WHERE freqencyId = 1 AND name = 'daily');
+
+INSERT INTO payment.paymentFrequency
+SELECT * FROM (SELECT 2, 'weakly') a
+WHERE NOT EXISTS (
+SELECT * FROM payment.paymentFrequency
+WHERE freqencyId = 2 AND name = 'weakly');
+
+INSERT INTO payment.paymentFrequency
+SELECT * FROM (SELECT 3, 'monthly') a
+WHERE NOT EXISTS (
+SELECT * FROM payment.paymentFrequency
+WHERE freqencyId = 3 AND name = 'monthly');
+
+INSERT INTO payment.paymentFrequency
+SELECT * FROM (SELECT 4, 'yearly') a
+WHERE NOT EXISTS (
+SELECT * FROM payment.paymentFrequency
+WHERE freqencyId = 4 AND name = 'yearly');
+
+INSERT INTO payment.paymentFrequency
+SELECT * FROM (SELECT 5, 'once') a
+WHERE NOT EXISTS (
+SELECT * FROM payment.paymentFrequency
+WHERE freqencyId = 5 AND name = 'once');
+
 /* insert payment setting */
 INSERT INTO payment.paymentssettings
 SELECT * FROM (SELECT 1, '82223', '1.6') a

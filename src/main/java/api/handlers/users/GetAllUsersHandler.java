@@ -8,7 +8,6 @@ import api.contracts.users.GetAllUsersRequest;
 import api.contracts.users.GetAllUsersResponse;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
-import org.apache.shiro.SecurityUtils;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -29,7 +28,7 @@ public class GetAllUsersHandler extends BaseHandler<GetAllUsersRequest, GetAllUs
     public GetAllUsersResponse handleBase(GetAllUsersRequest request) {
         GetAllUsersResponse response = createResponse();
 
-        response.Users = entityManager.getAll(User.class).stream().map(UserDto::new).collect(Collectors.toList());
+        response.users = entityManager.getAll(User.class).stream().map(UserDto::new).collect(Collectors.toList());
 
         return response;
     }

@@ -67,7 +67,7 @@ public class UserResource {
     @ApiOperation(value = "Gets user information by id.", response = GetUserInfoResponse.class)
     public Response getUserById(@PathParam("id") int id) {
         GetUserByIdRequest request = new GetUserByIdRequest();
-        request.Id = id;
+        request.id = id;
         GetUserInfoResponse response = getUserByIdHandler.handle(request);
 
         int statusCode = StatusResolver.getStatusCode(response);
@@ -81,13 +81,13 @@ public class UserResource {
     @ApiOperation(value = "Checks if current user has specified role.", response = boolean.class)
     public Response hasRole(@PathParam("roleName") String roleName) {
         HasRoleRequest request = new HasRoleRequest();
-        request.RoleName = roleName;
+        request.roleName = roleName;
 
         HasRoleResponse response = hasRoleHandler.handle(request);
 
         int statusCode = StatusResolver.getStatusCode(response);
 
-        return Response.status(statusCode).entity(response.HasRole).build();
+        return Response.status(statusCode).entity(response.hasRole).build();
     }
 
     @GET
@@ -95,17 +95,16 @@ public class UserResource {
     @ApiOperation(value = "Checks if current user has specified permission.", response = boolean.class)
     public Response hasPermission(@PathParam("permissionName") String permissionName) {
         HasPermissionRequest request = new HasPermissionRequest();
-        request.PermissionName = permissionName;
+        request.permissionName = permissionName;
 
         HasPermissionResponse response = hasPermissionHandler.handle(request);
 
         int statusCode = StatusResolver.getStatusCode(response);
 
-        return Response.status(statusCode).entity(response.HasPermission).build();
+        return Response.status(statusCode).entity(response.hasPermission).build();
     }
 
     @POST
-    @Path("/create")
     @ApiOperation(value = "Creates user", response = BaseResponse.class)
     public Response createUser(CreateUserRequest request) {
         BaseResponse response = createUserHandler.handle(request);

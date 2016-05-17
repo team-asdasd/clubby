@@ -37,10 +37,10 @@ public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserI
     @Override
     public GetUserInfoResponse handleBase(GetUserByIdRequest request) {
         GetUserInfoResponse response = createResponse();
-        User user = userInfoService.get(request.Id);
+        User user = userInfoService.get(request.id);
 
         if (user == null) {
-            logger.warn(String.format("User %s not found", request.Id));
+            logger.warn(String.format("User %s not found", request.id));
             return handleException("User not found", ErrorCodes.NOT_FOUND);
         }
 
@@ -48,17 +48,17 @@ public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserI
             try {
                 FacebookUserDetails userDetails = facebookClient.getUserDetailsById(user.getFacebookId());
                 if (!userDetails.Picture.isSilhouette()) {
-                    response.Picture = userDetails.Picture.getUrl();
+                    response.picture = userDetails.Picture.getUrl();
                 }
             } catch (IOException e) {
                 handleException(e);
             }
         }
 
-        response.Fields = formService.getFormByUserId(request.Id);
-        response.Id = user.getId();
-        response.Email = user.getLogin().getUsername();
-        response.Name = user.getName();
+        response.fields = formService.getFormByUserId(request.id);
+        response.id = user.getId();
+        response.email = user.getLogin().getUsername();
+        response.name = user.getName();
 
         return response;
     }

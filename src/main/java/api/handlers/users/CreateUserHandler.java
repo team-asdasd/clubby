@@ -39,7 +39,7 @@ public class CreateUserHandler extends BaseHandler<CreateUserRequest, BaseRespon
         ArrayList<ErrorDto> errors = Validator.checkAllNotNull(request);
 
         if (request.name.length() < 1) {
-            errors.add(new ErrorDto("Name must be provided", ErrorCodes.VALIDATION_ERROR));
+            errors.add(new ErrorDto("name must be provided", ErrorCodes.VALIDATION_ERROR));
         }
 
         if (request.password.length() < 6) {
@@ -51,17 +51,17 @@ public class CreateUserHandler extends BaseHandler<CreateUserRequest, BaseRespon
         }
 
         if (request.email.length() < 5) {
-            errors.add(new ErrorDto("Email must be provided", ErrorCodes.VALIDATION_ERROR));
+            errors.add(new ErrorDto("email must be provided", ErrorCodes.VALIDATION_ERROR));
         }
         User user = userService.getByEmail(request.email);
         if (user != null) {
             if (SecurityUtils.getSubject().isAuthenticated()) {
                 User current = userService.getByUsername(SecurityUtils.getSubject().getPrincipal().toString());
                 if (!current.equals(user)) {
-                    errors.add(new ErrorDto("Email already taken", ErrorCodes.DUPLICATE_EMAIL));
+                    errors.add(new ErrorDto("email already taken", ErrorCodes.DUPLICATE_EMAIL));
                 }
             } else {
-                errors.add(new ErrorDto("Email already taken", ErrorCodes.DUPLICATE_EMAIL));
+                errors.add(new ErrorDto("email already taken", ErrorCodes.DUPLICATE_EMAIL));
             }
         }
         for (SubmitFormDto dto : request.fields) {

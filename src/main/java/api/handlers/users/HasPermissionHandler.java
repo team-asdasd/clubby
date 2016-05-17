@@ -19,8 +19,8 @@ public class HasPermissionHandler extends BaseHandler<HasPermissionRequest, HasP
 
         ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
 
-        if (request.PermissionName.isEmpty()) {
-            errors.add(new ErrorDto("PermissionName empty.", ErrorCodes.VALIDATION_ERROR));
+        if (request.permissionName.isEmpty()) {
+            errors.add(new ErrorDto("permissionName empty.", ErrorCodes.VALIDATION_ERROR));
             return errors;
         }
 
@@ -31,10 +31,10 @@ public class HasPermissionHandler extends BaseHandler<HasPermissionRequest, HasP
     public HasPermissionResponse handleBase(HasPermissionRequest request) {
         Subject currentUser = SecurityUtils.getSubject();
 
-        boolean hasPermission = currentUser.isPermitted(request.PermissionName);
+        boolean hasPermission = currentUser.isPermitted(request.permissionName);
 
         HasPermissionResponse response = createResponse();
-        response.HasPermission = hasPermission;
+        response.hasPermission = hasPermission;
 
         return response;
     }

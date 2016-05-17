@@ -47,7 +47,7 @@ public class GetCurrentUserHandler extends BaseHandler<BaseRequest, GetUserInfoR
         Login login = loginService.getByUserName(username);
         User user = login.getUser();
 
-        response.Email = login.getUsername();
+        response.email = login.getUsername();
         if (user == null) {
             logger.warn(String.format("User %s not found", username));
             return handleException("User not found", ErrorCodes.NOT_FOUND);
@@ -58,16 +58,16 @@ public class GetCurrentUserHandler extends BaseHandler<BaseRequest, GetUserInfoR
             try {
                 FacebookUserDetails userDetails = facebookClient.getMyDetails();
                 if (!userDetails.Picture.isSilhouette()) {
-                    response.Picture = userDetails.Picture.getUrl();
+                    response.picture = userDetails.Picture.getUrl();
                 }
             } catch (IOException e) {
                 handleException(e);
             }
         }
 
-        response.Id = user.getId();
-        response.Name = user.getName();
-        response.Fields = formService.getFormByUserId(user.getId());
+        response.id = user.getId();
+        response.name = user.getName();
+        response.fields = formService.getFormByUserId(user.getId());
 
         return response;
     }

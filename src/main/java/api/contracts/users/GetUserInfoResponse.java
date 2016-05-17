@@ -7,13 +7,13 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.List;
 
 public class GetUserInfoResponse extends BaseResponse {
-    public int Id;
-    public String Name;
-    public String Email;
+    public int id;
+    public String name;
+    public String email;
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-    public String Picture;
+    public String picture;
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-    public List<FormInfoDto> Fields;
+    public List<FormInfoDto> fields;
 }

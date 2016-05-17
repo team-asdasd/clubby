@@ -14,10 +14,8 @@ import {UserService} from "../../shared/user.service";
 })
 export class CottagesList {
     cottages: Array<Cottage>;
-    isAdministrator: boolean;
 
-    constructor(private cottageService: CottageService, private userService: UserService) {
+    constructor(private cottageService: CottageService) {
         cottageService.getAllCottages().subscribe(resp => this.cottages = resp);
-        userService.hasRole('administrator').subscribe(resp => this.isAdministrator = resp);
     }
 }

@@ -9,11 +9,7 @@ import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authc.credential.PasswordService;
 
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.enterprise.context.RequestScoped;
 import javax.persistence.*;
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,7 +37,7 @@ public class UserService implements IUserService {
             em.persist(login);
             Role lr = new Role();
             lr.setRoleName("potentialCandidate");
-            lr.setUsername(login.getUsername());
+            lr.setUsername(login.getEmail());
             em.persist(lr);
             em.flush();
         } catch (Exception e) {
@@ -59,7 +55,7 @@ public class UserService implements IUserService {
         user.setPicture(details.Picture.getUrl());
         user.setLogin(login);
 
-        login.setUsername(details.Email);
+        login.setEmail(details.Email);
         login.setUser(user);
 
         PasswordService passwordService = new DefaultPasswordService();
@@ -94,7 +90,7 @@ public class UserService implements IUserService {
 
     @Override
     public User getByUsername(String username) {
-        List<User> userList = em.createQuery("SELECT u FROM User u WHERE u.login.username = :username", User.class)
+        List<User> userList = em.createQuery("SELECT u FROM User u WHERE u.login.email = :username", User.class)
                 .setParameter("username", username)
                 .getResultList();
         if (userList.size() == 0)

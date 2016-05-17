@@ -90,7 +90,7 @@ public class CreateUserHandler extends BaseHandler<CreateUserRequest, BaseRespon
         PasswordService passwordService = new DefaultPasswordService();
         String encryptedPassword = passwordService.encryptPassword(request.password);
 
-        login.setUsername(request.email);
+        login.setEmail(request.email);
         login.setPassword(encryptedPassword);
         login.setUser(user);
 

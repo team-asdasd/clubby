@@ -96,7 +96,7 @@ public class FormService implements IFormService {
         if (role.isPresent()) {
             Role r = new Role();
             r.setRoleName("candidate");
-            r.setUsername(user.getLogin().getUsername());
+            r.setUsername(user.getLogin().getEmail());
             em.persist(r);
             em.remove(role.get());
         }

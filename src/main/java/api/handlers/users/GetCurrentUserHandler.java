@@ -1,6 +1,5 @@
 package api.handlers.users;
 
-import api.business.entities.Login;
 import api.business.entities.User;
 import api.business.services.interfaces.IFormService;
 import api.business.services.interfaces.ILoginService;
@@ -12,13 +11,11 @@ import api.contracts.users.GetUserInfoResponse;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
 import clients.facebook.interfaces.IFacebookClient;
-import clients.facebook.responses.FacebookUserDetails;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.ArrayList;
 
 @Stateless
@@ -34,27 +31,27 @@ public class GetCurrentUserHandler extends BaseHandler<BaseRequest, GetUserInfoR
 
     @Override
     public ArrayList<ErrorDto> validate(BaseRequest request) {
-        return Validator.checkAllNotNullAndIsAuthenticated(request);
+        ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
+
+        int id = getCurrentUserId();
+        User user = userInfoService.get(id);
+
+        if (user == null) {
+            errors.add(new ErrorDto("user not found", ErrorCodes.NOT_FOUND));
+        }
+
+        return errors;
     }
 
     @Override
     public GetUserInfoResponse handleBase(BaseRequest request) {
-        Subject currentUser = SecurityUtils.getSubject();
+        int id = getCurrentUserId();
+        User user = userInfoService.get(id);
 
         GetUserInfoResponse response = createResponse();
-        String username = currentUser.getPrincipal().toString();
-
-        Login login = loginService.getByUserName(username);
-        User user = login.getUser();
-
-        response.email = login.getUsername();
-        if (user == null) {
-            logger.warn(String.format("User %s not found", username));
-            return handleException("User not found", ErrorCodes.NOT_FOUND);
-        }
-        
         response.id = user.getId();
         response.name = user.getName();
+        response.email = user.getLogin().getEmail();
         response.picture = user.getPicture();
         response.fields = formService.getFormByUserId(user.getId());
 
@@ -64,5 +61,10 @@ public class GetCurrentUserHandler extends BaseHandler<BaseRequest, GetUserInfoR
     @Override
     public GetUserInfoResponse createResponse() {
         return new GetUserInfoResponse();
+    }
+
+    private int getCurrentUserId() {
+        Subject currentUser = SecurityUtils.getSubject();
+        return Integer.parseInt(currentUser.getPrincipal().toString());
     }
 }

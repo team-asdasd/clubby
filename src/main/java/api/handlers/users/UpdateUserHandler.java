@@ -72,7 +72,7 @@ public class UpdateUserHandler extends BaseHandler<UpdateUserRequest, UpdateUser
             errors.add(new ErrorDto("email must be provided", ErrorCodes.VALIDATION_ERROR));
         }
 
-        User current = userService.getByUsername(SecurityUtils.getSubject().getPrincipal().toString());
+        User current = userService.get(Integer.parseInt(SecurityUtils.getSubject().getPrincipal().toString()));
         if (!current.equals(user)) {
             errors.add(new ErrorDto("email already taken", ErrorCodes.DUPLICATE_EMAIL));
         }
@@ -104,7 +104,7 @@ public class UpdateUserHandler extends BaseHandler<UpdateUserRequest, UpdateUser
         }
 
         if (request.email != null) {
-            user.getLogin().setUsername(request.email);
+            user.getLogin().setEmail(request.email);
         }
 
         if (request.picture != null) {

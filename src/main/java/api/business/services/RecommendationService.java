@@ -48,7 +48,7 @@ public class RecommendationService implements IRecommendationService {
         String currentUsername = SecurityUtils.getSubject().getPrincipal().toString();
         User currentUser = userService.getByUsername(currentUsername);
 
-        if (!userFrom.getLogin().getUsername().equals(currentUser.getLogin().getUsername())) {
+        if (!userFrom.getLogin().getEmail().equals(currentUser.getLogin().getEmail())) {
             throw new BadRequestException();
         }
 
@@ -62,12 +62,12 @@ public class RecommendationService implements IRecommendationService {
         if (Integer.parseInt(minRec.getValue()) <= count) {
             //change role
             Role lr = em.createQuery("SELECT lr FROM Role lr WHERE lr.roleName = 'candidate' AND lr.username = :username", Role.class)
-                    .setParameter("username", userTo.getLogin().getUsername())
+                    .setParameter("username", userTo.getLogin().getEmail())
                     .getSingleResult();
             em.remove(lr);
-            logger.trace("User " + userTo.getLogin().getUsername() + " is not candidate anymore");
+            logger.trace("User " + userTo.getLogin().getEmail() + " is not candidate anymore");
         }
-        logger.trace("User " + userTo.getLogin().getUsername() + " received recommendation from " + userFrom.getLogin().getUsername());
+        logger.trace("User " + userTo.getLogin().getEmail() + " received recommendation from " + userFrom.getLogin().getEmail());
     }
 
     public void sendRecommendationRequest(String userEmail) throws MessagingException {
@@ -126,7 +126,7 @@ public class RecommendationService implements IRecommendationService {
         } else {
             //notify about reached request limit
         }
-        logger.trace("Recommendation request from user " + userTo.getLogin().getUsername() + " to " + userFrom.getLogin().getUsername() + " has been sent");
+        logger.trace("Recommendation request from user " + userTo.getLogin().getEmail() + " to " + userFrom.getLogin().getEmail() + " has been sent");
     }
 
     public List<RecommendationDto> getAllRecommendationRequests() {

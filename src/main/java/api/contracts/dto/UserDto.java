@@ -11,7 +11,7 @@ public class UserDto {
     public UserDto(User u) {
         id = u.getId();
         name = u.getName();
-        email = u.getLogin().getUsername();
+        email = u.getLogin().getEmail();
         picture = u.getPicture();
     }
 }

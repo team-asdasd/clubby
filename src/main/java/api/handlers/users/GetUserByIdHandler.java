@@ -57,7 +57,7 @@ public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserI
 
         response.fields = formService.getFormByUserId(request.id);
         response.id = user.getId();
-        response.email = user.getLogin().getUsername();
+        response.email = user.getLogin().getEmail();
         response.name = user.getName();
 
         return response;

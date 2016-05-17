@@ -12,9 +12,9 @@ public class FacebookAuthenticationInfo implements AuthenticationInfo {
 
     private final SimplePrincipalCollection principalCollection;
 
-    public FacebookAuthenticationInfo(FacebookUserDetails facebookUserDetails, String realmName){
+    public FacebookAuthenticationInfo(int id, String realmName) {
         Collection<String> principals = new ArrayList<>();
-        principals.add(facebookUserDetails.Email);
+        principals.add(Integer.toString(id));
 
         this.principalCollection = new SimplePrincipalCollection(principals, realmName);
     }

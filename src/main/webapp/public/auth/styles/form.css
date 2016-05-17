@@ -46,10 +46,6 @@
     filter: alpha(opacity=0);
 }
 
-.photo {
-    display: none;
-}
-
 form {
     color: #0A0A0A;
 }

@@ -3,7 +3,6 @@ package api.resources;
 import api.contracts.base.BaseResponse;
 import api.contracts.form.AddFieldRequest;
 import api.contracts.form.GetFormRequest;
-import api.contracts.form.SubmitFormRequest;
 import api.handlers.form.AddFieldHandler;
 import api.handlers.form.GetFormHandler;
 import api.handlers.form.UpdateFieldHandler;

@@ -7,6 +7,7 @@ import javax.persistence.*;
 public class Configuration {
     private String key;
     private String value;
+    private String description;
 
     @Id
     @Column(name = "key")
@@ -46,5 +47,14 @@ public class Configuration {
         int result = key != null ? key.hashCode() : 0;
         result = 31 * result + (value != null ? value.hashCode() : 0);
         return result;
+    }
+    @Basic
+    @Column(name = "description")
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -75,10 +75,10 @@ public class ApplicationRealm extends AuthorizingRealm {
 
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         UsernamePasswordToken upToken = (UsernamePasswordToken) token;
-        String username = upToken.getUsername();
+        String email = upToken.getUsername();
 
         // Null username is invalid
-        if (username == null) {
+        if (email == null) {
             throw new AccountException("Null usernames are not allowed by this realm.");
         }
 
@@ -86,10 +86,10 @@ public class ApplicationRealm extends AuthorizingRealm {
         SimpleAuthenticationInfo info = null;
         try {
             conn = dataSource.getConnection();
-            String password = getPasswordForUser(conn, username)[0];
+            String password = getPasswordForUser(conn, email)[0];
 
             if (password == null) {
-                throw new UnknownAccountException("No account found for user [" + username + "]");
+                throw new UnknownAccountException("No account found for user [" + email + "]");
             }
 
             //kind off hack check password with shiro password service
@@ -97,9 +97,9 @@ public class ApplicationRealm extends AuthorizingRealm {
                 upToken.setPassword(password.toCharArray());
             }
             userService = BeanProvider.getContextualReference(IUserService.class, true);
-            info = new SimpleAuthenticationInfo(Integer.toString(userService.getByEmail(username).getId()), password.toCharArray(), getName());
+            info = new SimpleAuthenticationInfo(Integer.toString(userService.getByEmail(email).getId()), password.toCharArray(), getName());
         } catch (SQLException e) {
-            final String message = "There was a SQL error while authenticating user [" + username + "]";
+            final String message = "There was a SQL error while authenticating user [" + email + "]";
             throw new AuthenticationException(message, e);
         } finally {
             JdbcUtils.closeConnection(conn);

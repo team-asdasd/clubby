@@ -21,7 +21,7 @@ import java.util.ArrayList;
 @Stateless
 public class GetCurrentUserHandler extends BaseHandler<BaseRequest, GetUserInfoResponse> {
     @Inject
-    private IUserService userInfoService;
+    private IUserService userService;
     @Inject
     private ILoginService loginService;
     @Inject
@@ -33,8 +33,7 @@ public class GetCurrentUserHandler extends BaseHandler<BaseRequest, GetUserInfoR
     public ArrayList<ErrorDto> validate(BaseRequest request) {
         ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
 
-        int id = getCurrentUserId();
-        User user = userInfoService.get(id);
+        User user = userService.get();
 
         if (user == null) {
             errors.add(new ErrorDto("user not found", ErrorCodes.NOT_FOUND));
@@ -45,8 +44,8 @@ public class GetCurrentUserHandler extends BaseHandler<BaseRequest, GetUserInfoR
 
     @Override
     public GetUserInfoResponse handleBase(BaseRequest request) {
-        int id = getCurrentUserId();
-        User user = userInfoService.get(id);
+
+        User user = userService.get();
 
         GetUserInfoResponse response = createResponse();
         response.id = user.getId();
@@ -61,10 +60,5 @@ public class GetCurrentUserHandler extends BaseHandler<BaseRequest, GetUserInfoR
     @Override
     public GetUserInfoResponse createResponse() {
         return new GetUserInfoResponse();
-    }
-
-    private int getCurrentUserId() {
-        Subject currentUser = SecurityUtils.getSubject();
-        return Integer.parseInt(currentUser.getPrincipal().toString());
     }
 }

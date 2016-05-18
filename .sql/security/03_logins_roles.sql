@@ -1,10 +1,6 @@
--- Table: security.logins_roles
-
--- DROP TABLE security.logins_roles;
-
-CREATE TABLE security.logins_roles
-(
+CREATE TABLE security.logins_roles (
   role_name TEXT,
-  username  TEXT
-)
-WITH (OIDS =FALSE);
+  username TEXT,
+  FOREIGN KEY (username) REFERENCES security.logins (username)
+  MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE
+);

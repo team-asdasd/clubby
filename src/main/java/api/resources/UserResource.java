@@ -1,12 +1,10 @@
 package api.resources;
 
 import api.contracts.base.BaseRequest;
-import api.contracts.form.GetMyFormResponse;
 import api.contracts.users.GetUserByIdRequest;
 import api.contracts.users.GetUserInfoResponse;
 import api.contracts.users.*;
 import api.contracts.base.BaseResponse;
-import api.handlers.form.GetMyFormHandler;
 import api.handlers.users.*;
 import api.handlers.utilities.StatusResolver;
 import io.swagger.annotations.Api;
@@ -15,7 +13,6 @@ import io.swagger.jaxrs.PATCH;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Api(value = "user")
@@ -32,8 +29,6 @@ public class UserResource {
     private GetUserByIdHandler getUserByIdHandler;
     @Inject
     private GetAllUsersHandler getAllUsersHandler;
-    @Inject
-    private GetMyFormHandler getMyFormHandler;
     @Inject
     private HasPermissionHandler hasPermissionHandler;
     @Inject
@@ -125,17 +120,4 @@ public class UserResource {
 
         return Response.status(statusCode).entity(response).build();
     }
-
-    @GET
-    @Path("me/form")
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Get my form with values", response = GetMyFormResponse.class)
-    public Response getUserForm() {
-        GetMyFormResponse response = getMyFormHandler.handle(new BaseRequest());
-
-        int statusCode = StatusResolver.getStatusCode(response);
-
-        return Response.status(statusCode).entity(response).build();
-    }
-
 }

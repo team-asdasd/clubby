@@ -7,6 +7,8 @@ import api.business.entities.User;
 import api.business.persistance.ISimpleEntityManager;
 import api.business.services.interfaces.IFormService;
 import api.business.services.interfaces.IUserService;
+import api.contracts.base.ErrorCodes;
+import api.contracts.base.ErrorDto;
 import api.contracts.dto.FormInfoDto;
 import api.contracts.dto.SubmitFormDto;
 import org.apache.shiro.SecurityUtils;
@@ -77,7 +79,7 @@ public class FormService implements IFormService {
         }
     }
 
-    public void saveFormResults(List<SubmitFormDto> formDtos, User user){
+    public void saveFormResults(List<SubmitFormDto> formDtos, User user) {
         for (SubmitFormDto dto : formDtos) {
             if (!dto.value.isEmpty()) {
                 FormResult fr = getFormResult(dto.name, user.getId());
@@ -101,6 +103,26 @@ public class FormService implements IFormService {
             em.remove(role.get());
         }
         em.flush();
+    }
+
+    @Override
+    public ArrayList<ErrorDto> validateFormFields(List<SubmitFormDto> fields) {
+        ArrayList<ErrorDto> errors = new ArrayList<>();
+
+        if (fields != null) {
+            for (SubmitFormDto dto : fields) {
+                Field field = getFieldByName(dto.name);
+                if (field == null)
+                    errors.add(new ErrorDto("Field " + dto.name + " not found", ErrorCodes.BAD_REQUEST));
+                else if (field.getValidationRegex() != null && !field.getValidationRegex().isEmpty() && !dto.value.matches(field.getValidationRegex())) {
+                    errors.add(new ErrorDto("Field " + field.getDescription() + " does not match pattern", ErrorCodes.VALIDATION_ERROR));
+                }
+                if (field != null && field.getRequired() && dto.value.isEmpty()) {
+                    errors.add(new ErrorDto("Required field " + field.getDescription() + " is empty", ErrorCodes.VALIDATION_ERROR));
+                }
+            }
+        }
+        return errors;
     }
 
 

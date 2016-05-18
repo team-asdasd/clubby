@@ -58,7 +58,7 @@ public class CreateUserHandler extends BaseHandler<CreateUserRequest, BaseRespon
         User user = userService.getByUsername(request.email);
         if (user != null) {
             if (SecurityUtils.getSubject().isAuthenticated()) {
-                User current = userService.getByUsername(SecurityUtils.getSubject().getPrincipal().toString());
+                User current = userService.get();
                 if (!current.equals(user)) {
                     errors.add(new ErrorDto("Email already taken", ErrorCodes.DUPLICATE_EMAIL));
                 }
@@ -66,18 +66,7 @@ public class CreateUserHandler extends BaseHandler<CreateUserRequest, BaseRespon
                 errors.add(new ErrorDto("Email already taken", ErrorCodes.DUPLICATE_EMAIL));
             }
         }
-        for (SubmitFormDto dto : request.fields) {
-            Field field = formService.getFieldByName(dto.name);
-            if (field == null)
-                errors.add(new ErrorDto("Field " + dto.name + " not found", ErrorCodes.BAD_REQUEST));
-            else if (field.getValidationRegex() != null && !field.getValidationRegex().isEmpty() && !dto.value.matches(field.getValidationRegex())) {
-                errors.add(new ErrorDto("Field " + field.getDescription() + " does not match pattern", ErrorCodes.VALIDATION_ERROR));
-            }
-            if (field != null && field.getRequired() && dto.value.isEmpty()) {
-                errors.add(new ErrorDto("Required field " + field.getDescription() + " is empty", ErrorCodes.VALIDATION_ERROR));
-            }
-        }
-
+        errors.addAll(formService.validateFormFields(request.fields));
         return errors;
     }
 
@@ -86,13 +75,12 @@ public class CreateUserHandler extends BaseHandler<CreateUserRequest, BaseRespon
         Subject sub = SecurityUtils.getSubject();
         Login login;
         User user;
-        if (sub.isAuthenticated()) {
-            user = userService.get(Integer.parseInt(sub.getPrincipal().toString()));
+        if (sub.isAuthenticated() && !sub.hasRole("administrator")) {
+            user = userService.get();
             login = user.getLogin();
             user.setName(request.name);
             user.setPicture(request.picture);
             login.setEmail(request.email);
-
         } else {
             login = new Login();
             user = new User();

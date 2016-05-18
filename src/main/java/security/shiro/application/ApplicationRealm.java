@@ -35,8 +35,8 @@ public class ApplicationRealm extends AuthorizingRealm {
 
     // TODO: add roles, permissions etc
     protected static final String DEFAULT_SALTED_AUTHENTICATION_QUERY = "";
-    protected static final String DEFAULT_USER_ROLES_QUERY = "SELECT role_name FROM security.logins AS l JOIN main.users ON users.id = ? AND users.login = l.id " +
-            "JOIN security.logins_roles AS r ON r.username = l.username";
+    protected static final String DEFAULT_USER_ROLES_QUERY = "SELECT role_name FROM security.logins AS L JOIN main.users ON users.id = ? AND users.login = L.id " +
+            "JOIN security.logins_roles AS r ON r.username = L.username";
     protected static final String DEFAULT_PERMISSIONS_QUERY = "select permission from security.roles_permissions where role_name = ?";
 
 

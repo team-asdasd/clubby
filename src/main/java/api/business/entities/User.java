@@ -9,7 +9,6 @@ public class User {
     private int id;
     private String name;
     private Login login;
-    private String facebookId; //TODO: Try to move to Login
     private String picture;
 
     @Id
@@ -24,7 +23,7 @@ public class User {
     }
 
     @Basic
-    @Column(name = "name", nullable = true, length = -1)
+    @Column(name = "name", length = -1)
     public String getName() {
         return name;
     }
@@ -33,19 +32,9 @@ public class User {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "facebook_id", nullable = true, length = -1)
-    public String getFacebookId() {
-        return facebookId;
-    }
-
-    public void setFacebookId(String id) {
-        this.facebookId = id;
-    }
-
     @Transient
     public boolean isFacebookUser() {
-        return facebookId != null && !facebookId.isEmpty();
+        return getLogin().isFacebookUser();
     }
 
     @Override
@@ -73,7 +62,6 @@ public class User {
     public Login getLogin() {
         return login;
     }
-
     public void setLogin(Login login) {
         this.login = login;
     }

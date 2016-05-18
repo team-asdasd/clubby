@@ -6,7 +6,6 @@ import api.contracts.form.GetFormRequest;
 import api.contracts.form.SubmitFormRequest;
 import api.handlers.form.AddFieldHandler;
 import api.handlers.form.GetFormHandler;
-import api.handlers.form.SubmitFormHandler;
 import api.handlers.form.UpdateFieldHandler;
 import api.handlers.utilities.StatusResolver;
 import io.swagger.annotations.Api;
@@ -22,26 +21,11 @@ import javax.ws.rs.core.Response;
 @Produces({"application/json"})
 public class FormResource {
     @Inject
-    private SubmitFormHandler submitFormHandler;
-    @Inject
     private GetFormHandler getFormHandler;
     @Inject
     private AddFieldHandler addFieldHandler;
     @Inject
     private UpdateFieldHandler updateFieldHandler;
-
-    @POST
-    @Path("")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Submit or update membership form", response = BaseResponse.class)
-    public Response submitForm(SubmitFormRequest request) {
-        BaseResponse response = submitFormHandler.handle(request);
-
-        int statusCode = StatusResolver.getStatusCode(response);
-
-        return Response.status(statusCode).entity(response).build();
-    }
 
     @GET
     @Path("")

@@ -46,7 +46,7 @@ public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserI
 
         if (user.isFacebookUser()) {
             try {
-                FacebookUserDetails userDetails = facebookClient.getUserDetailsById(user.getFacebookId());
+                FacebookUserDetails userDetails = facebookClient.getUserDetailsById(user.getLogin().getFacebookId());
                 if (!userDetails.Picture.isSilhouette()) {
                     response.picture = userDetails.Picture.getUrl();
                 }

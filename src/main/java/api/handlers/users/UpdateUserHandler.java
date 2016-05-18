@@ -69,27 +69,15 @@ public class UpdateUserHandler extends BaseHandler<UpdateUserRequest, UpdateUser
         }
 
         if (request.email != null && request.email.length() < 5) {
-            errors.add(new ErrorDto("email must be provided", ErrorCodes.VALIDATION_ERROR));
+            errors.add(new ErrorDto("Email must be provided", ErrorCodes.VALIDATION_ERROR));
         }
 
-        User current = userService.get(Integer.parseInt(SecurityUtils.getSubject().getPrincipal().toString()));
+        User current = userService.get();
         if (!current.equals(user)) {
-            errors.add(new ErrorDto("email already taken", ErrorCodes.DUPLICATE_EMAIL));
+            errors.add(new ErrorDto("Email already taken", ErrorCodes.DUPLICATE_EMAIL));
         }
+            errors.addAll(formService.validateFormFields(request.fields));
 
-        if (request.fields != null) {
-            for (SubmitFormDto dto : request.fields) {
-                Field field = formService.getFieldByName(dto.name);
-                if (field == null)
-                    errors.add(new ErrorDto("Field " + dto.name + " not found", ErrorCodes.BAD_REQUEST));
-                else if (field.getValidationRegex() != null && !field.getValidationRegex().isEmpty() && !dto.value.matches(field.getValidationRegex())) {
-                    errors.add(new ErrorDto("Field " + field.getDescription() + " does not match pattern", ErrorCodes.VALIDATION_ERROR));
-                }
-                if (field != null && field.getRequired() && dto.value.isEmpty()) {
-                    errors.add(new ErrorDto("Required field " + field.getDescription() + " is empty", ErrorCodes.VALIDATION_ERROR));
-                }
-            }
-        }
         return errors;
     }
 

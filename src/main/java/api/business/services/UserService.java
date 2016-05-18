@@ -5,6 +5,7 @@ import api.business.entities.Role;
 import api.business.entities.User;
 import api.business.services.interfaces.IUserService;
 import clients.facebook.responses.FacebookUserDetails;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authc.credential.PasswordService;
 
@@ -21,10 +22,13 @@ public class UserService implements IUserService {
     public User get(int id) {
         return em.find(User.class, id);
     }
+    public User get() {
+        return get();
+    }
 
     public User getByEmail(String email) {
         try {
-            TypedQuery<User> users = em.createQuery("SELECT U FROM User U WHERE U.email = :email", User.class).setParameter("email", email);
+            TypedQuery<User> users = em.createQuery("SELECT U FROM User U WHERE U.login.email = :email", User.class).setParameter("email", email);
             return users.getSingleResult();
         } catch (Exception e) {
             return null;
@@ -37,7 +41,7 @@ public class UserService implements IUserService {
             em.persist(login);
             Role lr = new Role();
             lr.setRoleName("potentialCandidate");
-            lr.setUsername(login.getEmail());
+            lr.setUsername(user.getLogin().getEmail());
             em.persist(lr);
             em.flush();
         } catch (Exception e) {
@@ -51,7 +55,7 @@ public class UserService implements IUserService {
         Login login = new Login();
 
         user.setName(details.Name);
-        user.setFacebookId(details.Id);
+        login.setFacebookId(details.Id);
         user.setPicture(details.Picture.getUrl());
         user.setLogin(login);
 
@@ -69,7 +73,7 @@ public class UserService implements IUserService {
     @Override
     public User getByFacebookId(String id) {
         try {
-            TypedQuery<User> users = em.createQuery("SELECT U FROM User U WHERE U.facebookId = :id", User.class).setParameter("id", id);
+            TypedQuery<User> users = em.createQuery("SELECT U FROM User U WHERE U.login.facebookId = :id", User.class).setParameter("id", id);
             return users.getSingleResult();
         } catch (Exception e) {
             e.printStackTrace();

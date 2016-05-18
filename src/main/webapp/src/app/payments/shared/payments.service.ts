@@ -6,6 +6,7 @@ import {PaymentResponse} from "./payment.response.ts";
 import {MoneyTransaction} from "./moneyTransaction.model.ts";
 import {HistoryPaymentsResponse} from "./historyPayments.response.ts";
 import {ApiHelper} from "./helpers/apiHelper";
+import {PendingPaymentsResponse} from "./pendingPayments.response";
 
 @Injectable()
 export class PaymentsService {
@@ -24,6 +25,12 @@ export class PaymentsService {
     public getHistroyPayments(): Observable<Array<MoneyTransaction>> {
         return this.http.get(`${this.url}/my/history`)
             .map(resp => ApiHelper.parse<HistoryPaymentsResponse>(resp).payments)
+            .catch(ApiHelper.handleError);
+    }
+
+    public getPendingPayments(): Observable<Array<Payment>> {
+        return this.http.get(`${this.url}/my/pending`)
+            .map(resp => ApiHelper.parse<PendingPaymentsResponse>(resp).pendingPayments)
             .catch(ApiHelper.handleError);
     }
 

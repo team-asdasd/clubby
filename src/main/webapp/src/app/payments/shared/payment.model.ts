@@ -4,4 +4,5 @@ export class Payment {
     InfoText:string;
     Amount:number;
     Currency:string;
+    Required:boolean;
 }

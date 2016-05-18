@@ -4,6 +4,7 @@ import api.business.entities.MoneyTransaction;
 import api.business.entities.Payment;
 import api.business.entities.PaymentsSettings;
 import api.business.entities.TransactionStatus;
+import api.contracts.dto.PaymentInfoDto;
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.StringUtils;
 
 import java.util.ArrayList;
@@ -60,4 +61,6 @@ public interface IPaymentsService {
     int getMyCredit(int userId);
 
     int getMyBalance(int userId);
+
+    List<PaymentInfoDto> getPendingPaymentsForUser(int userId);
 }

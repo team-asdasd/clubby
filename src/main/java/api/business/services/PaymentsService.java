@@ -4,11 +4,13 @@ import api.business.entities.*;
 import api.business.entities.TransactionStatus;
 import api.business.persistance.ISimpleEntityManager;
 import api.business.services.interfaces.IPaymentsService;
+import api.contracts.dto.PaymentInfoDto;
 import api.contracts.enums.*;
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
@@ -18,6 +20,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Stateless
 public class PaymentsService implements IPaymentsService {
@@ -205,6 +208,43 @@ public class PaymentsService implements IPaymentsService {
 
     public int getMyBalance(int userId){
         return getMyDebit(userId) - getMyCredit(userId);
+    }
+
+    //endregion
+
+    //region Pending payments
+
+    public List<PaymentInfoDto> getPendingPaymentsForUser(int userId){
+
+        Query q = em.getEntityManager().createNativeQuery("\n" +
+                "\n" +
+                "WITH pendingPaymentsIds AS (\n" +
+                "SELECT \n" +
+                "        DISTINCT p.paymentId\n" +
+                "FROM payment.payments p\n" +
+                "LEFT JOIN payment.pendingpayments pp ON p.paymentid = pp.paymentid\n" +
+                "WHERE p.frequencyid <> 0 AND COALESCE(pp.userid, :userId) = :userId\n" +
+                "\n" +
+                "EXCEPT\n" +
+                " \n" +
+                "SELECT p.paymentId FROM payment.moneytransactions mt\n" +
+                "INNER JOIN payment.payments p ON mt.paymentId = p.paymentId\n" +
+                "WHERE mt.userId = :userId AND mt.Status = 4\n" +
+                "GROUP BY p.paymentId, frequencyid\n" +
+                "HAVING \n" +
+                "(frequencyid = 1 AND MAX(COALESCE(EXTRACT(MONTH FROM creationtime),0)) = EXTRACT(MONTH FROM current_date))\n" +
+                "OR (frequencyid = 2 AND MAX(COALESCE(EXTRACT(YEAR FROM creationtime),0)) = EXTRACT(YEAR FROM current_date))\n" +
+                "OR (frequencyid = 3 AND MAX(creationtime) IS NOT NULL))\n" +
+                "SELECT p.* FROM payment.payments p\n" +
+                "INNER JOIN pendingPaymentsIds pp ON p.paymentId = pp.paymentId")
+                .setParameter("userId", userId);
+
+        List l = q.getResultList();
+
+
+        List<PaymentInfoDto> a = (List<PaymentInfoDto>) l.stream().map(PaymentInfoDto::new).collect(Collectors.toList());
+
+        return a;
     }
 
     //endregion

@@ -1,16 +1,16 @@
 package api.handlers.payments;
 
-import api.business.entities.MoneyTransaction;
 import api.business.entities.Payment;
 import api.business.entities.User;
 import api.business.services.interfaces.IPaymentsService;
 import api.business.services.interfaces.IUserService;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
-import api.contracts.dto.MoneyTransactionDto;
-import api.contracts.payments.GetMyHistoryPaymetsRequest;
-import api.contracts.payments.GetMyHistoryPaymetsResponse;
+import api.contracts.dto.PaymentInfoDto;
+import api.contracts.payments.GetPendingPaymentsRequest;
+import api.contracts.payments.GetPendingPaymentsResponse;
 import api.handlers.base.BaseHandler;
+import api.helpers.Validator;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -21,16 +21,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Stateless
-public class GetMyHistoryPamentsHandler extends BaseHandler<GetMyHistoryPaymetsRequest, GetMyHistoryPaymetsResponse> {
+public class GetPendingPaymentsHandler extends BaseHandler<GetPendingPaymentsRequest, GetPendingPaymentsResponse> {
+
     @Inject
     private IPaymentsService paymentsService;
     @Inject
     private IUserService userService;
 
     @Override
-    public ArrayList<ErrorDto> validate(GetMyHistoryPaymetsRequest request) {
-        ArrayList<ErrorDto> errors =  new ArrayList<>();
+    public ArrayList<ErrorDto> validate(GetPendingPaymentsRequest request) {
         Subject currentUser = SecurityUtils.getSubject();
+
+        ArrayList<ErrorDto> errors = Validator.checkAllNotNull(request);
 
         if (!currentUser.isAuthenticated()) {
             errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
@@ -40,22 +42,21 @@ public class GetMyHistoryPamentsHandler extends BaseHandler<GetMyHistoryPaymetsR
     }
 
     @Override
-    public GetMyHistoryPaymetsResponse handleBase(GetMyHistoryPaymetsRequest request) {
-        GetMyHistoryPaymetsResponse response = createResponse();
+    public GetPendingPaymentsResponse handleBase(GetPendingPaymentsRequest request) {
+        GetPendingPaymentsResponse response = createResponse();
         Subject currentUser = SecurityUtils.getSubject();
 
         String username = currentUser.getPrincipal().toString();
         User user = userService.getByUsername(username);
 
-        List<MoneyTransaction> payments = paymentsService.getMoneyTransactionsByUserId(user.getId());
+        List<PaymentInfoDto> pendingPpayments = paymentsService.getPendingPaymentsForUser(user.getId());
 
-        response.payments =  payments.stream().map(MoneyTransactionDto::new).collect(Collectors.toList());
-
+        response.pendingPayments = pendingPpayments;
         return response;
     }
 
     @Override
-    public GetMyHistoryPaymetsResponse createResponse() {
-        return new GetMyHistoryPaymetsResponse();
+    public GetPendingPaymentsResponse createResponse() {
+        return new GetPendingPaymentsResponse();
     }
 }

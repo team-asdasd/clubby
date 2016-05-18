@@ -1,8 +1,5 @@
 package api.contracts.enums;
 
-/**
- * Created by Mindaugas on 30/04/2016.
- */
 public enum PaymentTypes {
     pay(1),
     buy(2),

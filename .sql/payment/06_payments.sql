@@ -15,8 +15,6 @@ CREATE TABLE payment.payments
   CONSTRAINT fk_payments_payment_types FOREIGN KEY (paymentTypeId)
   REFERENCES payment.paymentTypes (paymentTypeId) MATCH SIMPLE,
   CONSTRAINT fk_payments_payments_frequency FOREIGN KEY (frequencyId)
-  REFERENCES payment.frequencyId (frequencyId) MATCH SIMPLE,
-  CONSTRAINT unique_key UNIQUE (paymentTypeId)
-
+  REFERENCES payment.paymentsFrequency (frequencyId) MATCH SIMPLE
 )
 WITH (OIDS =FALSE);

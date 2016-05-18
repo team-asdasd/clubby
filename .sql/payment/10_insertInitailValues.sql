@@ -24,41 +24,29 @@ SELECT * FROM payment.transactionstatus
 WHERE status = 4 AND name = 'approved');
 
 /* insert frequency*/
-INSERT INTO payment.paymentFrequency
+INSERT INTO payment.paymentsFrequency
 SELECT * FROM (SELECT 0, 'any') a
 WHERE NOT EXISTS (
-SELECT * FROM payment.paymentFrequency
-WHERE freqencyId = 0 AND name = 'any');
+SELECT * FROM payment.paymentsFrequency
+WHERE frequencyId = 0 AND name = 'any');
 
-INSERT INTO payment.paymentFrequency
-SELECT * FROM (SELECT 1, 'daily') a
+INSERT INTO payment.paymentsFrequency
+SELECT * FROM (SELECT 1, 'monthly') a
 WHERE NOT EXISTS (
-SELECT * FROM payment.paymentFrequency
-WHERE freqencyId = 1 AND name = 'daily');
+SELECT * FROM payment.paymentsFrequency
+WHERE frequencyId = 1 AND name = 'monthly');
 
-INSERT INTO payment.paymentFrequency
-SELECT * FROM (SELECT 2, 'weakly') a
+INSERT INTO payment.paymentsFrequency
+SELECT * FROM (SELECT 2, 'yearly') a
 WHERE NOT EXISTS (
-SELECT * FROM payment.paymentFrequency
-WHERE freqencyId = 2 AND name = 'weakly');
+SELECT * FROM payment.paymentsFrequency
+WHERE frequencyId = 2 AND name = 'yearly');
 
-INSERT INTO payment.paymentFrequency
-SELECT * FROM (SELECT 3, 'monthly') a
+INSERT INTO payment.paymentsFrequency
+SELECT * FROM (SELECT 3, 'once') a
 WHERE NOT EXISTS (
-SELECT * FROM payment.paymentFrequency
-WHERE freqencyId = 3 AND name = 'monthly');
-
-INSERT INTO payment.paymentFrequency
-SELECT * FROM (SELECT 4, 'yearly') a
-WHERE NOT EXISTS (
-SELECT * FROM payment.paymentFrequency
-WHERE freqencyId = 4 AND name = 'yearly');
-
-INSERT INTO payment.paymentFrequency
-SELECT * FROM (SELECT 5, 'once') a
-WHERE NOT EXISTS (
-SELECT * FROM payment.paymentFrequency
-WHERE freqencyId = 5 AND name = 'once');
+SELECT * FROM payment.paymentsFrequency
+WHERE frequencyId = 3 AND name = 'once');
 
 /* insert payment setting */
 INSERT INTO payment.paymentssettings

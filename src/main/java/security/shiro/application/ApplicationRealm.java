@@ -25,7 +25,7 @@ public class ApplicationRealm extends AuthorizingRealm {
 
     private final PasswordService passwordService;
 
-    public ApplicationRealm(){
+    public ApplicationRealm() {
         passwordService = new DefaultPasswordService();
         super.setAuthorizationCachingEnabled(false);
     }
@@ -35,7 +35,8 @@ public class ApplicationRealm extends AuthorizingRealm {
 
     // TODO: add roles, permissions etc
     protected static final String DEFAULT_SALTED_AUTHENTICATION_QUERY = "";
-    protected static final String DEFAULT_USER_ROLES_QUERY = "select role_name from security.logins_roles where username = ?";
+    protected static final String DEFAULT_USER_ROLES_QUERY = "SELECT role_name FROM security.logins AS l JOIN main.users ON users.id = ? AND users.login = l.id " +
+            "JOIN security.logins_roles AS r ON r.username = l.username";
     protected static final String DEFAULT_PERMISSIONS_QUERY = "select permission from security.roles_permissions where role_name = ?";
 
 
@@ -89,7 +90,7 @@ public class ApplicationRealm extends AuthorizingRealm {
             }
 
             //kind off hack check password with shiro password service
-            if(passwordService.passwordsMatch(upToken.getPassword(),password)){
+            if (passwordService.passwordsMatch(upToken.getPassword(), password)) {
                 upToken.setPassword(password.toCharArray());
             }
 
@@ -184,7 +185,7 @@ public class ApplicationRealm extends AuthorizingRealm {
         Set<String> roleNames = new LinkedHashSet<String>();
         try {
             ps = conn.prepareStatement(userRolesQuery);
-            ps.setString(1, username);
+            ps.setInt(1, Integer.parseInt(username));
 
             // Execute query
             rs = ps.executeQuery();

@@ -23,7 +23,7 @@ public class UserService implements IUserService {
         return em.find(User.class, id);
     }
     public User get() {
-        return get();
+        return get(Integer.parseInt(SecurityUtils.getSubject().getPrincipal().toString()));
     }
 
     public User getByEmail(String email) {

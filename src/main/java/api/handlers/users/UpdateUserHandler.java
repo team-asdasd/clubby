@@ -57,7 +57,7 @@ public class UpdateUserHandler extends BaseHandler<UpdateUserRequest, UpdateUser
         }
 
         if (request.name != null && request.name.length() < 1) {
-            errors.add(new ErrorDto("name must be provided", ErrorCodes.VALIDATION_ERROR));
+            errors.add(new ErrorDto("Name must be provided", ErrorCodes.VALIDATION_ERROR));
         }
 
         if (request.password != null && request.password.length() < 6) {
@@ -76,7 +76,7 @@ public class UpdateUserHandler extends BaseHandler<UpdateUserRequest, UpdateUser
         if (!current.equals(user)) {
             errors.add(new ErrorDto("Email already taken", ErrorCodes.DUPLICATE_EMAIL));
         }
-            errors.addAll(formService.validateFormFields(request.fields));
+        errors.addAll(formService.validateFormFields(request.fields));
 
         return errors;
     }
@@ -105,8 +105,8 @@ public class UpdateUserHandler extends BaseHandler<UpdateUserRequest, UpdateUser
 
             user.getLogin().setPassword(encryptedPassword);
         }
-
-        // TODO: Fields
+        if (request.fields != null)
+            formService.saveFormResults(request.fields, user);
 
         return response;
     }

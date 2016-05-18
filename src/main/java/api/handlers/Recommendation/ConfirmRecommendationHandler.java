@@ -7,6 +7,7 @@ import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -23,10 +24,9 @@ public class ConfirmRecommendationHandler extends BaseHandler<ConfirmRecommendat
     public ArrayList<ErrorDto> validate(ConfirmRecommendationRequest request) {
         ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
 
-        if(request.recommendationCode.isEmpty()){
-            errors.add(new ErrorDto("Bad request", ErrorCodes.VALIDATION_ERROR));
+        if (request.recommendationCode.isEmpty()) {
+            errors.add(new ErrorDto("Bad request", ErrorCodes.BAD_REQUEST));
         }
-
         return errors;
     }
 
@@ -37,11 +37,13 @@ public class ConfirmRecommendationHandler extends BaseHandler<ConfirmRecommendat
 
         try {
             recommendationService.ConfirmRecommendation(request.recommendationCode);
+        } catch (Exception e) {
+            Throwable er = ExceptionUtils.getRootCause(e);
+            if (er instanceof BadRequestException)
+                response = handleException(er.getMessage(), ErrorCodes.BAD_REQUEST);
+            else
+                return handleException(e);
         }
-        catch (BadRequestException e){
-            handleException(e.getMessage(), ErrorCodes.BAD_REQUEST);
-        }
-
         return response;
     }
 

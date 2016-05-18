@@ -1,33 +1,39 @@
 package api.handlers.Recommendation;
 
 import api.business.services.interfaces.IRecommendationService;
+import api.contracts.base.ErrorCodes;
+import api.contracts.base.ErrorDto;
 import api.contracts.recommendations.GetRecommendationsRequest;
 import api.contracts.recommendations.GetRecommendationsResponse;
-import api.contracts.base.ErrorDto;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
+import org.apache.shiro.SecurityUtils;
 
-import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.ArrayList;
 
-@Stateless
-public class GetRecommendationsHandler extends BaseHandler<GetRecommendationsRequest, GetRecommendationsResponse> {
+public class GetSentRecommendationsHandler extends BaseHandler<GetRecommendationsRequest, GetRecommendationsResponse> {
     @Inject
     private IRecommendationService recommendationService;
 
     @Override
     public ArrayList<ErrorDto> validate(GetRecommendationsRequest request) {
-        ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
+        ArrayList<ErrorDto> errors = new ArrayList<>();
 
+        if (!SecurityUtils.getSubject().isAuthenticated()) {
+            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
+            return errors;
+        }
         return errors;
     }
 
     @Override
     public GetRecommendationsResponse handleBase(GetRecommendationsRequest request) {
         GetRecommendationsResponse response = createResponse();
-
-        response.requests = recommendationService.getAllRecommendationRequests();
+        try {
+            response.requests = recommendationService.getSentRecommendationRequests();
+        } catch (Exception e) {
+            return handleException(e);
+        }
         return response;
     }
 

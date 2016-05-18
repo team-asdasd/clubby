@@ -1,5 +1,7 @@
 package security.shiro.application;
 
+import api.business.services.interfaces.IUserService;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authc.credential.PasswordService;
@@ -24,6 +26,7 @@ import java.util.Set;
 public class ApplicationRealm extends AuthorizingRealm {
 
     private final PasswordService passwordService;
+    private IUserService userService;
 
     public ApplicationRealm() {
         passwordService = new DefaultPasswordService();
@@ -93,8 +96,8 @@ public class ApplicationRealm extends AuthorizingRealm {
             if (passwordService.passwordsMatch(upToken.getPassword(), password)) {
                 upToken.setPassword(password.toCharArray());
             }
-
-            info = new SimpleAuthenticationInfo(username, password.toCharArray(), getName()); // TODO: Investigate Principals
+            userService = BeanProvider.getContextualReference(IUserService.class, true);
+            info = new SimpleAuthenticationInfo(Integer.toString(userService.getByEmail(username).getId()), password.toCharArray(), getName());
         } catch (SQLException e) {
             final String message = "There was a SQL error while authenticating user [" + username + "]";
             throw new AuthenticationException(message, e);

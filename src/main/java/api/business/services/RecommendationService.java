@@ -45,8 +45,7 @@ public class RecommendationService implements IRecommendationService {
         User userTo = recommendation.getUserTo();
         User userFrom = recommendation.getUserFrom();
 
-        String currentUsername = SecurityUtils.getSubject().getPrincipal().toString();
-        User currentUser = userService.getByUsername(currentUsername);
+        User currentUser = userService.get();
 
         if (!userFrom.getLogin().getEmail().equals(currentUser.getLogin().getEmail())) {
             throw new BadRequestException();
@@ -76,11 +75,10 @@ public class RecommendationService implements IRecommendationService {
 
         if (userFrom == null) {
             logger.trace("Wrong email: " + userEmail);
-            throw new BadRequestException("Bad request parameter");
+            throw new BadRequestException("User with this email does not exist");
         }
 
-        String usernameTo = SecurityUtils.getSubject().getPrincipal().toString();
-        User userTo = userService.getByUsername(usernameTo);
+        User userTo = userService.get();
 
         if (userTo.getId() == userFrom.getId()) {
             throw new BadRequestException("Can't send request to yourself");
@@ -106,13 +104,8 @@ public class RecommendationService implements IRecommendationService {
         if (recList.size() != 0) {
             throw new BadRequestException("Can't send multiple request to same member");
         }
-        Configuration maxReq = em.find(Configuration.class, "max_recommendation_request");
 
-        long requestCount = em.createQuery("SELECT COUNT(r) FROM Recommendation r WHERE r.userTo = :userto", Long.class)
-                .setParameter("userto", userTo)
-                .getSingleResult();
-
-        if (requestCount < Integer.parseInt(maxReq.getValue())) {
+        if (!isRequestLimitReached()) {
 
             Recommendation r = new Recommendation();
             r.setRecommendationCode(UUID.randomUUID().toString().replaceAll("-", ""));
@@ -123,16 +116,15 @@ public class RecommendationService implements IRecommendationService {
 
             emailService.send(userEmail, "Recommendation request", "Hello dear friend! \nYou have received recommendation request from user "
                     + userTo.getName());
+            logger.trace("Recommendation request from user " + userTo.getLogin().getEmail() + " to " + userFrom.getLogin().getEmail() + " has been sent");
         } else {
-            //notify about reached request limit
+            throw new BadRequestException("Request limit reached");
         }
-        logger.trace("Recommendation request from user " + userTo.getLogin().getEmail() + " to " + userFrom.getLogin().getEmail() + " has been sent");
     }
 
-    public List<RecommendationDto> getAllRecommendationRequests() {
+    public List<RecommendationDto> getReceivedRecommendationRequests() {
 
-        String currentUsername = SecurityUtils.getSubject().getPrincipal().toString();
-        User user = userService.getByUsername(currentUsername);
+        User user = userService.get();
 
         List<Recommendation> recommendations = em.createQuery("SELECT r FROM Recommendation r WHERE r.userFrom = :userFrom AND r.status = 0", Recommendation.class)
                 .setParameter("userFrom", user)
@@ -140,9 +132,35 @@ public class RecommendationService implements IRecommendationService {
 
         List<RecommendationDto> result = new ArrayList<>();
         for (Recommendation r : recommendations) {
-            RecommendationDto res = new RecommendationDto(r);
+            RecommendationDto res = new RecommendationDto(r.getStatus(), r.getUserTo().getId(), r.getRecommendationCode());
             result.add(res);
         }
         return result;
+    }
+
+    public List<RecommendationDto> getSentRecommendationRequests() {
+
+        User user = userService.get();
+
+        List<Recommendation> recommendations = em.createQuery("SELECT r FROM Recommendation r WHERE r.userTo = :userTo", Recommendation.class)
+                .setParameter("userTo", user)
+                .getResultList();
+
+        List<RecommendationDto> result = new ArrayList<>();
+        for (Recommendation r : recommendations) {
+            RecommendationDto res = new RecommendationDto(r.getStatus(), r.getUserFrom().getId(), null);
+            result.add(res);
+        }
+        return result;
+    }
+
+    public Boolean isRequestLimitReached() {
+        Configuration maxReq = em.find(Configuration.class, "max_recommendation_request");
+
+        long requestCount = em.createQuery("SELECT COUNT(r) FROM Recommendation r WHERE r.userTo = :userTo", Long.class)
+                .setParameter("userTo", userService.get())
+                .getSingleResult();
+
+        return requestCount > Integer.parseInt(maxReq.getValue());
     }
 }

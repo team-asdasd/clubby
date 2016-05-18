@@ -8,6 +8,7 @@ import api.contracts.base.ErrorDto;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.shiro.SecurityUtils;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -21,7 +22,15 @@ public class SendRecommendationHandler extends BaseHandler<SendRecommendationReq
 
     @Override
     public ArrayList<ErrorDto> validate(SendRecommendationRequest request) {
-        ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
+        ArrayList<ErrorDto> errors = new ArrayList<>();
+
+        if (!SecurityUtils.getSubject().isAuthenticated()) {
+            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
+            return errors;
+        }
+        if (recommendationService.isRequestLimitReached()) {
+            errors.add(new ErrorDto("Request limit reached", ErrorCodes.VALIDATION_ERROR));
+        }
 
         return errors;
     }
@@ -35,9 +44,9 @@ public class SendRecommendationHandler extends BaseHandler<SendRecommendationReq
         } catch (Exception e) {
             Throwable er = ExceptionUtils.getRootCause(e);
             if (er instanceof BadRequestException)
-               response = handleException(er.getMessage(), ErrorCodes.BAD_REQUEST);
+                response = handleException(er.getMessage(), ErrorCodes.BAD_REQUEST);
             else
-                handleException(e);
+                return handleException(e);
         }
         return response;
     }

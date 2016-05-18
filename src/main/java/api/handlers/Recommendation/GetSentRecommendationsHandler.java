@@ -29,11 +29,8 @@ public class GetSentRecommendationsHandler extends BaseHandler<GetRecommendation
     @Override
     public GetRecommendationsResponse handleBase(GetRecommendationsRequest request) {
         GetRecommendationsResponse response = createResponse();
-        try {
-            response.requests = recommendationService.getSentRecommendationRequests();
-        } catch (Exception e) {
-            return handleException(e);
-        }
+
+        response.requests = recommendationService.getSentRecommendationRequests();
         return response;
     }
 

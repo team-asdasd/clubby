@@ -18,19 +18,15 @@ public class GetReceivedRecommendationsHandler extends BaseHandler<GetRecommenda
 
     @Override
     public ArrayList<ErrorDto> validate(GetRecommendationsRequest request) {
-        ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
 
-        return errors;
+        return Validator.checkAllNotNullAndIsAuthenticated(request);
     }
 
     @Override
     public GetRecommendationsResponse handleBase(GetRecommendationsRequest request) {
         GetRecommendationsResponse response = createResponse();
-        try {
-            response.requests = recommendationService.getReceivedRecommendationRequests();
-        } catch (Exception e) {
-            return handleException(e);
-        }
+
+        response.requests = recommendationService.getReceivedRecommendationRequests();
         return response;
     }
 

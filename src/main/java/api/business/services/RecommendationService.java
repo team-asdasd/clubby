@@ -36,20 +36,10 @@ public class RecommendationService implements IRecommendationService {
                 .setParameter("recommendationCode", recommendationCode)
                 .getResultList();
 
-        if (recommendations.size() != 1) {
-            throw new BadRequestException("Bad recommendation code");
-        }
-
         Recommendation recommendation = recommendations.get(0);
 
         User userTo = recommendation.getUserTo();
         User userFrom = recommendation.getUserFrom();
-
-        User currentUser = userService.get();
-
-        if (!userFrom.getLogin().getEmail().equals(currentUser.getLogin().getEmail())) {
-            throw new BadRequestException();
-        }
 
         recommendation.setStatus(1);
 
@@ -73,53 +63,18 @@ public class RecommendationService implements IRecommendationService {
 
         User userFrom = userService.getByEmail(userEmail);
 
-        if (userFrom == null) {
-            logger.trace("Wrong email: " + userEmail);
-            throw new BadRequestException("User with this email does not exist");
-        }
-
         User userTo = userService.get();
 
-        if (userTo.getId() == userFrom.getId()) {
-            throw new BadRequestException("Can't send request to yourself");
-        }
-        //check if userTo is candidate
-        List<Role> userToRoles = userTo.getLogin().getRoles();
-        if (!userToRoles.stream().map(x -> x.getRoleName()).collect(Collectors.toList()).contains("candidate")) {
-            throw new BadRequestException("Already a member");
-        }
+        Recommendation r = new Recommendation();
+        r.setRecommendationCode(UUID.randomUUID().toString().replaceAll("-", ""));
+        r.setUserFrom(userFrom);
+        r.setUserTo(userTo);
 
-        //check if userFrom is member
-        List<Role> userFromRoles = userFrom.getLogin().getRoles();
-        if (userFromRoles.stream().map(x -> x.getRoleName()).collect(Collectors.toList()).contains("candidate")) {
-            throw new BadRequestException("Can't send request to candidate");
-        }
+        em.persist(r);
 
-        //check for multiple recommendations to same member
-        List<Recommendation> recList = em.createQuery("SELECT r FROM Recommendation r WHERE r.userFrom = :userFrom " +
-                "AND r.userTo = :userTo", Recommendation.class)
-                .setParameter("userFrom", userFrom)
-                .setParameter("userTo", userTo)
-                .getResultList();
-        if (recList.size() != 0) {
-            throw new BadRequestException("Can't send multiple request to same member");
-        }
-
-        if (!isRequestLimitReached()) {
-
-            Recommendation r = new Recommendation();
-            r.setRecommendationCode(UUID.randomUUID().toString().replaceAll("-", ""));
-            r.setUserFrom(userFrom);
-            r.setUserTo(userTo);
-
-            em.persist(r);
-
-            emailService.send(userEmail, "Recommendation request", "Hello dear friend! \nYou have received recommendation request from user "
-                    + userTo.getName());
-            logger.trace("Recommendation request from user " + userTo.getLogin().getEmail() + " to " + userFrom.getLogin().getEmail() + " has been sent");
-        } else {
-            throw new BadRequestException("Request limit reached");
-        }
+        emailService.send(userEmail, "Recommendation request", "Hello dear friend! \nYou have received recommendation request from user "
+                + userTo.getName());
+        logger.trace("Recommendation request from user " + userTo.getLogin().getEmail() + " to " + userFrom.getLogin().getEmail() + " has been sent");
     }
 
     public List<RecommendationDto> getReceivedRecommendationRequests() {

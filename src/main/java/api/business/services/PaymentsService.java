@@ -223,7 +223,7 @@ public class PaymentsService implements IPaymentsService {
                 "        DISTINCT p.paymentId\n" +
                 "FROM payment.payments p\n" +
                 "LEFT JOIN payment.pendingpayments pp ON p.paymentid = pp.paymentid\n" +
-                "WHERE p.frequencyid <> 0 AND COALESCE(pp.userid, :userId) = :userId\n" +
+                "WHERE p.frequencyid <> 0 AND COALESCE(pp.userid, :userId) = :userId  AND p.active\n" +
                 "\n" +
                 "EXCEPT\n" +
                 " \n" +

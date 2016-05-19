@@ -10,6 +10,8 @@ public class MoneyTransaction {
     private int status;
     private Date creationTime;
     private int transactionTypeId;
+    private String currency;
+    private int amount;
 
     @Id
     @Column(name = "transactionid")
@@ -49,6 +51,26 @@ public class MoneyTransaction {
 
     public void setTransactionTypeId(int transactionTypeId) {
         this.transactionTypeId = transactionTypeId;
+    }
+
+    @Basic
+    @Column(name = "currency")
+    public String getCurrency() {
+        return this.currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    @Basic
+    @Column(name = "amount")
+    public int getAmount() {
+        return this.amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 
     @Override

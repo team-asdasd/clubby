@@ -3,10 +3,6 @@ package api.business.entities;
 import javax.persistence.*;
 import java.util.Collection;
 
-/**
- * Created by Mindaugas on 30/04/2016.
- */
-
 @Entity
 @Table(name = "payments", schema = "payment", catalog = "clubby")
 public class Payment {
@@ -139,5 +135,16 @@ public class Payment {
 
     public void setTransactions(Collection<MoneyTransaction> transactions) {
         this.transactions = transactions;
+    }
+
+    private Collection<PendingPayment> pendingPayments;
+
+    @OneToMany(mappedBy = "payment")
+    public Collection<PendingPayment> getPendingPayments() {
+        return pendingPayments;
+    }
+
+    public void setPendingPayments(Collection<PendingPayment> pendingPayments) {
+        this.pendingPayments = pendingPayments;
     }
 }

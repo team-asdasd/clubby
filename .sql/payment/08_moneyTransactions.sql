@@ -3,6 +3,8 @@ CREATE TABLE payment.moneyTransactions
   transactionId TEXT NOT NULL,
   userId INT NOT NULL,
   status INT NOT NULL,
+  amount INT NOT NULL,
+  currency TEXT NOT NULL,
   creationTime TIMESTAMP NOT NULL,
   paymentId INT NOT NULL,
   transactionTypeId INT NOT NULL,

@@ -11,11 +11,17 @@ export class CottageService {
     }
 
     public getAllCottages(): Observable<Array<Cottage>> {
-        return this.http.get(this.url).map(this.parse).catch(this.handleError);
+        return this.http
+            .get(this.url)
+            .map(this.parse)
+            .catch(this.handleError);
     }
 
     public getFilteredCottages(query: string): Observable<Array<Cottage>> {
-        return this.http.get(this.url + query).map(this.parse).catch(this.handleError);
+        return this.http
+            .get(this.url + query)
+            .map(this.parse)
+            .catch(this.handleError);
     }
 
     private parse(res: Response): Array<Cottage> {

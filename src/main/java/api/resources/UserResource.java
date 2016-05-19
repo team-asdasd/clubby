@@ -1,37 +1,58 @@
 package api.resources;
 
+import api.contracts.base.BaseRequest;
+import api.contracts.form.GetMyFormResponse;
+import api.contracts.requests.GetUserByIdRequest;
+import api.contracts.responses.GetUserByIdResponse;
 import api.contracts.users.*;
 import api.contracts.base.BaseResponse;
+import api.handlers.form.GetMyFormHandler;
 import api.handlers.users.*;
 import api.handlers.utilities.StatusResolver;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import javax.ejb.EJB;
+
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Api(value = "user")
 @Path("/user")
-@Produces({"application/json"})
+@Produces({"application/json; charset=UTF-8"})
 public class UserResource {
-    @EJB
+    @Inject
     private GetUserInfoHandler getUserInfoHandler;
-    @EJB
+    @Inject
     private CreateUserHandler createUserHandler;
+    @Inject
+    private GetUserByIdHandler getUserByIdHandler;
+    @Inject
+    private GetAllUsersHandler getAllUsersHandler;
+    @Inject
+    private GetMyFormHandler getMyFormHandler;
+    @Inject
+    private HasPermissionHandler hasPermissionHandler;
+    @Inject
+    private HasRoleHandler hasRoleHandler;
 
-    private final HasPermissionHandler hasPermissionHandler;
-    private final HasRoleHandler hasRoleHandler;
 
+    @GET
+    @ApiOperation(value = "Gets user information for all users.", response = GetAllUsersResponse.class)
+    public Response getAllUsers() {
+        GetAllUsersRequest request = new GetAllUsersRequest();
 
-    public UserResource() {
-        hasPermissionHandler = new HasPermissionHandler();
-        hasRoleHandler = new HasRoleHandler();
+        GetAllUsersResponse response = getAllUsersHandler.handle(request);
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
     }
 
     @GET
+    @Path("/me")
     @ApiOperation(value = "Gets user information for current user.", response = GetUserInfoResponse.class)
-    public Response getUserInfo() {
+    public Response getCurrentUser() {
         GetUserInfoRequest request = new GetUserInfoRequest();
 
         GetUserInfoResponse response = getUserInfoHandler.handle(request);
@@ -42,7 +63,21 @@ public class UserResource {
     }
 
     @GET
-    @Path("/hasRole/{roleName}")
+    @Path("/{id}")
+    @ApiOperation(value = "Gets user information by id.", response = GetUserByIdResponse.class)
+    public Response getUserById(@PathParam("id") int id) {
+        GetUserByIdRequest request = new GetUserByIdRequest();
+        request.Id = id;
+        GetUserByIdResponse response = getUserByIdHandler.handle(request);
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
+    }
+
+
+    @GET
+    @Path("/me/hasRole/{roleName}")
     @ApiOperation(value = "Checks if current user has specified role.", response = boolean.class)
     public Response hasRole(@PathParam("roleName") String roleName) {
         HasRoleRequest request = new HasRoleRequest();
@@ -56,7 +91,7 @@ public class UserResource {
     }
 
     @GET
-    @Path("/hasPermission/{permissionName}")
+    @Path("/me/hasPermission/{permissionName}")
     @ApiOperation(value = "Checks if current user has specified permission.", response = boolean.class)
     public Response hasPermission(@PathParam("permissionName") String permissionName) {
         HasPermissionRequest request = new HasPermissionRequest();
@@ -71,14 +106,25 @@ public class UserResource {
 
     @POST
     @Path("/create")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Creates user", response = boolean.class)
-    public Response createUser(CreateUserRequest request){
+    @ApiOperation(value = "Creates user", response = BaseResponse.class)
+    public Response createUser(CreateUserRequest request) {
         BaseResponse response = createUserHandler.handle(request);
 
         int statusCode = StatusResolver.getStatusCode(response);
 
         return Response.status(statusCode).entity(response).build();
     }
+
+    @GET
+    @Path("me/form")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Get my form with values", response = GetMyFormResponse.class)
+    public Response getUserForm(){
+        GetMyFormResponse response = getMyFormHandler.handle(new BaseRequest());
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
+    }
+
 }

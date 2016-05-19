@@ -17,12 +17,8 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.ArrayList;
 
-/**
- * Created by Mindaugas on 23/04/2016.
- */
 @Stateless
 public class CreateUserHandler extends BaseHandler<CreateUserRequest, BaseResponse> {
-
     @Inject
     private IUserService userService;
 
@@ -31,21 +27,37 @@ public class CreateUserHandler extends BaseHandler<CreateUserRequest, BaseRespon
 
     @Override
     public ArrayList<ErrorDto> validate(CreateUserRequest request) {
-        ArrayList errors = Validator.checkAllNotNull(request);
+        ArrayList<ErrorDto> errors = Validator.checkAllNotNull(request);
 
-        if(request.password.length() < 6){
-            errors.add(new ErrorDto("Passwords must bee atleast 6 characters length", ErrorCodes.VALIDATION_ERROR));
+        if (request.firstName.length() < 1) {
+            errors.add(new ErrorDto("First name must be provided", ErrorCodes.VALIDATION_ERROR));
         }
 
-        if(!request.password.equals(request.passwordConfirm)){
+        if (request.lastName.length() < 1) {
+            errors.add(new ErrorDto("Last name must be provided", ErrorCodes.VALIDATION_ERROR));
+        }
+
+        if (request.userName.length() < 6) {
+            errors.add(new ErrorDto("Username must be at least 6 characters length", ErrorCodes.VALIDATION_ERROR));
+        }
+
+        if (request.password.length() < 6) {
+            errors.add(new ErrorDto("Password must bee at least 6 characters length", ErrorCodes.VALIDATION_ERROR));
+        }
+
+        if (!request.password.equals(request.passwordConfirm)) {
             errors.add(new ErrorDto("Passwords does not match", ErrorCodes.VALIDATION_ERROR));
         }
 
-        if(userService.getByEmail(request.email) != null){
+        if (request.email.length() < 5) {
+            errors.add(new ErrorDto("Email must be provided", ErrorCodes.VALIDATION_ERROR));
+        }
+
+        if (userService.getByEmail(request.email) != null) {
             errors.add(new ErrorDto("Email already taken", ErrorCodes.DUPLICATE_EMAIL));
         }
 
-        if(loginService.getByUserName(request.userName) != null){
+        if (loginService.getByUserName(request.userName) != null) {
             errors.add(new ErrorDto("User name already taken", ErrorCodes.DUPLICATE_USERNAME));
         }
 

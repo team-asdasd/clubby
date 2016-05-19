@@ -1,0 +1,53 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/4.12.0/bootstrap-social.css">
+
+    <title>Clubby Form</title>
+</head>
+<body>
+<link rel="stylesheet" href="/public/auth/styles/form.css">
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Please fill this form </h3>
+    </div>
+    <div class="loader">Loading...</div>
+    <div id="message-box"></div>
+    <div class="panel-body">
+        <form class="form-horizontal">
+            <div class="photo form-group">
+                <div class="photo-input">
+                    <input value="" type="hidden" name="photo" id="photo" class="form-control input-sm">
+                    <div class="uploadinput btn btn-info">
+                        <label for="photo" class="col-sm-2 control-label">Add photo</label>
+                    </div>
+                    <div class="progress" style="display: none">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                             aria-valuemax="100">
+                        </div>
+                    </div>
+                </div>
+                <div class="thumbnail"></div>
+            </div>
+            <button type="button" class="btn btn-primary btn-block" id="submit">Save</button>
+        </form>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="/node_modules/jquery/dist/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="/node_modules/blueimp-file-upload/js/vendor/jquery.ui.widget.js" type="text/javascript"></script>
+<script src="/node_modules/blueimp-file-upload/js/jquery.iframe-transport.js" type="text/javascript"></script>
+<script src="/node_modules/blueimp-file-upload/js/jquery.fileupload.js" type="text/javascript"></script>
+<script src="/node_modules/cloudinary-jquery-file-upload/cloudinary-jquery-file-upload.min.js"></script>
+<script src="/public/admin/shared/scripts/clubby/alert.js"></script>
+<script src="/public/auth/scripts/form.js"></script>
+</body>
+</html>

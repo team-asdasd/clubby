@@ -8,6 +8,7 @@ import api.contracts.users.GetUserInfoResponse;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.handlers.base.BaseHandler;
+import api.helpers.Validator;
 import clients.facebook.interfaces.IFacebookClient;
 import clients.facebook.responses.FacebookUserDetails;
 import org.apache.shiro.SecurityUtils;
@@ -20,28 +21,18 @@ import java.util.ArrayList;
 
 @Stateless
 public class GetUserInfoHandler extends BaseHandler<GetUserInfoRequest, GetUserInfoResponse> {
+
     @Inject
     private IUserService userInfoService;
-
     @Inject
     private ILoginService loginService;
-
     @Inject
     private IFacebookClient facebookClient;
 
     @Override
     public ArrayList<ErrorDto> validate(GetUserInfoRequest request) {
-        Subject currentUser = SecurityUtils.getSubject();
 
-        ArrayList<ErrorDto> errors = new ArrayList<>();
-
-        if (request == null) {
-            errors.add(new ErrorDto("Request missing.", ErrorCodes.VALIDATION_ERROR));
-        }
-
-        if (!currentUser.isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
-        }
+        ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
 
         return errors;
     }
@@ -55,19 +46,17 @@ public class GetUserInfoHandler extends BaseHandler<GetUserInfoRequest, GetUserI
 
         User user = loginService.getByUserName(username).getUser();
         response.Email = user.getEmail();
-
         if (user == null) {
-            logger.warn(String.format("User ? not found", username));
-            return handleException(new Exception("User not found.")); // Todo Custom error for not found -> Handle(Error)
+            logger.warn(String.format("User %s not found", username));
+            return handleException("User not found", ErrorCodes.NOT_FOUND);
         }
 
         if (user.isFacebookUser()) {
             try {
-                FacebookUserDetails userDetails = facebookClient.getUserDetails();
+                FacebookUserDetails userDetails = facebookClient.getMyDetails();
                 if (!userDetails.Picture.isSilhouette()) {
                     response.Picture = userDetails.Picture.getUrl();
                 }
-
             } catch (IOException e) {
                 handleException(e);
             }

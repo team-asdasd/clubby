@@ -13,23 +13,23 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 @Api(value = "cottage")
 @Path("/cottage")
-@Produces({"application/json"})
-@Consumes({"application/json"})
+@Produces({"application/json; charset=UTF-8"})
 public class CottageResource {
-    @EJB
+    @Inject
     private GetCottageHandler getCottageHandler;
-    @EJB
+    @Inject
     private GetCottagesHandler getCottagesHandler;
-    @EJB
+    @Inject
     private CreateCottageHandler createCottagesHandler;
-    @EJB
+    @Inject
     private UpdateCottageHandler updateCottageHandler;
-    @EJB
+    @Inject
     private DeleteCottageHandler deleteCottageHandler;
 
     @GET

@@ -34,7 +34,8 @@ public class RequestsForwarder {
         int hash = path.hashCode();
         if(routesMap.containsKey(hash)){
             forward(request,response,servletContext,hash);
-            found = true;
+            if(response.getStatus() != HttpServletResponse.SC_NOT_FOUND)
+                found = true;
         }
 
         return found;

@@ -5,34 +5,23 @@ import api.contracts.users.HasPermissionResponse;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.handlers.base.BaseHandler;
+import api.helpers.Validator;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
+import javax.ejb.Stateless;
 import java.util.ArrayList;
 
+@Stateless
 public class HasPermissionHandler extends BaseHandler<HasPermissionRequest, HasPermissionResponse> {
     @Override
     public ArrayList<ErrorDto> validate(HasPermissionRequest request) {
-        Subject currentUser = SecurityUtils.getSubject();
 
-        ArrayList<ErrorDto> errors = new ArrayList<>();
+        ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
 
-        if (request == null) {
-            errors.add(new ErrorDto("Request missing.", ErrorCodes.VALIDATION_ERROR));
-        }
-
-        if(request.PermissionName == null){
-            errors.add(new ErrorDto("PermissionName missing.", ErrorCodes.VALIDATION_ERROR));
-            return errors;
-        }
-
-        if(request.PermissionName.isEmpty()){
+        if (request.PermissionName.isEmpty()) {
             errors.add(new ErrorDto("PermissionName empty.", ErrorCodes.VALIDATION_ERROR));
             return errors;
-        }
-
-        if (!currentUser.isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
         }
 
         return errors;

@@ -5,9 +5,6 @@ import web.helpers.Controller;
 import web.helpers.PathMapping;
 import web.helpers.Sender;
 
-/**
- * Created by Mindaugas on 07/04/2016.
- */
 @Controller("Error")
 public class ErrorController {
     @PathMapping("500")

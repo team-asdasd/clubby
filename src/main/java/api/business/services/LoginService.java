@@ -3,17 +3,14 @@ package api.business.services;
 import api.business.entities.Login;
 import api.business.services.interfaces.ILoginService;
 
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.enterprise.context.RequestScoped;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
 import javax.persistence.TypedQuery;
 
-@RequestScoped
+@Stateless
 public class LoginService implements ILoginService {
-    @PersistenceContext(type= PersistenceContextType.EXTENDED)
+    @PersistenceContext
     private EntityManager em;
 
     public void createLogin(Login login) {
@@ -27,12 +24,11 @@ public class LoginService implements ILoginService {
         }
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Login getByUserName(String username) {
         try {
-            TypedQuery<Login> logins = em.createQuery("FROM Login WHERE username = :username", Login.class).setParameter("username", username);
+            TypedQuery<Login> logins = em.createQuery("SELECT l FROM Login l WHERE l.username = :username", Login.class).setParameter("username", username);
             return logins.getSingleResult();
-        }catch (Exception e) {
+        } catch (Exception e) {
             return null;
         }
 

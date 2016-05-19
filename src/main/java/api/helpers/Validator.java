@@ -2,6 +2,7 @@ package api.helpers;
 
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
+import org.apache.shiro.SecurityUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.lang.reflect.Field;
@@ -18,6 +19,12 @@ public class Validator {
 
     public static <T> ArrayList<ErrorDto> checkAllNotNull(T entity) {
         ArrayList<ErrorDto> errors = new ArrayList<>();
+
+        return checkAllNotNull(entity, errors);
+    }
+
+    private static <T> ArrayList<ErrorDto> checkAllNotNull(T entity, ArrayList<ErrorDto> errors) {
+
         if (entity == null) {
             errors.add(new ErrorDto("Entity missing", ErrorCodes.VALIDATION_ERROR));
         } else {
@@ -29,8 +36,15 @@ public class Validator {
                 e.printStackTrace();
             }
         }
-
         return errors;
+    }
+
+    public static <T> ArrayList<ErrorDto> checkAllNotNullAndIsAuthenticated(T entity) {
+        ArrayList<ErrorDto> errors = new ArrayList<>();
+        if (!SecurityUtils.getSubject().isAuthenticated()) {
+            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
+        }
+        return checkAllNotNull(entity, errors);
     }
 
 }

@@ -1,14 +1,17 @@
 package api.business.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "logins", schema = "security", catalog = "clubby")
-public class Login {
+public class Login implements Serializable{
     private int id;
     private String username;
     private String password;
     private User user;
+    private List<Role> roles;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -22,7 +25,7 @@ public class Login {
     }
 
     @Basic
-    @Column(name = "username", nullable = true, length = -1)
+    @Column(name = "username", length = -1)
     public String getUsername() {
         return username;
     }
@@ -70,5 +73,15 @@ public class Login {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @OneToMany
+    @JoinColumn(name="username", referencedColumnName = "username")
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> role) {
+        this.roles = role;
     }
 }

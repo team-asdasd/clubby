@@ -50,6 +50,7 @@ public class ViewsFilter implements Filter {
             if (request.getRequestURI().endsWith(".css") ||
                     request.getRequestURI().endsWith(".js") ||
                     request.getRequestURI().endsWith(".png") ||
+                    request.getRequestURI().endsWith(".jpg") ||
                     request.getRequestURI().endsWith(".ico") ||
                     request.getRequestURI().endsWith(".woff") ||
                     request.getRequestURI().endsWith(".woff2") ||

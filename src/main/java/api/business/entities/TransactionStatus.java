@@ -3,9 +3,6 @@ package api.business.entities;
 import javax.persistence.*;
 import java.util.Collection;
 
-/**
- * Created by Mindaugas on 30/04/2016.
- */
 @Entity
 public class TransactionStatus {
     private int status;

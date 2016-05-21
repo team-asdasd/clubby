@@ -1,9 +1,13 @@
 package api.resources;
 
-import api.contracts.payments.GetPaymentInfoRequest;
-import api.contracts.payments.GetPaymentInfoResponse;
+import api.contracts.base.BaseResponse;
+import api.contracts.payments.*;
+import api.handlers.payments.GetMyHistoryPamentsHandler;
 import api.handlers.payments.GetPaymentInfoHandler;
+import api.handlers.payments.GetPendingPaymentsHandler;
+import api.handlers.payments.PayClubbyHandler;
 import api.handlers.utilities.StatusResolver;
+import com.google.api.client.http.HttpStatusCodes;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -20,6 +24,12 @@ import javax.ws.rs.core.Response;
 public class PaymentsResource {
     @Inject
     private GetPaymentInfoHandler getPaymentInfoHandler;
+    @Inject
+    private GetMyHistoryPamentsHandler getMyHistoryPamentsHandler;
+    @Inject
+    private PayClubbyHandler payClubbyHandler;
+    @Inject
+    private GetPendingPaymentsHandler getPendingPaymentsHandler;
 
     @GET
     @Path("{paymentId}")
@@ -30,6 +40,50 @@ public class PaymentsResource {
         request.PaymentId = paymentId;
 
         GetPaymentInfoResponse response = getPaymentInfoHandler.handle(request);
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
+    }
+
+    @GET
+    @Produces("application/json")
+    @Path("pay/{paymentId}")
+    @ApiOperation(value = "Get payment info", response = PayClubbyResponse.class)
+    public Response pay(@PathParam("paymentId") int paymentId) {
+        PayClubbyRequest request = new PayClubbyRequest();
+
+        request.PaymentId = paymentId;
+
+        BaseResponse response = payClubbyHandler.handle(request);
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
+    }
+
+    @GET
+    @Produces("application/json")
+    @Path("my/history")
+    @ApiOperation(value = "Get my bpayments", response = GetMyHistoryPaymetsResponse.class)
+    public Response getMyHistoryPaments() {
+        GetMyHistoryPaymetsRequest request = new GetMyHistoryPaymetsRequest();
+
+        GetMyHistoryPaymetsResponse response = getMyHistoryPamentsHandler.handle(request);
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
+    }
+
+    @GET
+    @Produces("application/json")
+    @Path("my/pending")
+    @ApiOperation(value = "Get my pending payments", response = GetPendingPaymentsResponse.class)
+    public Response getMyPendingPaments() {
+        GetPendingPaymentsRequest request = new GetPendingPaymentsRequest();
+
+        GetPendingPaymentsResponse response = getPendingPaymentsHandler.handle(request);
 
         int statusCode = StatusResolver.getStatusCode(response);
 

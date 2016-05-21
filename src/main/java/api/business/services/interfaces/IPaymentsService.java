@@ -4,13 +4,13 @@ import api.business.entities.MoneyTransaction;
 import api.business.entities.Payment;
 import api.business.entities.PaymentsSettings;
 import api.business.entities.TransactionStatus;
+import api.contracts.dto.PaymentInfoDto;
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Mindaugas on 30/04/2016.
- */
 public interface IPaymentsService {
     String getPassword();
 
@@ -53,4 +53,14 @@ public interface IPaymentsService {
     MoneyTransaction updateMoneyTransaction(MoneyTransaction transaction);
 
     MoneyTransaction getMoneyTransaction(String id);
+
+    List<MoneyTransaction> getMoneyTransactionsByUserId(int id);
+
+    int getMyDebit(int userId);
+
+    int getMyCredit(int userId);
+
+    int getMyBalance(int userId);
+
+    List<PaymentInfoDto> getPendingPaymentsForUser(int userId);
 }

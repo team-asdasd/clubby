@@ -16,9 +16,6 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.ArrayList;
 
-/**
- * Created by Mindaugas on 01/05/2016.
- */
 @Stateless
 public class PayseraCallbackHandler extends BaseHandler<PayseraCallbackRequest, PayseraCallbackResponse> {
 
@@ -54,17 +51,29 @@ public class PayseraCallbackHandler extends BaseHandler<PayseraCallbackRequest, 
             return response;
         }
 
-        if(callbackParams.Amount != mt.getAmmount()){
+        if(mt.getPayment().getSettings() == null){
             response.Errors = new ArrayList<>();
-            response.Errors.add(new ErrorDto(String.format("Not equal money amount. Paysera : %s, clubby : %s"
-                    ,callbackParams.Amount, mt.getAmmount()), ErrorCodes.VALIDATION_ERROR));
+            response.Errors.add(new ErrorDto("Not paysera payment", ErrorCodes.VALIDATION_ERROR));
             return response;
         }
 
-        if(!callbackParams.Currency.equals(mt.getPayment().getSettings().getCurrency())){
+        if(callbackParams.Projectid ==  mt.getPayment().getSettings().getProjectid()){
+            response.Errors = new ArrayList<>();
+            response.Errors.add(new ErrorDto("Bad project id " + callbackParams.Projectid, ErrorCodes.VALIDATION_ERROR));
+            return response;
+        }
+
+        if(callbackParams.Amount != mt.getPayment().getAmount()){
+            response.Errors = new ArrayList<>();
+            response.Errors.add(new ErrorDto(String.format("Not equal money amount. Paysera : %s, clubby : %s"
+                    ,callbackParams.Amount, mt.getPayment()), ErrorCodes.VALIDATION_ERROR));
+            return response;
+        }
+
+        if(!callbackParams.Currency.equals(mt.getPayment().getCurrency())){
             response.Errors = new ArrayList<>();
             response.Errors.add(new ErrorDto(String.format("Not equal money currency. Paysera : %s, clubby : %s"
-                    ,callbackParams.Amount, mt.getAmmount()), ErrorCodes.VALIDATION_ERROR));
+                    ,callbackParams.Currency, mt.getPayment().getCurrency()), ErrorCodes.VALIDATION_ERROR));
             return response;
         }
 

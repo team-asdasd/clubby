@@ -1,0 +1,64 @@
+<div class="wraper">
+    <div class="card card-block">
+        <div *ngIf="(!payment && !failed) || loading" class="loader"></div>
+        <cb-error *ngIf="failed && !loading"></cb-error>
+        <div *ngIf="payment && !failed && !loading" class="payment">
+            <ul *ngIf="errors" class="text-danger">
+                <li *ngFor="#err of errors; #i = index">
+                {{err.Message}}
+                </li>
+            </ul>
+            <div class="row">
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                    <address>
+                        <strong>Clubby</strong>
+                    </address>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6 text-right">
+                    <p>
+                        <em>Date: {{currentDate | date:'yyyy-MMM-dd HH:mm:ss'}}</em>
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="text-center">
+                    <h1>Payment</h1>
+                </div>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>#</th>
+                        <th class="text-center">Price</th>
+                        <th class="text-center">Total</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="col-md-9"><em >{{payment.InfoText}}</em></td>
+                        <td class="col-md-1" style="text-align: center"> 1 </td>
+                        <td class="col-md-1 text-center no-break">{{payment.Amount | currency:payment.Currency:true:'1.2-2'}}</td>
+                        <td class="col-md-1 text-center no-break">{{payment.Amount | currency:payment.Currency:true:'1.2-2'}}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td class="text-right"><h4><strong>Total:</strong></h4></td>
+                        <td class="text-center text-danger no-break"><h4><strong >{{payment.Amount | currency:payment.Currency:true:'1.2-2'}}</strong></h4></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="btn-group btn-group-justified">
+                    <a *ngIf="payment.PaymentTypeId != 3" href="/pay/paysera?payment={{payment.PaymentId}}" class="btn btn-success btn-lg btn-block">
+                        Pay through bank<span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
+                    <a *ngIf="payment.PaymentTypeId == 1" (click)="payClubby(payment)" class="btn btn-success btn-lg btn-block">
+                        Pay with clubby coins<span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -8,12 +8,13 @@ import api.business.services.interfaces.ILoginService;
 import api.business.services.interfaces.IPaymentsService;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
+import api.contracts.enums.PaymentTypes;
+import api.contracts.enums.TransactionTypes;
 import api.contracts.payments.GetPayseraParamsRequest;
 import api.contracts.payments.GetPayseraParamsResponse;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
 import api.contracts.enums.TransactionStatus;
-import api.contracts.enums.TransactionTypes;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -21,9 +22,6 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.*;
 
-/**
- * Created by Mindaugas on 29/04/2016.
- */
 @Stateless
 public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest,GetPayseraParamsResponse> {
     @Inject
@@ -53,22 +51,42 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
         Map<String, String> queryParams = new HashMap<>();
 
         Payment payment = paymentsService.getPayment(request.PaymentId);
+
+        if(payment == null){
+            response.Errors = new ArrayList<>();
+            response.Errors.add(new ErrorDto(String.format("Payment %s not found",request.PaymentId), ErrorCodes.NOT_FOUND));
+            return response;
+        }
+
+        if(payment.getPaymenttypeid() == PaymentTypes.free.getValue()){
+            response.Errors = new ArrayList<>();
+            response.Errors.add(new ErrorDto("This is free payment", ErrorCodes.VALIDATION_ERROR));
+            return response;
+        }
+
         String username = currentUser.getPrincipal().toString();
         User user = loginService.getByUserName(username).getUser();
+        PaymentsSettings paymentsSettings = payment.getSettings();
+
+        if(paymentsSettings == null){
+            response.Errors = new ArrayList<>();
+            response.Errors.add(new ErrorDto(String.format("Payment %s does not have payments settings"
+                    ,request.PaymentId), ErrorCodes.VALIDATION_ERROR));
+            return response;
+        }
 
         MoneyTransaction mt = new MoneyTransaction();
-        mt.setAmmount(payment.getAmount());
-        mt.setAmmountclubby(payment.getAmount());
         mt.setStatus(TransactionStatus.pending.getValue());
         mt.setPayment(payment);
         mt.setUser(user);
-        mt.setTransactiontypeid(TransactionTypes.in.getValue());
         mt.setTransactionid(UUID.randomUUID().toString());
         mt.setCreationTime(new Date());
+        mt.setTransactionTypeId(TransactionTypes.direct.getValue());
+        mt.setAmount(payment.getAmount());
+        mt.setCurrency(payment.getCurrency());
 
         paymentsService.createMoneyTransaction(mt);
 
-        PaymentsSettings paymentsSettings = payment.getSettings();
         String baseUrl = System.getenv("OPENSHIFT_GEAR_DNS");
         if(baseUrl == null){
             baseUrl = "localhost:8080";
@@ -87,7 +105,7 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
         queryParams.put("projectid", paymentsSettings.getProjectid());
         queryParams.put("orderid", mt.getTransactionid());
         queryParams.put("version", paymentsSettings.getVersion());
-        queryParams.put("currency", paymentsSettings.getCurrency());
+        queryParams.put("currency", payment.getCurrency());
         queryParams.put("paytext", payment.getPaytext());
         queryParams.put("p_firstname", firstName);
         queryParams.put("p_lastname", lastName);

@@ -1,27 +1,36 @@
 package api.business.services;
 
-import api.business.entities.MoneyTransaction;
-import api.business.entities.Payment;
-import api.business.entities.PaymentsSettings;
+import api.business.entities.*;
 import api.business.entities.TransactionStatus;
 import api.business.persistance.ISimpleEntityManager;
 import api.business.services.interfaces.IPaymentsService;
+import api.contracts.dto.PaymentInfoDto;
+import api.contracts.enums.*;
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Stateless
 public class PaymentsService implements IPaymentsService {
 
+    @PersistenceContext
+    private EntityManager em;
+
     @Inject
-    private ISimpleEntityManager em;
+    private ISimpleEntityManager simpleEm;
 
     //region encryptions
 
@@ -95,17 +104,17 @@ public class PaymentsService implements IPaymentsService {
 
     @Override
     public int createPaymentsSettings(PaymentsSettings paymentsSettings) {
-        return em.insert(paymentsSettings).getPaymentsettingsid();
+        return simpleEm.insert(paymentsSettings).getPaymentsettingsid();
     }
 
     @Override
     public PaymentsSettings updatePaymentsSettings(PaymentsSettings paymentsSettings) {
-        return em.update(paymentsSettings);
+        return simpleEm.update(paymentsSettings);
     }
 
     @Override
     public void removePaymentsSettings(PaymentsSettings paymentsSettings) {
-        em.delete(paymentsSettings);
+        simpleEm.delete(paymentsSettings);
     }
     //endregion
 
@@ -113,22 +122,22 @@ public class PaymentsService implements IPaymentsService {
 
     @Override
     public int createPayment(Payment payment) {
-        return em.insert(payment).getPaymentid();
+        return simpleEm.insert(payment).getPaymentid();
     }
 
     @Override
     public Payment updatePayment(Payment payment) {
-        return em.update(payment);
+        return simpleEm.update(payment);
     }
 
     @Override
     public void removePayment(Payment payment) {
-        em.delete(payment);
+        simpleEm.delete(payment);
     }
 
     @Override
     public Payment getPayment(int id) {
-        return em.getById(Payment.class, id);
+        return simpleEm.getById(Payment.class, id);
     }
 
     //endregion
@@ -136,19 +145,19 @@ public class PaymentsService implements IPaymentsService {
     // region payments
 
     public int createTransactionStatus(TransactionStatus status) {
-        return em.insert(status).getStatus();
+        return simpleEm.insert(status).getStatus();
     }
 
     public TransactionStatus updateTransactionStatus(TransactionStatus status) {
-        return em.update(status);
+        return simpleEm.update(status);
     }
 
     public void removeTransactionStatus(TransactionStatus status) {
-        em.delete(status);
+        simpleEm.delete(status);
     }
 
     public TransactionStatus getTransactionStatus(int status) {
-        return em.getById(TransactionStatus.class, status);
+        return simpleEm.getById(TransactionStatus.class, status);
     }
 
     //endregion
@@ -156,15 +165,90 @@ public class PaymentsService implements IPaymentsService {
     // region transaction
 
     public String createMoneyTransaction(MoneyTransaction transaction) {
-        return em.insert(transaction).getTransactionid();
+        return simpleEm.insert(transaction).getTransactionid();
     }
 
     public MoneyTransaction updateMoneyTransaction(MoneyTransaction transaction) {
-        return em.update(transaction);
+        return simpleEm.update(transaction);
     }
 
     public MoneyTransaction getMoneyTransaction(String id) {
-        return em.getById(MoneyTransaction.class, id);
+        return simpleEm.getById(MoneyTransaction.class, id);
+    }
+
+    @Override
+    public List<MoneyTransaction> getMoneyTransactionsByUserId(int id) {
+        TypedQuery<MoneyTransaction> moneytransactions = em.createQuery("SELECT m FROM MoneyTransaction m WHERE userid = :userid  ORDER BY creationTime DESC", MoneyTransaction.class)
+                .setParameter("userid", id);
+
+        return moneytransactions.getResultList();
+    }
+
+    //endregion
+
+    //region clubby payments
+
+    public int getMyCredit(int userId){
+        BigInteger credit = (BigInteger) em
+                .createNativeQuery("SELECT COALESCE(SUM(amount),0) FROM payment.moneytransactions INNER JOIN payment.payments p ON moneytransactions.paymentid = p.paymentid WHERE paymenttypeid = :paymentTypeId AND userid = :userId AND moneytransactions.transactiontypeid = :transactionTypeId AND moneytransactions.status = :status")
+                .setParameter("userId", userId)
+                .setParameter("paymentTypeId", PaymentTypes.pay.getValue())
+                .setParameter("transactionTypeId", TransactionTypes.clubby.getValue())
+                .setParameter("status", api.contracts.enums.TransactionStatus.approved.getValue())
+                .getSingleResult();
+        return credit.intValue();
+    }
+
+    public int getMyDebit(int userId){
+        BigInteger debit = (BigInteger) em
+                .createNativeQuery("SELECT COALESCE(SUM(amount),0) FROM payment.moneytransactions INNER JOIN payment.payments p ON moneytransactions.paymentid = p.paymentid WHERE (paymenttypeid = :paymentTypeId1 OR paymenttypeid = :paymentTypeId2) AND userid = :userId AND moneytransactions.status = :status")
+                .setParameter("userId", userId)
+                .setParameter("paymentTypeId1", PaymentTypes.buy.getValue())
+                .setParameter("paymentTypeId2", PaymentTypes.free.getValue())
+                .setParameter("status", api.contracts.enums.TransactionStatus.approved.getValue())
+                .getSingleResult();
+        return debit.intValue();
+    }
+
+    public int getMyBalance(int userId){
+        return getMyDebit(userId) - getMyCredit(userId);
+    }
+
+    //endregion
+
+    //region Pending payments
+
+    public List<PaymentInfoDto> getPendingPaymentsForUser(int userId){
+
+        Query q = em.createNativeQuery("\n" +
+                "\n" +
+                "WITH pendingPaymentsIds AS (\n" +
+                "SELECT \n" +
+                "        DISTINCT p.paymentId\n" +
+                "FROM payment.payments p\n" +
+                "LEFT JOIN payment.pendingpayments pp ON p.paymentid = pp.paymentid\n" +
+                "WHERE p.frequencyid <> 0 AND COALESCE(pp.userid, :userId) = :userId  AND p.active\n" +
+                "\n" +
+                "EXCEPT\n" +
+                " \n" +
+                "SELECT p.paymentId FROM payment.moneytransactions mt\n" +
+                "INNER JOIN payment.payments p ON mt.paymentId = p.paymentId\n" +
+                "WHERE mt.userId = :userId AND mt.Status = 4\n" +
+                "GROUP BY p.paymentId, frequencyid\n" +
+                "HAVING \n" +
+                "(frequencyid = 1 AND MAX(COALESCE(EXTRACT(MONTH FROM creationtime),0)) = EXTRACT(MONTH FROM current_date))\n" +
+                "OR (frequencyid = 2 AND MAX(COALESCE(EXTRACT(YEAR FROM creationtime),0)) = EXTRACT(YEAR FROM current_date))\n" +
+                "OR (frequencyid = 3 AND MAX(creationtime) IS NOT NULL))\n" +
+                "SELECT p.* FROM payment.payments p\n" +
+                "INNER JOIN pendingPaymentsIds pp ON p.paymentId = pp.paymentId")
+                .setParameter("userId", userId);
+
+        List l = q.getResultList();
+
+
+        List<PaymentInfoDto> a = (List<PaymentInfoDto>) l.stream().map(PaymentInfoDto::new).collect(Collectors.toList());
+
+        return a;
     }
 
     //endregion

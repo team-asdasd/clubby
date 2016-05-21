@@ -70,35 +70,13 @@ public class PaymentController {
 
     @PathMapping("accepted")
     public void accepted(WebContext ctx) throws Exception {
-        sendInfoToCallback(ctx);
-        ctx.setVariable("pageTitle", "Success");
-        ctx.setVariable("layout", "_baseLayout");
-
-        Sender.sendView(ctx, "payment/accept");
+        ctx.getResponse().sendRedirect("/app/#/Payments/success");
     }
 
     @PathMapping("cancelled")
     public void cancelled(WebContext ctx) throws Exception {
-        ctx.setVariable("pageTitle", "Failed");
-        ctx.setVariable("layout", "_baseLayout");
-
-        Sender.sendView(ctx, "payment/cancel");
+        ctx.getResponse().sendRedirect("/app/#/Payments/failed");
     }
 
-    private void sendInfoToCallback(WebContext ctx) {
-        try {
-            HttpServletRequest request = ctx.getRequest();
-            Map<String, String> params = new HashMap<>();
-            //to list :)
-            for (String name : Collections.list(request.getParameterNames())) {
-                params.put(name, request.getParameter(name));
-            }
 
-            HttpClient.sendGetRequest("/api/paysera/callback", String.class, params, null);
-
-        } catch (Exception e) {
-            //do nothing just log
-            logger.info(e);
-        }
-    }
 }

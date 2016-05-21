@@ -140,6 +140,19 @@ public class PaymentsService implements IPaymentsService {
         return simpleEm.getById(Payment.class, id);
     }
 
+    public List<PaymentInfoDto> getPaymentsByType(int paymentTypeId){
+
+        Query q = em.createQuery("SELECT p FROM Payment  p WHERE :paymenttypeid = 0 OR p.paymenttypeid = :paymenttypeid", Payment.class)
+                .setParameter("paymenttypeid", paymentTypeId);
+
+        List<Payment> l = q.getResultList();
+
+
+        List<PaymentInfoDto> payments = l.stream().map(PaymentInfoDto::new).collect(Collectors.toList());
+
+        return payments;
+    }
+
     //endregion
 
     // region payments

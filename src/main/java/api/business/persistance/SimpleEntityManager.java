@@ -9,9 +9,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 
-/**
- * Created by Mindaugas on 30/04/2016.
- */
 @Stateless
 public class SimpleEntityManager implements ISimpleEntityManager {
 
@@ -20,17 +17,13 @@ public class SimpleEntityManager implements ISimpleEntityManager {
 
     private final Logger logger = LogManager.getLogger(getClass().getName());
 
-    @Override
-    public EntityManager getEntityManager() {
-        return em;
-    }
-
     public<T> T insert(T entity){
         try {
             em.persist(entity);
             em.flush();
         } catch (Exception e) {
             em.clear();
+            logger.error(e);
             throw e;
         }
 
@@ -44,6 +37,7 @@ public class SimpleEntityManager implements ISimpleEntityManager {
             em.flush();
         } catch (Exception e) {
             em.clear();
+            logger.error(e);
             throw e;
         }
         return updated;
@@ -55,6 +49,7 @@ public class SimpleEntityManager implements ISimpleEntityManager {
             em.flush();
         } catch (Exception e) {
             em.clear();
+            logger.error(e);
             throw e;
         }
     }

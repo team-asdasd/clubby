@@ -32,8 +32,13 @@ import {PaymentsCentral} from "./payments/payments.component";
 ])
 export class App {
     url: string = 'https://github.com/preboot/angular2-webpack';
+    balance: number;
 
-    constructor(private router: Router) {
+    constructor(private router: Router, private paymentsService: PaymentsService) {
+        paymentsService.getBalance().subscribe(
+            resp => this.balance = resp,
+            error => this.balance = 0
+        );
     }
 
     public isRouteActive(route) {

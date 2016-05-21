@@ -7,6 +7,7 @@ import {MoneyTransaction} from "./moneyTransaction.model.ts";
 import {HistoryPaymentsResponse} from "./historyPayments.response.ts";
 import {ApiHelper} from "./helpers/apiHelper";
 import {PendingPaymentsResponse} from "./pendingPayments.response";
+import {GetBalanceResponse} from "./getBalance.response";
 
 @Injectable()
 export class PaymentsService {
@@ -23,13 +24,13 @@ export class PaymentsService {
     }
 
     public getHistroyPayments(): Observable<Array<MoneyTransaction>> {
-        return this.http.get(`${this.url}/my/history`)
+        return this.http.get(`${this.url}/me/history`)
             .map(resp => ApiHelper.parse<HistoryPaymentsResponse>(resp).payments)
             .catch(ApiHelper.handleError);
     }
 
     public getPendingPayments(): Observable<Array<Payment>> {
-        return this.http.get(`${this.url}/my/pending`)
+        return this.http.get(`${this.url}/me/pending`)
             .map(resp => ApiHelper.parse<PendingPaymentsResponse>(resp).pendingPayments)
             .catch(ApiHelper.handleError);
     }
@@ -37,6 +38,12 @@ export class PaymentsService {
     public pay(paymentId: number): Observable<Array<MoneyTransaction>> {
         return this.http.get(`${this.url}/pay/${paymentId}`)
             .map(resp => ApiHelper.parse<HistoryPaymentsResponse>(resp).payments)
+            .catch(ApiHelper.handleError);
+    }
+
+    public getBalance() {
+        return this.http.get(`${this.url}/me/balance`)
+            .map(resp => ApiHelper.parse<GetBalanceResponse>(resp).balance)
             .catch(ApiHelper.handleError);
     }
 }

@@ -1,0 +1,14 @@
+<div *ngIf="!payments" class="loader"></div>
+<div *ngIf="payments" class="wraper">
+    <div *ngFor="#row of payments | rows:3" class="row">
+        <div *ngFor="#col of row.columns" class="col-sm-4">
+            <div class="card card-block">
+                <h3 class="card-title">Buy {{col.Amount | number:'1.2-2'}} Clubby coins</h3>
+                <p class="card-text">{{col.InfoText}}</p>
+                <a href="/pay/paysera?payment={{col.PaymentId}}" class="btn btn-success btn-lg btn-block">
+                    Buy<span class="glyphicon glyphicon-chevron-right"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

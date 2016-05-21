@@ -7,6 +7,7 @@ import {MoneyTransaction} from "./moneyTransaction.model.ts";
 import {HistoryPaymentsResponse} from "./historyPayments.response.ts";
 import {ApiHelper} from "./helpers/apiHelper";
 import {PendingPaymentsResponse} from "./pendingPayments.response";
+import {PaymentsResponse} from "./payments.response";
 import {GetBalanceResponse} from "./getBalance.response";
 
 @Injectable()
@@ -44,6 +45,12 @@ export class PaymentsService {
     public getBalance() {
         return this.http.get(`${this.url}/me/balance`)
             .map(resp => ApiHelper.parse<GetBalanceResponse>(resp).balance)
+            .catch(ApiHelper.handleError);
+    }
+
+    public getAllPaymentsByType(type: number) {
+        return this.http.get(`${this.url}/all/${type}`)
+            .map(resp => ApiHelper.parse<PaymentsResponse>(resp).payments)
             .catch(ApiHelper.handleError);
     }
 }

@@ -8,12 +8,9 @@ import api.business.services.interfaces.IUserService;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.contracts.constants.Currency;
-import api.contracts.dto.PaymentInfoDto;
 import api.contracts.enums.PaymentTypes;
 import api.contracts.enums.TransactionStatus;
 import api.contracts.enums.TransactionTypes;
-import api.contracts.payments.GetPaymentInfoRequest;
-import api.contracts.payments.GetPaymentInfoResponse;
 import api.contracts.payments.PayClubbyRequest;
 import api.contracts.payments.PayClubbyResponse;
 import api.handlers.base.BaseHandler;
@@ -87,6 +84,8 @@ public class PayClubbyHandler extends BaseHandler<PayClubbyRequest, PayClubbyRes
         mt.setTransactionTypeId(TransactionTypes.clubby.getValue());
         mt.setAmount(payment.getAmount());
         mt.setCurrency(Currency.ClubbyCoin);
+
+        paymentsService.createMoneyTransaction(mt);
 
         response.success = true;
 

@@ -6,20 +6,21 @@ import {Payment} from "../shared/payment.model.ts";
 import {ErrorDirective} from "../../directives/error.ts";
 import {ErrorDto} from "../shared/error.model.ts";
 import {ErrorResponse} from "../shared/error.response.ts";
+import {SuccessPayment} from "../payments-success/payments-success.component.ts";
 
 @Component({
     selector: 'payments-pay',
     template: require('./payments-pay.component.html'),
     styles: [require('./payments-pay.component.scss')],
     providers: [],
-    directives: [ErrorDirective],
+    directives: [ErrorDirective, SuccessPayment],
     pipes: []
 })
 export class PayPayment {
     payment: Payment;
     failed: boolean;
     loading: boolean;
-    succesPayment: boolean;
+    successPayment: boolean;
     errors: Array<ErrorDto>;
     currentDate: Date;
 
@@ -43,11 +44,11 @@ export class PayPayment {
 
         this._paymentsService.pay(payment.PaymentId)
             .subscribe(resp => {
-                    this.succesPayment = true;
+                    this.successPayment = true;
                     this.loading = false;
                 },
                 error => {
-                    this.succesPayment = false;
+                    this.successPayment = false;
                     this.loading = false;
                     let resp: Response = error as Response;
                     if(resp) {

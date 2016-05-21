@@ -1,7 +1,7 @@
 import {Component} from 'angular2/core';
 
 @Component({
-    selector: 'payments-pending',
+    selector: 'payment-success',
     template: require('./payments-success.component.html'),
     styles: [require('./payments-success.component.scss')],
     providers: [],

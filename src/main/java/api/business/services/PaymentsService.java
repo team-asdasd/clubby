@@ -190,7 +190,7 @@ public class PaymentsService implements IPaymentsService {
 
     public int getMyCredit(int userId){
         BigInteger credit = (BigInteger) em
-                .createNativeQuery("SELECT COALESCE(SUM(amount),0) FROM payment.moneytransactions INNER JOIN payment.payments p ON moneytransactions.paymentid = p.paymentid WHERE paymenttypeid = :paymentTypeId AND userid = :userId AND moneytransactions.transactiontypeid = :transactionTypeId AND moneytransactions.status = :status")
+                .createNativeQuery("SELECT COALESCE(SUM(moneytransactions.amount),0) FROM payment.moneytransactions INNER JOIN payment.payments p ON moneytransactions.paymentid = p.paymentid WHERE paymenttypeid = :paymentTypeId AND userid = :userId AND moneytransactions.transactiontypeid = :transactionTypeId AND moneytransactions.status = :status")
                 .setParameter("userId", userId)
                 .setParameter("paymentTypeId", PaymentTypes.pay.getValue())
                 .setParameter("transactionTypeId", TransactionTypes.clubby.getValue())
@@ -201,7 +201,7 @@ public class PaymentsService implements IPaymentsService {
 
     public int getMyDebit(int userId){
         BigInteger debit = (BigInteger) em
-                .createNativeQuery("SELECT COALESCE(SUM(amount),0) FROM payment.moneytransactions INNER JOIN payment.payments p ON moneytransactions.paymentid = p.paymentid WHERE (paymenttypeid = :paymentTypeId1 OR paymenttypeid = :paymentTypeId2) AND userid = :userId AND moneytransactions.status = :status")
+                .createNativeQuery("SELECT COALESCE(SUM(moneytransactions.amount),0) FROM payment.moneytransactions INNER JOIN payment.payments p ON moneytransactions.paymentid = p.paymentid WHERE (paymenttypeid = :paymentTypeId1 OR paymenttypeid = :paymentTypeId2) AND userid = :userId AND moneytransactions.status = :status")
                 .setParameter("userId", userId)
                 .setParameter("paymentTypeId1", PaymentTypes.buy.getValue())
                 .setParameter("paymentTypeId2", PaymentTypes.free.getValue())

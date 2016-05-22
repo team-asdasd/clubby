@@ -44,7 +44,7 @@ public class FormService implements IFormService {
 
     @Override
     public List<FormResult> getMyFields() {
-        User user = userService.getByUsername(SecurityUtils.getSubject().getPrincipal().toString());
+        User user = userService.get();
         return em.createQuery("SELECT F FROM FormResult F WHERE F.user = :user", FormResult.class).setParameter("user", user).getResultList();
     }
 

@@ -8,9 +8,6 @@ import web.helpers.TemplateEngineFactory;
 
 import java.util.HashSet;
 
-/**
- * Created by Mindaugas on 03/04/2016.
- */
 public class ApplicationConfiguration {
     private RequestsForwarder requestsForwarder;
 
@@ -25,7 +22,6 @@ public class ApplicationConfiguration {
         classes.add(AdminController.class);
         classes.add(RegisterController.class);
         classes.add(PaymentController.class);
-        classes.add(FormController.class);
 
         try {
             requestsForwarder = new RequestsForwarder(classes);

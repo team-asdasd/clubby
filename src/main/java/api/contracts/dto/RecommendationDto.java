@@ -1,13 +1,16 @@
 package api.contracts.dto;
 
-import api.business.entities.Recommendation;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 public class RecommendationDto {
-    public String RequestCode;
-    public int UserId;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public String requestCode;
+    public int userId;
+    public int status;
 
-    public RecommendationDto(Recommendation r) {
-        UserId = r.getUserTo().getId();
-        RequestCode = r.getRecommendationCode();
+    public RecommendationDto(int status, int userId, String statusCode) {
+        this.userId = userId;
+        requestCode = statusCode;
+        this.status = status;
     }
 }

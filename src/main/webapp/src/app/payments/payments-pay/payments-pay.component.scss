@@ -1,0 +1,22 @@
+.payment {
+  border: 1px solid black;
+  border-radius: 12px;
+  padding: 24px;
+  margin: 10px;
+}
+
+.wraper{
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 768px) {
+.wraper{
+  width: 100%;
+}
+}
+@media (min-width: 992px) {
+.wraper{
+  width: 700px;
+}
+}

@@ -24,7 +24,7 @@ public class GetFormHandler extends BaseHandler<GetFormRequest, GetFormResponse>
 
     @Override
     public ArrayList<ErrorDto> validate(GetFormRequest request) {
-        return Validator.checkAllNotNullAndIsAuthenticated(request);
+        return Validator.checkAllNotNull(request);
     }
 
     @Override

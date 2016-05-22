@@ -82,18 +82,16 @@
             <thead>
             <tr>
                 <th>Id</th>
-                <th>Username</th>
                 <th>Name</th>
                 <th>Email</th>
             </tr>
             </thead>
             <tbody class="searchable">
-            <% _.each(Users, function(user){ %>
+            <% _.each(users, function(user){ %>
             <tr>
-                <td><%= _.escape(user.Id) %></td>
-                <td><%= _.escape(user.Username) %></td>
-                <td><%= _.escape(user.Name) %></td>
-                <td><%= _.escape(user.Email) %></td>
+                <td><%= _.escape(user.id) %></td>
+                <td><%= _.escape(user.name) %></td>
+                <td><%= _.escape(user.email) %></td>
             </tr>
             <% }); %>
             </tbody>

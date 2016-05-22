@@ -1,11 +1,9 @@
 package api.contracts.enums;
 
-/**
- * Created by Mindaugas on 30/04/2016.
- */
 public enum TransactionTypes {
-    in(1),
-    out(2);
+    direct(1),
+    clubby(2),
+    free(3);
 
     private final int val;
     TransactionTypes(int val) { this.val = val; }

@@ -26,7 +26,7 @@ public class LoginService implements ILoginService {
 
     public Login getByUserName(String username) {
         try {
-            TypedQuery<Login> logins = em.createQuery("SELECT l FROM Login l WHERE l.username = :username", Login.class).setParameter("username", username);
+            TypedQuery<Login> logins = em.createQuery("SELECT l FROM Login l WHERE l.email = :username", Login.class).setParameter("username", username);
             return logins.getSingleResult();
         } catch (Exception e) {
             return null;

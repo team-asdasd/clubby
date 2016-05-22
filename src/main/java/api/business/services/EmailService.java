@@ -27,7 +27,7 @@ public class EmailService implements IEmailService {
             message.setSubject(subject);
             message.setText(textMessage);
             Transport.send(message);
-            logger.trace("Email sent to " + addresses);
+            logger.trace("email sent to " + addresses);
 
         } catch (MessagingException e) {
             logger.error(e);

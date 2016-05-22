@@ -10,6 +10,7 @@ header {
   top: 0;
   left: 0;
   width: 100%;
+  z-index: 100;
 
   .open > a, .active > a {
     background-color: $darker;
@@ -42,4 +43,10 @@ main {
 footer {
   text-align: center;
   font-size: 0.8em;
+}
+
+span.balance{
+  color: #FCFFF5;
+  padding: 15px;
+  display: inline-block;
 }

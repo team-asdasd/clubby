@@ -7,6 +7,8 @@ import clients.facebook.responses.FacebookUserDetails;
 public interface IUserService {
     User get(int id);
 
+    User get();
+
     User getByEmail(String email);
 
     void createUser(User user, Login login);

@@ -3,19 +3,15 @@ package api.business.entities;
 import javax.persistence.*;
 import java.util.Date;
 
-/**
- * Created by Mindaugas on 30/04/2016.
- */
-
 @Entity
 @Table(name = "moneytransactions", schema = "payment", catalog = "clubby")
 public class MoneyTransaction {
     private String transactionid;
-    private int transactiontypeid;
     private int status;
-    private int ammount;
-    private int ammountclubby;
     private Date creationTime;
+    private int transactionTypeId;
+    private String currency;
+    private int amount;
 
     @Id
     @Column(name = "transactionid")
@@ -25,16 +21,6 @@ public class MoneyTransaction {
 
     public void setTransactionid(String transactionid) {
         this.transactionid = transactionid;
-    }
-
-    @Basic
-    @Column(name = "transactiontypeid")
-    public int getTransactiontypeid() {
-        return transactiontypeid;
-    }
-
-    public void setTransactiontypeid(int transactiontypeid) {
-        this.transactiontypeid = transactiontypeid;
     }
 
     @Basic
@@ -48,26 +34,6 @@ public class MoneyTransaction {
     }
 
     @Basic
-    @Column(name = "ammount")
-    public int getAmmount() {
-        return ammount;
-    }
-
-    public void setAmmount(int ammount) {
-        this.ammount = ammount;
-    }
-
-    @Basic
-    @Column(name = "ammountclubby")
-    public int getAmmountclubby() {
-        return ammountclubby;
-    }
-
-    public void setAmmountclubby(int ammountclubby) {
-        this.ammountclubby = ammountclubby;
-    }
-
-    @Basic
     @Column(name = "creationTime")
     public Date getCreationTime() {
         return creationTime;
@@ -75,6 +41,36 @@ public class MoneyTransaction {
 
     public void setCreationTime(Date creationTime) {
         this.creationTime = creationTime;
+    }
+
+    @Basic
+    @Column(name = "transactionTypeId")
+    public int getTransactionTypeId() {
+        return transactionTypeId;
+    }
+
+    public void setTransactionTypeId(int transactionTypeId) {
+        this.transactionTypeId = transactionTypeId;
+    }
+
+    @Basic
+    @Column(name = "currency")
+    public String getCurrency() {
+        return this.currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    @Basic
+    @Column(name = "amount")
+    public int getAmount() {
+        return this.amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 
     @Override

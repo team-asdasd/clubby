@@ -12,7 +12,7 @@ public class AppController {
     public void test(WebContext ctx) throws Exception {
 
         if(SecurityUtils.getSubject().hasRole("potentialCandidate")) {
-            ctx.getResponse().sendRedirect(ctx.getResponse().encodeRedirectURL("/form"));
+            ctx.getResponse().sendRedirect(ctx.getResponse().encodeRedirectURL("/register"));
             return;
         }
         Sender.sendView(ctx, "app/index");

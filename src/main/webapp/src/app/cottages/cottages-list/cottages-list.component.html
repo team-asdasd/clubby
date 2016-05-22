@@ -25,10 +25,12 @@
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="#cottage of cottages">
+            <tr *ngFor="#cottage of cottages"
+                (click)="onSelect(cottage)">
                 <td>
                     <img src="{{cottage.Image}}" class="img-thumbnail">
                 </td>
+                <td>asdasd</td>
                 <td>{{cottage.Title}}</td>
                 <td>{{cottage.Beds}}</td>
             </tr>

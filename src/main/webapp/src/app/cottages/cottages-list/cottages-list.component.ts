@@ -2,6 +2,7 @@ import {Component} from 'angular2/core';
 import {Cottage} from "../shared/cottage.model";
 import {CottageService} from "../shared/cottages.service";
 import {RoomsSelector} from "./rooms-selector/rooms-selector.component";
+import {Router} from 'angular2/router';
 
 @Component({
     selector: 'cottages-list',
@@ -14,7 +15,9 @@ import {RoomsSelector} from "./rooms-selector/rooms-selector.component";
 export class CottagesList {
     cottages: Array<Cottage>;
 
-    constructor(private cottageService: CottageService) {
+    constructor(
+        private cottageService: CottageService,
+        private router: Router) {
         cottageService.getAllCottages().subscribe(resp => this.cottages = resp);
     }
 
@@ -24,5 +27,9 @@ export class CottagesList {
         query += beds !== "Any" ? "beds=" + beds + "&" : "";
         query = query.substring(0, query.length - 1);
         this.cottageService.getFilteredCottages(query).subscribe(resp => this.cottages = resp);
+    }
+
+    public onSelect(cottage: Cottage) {
+        this.router.navigateByUrl( `/crisis-list/${cottage.Id}`);
     }
 }

@@ -25,7 +25,7 @@ import {CottageService} from "./cottages/shared/cottages.service";
 @RouteConfig([
     {path: '/', component: Home, as: 'Home', useAsDefault: true},
     {path: '/Profile', component: Profile, as: 'Profile'},
-    {path: '/Cottages/...', component: Cottages, as: 'Cottages'}
+    {path: '/Cottages/...', component: Cottages, as: 'Cottages'},
 ])
 export class App {
     url: string = 'https://github.com/preboot/angular2-webpack';

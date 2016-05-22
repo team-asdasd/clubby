@@ -1,3 +1,31 @@
-<div class="card card-block">
-    hi
+<div class="container">
+
+    <!-- Portfolio Item Heading -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{{cottage.Title}}
+                <small>Cottage</small>
+            </h1>
+        </div>
+    </div>
+    <!-- /.row -->
+
+    <!-- Portfolio Item Row -->
+    <div class="row">
+
+        <div class="col-md-8">
+            <img class="img-thumbnail" src="{{cottage.Image}}" alt="">
+        </div>
+
+        <div class="col-md-4">
+            <h3>Description</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque urna varius vitae. Sed dui lorem, adipiscing in adipiscing et, interdum nec metus. Mauris ultricies, justo eu convallis placerat, felis enim.</p>
+            <h3>Cottage Details</h3>
+            <ul>
+                <li>Beds: {{cottage.Beds}}</li>
+            </ul>
+            <button type="button" class="btn btn-success">Reserve</button>
+        </div>
+
+    </div>
 </div>

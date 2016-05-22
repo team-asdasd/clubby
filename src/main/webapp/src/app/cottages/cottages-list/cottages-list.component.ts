@@ -1,8 +1,9 @@
+import {Router} from 'angular2/router';
+
 import {Component} from 'angular2/core';
 import {Cottage} from "../shared/cottage.model";
 import {CottageService} from "../shared/cottages.service";
 import {RoomsSelector} from "./rooms-selector/rooms-selector.component";
-import {Router} from 'angular2/router';
 
 @Component({
     selector: 'cottages-list',
@@ -11,6 +12,7 @@ import {Router} from 'angular2/router';
     providers: [],
     directives: [RoomsSelector]
 })
+
 
 export class CottagesList {
     cottages: Array<Cottage>;
@@ -30,6 +32,7 @@ export class CottagesList {
     }
 
     public onSelect(cottage: Cottage) {
-        this.router.navigateByUrl( `/crisis-list/${cottage.Id}`);
+        console.log('navigating to cottage ', cottage.Id);
+        this.router.navigate( ['CottageDetails', { id: cottage.Id }] );
     }
 }

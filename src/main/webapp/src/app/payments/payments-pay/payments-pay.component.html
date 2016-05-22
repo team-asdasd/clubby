@@ -1,4 +1,6 @@
-<div class="wraper">
+<payment-success *ngIf="successPayment"></payment-success>
+
+<div *ngIf="!successPayment" class="wraper">
     <div class="card card-block">
         <div *ngIf="(!payment && !failed) || loading" class="loader"></div>
         <cb-error *ngIf="failed && !loading"></cb-error>

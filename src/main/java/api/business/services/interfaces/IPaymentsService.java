@@ -38,6 +38,8 @@ public interface IPaymentsService {
 
     void removePayment(Payment payment);
 
+    List<PaymentInfoDto> getPaymentsByType(int paymentTypeId);
+
     Payment getPayment(int id);
 
     TransactionStatus getTransactionStatus(int status);

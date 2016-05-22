@@ -2,10 +2,7 @@ package api.resources;
 
 import api.contracts.base.BaseResponse;
 import api.contracts.payments.*;
-import api.handlers.payments.GetMyHistoryPamentsHandler;
-import api.handlers.payments.GetPaymentInfoHandler;
-import api.handlers.payments.GetPendingPaymentsHandler;
-import api.handlers.payments.PayClubbyHandler;
+import api.handlers.payments.*;
 import api.handlers.utilities.StatusResolver;
 import com.google.api.client.http.HttpStatusCodes;
 import io.swagger.annotations.Api;
@@ -30,6 +27,10 @@ public class PaymentsResource {
     private PayClubbyHandler payClubbyHandler;
     @Inject
     private GetPendingPaymentsHandler getPendingPaymentsHandler;
+    @Inject
+    private GetBalanceHandler getBalanceHandler;
+    @Inject
+    private GetPaymentsHandler getPaymentsHandler;
 
     @GET
     @Path("{paymentId}")
@@ -64,7 +65,7 @@ public class PaymentsResource {
 
     @GET
     @Produces("application/json")
-    @Path("my/history")
+    @Path("me/history")
     @ApiOperation(value = "Get my bpayments", response = GetMyHistoryPaymetsResponse.class)
     public Response getMyHistoryPaments() {
         GetMyHistoryPaymetsRequest request = new GetMyHistoryPaymetsRequest();
@@ -78,12 +79,42 @@ public class PaymentsResource {
 
     @GET
     @Produces("application/json")
-    @Path("my/pending")
+    @Path("me/pending")
     @ApiOperation(value = "Get my pending payments", response = GetPendingPaymentsResponse.class)
     public Response getMyPendingPaments() {
         GetPendingPaymentsRequest request = new GetPendingPaymentsRequest();
 
         GetPendingPaymentsResponse response = getPendingPaymentsHandler.handle(request);
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
+    }
+
+    @GET
+    @Produces("application/json")
+    @Path("me/balance")
+    @ApiOperation(value = "Get my current balance", response = GetBalanceResponse.class)
+    public Response getMyBalance() {
+        GetBalanceRequest request = new GetBalanceRequest();
+
+        GetBalanceResponse response = getBalanceHandler.handle(request);
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
+    }
+
+    @GET
+    @Produces("application/json")
+    @Path("all/{paymentType}")
+    @ApiOperation(value = "Get all/by type payments", response = GetPaymentsResponse.class)
+    public Response getPayments(@PathParam("paymentType") int paymentTypeId) {
+        GetPaymentsRequest request = new GetPaymentsRequest();
+
+        request.paymentTypeId = paymentTypeId;
+
+        BaseResponse response = getPaymentsHandler.handle(request);
 
         int statusCode = StatusResolver.getStatusCode(response);
 

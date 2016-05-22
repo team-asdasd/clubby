@@ -6,6 +6,7 @@ import {PayPayment} from './payments-pay/payments-pay.component.ts';
 import {HistoryPayments} from './payments-history/payments-history.component.ts';
 import {SuccessPayment} from './payments-success/payments-success.component.ts';
 import {FailedPayment} from './payments-failed/payments-failed.component.ts';
+import {BuyClubbyCoins} from "./payments-buy/payments-buy.component.ts";
 
 @Component({
     selector: 'payments',
@@ -21,6 +22,7 @@ import {FailedPayment} from './payments-failed/payments-failed.component.ts';
     {path: '/history', name: 'History', component: HistoryPayments},
     {path: '/success', name: 'Success', component: SuccessPayment},
     {path: '/failed', name: 'Failed', component: FailedPayment},
+    {path: '/buyclubbycoins', name: 'BuyClubby', component: BuyClubbyCoins},
 ])
 export class PaymentsCentral {
     options: any;

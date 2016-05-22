@@ -1,14 +1,14 @@
 var alertDialog = window.Clubby.Alert();
 var dashboardMessage = $("#dashboard-message-box");
 
+var modal = $("#create-user-modal");
+
 $(function () {
     loadUsers();
-    $("#create-user-modal").find("#save").click(createUser);
+    modal.find("#save").click(createUser);
 });
 
 function createUser() {
-    var modal = $("#create-user-modal");
-
     var modalMessage = modal.find("#modal-message-box");
 
     var username = modal.find("#username");

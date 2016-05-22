@@ -11,9 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-/**
- * Created by Mindaugas on 30/04/2016.
- */
 public class UserHandlerTest {
     @Mock
     IUserService userServiceMock;

@@ -1,0 +1,28 @@
+@import '../../../style/colors';
+
+header {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80%;
+
+  .open > a, .active > a {
+    background-color: $dark;
+  }
+
+  .navbar, .dropdown-menu {
+    background-color: $darker;
+    border: none;
+    border-radius: 0;
+    margin: 0;
+
+    a {
+      text-decoration: none;
+      color: $light;
+    }
+
+    a:hover {
+      background-color: $dark;
+    }
+  }
+}

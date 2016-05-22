@@ -16,9 +16,6 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.ArrayList;
 
-/**
- * Created by Mindaugas on 01/05/2016.
- */
 @Stateless
 public class GetPaymentInfoHandler extends BaseHandler<GetPaymentInfoRequest, GetPaymentInfoResponse> {
 
@@ -45,16 +42,11 @@ public class GetPaymentInfoHandler extends BaseHandler<GetPaymentInfoRequest, Ge
 
         if(payment == null){
             response.Errors = new ArrayList<>();
-            response.Errors.add(new ErrorDto(String.format("Payment %s not found",request.PaymentId), ErrorCodes.VALIDATION_ERROR));
+            response.Errors.add(new ErrorDto(String.format("Payment %s not found",request.PaymentId), ErrorCodes.NOT_FOUND));
             return response;
         }
 
-        PaymentInfoDto paymentInfoDto = new PaymentInfoDto();
-
-        paymentInfoDto.Amount = payment.getAmount()/100d;
-        paymentInfoDto.Currency = payment.getSettings().getCurrency();
-        paymentInfoDto.InfoText = payment.getPaytext();
-        paymentInfoDto.PaymentId = payment.getPaymentid();
+        PaymentInfoDto paymentInfoDto = new PaymentInfoDto(payment);
 
         response.paymentInfoDto = paymentInfoDto;
 

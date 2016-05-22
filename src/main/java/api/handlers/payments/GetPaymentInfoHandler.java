@@ -24,15 +24,7 @@ public class GetPaymentInfoHandler extends BaseHandler<GetPaymentInfoRequest, Ge
 
     @Override
     public ArrayList<ErrorDto> validate(GetPaymentInfoRequest request) {
-        Subject currentUser = SecurityUtils.getSubject();
-
-        ArrayList<ErrorDto> errors = Validator.checkAllNotNull(request);
-
-        if (!currentUser.isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
-           }
-
-        return errors;
+        return Validator.checkAllNotNullAndIsAuthenticated(request);
     }
 
     @Override

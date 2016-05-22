@@ -11,6 +11,7 @@ import api.contracts.dto.MoneyTransactionDto;
 import api.contracts.payments.GetMyHistoryPaymetsRequest;
 import api.contracts.payments.GetMyHistoryPaymetsResponse;
 import api.handlers.base.BaseHandler;
+import api.helpers.Validator;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -29,23 +30,13 @@ public class GetMyHistoryPamentsHandler extends BaseHandler<GetMyHistoryPaymetsR
 
     @Override
     public ArrayList<ErrorDto> validate(GetMyHistoryPaymetsRequest request) {
-        ArrayList<ErrorDto> errors =  new ArrayList<>();
-        Subject currentUser = SecurityUtils.getSubject();
-
-        if (!currentUser.isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
-        }
-
-        return errors;
+        return Validator.checkAllNotNullAndIsAuthenticated(request);
     }
 
     @Override
     public GetMyHistoryPaymetsResponse handleBase(GetMyHistoryPaymetsRequest request) {
         GetMyHistoryPaymetsResponse response = createResponse();
-        Subject currentUser = SecurityUtils.getSubject();
-
-        String username = currentUser.getPrincipal().toString();
-        User user = userService.getByUsername(username);
+        User user = userService.get();
 
         List<MoneyTransaction> payments = paymentsService.getMoneyTransactionsByUserId(user.getId());
 

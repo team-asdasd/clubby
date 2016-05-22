@@ -6,6 +6,7 @@ import api.business.entities.PaymentsSettings;
 import api.business.entities.User;
 import api.business.services.interfaces.ILoginService;
 import api.business.services.interfaces.IPaymentsService;
+import api.business.services.interfaces.IUserService;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.contracts.enums.PaymentTypes;
@@ -28,26 +29,17 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
     private IPaymentsService paymentsService;
 
     @Inject
-    private ILoginService loginService;
+    private IUserService userService;
 
     @Override
     public ArrayList<ErrorDto> validate(GetPayseraParamsRequest request) {
-        Subject currentUser = SecurityUtils.getSubject();
-
-        ArrayList<ErrorDto> errors = Validator.checkAllNotNull(request);
-
-        if (!currentUser.isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
-        }
-
-        return errors;
+        return Validator.checkAllNotNullAndIsAuthenticated(request);
     }
 
     @Override
     public GetPayseraParamsResponse handleBase(GetPayseraParamsRequest request) {
         GetPayseraParamsResponse response = createResponse();
 
-        Subject currentUser = SecurityUtils.getSubject();
         Map<String, String> queryParams = new HashMap<>();
 
         Payment payment = paymentsService.getPayment(request.PaymentId);
@@ -64,8 +56,7 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
             return response;
         }
 
-        String username = currentUser.getPrincipal().toString();
-        User user = loginService.getByUserName(username).getUser();
+        User user = userService.get();
         PaymentsSettings paymentsSettings = payment.getSettings();
 
         if(paymentsSettings == null){

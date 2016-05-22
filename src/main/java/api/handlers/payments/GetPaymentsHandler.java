@@ -8,6 +8,7 @@ import api.contracts.dto.PaymentInfoDto;
 import api.contracts.payments.GetPaymentsRequest;
 import api.contracts.payments.GetPaymentsResponse;
 import api.handlers.base.BaseHandler;
+import api.helpers.Validator;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -26,15 +27,7 @@ public class GetPaymentsHandler extends BaseHandler<GetPaymentsRequest, GetPayme
 
     @Override
     public ArrayList<ErrorDto> validate(GetPaymentsRequest request) {
-        Subject currentUser = SecurityUtils.getSubject();
-
-        ArrayList<ErrorDto> errors = new ArrayList<>();
-
-        if (!currentUser.isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
-        }
-
-        return errors;
+        return Validator.checkAllNotNullAndIsAuthenticated(request);
     }
 
     @Override

@@ -3,6 +3,9 @@ package api.helpers.mappers;
 import api.business.entities.User;
 import api.contracts.dto.UserDto;
 
+import javax.ejb.Stateless;
+
+@Stateless
 public class UserMapper {
     public UserDto map(User u, String defaultPic) {
         UserDto userDto = new UserDto(u);

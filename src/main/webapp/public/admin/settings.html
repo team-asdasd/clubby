@@ -52,13 +52,13 @@
             <tbody class="searchable">
             <% _.each(settings, function(setting){ %>
             <tr>
-                <td><%= setting.key %></td>
-                <td><%= setting.value %></td>
-                <td><%= setting.description %></td>
+                <td><%= _.escape(setting.key) %></td>
+                <td><%= _.escape(setting.value) %></td>
+                <td><%= _.escape(setting.description) %></td>
                 <td>
-                    <a class="btn btn-default edit-setting" data-setting-key="<%= setting.key %>">
-                        <span class="glyphicon glyphicon-pencil" data-setting-key="<%= setting.key %>" aria-hidden="true"></span>
-                        <span style="font-size: 16px;" data-setting-key="<%= setting.key %>"> Edit</span></a>
+                    <a class="btn btn-default edit-setting" data-setting-key="<%= _.escape(setting.key) %>">
+                        <span class="glyphicon glyphicon-pencil" data-setting-key="<%= _.escape(setting.key) %>" aria-hidden="true"></span>
+                        <span style="font-size: 16px;" data-setting-key="<%= _.escape(setting.key) %>"> Edit</span></a>
                 </td>
             </tr>
             <% }); %>

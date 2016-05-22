@@ -1,6 +1,8 @@
 package api.handlers.users;
 
+import api.business.entities.Configuration;
 import api.business.entities.User;
+import api.business.persistance.ISimpleEntityManager;
 import api.business.services.interfaces.IFormService;
 import api.business.services.interfaces.ILoginService;
 import api.business.services.interfaces.IUserService;
@@ -10,6 +12,7 @@ import api.contracts.base.ErrorDto;
 import api.contracts.users.GetUserInfoResponse;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
+import api.helpers.mappers.UserMapper;
 import clients.facebook.interfaces.IFacebookClient;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -21,6 +24,8 @@ import java.util.ArrayList;
 @Stateless
 public class GetCurrentUserHandler extends BaseHandler<BaseRequest, GetUserInfoResponse> {
     @Inject
+    private ISimpleEntityManager em;
+    @Inject
     private IUserService userService;
     @Inject
     private ILoginService loginService;
@@ -28,6 +33,8 @@ public class GetCurrentUserHandler extends BaseHandler<BaseRequest, GetUserInfoR
     private IFacebookClient facebookClient;
     @Inject
     private IFormService formService;
+    @Inject
+    private UserMapper mapper;
 
     @Override
     public ArrayList<ErrorDto> validate(BaseRequest request) {
@@ -44,14 +51,16 @@ public class GetCurrentUserHandler extends BaseHandler<BaseRequest, GetUserInfoR
 
     @Override
     public GetUserInfoResponse handleBase(BaseRequest request) {
-
+        Configuration default_user_picture_url = em.getById(Configuration.class, "default_user_picture_url");
+        String defaultPic = default_user_picture_url != null ? default_user_picture_url.getValue() : "";
+        
         User user = userService.get();
 
         GetUserInfoResponse response = createResponse();
         response.id = user.getId();
         response.name = user.getName();
         response.email = user.getLogin().getEmail();
-        response.picture = user.getPicture();
+        response.picture = mapper.getPicture(user, defaultPic);
         response.fields = formService.getFormByUserId(user.getId());
 
         return response;

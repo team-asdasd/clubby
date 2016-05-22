@@ -30,24 +30,13 @@ public class GetPendingPaymentsHandler extends BaseHandler<GetPendingPaymentsReq
 
     @Override
     public ArrayList<ErrorDto> validate(GetPendingPaymentsRequest request) {
-        Subject currentUser = SecurityUtils.getSubject();
-
-        ArrayList<ErrorDto> errors = Validator.checkAllNotNull(request);
-
-        if (!currentUser.isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
-        }
-
-        return errors;
+        return Validator.checkAllNotNullAndIsAuthenticated(request);
     }
 
     @Override
     public GetPendingPaymentsResponse handleBase(GetPendingPaymentsRequest request) {
         GetPendingPaymentsResponse response = createResponse();
-        Subject currentUser = SecurityUtils.getSubject();
-
-        String username = currentUser.getPrincipal().toString();
-        User user = userService.getByUsername(username);
+        User user = userService.get();
 
         List<PaymentInfoDto> pendingPpayments = paymentsService.getPendingPaymentsForUser(user.getId());
 

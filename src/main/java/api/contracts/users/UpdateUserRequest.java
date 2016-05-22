@@ -5,7 +5,8 @@ import api.contracts.dto.SubmitFormDto;
 
 import java.util.List;
 
-public class CreateUserRequest extends BaseRequest {
+public class UpdateUserRequest extends BaseRequest {
+    public int id;
     public String email;
     public String name;
     public String picture;
@@ -13,3 +14,4 @@ public class CreateUserRequest extends BaseRequest {
     public String passwordConfirm;
     public List<SubmitFormDto> fields;
 }
+

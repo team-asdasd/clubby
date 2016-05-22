@@ -2,7 +2,7 @@ package api.users;
 
 import api.business.services.interfaces.ILoginService;
 import api.business.services.interfaces.IUserService;
-import api.handlers.users.GetUserInfoHandler;
+import api.handlers.users.GetCurrentUserHandler;
 import clients.facebook.interfaces.IFacebookClient;
 import org.junit.Assert;
 import org.junit.Before;
@@ -22,7 +22,7 @@ public class UserHandlerTest {
     IFacebookClient facebookClientMock;
 
     @InjectMocks
-    GetUserInfoHandler getUserInfoHandler;
+    GetCurrentUserHandler getCurrentUserHandler;
 
     @Before
     public void setup(){
@@ -31,7 +31,7 @@ public class UserHandlerTest {
 
     @Test
     public void injectsAllTest(){
-        Assert.assertNotNull(getUserInfoHandler);
+        Assert.assertNotNull(getCurrentUserHandler);
         Assert.assertNotNull(userServiceMock);
         Assert.assertNotNull(loginServiceMock);
         Assert.assertNotNull(facebookClientMock);

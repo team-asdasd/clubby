@@ -6,6 +6,7 @@ import api.business.entities.PaymentsSettings;
 import api.business.entities.User;
 import api.business.services.interfaces.ILoginService;
 import api.business.services.interfaces.IPaymentsService;
+import api.business.services.interfaces.IUserService;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.contracts.enums.PaymentTypes;
@@ -23,31 +24,22 @@ import javax.inject.Inject;
 import java.util.*;
 
 @Stateless
-public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest,GetPayseraParamsResponse> {
+public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest, GetPayseraParamsResponse> {
     @Inject
     private IPaymentsService paymentsService;
 
     @Inject
-    private ILoginService loginService;
+    private IUserService userService;
 
     @Override
     public ArrayList<ErrorDto> validate(GetPayseraParamsRequest request) {
-        Subject currentUser = SecurityUtils.getSubject();
-
-        ArrayList<ErrorDto> errors = Validator.checkAllNotNull(request);
-
-        if (!currentUser.isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
-        }
-
-        return errors;
+        return Validator.checkAllNotNullAndIsAuthenticated(request);
     }
 
     @Override
     public GetPayseraParamsResponse handleBase(GetPayseraParamsRequest request) {
         GetPayseraParamsResponse response = createResponse();
 
-        Subject currentUser = SecurityUtils.getSubject();
         Map<String, String> queryParams = new HashMap<>();
 
         Payment payment = paymentsService.getPayment(request.PaymentId);
@@ -64,8 +56,7 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
             return response;
         }
 
-        String username = currentUser.getPrincipal().toString();
-        User user = loginService.getByUserName(username).getUser();
+        User user = userService.get();
         PaymentsSettings paymentsSettings = payment.getSettings();
 
         if(paymentsSettings == null){
@@ -88,7 +79,7 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
         paymentsService.createMoneyTransaction(mt);
 
         String baseUrl = System.getenv("OPENSHIFT_GEAR_DNS");
-        if(baseUrl == null){
+        if (baseUrl == null) {
             baseUrl = "localhost:8080";
         }
         baseUrl = "http://" + baseUrl;
@@ -97,7 +88,7 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
         String[] names = user.getName().split(" ");
         String firstName = names[0];
         String lastName = names[0];
-        if(names.length > 1){
+        if (names.length > 1) {
             String[] lastNames = Arrays.copyOfRange(names, 1, names.length);
             lastName = String.join(" ", Arrays.asList(lastNames));
         }
@@ -109,12 +100,12 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
         queryParams.put("paytext", payment.getPaytext());
         queryParams.put("p_firstname", firstName);
         queryParams.put("p_lastname", lastName);
-        queryParams.put("p_email", user.getEmail());
+        queryParams.put("p_email", user.getLogin().getEmail());
         queryParams.put("amount", Integer.toString(payment.getAmount()));
         queryParams.put("test", "1");
-        queryParams.put("accepturl", baseUrl+"/pay/accepted");
-        queryParams.put("cancelurl", baseUrl+"/pay/cancelled");
-        queryParams.put("callbackurl", baseUrl+"/api/paysera/callback");
+        queryParams.put("accepturl", baseUrl + "/pay/accepted");
+        queryParams.put("cancelurl", baseUrl + "/pay/cancelled");
+        queryParams.put("callbackurl", baseUrl + "/api/paysera/callback");
 
         String urlEncoded = paymentsService.encodeUrl(queryParams);
         String base64PreparedUrl = paymentsService.prepareUrlEncoded(urlEncoded);

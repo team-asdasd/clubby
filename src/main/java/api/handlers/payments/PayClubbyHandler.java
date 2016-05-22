@@ -34,15 +34,7 @@ public class PayClubbyHandler extends BaseHandler<PayClubbyRequest, PayClubbyRes
 
     @Override
     public ArrayList<ErrorDto> validate(PayClubbyRequest request) {
-        Subject currentUser = SecurityUtils.getSubject();
-
-        ArrayList<ErrorDto> errors = Validator.checkAllNotNull(request);
-
-        if (!currentUser.isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
-        }
-
-        return errors;
+        return Validator.checkAllNotNullAndIsAuthenticated(request);
     }
 
     @Override
@@ -62,10 +54,7 @@ public class PayClubbyHandler extends BaseHandler<PayClubbyRequest, PayClubbyRes
             return response;
         }
 
-        Subject currentUser = SecurityUtils.getSubject();
-
-        String username = currentUser.getPrincipal().toString();
-        User user = userService.getByUsername(username);
+        User user = userService.get();
 
         int balance = paymentsService.getMyBalance(user.getId());
 

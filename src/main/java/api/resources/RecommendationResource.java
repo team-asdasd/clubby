@@ -1,13 +1,14 @@
 package api.resources;
 
-import api.contracts.requests.ConfirmRecommendationRequest;
-import api.contracts.requests.GetRecommendationsRequest;
-import api.contracts.requests.SendRecommendationRequest;
-import api.contracts.responses.ConfirmRecommendationResponse;
-import api.contracts.responses.GetRecommendationsResponse;
-import api.contracts.responses.SendRecommendationResponse;
+import api.contracts.recommendations.ConfirmRecommendationRequest;
+import api.contracts.recommendations.GetRecommendationsRequest;
+import api.contracts.recommendations.SendRecommendationRequest;
+import api.contracts.recommendations.ConfirmRecommendationResponse;
+import api.contracts.recommendations.GetRecommendationsResponse;
+import api.contracts.recommendations.SendRecommendationResponse;
 import api.handlers.Recommendation.ConfirmRecommendationHandler;
-import api.handlers.Recommendation.GetRecommendationsHandler;
+import api.handlers.Recommendation.GetReceivedRecommendationsHandler;
+import api.handlers.Recommendation.GetSentRecommendationsHandler;
 import api.handlers.Recommendation.SendRecommendationHandler;
 import api.handlers.utilities.StatusResolver;
 import io.swagger.annotations.Api;
@@ -26,7 +27,9 @@ public class RecommendationResource {
     @Inject
     private SendRecommendationHandler sendRecommendationHandler;
     @Inject
-    private GetRecommendationsHandler getRecommendationsHandler;
+    private GetReceivedRecommendationsHandler getReceivedRecommendationsHandler;
+    @Inject
+    private GetSentRecommendationsHandler getSentRecommendationsHandler;
 
     @POST
     @Path("/confirm/{recommendationCode}")
@@ -57,11 +60,24 @@ public class RecommendationResource {
     }
 
     @GET
-    @ApiOperation(value = "Gets recommendation requests list", response = GetRecommendationsResponse.class)
-    public Response getRecommendations() {
+    @Path("/received")
+    @ApiOperation(value = "Gets received recommendations requests list", response = GetRecommendationsResponse.class)
+    public Response getReceivedRecommendations() {
         GetRecommendationsRequest request = new GetRecommendationsRequest();
 
-        GetRecommendationsResponse response = getRecommendationsHandler.handle(request);
+        GetRecommendationsResponse response = getReceivedRecommendationsHandler.handle(request);
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
+    }
+    @GET
+    @Path("/sent")
+    @ApiOperation(value = "Gets sent recommendations requests list", response = GetRecommendationsResponse.class)
+    public Response getSentRecommendations() {
+        GetRecommendationsRequest request = new GetRecommendationsRequest();
+
+        GetRecommendationsResponse response = getSentRecommendationsHandler.handle(request);
 
         int statusCode = StatusResolver.getStatusCode(response);
 

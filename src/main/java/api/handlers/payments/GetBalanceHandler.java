@@ -8,6 +8,7 @@ import api.contracts.base.ErrorDto;
 import api.contracts.payments.GetBalanceRequest;
 import api.contracts.payments.GetBalanceResponse;
 import api.handlers.base.BaseHandler;
+import api.helpers.Validator;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -25,24 +26,13 @@ public class GetBalanceHandler extends BaseHandler<GetBalanceRequest, GetBalance
 
     @Override
     public ArrayList<ErrorDto> validate(GetBalanceRequest request) {
-        Subject currentUser = SecurityUtils.getSubject();
-
-        ArrayList<ErrorDto> errors = new ArrayList<>();
-
-        if (!currentUser.isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
-        }
-
-        return errors;
+        return Validator.checkAllNotNullAndIsAuthenticated(request);
     }
 
     @Override
     public GetBalanceResponse handleBase(GetBalanceRequest request) {
         GetBalanceResponse response = createResponse();
-        Subject currentUser = SecurityUtils.getSubject();
-
-        String username = currentUser.getPrincipal().toString();
-        User user = userService.getByUsername(username);
+        User user = userService.get();
 
         int balance = paymentsService.getMyBalance(user.getId());
         response.balance = balance / 100d;

@@ -57,8 +57,6 @@ public class UpdateCottageHandler extends BaseHandler<UpdateCottageRequest, Upda
         cottage.setBedcount(request.Cottage.Beds);
         cottage.setImageurl(request.Cottage.Image);
 
-        cottageService.save(cottage);
-
         response.Cottage = new CottageDto(cottage);
 
         return response;

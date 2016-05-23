@@ -21,8 +21,6 @@ public interface IFormService {
 
     List<Field> getVisibleFields();
 
-    List<FormInfoDto> getFormByUserId(int id);
-
     FormResult getFormResult(String fieldName, int userId);
 
     void saveFormResults(List<SubmitFormDto> formDtos, User user);

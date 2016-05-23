@@ -54,20 +54,6 @@ public class FormService implements IFormService {
     }
 
     @Override
-    public List<FormInfoDto> getFormByUserId(int id) {
-        List<FormInfoDto> list = new ArrayList<>();
-        List<FormResult> results = em.createQuery("SELECT R FROM FormResult R WHERE R.user.id = :id", FormResult.class).setParameter("id", id).getResultList();
-        for (FormResult res : results) {
-            FormInfoDto info = new FormInfoDto();
-            info.value = res.getValue();
-            info.description = res.getField().getDescription();
-            info.type = res.getField().getType();
-            list.add(info);
-        }
-        return list;
-    }
-
-    @Override
     public FormResult getFormResult(String fieldName, int userId) {
         try {
             return em.createQuery("SELECT R FROM FormResult R WHERE R.user.id = :userId AND R.field.name = :fieldName", FormResult.class)

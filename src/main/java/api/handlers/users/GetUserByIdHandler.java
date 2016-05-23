@@ -7,6 +7,7 @@ import api.business.services.interfaces.IFormService;
 import api.business.services.interfaces.IUserService;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
+import api.contracts.dto.FormInfoDto;
 import api.contracts.users.GetUserByIdRequest;
 import api.contracts.users.GetUserInfoResponse;
 import api.handlers.base.BaseHandler;
@@ -19,6 +20,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @Stateless
 public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserInfoResponse> {
@@ -51,11 +53,22 @@ public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserI
             return handleException("User not found", ErrorCodes.NOT_FOUND);
         }
 
+        if (user.isFacebookUser()) {
+            try {
+                FacebookUserDetails userDetails = facebookClient.getUserDetailsById(user.getLogin().getFacebookId());
+                if (!userDetails.Picture.isSilhouette()) {
+                    response.picture = userDetails.Picture.getUrl();
+                }
+            } catch (IOException e) {
+                handleException(e);
+            }
+        }
+
         response.id = user.getId();
         response.name = user.getName();
         response.email = user.getLogin().getEmail();
         response.picture = mapper.getPicture(user, defaultPic);
-        response.fields = formService.getFormByUserId(request.id);
+        response.fields = user.getFormResults().stream().map(FormInfoDto::new).collect(Collectors.toList());
 
         return response;
     }

@@ -1,0 +1,30 @@
+<div class="card card-block">
+    <div *ngIf="loading" class="loader"></div>
+    <cb-error *ngIf="failed"></cb-error>
+    <div *ngIf="!loading && payments && !failed">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Currency</th>
+                <th>Type</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="#payment of payments; #i = index">
+                <td>{{payment.InfoText}}</td>
+                <td>{{payment.Amount | number:'1.2-2'}}</td>
+                <td>{{payment.Currency}}</td>
+                <td cb-required-optional="{{payment.Required}}"></td>
+                <td>
+                    <a href="/app/#/Payments/{{payment.PaymentId}}" class="btn btn-success btn-medium">
+                    Pay <span class="glyphicon glyphicon-chevron-right"></span>
+                </a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

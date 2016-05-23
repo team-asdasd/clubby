@@ -19,8 +19,8 @@ public class HasRoleHandler extends BaseHandler<HasRoleRequest, HasRoleResponse>
 
         ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
 
-        if (request.RoleName.isEmpty()) {
-            errors.add(new ErrorDto("RoleName empty.", ErrorCodes.VALIDATION_ERROR));
+        if (request.roleName.isEmpty()) {
+            errors.add(new ErrorDto("roleName empty.", ErrorCodes.VALIDATION_ERROR));
             return errors;
         }
 
@@ -31,11 +31,11 @@ public class HasRoleHandler extends BaseHandler<HasRoleRequest, HasRoleResponse>
     public HasRoleResponse handleBase(HasRoleRequest request) {
         Subject currentUser = SecurityUtils.getSubject();
 
-        boolean hasRole = currentUser.hasRole(request.RoleName);
+        boolean hasRole = currentUser.hasRole(request.roleName);
 
         HasRoleResponse response = createResponse();
 
-        response.HasRole = hasRole;
+        response.hasRole = hasRole;
 
         return response;
     }

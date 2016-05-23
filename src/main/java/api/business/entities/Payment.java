@@ -3,18 +3,17 @@ package api.business.entities;
 import javax.persistence.*;
 import java.util.Collection;
 
-/**
- * Created by Mindaugas on 30/04/2016.
- */
-
 @Entity
 @Table(name = "payments", schema = "payment", catalog = "clubby")
 public class Payment {
     private int paymentid;
     private int paymenttypeid;
     private int amount;
+    private String currency;
     private String paytext;
     private boolean active;
+    private boolean required;
+    private int frequencyId;
 
     @Id
     @Column(name = "paymentid")
@@ -37,6 +36,26 @@ public class Payment {
     }
 
     @Basic
+    @Column(name = "frequencyId")
+    public int getFrequencyId() {
+        return frequencyId;
+    }
+
+    public void setFrequencyId(int frequencyId) {
+        this.frequencyId = frequencyId;
+    }
+
+    @Basic
+    @Column(name = "required")
+    public boolean getRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
+    @Basic
     @Column(name = "amount")
     public int getAmount() {
         return amount;
@@ -44,6 +63,16 @@ public class Payment {
 
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    @Basic
+    @Column(name = "currency")
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 
     @Basic
@@ -87,7 +116,7 @@ public class Payment {
 
     private PaymentsSettings settings;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = true)
     @JoinColumn(name = "paymentSettingsId", referencedColumnName = "paymentSettingsId")
     public PaymentsSettings getSettings() {
         return settings;
@@ -106,5 +135,16 @@ public class Payment {
 
     public void setTransactions(Collection<MoneyTransaction> transactions) {
         this.transactions = transactions;
+    }
+
+    private Collection<PendingPayment> pendingPayments;
+
+    @OneToMany(mappedBy = "payment")
+    public Collection<PendingPayment> getPendingPayments() {
+        return pendingPayments;
+    }
+
+    public void setPendingPayments(Collection<PendingPayment> pendingPayments) {
+        this.pendingPayments = pendingPayments;
     }
 }

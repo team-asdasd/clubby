@@ -5,12 +5,12 @@
                 <div *ngIf="!user" class="row loader"></div>
                 <div *ngIf="user" class="row">
                     <div class="col-sm-6 col-md-4">
-                        <img src="{{user.Picture}}" alt="" class="img-circle img-responsive center-block" />
+                        <img src="{{user.picture}}" alt="" class="img-circle img-responsive center-block" />
                     </div>
                     <div class="col-sm-6 col-md-8 text-center">
-                        <h4>{{user.Name}}</h4>
+                        <h4>{{user.name}}</h4>
                         <p>
-                            <i class="glyphicon glyphicon-envelope"></i>{{user.Email}}
+                            <i class="glyphicon glyphicon-envelope"></i>{{user.email}}
                         </p>
                         <!-- Split button -->
                         <!--TODO: enable social button.. till we can make it *social*-->

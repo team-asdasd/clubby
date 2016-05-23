@@ -81,17 +81,15 @@ public class FacebookRealm extends AuthorizingRealm {
                         FacebookUserDetails fud = userInfoResponse.parseAs(FacebookUserDetails.class);
                         userInfoResponse.disconnect();
 
-                        info = new FacebookAuthenticationInfo(fud, this.getName());
-
                         userService = BeanProvider.getContextualReference(IUserService.class, true);
 
                         User user = userService.getByFacebookId(fud.Id);
                         if (user == null) {
                             userService.createFacebookUser(fud);
-                        } else {
-                            user.setName(fud.Name);
-                            userService.save(user);
+                            user = userService.getByFacebookId(fud.Id);
                         }
+
+                        info = new FacebookAuthenticationInfo(user.getId(), this.getName());
                     } else {
                         throw new Exception("Facebook auth responded with status code: " + response.getStatusCode());
                     }

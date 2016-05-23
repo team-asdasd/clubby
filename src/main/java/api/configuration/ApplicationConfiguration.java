@@ -19,7 +19,7 @@ public class ApplicationConfiguration extends Application {
         beanConfig.setSchemes(new String[]{"http"});
 
         String url = System.getenv("OPENSHIFT_APP_DNS");
-        if(url == null || url.isEmpty()){
+        if (url == null || url.isEmpty()) {
             url = "localhost:8080";
         }
 
@@ -35,6 +35,7 @@ public class ApplicationConfiguration extends Application {
         classes.add(CottageResource.class);
         classes.add(PayseraResource.class);
         classes.add(FormResource.class);
+        classes.add(SettingsResource.class);
 
         classes.add(io.swagger.jaxrs.listing.ApiListingResource.class);
         classes.add(io.swagger.jaxrs.listing.SwaggerSerializers.class);

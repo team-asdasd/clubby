@@ -9,14 +9,12 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Mindaugas on 01/05/2016.
- */
 public class PaymentsServiceTest {
     IPaymentsService paymentsService;
 
     @Before
     public void setup(){
+
         paymentsService = new PaymentsService();
     }
 

@@ -1,0 +1,23 @@
+<!--<div class="row main-info">
+    <div  class="col-md-2"><img title="{{member.name}}" src="{{member.picture}}" class="small-img img-thumbnail img-responsive img-circle"></div>
+    <div  class="col-md-4 cap">{{member.name}}</div>
+    <div  class="col-md-4 cap">{{member.email}}</div>
+    <div  class="col-md-2"><a (click)="toggle()" class="glyphicon glyphicon-plus"></a></div>
+    <div  class="col-md-12" [hidden]="!active">HahaHa</div>
+</div>-->
+
+<div class="col-md-4">
+    <div class="card" >
+        <div class="header-bg" ></div>
+        <div class="avatar" >
+            <img class="small-img img-thumbnail img-responsive img-circle" title="{{member.name}}" src="{{member.picture}}" alt="">
+        </div>
+        <div class="content">
+            <p>{{member.name}}<br>{{member.email}}</p>
+            <form [hidden]="!active" [fields]="member.fields" ></form>
+            <p>
+                <button type="button" (click)="toggle()" class="btn btn-default">More info</button>
+            </p>
+        </div>
+    </div>
+</div>

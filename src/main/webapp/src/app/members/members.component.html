@@ -1,0 +1,5 @@
+<div *ngIf="!users" class="loader"></div>
+<div *ngIf="users" class="row user-list ">
+    <member *ngFor="#u of users" [member]="u">
+    </member>
+</div>

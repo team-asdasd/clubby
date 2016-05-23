@@ -1,0 +1,46 @@
+@import '../../../style/colors';
+/*.main-info{
+  line-height: 60px;
+  border-bottom: 1px solid black;
+  border-radius: 5px;
+  box-shadow: 0px 8px 24px -10px;
+  margin: 0;
+  padding: 5px
+}
+a{
+  animation: none;
+  text-decoration: none;
+  cursor: pointer;
+}*/
+
+.card{
+  background: $darker;
+  padding: 2px;
+  border-radius: 8px;
+  -webkit-box-shadow: inset 0px -22px 70px 32px rgba(0, 0, 10, 0.5);
+  box-shadow: inset 0px -22px 70px 32px rgba(0, 0, 10, 0.5);
+  text-align: center;
+}
+.header-bg{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  border-bottom: 1px #FFF solid;
+  z-index: 1;
+}
+.avatar{
+  z-index: 100;
+  position: relative;
+  margin-top: 15px;
+}
+.col.md.4{
+  text-align: center;
+  padding: 0px 40px 12px 40px;
+  margin-top: 20px;
+}
+.avatar > img{
+  width: 60px;
+  height: 60px;
+}

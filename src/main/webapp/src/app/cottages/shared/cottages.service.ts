@@ -17,12 +17,13 @@ export class CottageService {
             .catch(this.handleError);
     }
 
-    public getCottage(id: number): Observable<Cottage> {
+    public getCottage(id: string): Observable<Cottage> {
         return this.http
             .get(this.url + '/' + id)
             .map(this.parse)
             .catch(this.handleError);
     }
+    
     public getFilteredCottages(query: string): Observable<Array<Cottage>> {
         return this.http
             .get(this.url + query)

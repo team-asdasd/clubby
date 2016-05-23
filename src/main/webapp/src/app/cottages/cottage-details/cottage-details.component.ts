@@ -14,14 +14,15 @@ import {Cottage} from "../shared/cottage.model";
 export class CottageDetails {
     cottage: Cottage;
 
-    constructor(private router:Router,
-                private routeParams:RouteParams,
-                private cottageService:CottageService) {
-        console.log(router);
+    constructor(private router: Router,
+                private routeParams: RouteParams,
+                private cottageService: CottageService) {
         this.cottage = new Cottage();
         let id = this.routeParams.get('id');
-        cottageService.getCottage(<number>id)
-            .subscribe(cottage => {this.cottage = cottage; console.log(cottage)});
+        cottageService.getCottage(id)
+            .subscribe(cottage => {
+                this.cottage = cottage;
+            });
         //TODO: handle server error
     }
 

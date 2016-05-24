@@ -5,35 +5,23 @@ import api.contracts.users.HasRoleResponse;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.handlers.base.BaseHandler;
+import api.helpers.Validator;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
+import javax.ejb.Stateless;
 import java.util.ArrayList;
 
+@Stateless
 public class HasRoleHandler extends BaseHandler<HasRoleRequest, HasRoleResponse> {
     @Override
     public ArrayList<ErrorDto> validate(HasRoleRequest request) {
-        Subject currentUser = SecurityUtils.getSubject();
 
-        ArrayList<ErrorDto> errors = new ArrayList<>();
+        ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
 
-        if (request == null) {
-            errors.add(new ErrorDto("Request missing.", ErrorCodes.VALIDATION_ERROR));
+        if (request.roleName.isEmpty()) {
+            errors.add(new ErrorDto("roleName empty.", ErrorCodes.VALIDATION_ERROR));
             return errors;
-        }
-
-        if(request.RoleName == null){
-            errors.add(new ErrorDto("RoleName missing.", ErrorCodes.VALIDATION_ERROR));
-            return errors;
-        }
-
-        if(request.RoleName.isEmpty()){
-            errors.add(new ErrorDto("RoleName empty.", ErrorCodes.VALIDATION_ERROR));
-            return errors;
-        }
-
-        if (!currentUser.isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
         }
 
         return errors;
@@ -43,11 +31,11 @@ public class HasRoleHandler extends BaseHandler<HasRoleRequest, HasRoleResponse>
     public HasRoleResponse handleBase(HasRoleRequest request) {
         Subject currentUser = SecurityUtils.getSubject();
 
-        boolean hasRole = currentUser.hasRole(request.RoleName);
+        boolean hasRole = currentUser.hasRole(request.roleName);
 
         HasRoleResponse response = createResponse();
 
-        response.HasRole = hasRole;
+        response.hasRole = hasRole;
 
         return response;
     }

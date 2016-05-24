@@ -1,0 +1,40 @@
+<div class="card card-block">
+    <div *ngIf="!cottages" class="loader"></div>
+    <div *ngIf="cottages">
+
+        <div id="filters-container">
+            <div id="title-filter-group" class="input-group">
+                <div class="input-group-addon">Title:</div>
+                <input type="text" class="form-control" style="width: 140px" #titleInput>
+            </div>
+
+            <div id="beds-filter-group" class="input-group">
+                <div class="input-group-addon">Beds:</div>
+                <rooms-selector class="form-control" style="padding:6px;" [cottages]="cottages" #roomsInput></rooms-selector>
+            </div>
+
+            <button id="filter-button" (click)="filterCottages(titleInput.value, roomsInput.selector.value)" class="btn btn-primary">Filter</button>
+        </div>
+
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Title</th>
+                <th>Number of Beds</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="#cottage of cottages">
+                <td>
+                    <img src="{{cottage.Image}}" class="img-thumbnail">
+                </td>
+                <td>{{cottage.Title}}</td>
+                <td>{{cottage.Beds}}</td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</div>

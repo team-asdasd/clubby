@@ -1,5 +1,7 @@
 package security.shiro.application;
 
+import api.business.services.interfaces.IUserService;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authc.credential.PasswordService;
@@ -24,9 +26,11 @@ import java.util.Set;
 public class ApplicationRealm extends AuthorizingRealm {
 
     private final PasswordService passwordService;
+    private IUserService userService;
 
-    public ApplicationRealm(){
+    public ApplicationRealm() {
         passwordService = new DefaultPasswordService();
+        super.setAuthorizationCachingEnabled(false);
     }
 
     // TODO: Refactor this to our style
@@ -34,7 +38,8 @@ public class ApplicationRealm extends AuthorizingRealm {
 
     // TODO: add roles, permissions etc
     protected static final String DEFAULT_SALTED_AUTHENTICATION_QUERY = "";
-    protected static final String DEFAULT_USER_ROLES_QUERY = "select role_name from security.logins_roles where username = ?";
+    protected static final String DEFAULT_USER_ROLES_QUERY = "SELECT role_name FROM security.logins AS L JOIN main.users ON users.id = ? AND users.login = L.id " +
+            "JOIN security.logins_roles AS r ON r.username = L.username";
     protected static final String DEFAULT_PERMISSIONS_QUERY = "select permission from security.roles_permissions where role_name = ?";
 
 
@@ -70,10 +75,10 @@ public class ApplicationRealm extends AuthorizingRealm {
 
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         UsernamePasswordToken upToken = (UsernamePasswordToken) token;
-        String username = upToken.getUsername();
+        String email = upToken.getUsername();
 
         // Null username is invalid
-        if (username == null) {
+        if (email == null) {
             throw new AccountException("Null usernames are not allowed by this realm.");
         }
 
@@ -81,20 +86,20 @@ public class ApplicationRealm extends AuthorizingRealm {
         SimpleAuthenticationInfo info = null;
         try {
             conn = dataSource.getConnection();
-            String password = getPasswordForUser(conn, username)[0];
+            String password = getPasswordForUser(conn, email)[0];
 
             if (password == null) {
-                throw new UnknownAccountException("No account found for user [" + username + "]");
+                throw new UnknownAccountException("No account found for user [" + email + "]");
             }
 
             //kind off hack check password with shiro password service
-            if(passwordService.passwordsMatch(upToken.getPassword(),password)){
+            if (passwordService.passwordsMatch(upToken.getPassword(), password)) {
                 upToken.setPassword(password.toCharArray());
             }
-
-            info = new SimpleAuthenticationInfo(username, password.toCharArray(), getName()); // TODO: Investigate Principals
+            userService = BeanProvider.getContextualReference(IUserService.class, true);
+            info = new SimpleAuthenticationInfo(Integer.toString(userService.getByEmail(email).getId()), password.toCharArray(), getName());
         } catch (SQLException e) {
-            final String message = "There was a SQL error while authenticating user [" + username + "]";
+            final String message = "There was a SQL error while authenticating user [" + email + "]";
             throw new AuthenticationException(message, e);
         } finally {
             JdbcUtils.closeConnection(conn);
@@ -183,7 +188,7 @@ public class ApplicationRealm extends AuthorizingRealm {
         Set<String> roleNames = new LinkedHashSet<String>();
         try {
             ps = conn.prepareStatement(userRolesQuery);
-            ps.setString(1, username);
+            ps.setInt(1, Integer.parseInt(username));
 
             // Execute query
             rs = ps.executeQuery();

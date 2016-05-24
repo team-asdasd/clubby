@@ -59,9 +59,9 @@ module.exports = function makeWebpackConfig(){
      * Reference: http://webpack.github.io/docs/configuration.html#output
      */
     config.output = isTest ? {} : {
-        path: root('public/app'),
+        path: root('public/app/'),
         // publicPath: isProd ? '/public/app' : 'http://localhost:3000/',
-        publicPath: '/public/app',
+        publicPath: '/public/app/',
         // publicPath: '/',
         filename: isProd ? 'js/[name].[hash].js' : 'js/[name].js',
         chunkFilename: isProd ? '[id].[hash].chunk.js' : '[id].chunk.js'
@@ -214,6 +214,9 @@ module.exports = function makeWebpackConfig(){
             // Reference: http://webpack.github.io/docs/list-of-plugins.html#uglifyjsplugin
             // Minify all javascript, switch loaders to minimizing mode
             new webpack.optimize.UglifyJsPlugin({
+                compress: {
+                    warnings: false
+                },
                 // Angular 2 is broken again, disabling mangle until beta 6 that should fix the thing
                 // Todo: remove this with beta 6
                 mangle: false

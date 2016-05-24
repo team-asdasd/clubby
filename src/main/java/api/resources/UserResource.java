@@ -1,40 +1,45 @@
 package api.resources;
 
+import api.contracts.base.BaseRequest;
+import api.contracts.users.GetUserByIdRequest;
+import api.contracts.users.GetUserInfoResponse;
 import api.contracts.users.*;
 import api.contracts.base.BaseResponse;
 import api.handlers.users.*;
 import api.handlers.utilities.StatusResolver;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import javax.ejb.EJB;
+import io.swagger.jaxrs.PATCH;
+
+import javax.inject.Inject;
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Api(value = "user")
 @Path("/user")
-@Produces({"application/json"})
+@Produces({"application/json; charset=UTF-8"})
 public class UserResource {
-    @EJB
-    private GetUserInfoHandler getUserInfoHandler;
-    @EJB
+    @Inject
+    private GetCurrentUserHandler getCurrentUserHandler;
+    @Inject
     private CreateUserHandler createUserHandler;
-
-    private final HasPermissionHandler hasPermissionHandler;
-    private final HasRoleHandler hasRoleHandler;
-
-
-    public UserResource() {
-        hasPermissionHandler = new HasPermissionHandler();
-        hasRoleHandler = new HasRoleHandler();
-    }
+    @Inject
+    private UpdateUserHandler updateUserHandler;
+    @Inject
+    private GetUserByIdHandler getUserByIdHandler;
+    @Inject
+    private GetAllUsersHandler getAllUsersHandler;
+    @Inject
+    private HasPermissionHandler hasPermissionHandler;
+    @Inject
+    private HasRoleHandler hasRoleHandler;
 
     @GET
-    @ApiOperation(value = "Gets user information for current user.", response = GetUserInfoResponse.class)
-    public Response getUserInfo() {
-        GetUserInfoRequest request = new GetUserInfoRequest();
+    @ApiOperation(value = "Gets user information for all users.", response = GetAllUsersResponse.class)
+    public Response getAllUsers() {
+        GetAllUsersRequest request = new GetAllUsersRequest();
 
-        GetUserInfoResponse response = getUserInfoHandler.handle(request);
+        GetAllUsersResponse response = getAllUsersHandler.handle(request);
 
         int statusCode = StatusResolver.getStatusCode(response);
 
@@ -42,40 +47,74 @@ public class UserResource {
     }
 
     @GET
-    @Path("/hasRole/{roleName}")
+    @Path("/me")
+    @ApiOperation(value = "Gets user information for current user.", response = GetUserInfoResponse.class)
+    public Response getCurrentUser() {
+        BaseRequest request = new BaseRequest();
+
+        GetUserInfoResponse response = getCurrentUserHandler.handle(request);
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
+    }
+
+    @GET
+    @Path("/{id}")
+    @ApiOperation(value = "Gets user information by id.", response = GetUserInfoResponse.class)
+    public Response getUserById(@PathParam("id") int id) {
+        GetUserByIdRequest request = new GetUserByIdRequest();
+        request.id = id;
+        GetUserInfoResponse response = getUserByIdHandler.handle(request);
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
+    }
+
+
+    @GET
+    @Path("/me/hasRole/{roleName}")
     @ApiOperation(value = "Checks if current user has specified role.", response = boolean.class)
     public Response hasRole(@PathParam("roleName") String roleName) {
         HasRoleRequest request = new HasRoleRequest();
-        request.RoleName = roleName;
+        request.roleName = roleName;
 
         HasRoleResponse response = hasRoleHandler.handle(request);
 
         int statusCode = StatusResolver.getStatusCode(response);
 
-        return Response.status(statusCode).entity(response.HasRole).build();
+        return Response.status(statusCode).entity(response.hasRole).build();
     }
 
     @GET
-    @Path("/hasPermission/{permissionName}")
+    @Path("/me/hasPermission/{permissionName}")
     @ApiOperation(value = "Checks if current user has specified permission.", response = boolean.class)
     public Response hasPermission(@PathParam("permissionName") String permissionName) {
         HasPermissionRequest request = new HasPermissionRequest();
-        request.PermissionName = permissionName;
+        request.permissionName = permissionName;
 
         HasPermissionResponse response = hasPermissionHandler.handle(request);
 
         int statusCode = StatusResolver.getStatusCode(response);
 
-        return Response.status(statusCode).entity(response.HasPermission).build();
+        return Response.status(statusCode).entity(response.hasPermission).build();
     }
 
     @POST
-    @Path("/create")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Creates user", response = boolean.class)
-    public Response createUser(CreateUserRequest request){
+    @ApiOperation(value = "Creates user", response = BaseResponse.class)
+    public Response createUser(CreateUserRequest request) {
         BaseResponse response = createUserHandler.handle(request);
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
+    }
+
+    @PATCH
+    @ApiOperation(value = "Updates selected user", response = UpdateUserResponse.class)
+    public Response updateUser(UpdateUserRequest request) {
+        UpdateUserResponse response = updateUserHandler.handle(request);
 
         int statusCode = StatusResolver.getStatusCode(response);
 

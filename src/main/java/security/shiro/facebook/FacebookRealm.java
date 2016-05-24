@@ -1,5 +1,6 @@
 package security.shiro.facebook;
 
+import api.business.entities.User;
 import api.business.services.UserService;
 import api.business.services.interfaces.IUserService;
 import clients.facebook.FacebookSettings;
@@ -18,12 +19,17 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+
 import java.net.URL;
 
 
 public class FacebookRealm extends AuthorizingRealm {
 
     private IUserService userService;
+
+    public FacebookRealm() {
+        super.setAuthorizationCachingEnabled(false);
+    }
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
@@ -75,12 +81,15 @@ public class FacebookRealm extends AuthorizingRealm {
                         FacebookUserDetails fud = userInfoResponse.parseAs(FacebookUserDetails.class);
                         userInfoResponse.disconnect();
 
-                        info = new FacebookAuthenticationInfo(fud, this.getName());
+                        userService = BeanProvider.getContextualReference(IUserService.class, true);
 
-                        userService = BeanProvider.getDependent(UserService.class).get();
-                        if (userService.getByEmail(fud.Email) == null) {
-                            userService.createFacebookUser(fud.Name, fud.Email);
+                        User user = userService.getByFacebookId(fud.Id);
+                        if (user == null) {
+                            userService.createFacebookUser(fud);
+                            user = userService.getByFacebookId(fud.Id);
                         }
+
+                        info = new FacebookAuthenticationInfo(user.getId(), this.getName());
                     } else {
                         throw new Exception("Facebook auth responded with status code: " + response.getStatusCode());
                     }

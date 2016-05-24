@@ -8,4 +8,9 @@ public class ErrorDto {
         Message = message;
         Code = errorCode;
     }
+
+    @Override
+    public String toString(){
+        return String.format("%s - %s",Code, Message);
+    }
 }

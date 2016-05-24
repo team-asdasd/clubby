@@ -3,13 +3,13 @@ package api.business.services;
 import api.business.entities.Cottage;
 import api.business.services.interfaces.ICottageService;
 
-import javax.enterprise.context.RequestScoped;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-@RequestScoped
+@Stateless
 public class CottageService implements ICottageService {
     @PersistenceContext
     private EntityManager em;
@@ -18,7 +18,7 @@ public class CottageService implements ICottageService {
     public List<Cottage> getByFilters(String title, int beds) {
         String titleFilter = title != null ? '%' + title + '%' : "";
 
-        TypedQuery<Cottage> cottages = em.createQuery("SELECT C FROM Cottage C WHERE (:title = '' OR lower(title) LIKE lower(:title)) AND (:beds = 0 OR bedcount = :beds) ORDER BY id", Cottage.class)
+        TypedQuery<Cottage> cottages = em.createQuery("SELECT C FROM Cottage C WHERE (:title = '' OR lower(C.title) LIKE lower(:title)) AND (:beds = 0 OR C.bedcount = :beds) ORDER BY C.id", Cottage.class)
                 .setParameter("title", titleFilter)
                 .setParameter("beds", beds);
 

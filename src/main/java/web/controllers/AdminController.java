@@ -1,12 +1,16 @@
 package web.controllers;
 
+import api.contracts.cottages.GetCottagesResponse;
+import api.contracts.users.GetAllUsersResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.thymeleaf.context.WebContext;
 import web.helpers.Controller;
+import web.helpers.HttpClient;
 import web.helpers.PathMapping;
 import web.helpers.Sender;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -19,16 +23,21 @@ public class AdminController {
     final Logger logger = LogManager.getLogger(getClass().getName());
 
     @PathMapping("")
-    public void adminIndex(WebContext ctx) throws Exception {
+    public void admin(WebContext ctx) throws Exception {
+        ctx.getResponse().sendRedirect("/admin/dashboard");
+    }
+
+    @PathMapping("dashboard")
+    public void dashboard(WebContext ctx) throws Exception {
         ctx.setVariable("pageTitle", "Admin");
         ctx.setVariable("navbarSearch", false);
-        ctx.setVariable("layout","admin/shared/_adminLayout");
+        ctx.setVariable("layout", "admin/shared/_adminLayout");
 
-        Sender.sendView(ctx, "admin/admin");
+        Sender.sendView(ctx, "admin/dashboard");
     }
 
     @PathMapping("logs")
-    public void logsIndex(WebContext ctx) throws Exception {
+    public void logs(WebContext ctx) throws Exception {
         ArrayList<String[]> logs = new ArrayList<>();
 
         try {
@@ -45,18 +54,27 @@ public class AdminController {
             for (String line : lines) {
                 logs.add(line.split("\\$sep\\$"));
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
 
         Collections.reverse(logs); // Reverse so the latest entries are on top
 
-        ctx.setVariable("logs",logs);
-        ctx.setVariable("pageTitle", "Logai");
+        ctx.setVariable("logs", logs);
+        ctx.setVariable("pageTitle", "Logs");
         ctx.setVariable("navbarSearch", true);
-        ctx.setVariable("layout","admin/shared/_adminLayout");
+        ctx.setVariable("layout", "admin/shared/_adminLayout");
 
         Sender.sendView(ctx, "admin/logs");
+    }
+
+    @PathMapping("users")
+    public void users(WebContext ctx) throws Exception {
+        ctx.setVariable("pageTitle", "Users");
+        ctx.setVariable("navbarSearch", true);
+        ctx.setVariable("layout", "admin/shared/_adminLayout");
+
+        Sender.sendView(ctx, "admin/users");
     }
 
     @PathMapping("clearlogs")
@@ -70,12 +88,30 @@ public class AdminController {
     }
 
     @PathMapping("swagger")
-    public void swaggerIndex(WebContext ctx) throws Exception {
-
+    public void swagger(WebContext ctx) throws Exception {
         ctx.setVariable("pageTitle", "API Docs");
         ctx.setVariable("navbarSearch", false);
-        ctx.setVariable("layout","admin/shared/_adminLayout");
+        ctx.setVariable("layout", "admin/shared/_adminLayout");
 
         Sender.sendView(ctx, "admin/swagger");
     }
+
+    @PathMapping("cottages")
+    public void cottages(WebContext ctx) throws Exception {
+        ctx.setVariable("pageTitle", "Cottages");
+        ctx.setVariable("navbarSearch", true);
+        ctx.setVariable("layout", "admin/shared/_adminLayout");
+
+        Sender.sendView(ctx, "admin/cottages");
+    }
+
+    @PathMapping("settings")
+    public void settings(WebContext ctx) throws Exception {
+        ctx.setVariable("pageTitle", "Settings");
+        ctx.setVariable("navbarSearch", false);
+        ctx.setVariable("layout", "admin/shared/_adminLayout");
+
+        Sender.sendView(ctx, "admin/settings");
+    }
+
 }

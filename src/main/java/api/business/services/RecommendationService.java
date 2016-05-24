@@ -54,9 +54,13 @@ public class RecommendationService implements IRecommendationService {
                     .setParameter("username", userTo.getLogin().getEmail())
                     .getSingleResult();
             em.remove(lr);
-            logger.trace("User " + userTo.getLogin().getEmail() + " is not candidate anymore");
+            Role r = new Role();
+            r.setUsername(userTo.getLogin().getEmail());
+            r.setRoleName("member");
+            em.persist(r);
+            logger.info("User " + userTo.getLogin().getEmail() + " is member");
         }
-        logger.trace("User " + userTo.getLogin().getEmail() + " received recommendation from " + userFrom.getLogin().getEmail());
+        logger.info("User " + userTo.getLogin().getEmail() + " received recommendation from " + userFrom.getLogin().getEmail());
     }
 
     public void sendRecommendationRequest(String userEmail) throws MessagingException {

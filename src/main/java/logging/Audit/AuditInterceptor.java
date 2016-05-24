@@ -13,11 +13,14 @@ import javax.interceptor.InvocationContext;
 @Audit
 public class AuditInterceptor {
     private final Logger logger = LogManager.getLogger("auditLogger");
+
     @AroundInvoke
     public Object log(InvocationContext ctx) throws Exception {
         Subject sub = SecurityUtils.getSubject();
-        logger.info(String.format("%s administrator: %s userId: %s", ctx.getMethod(), sub.hasRole("administrator")
-        ,sub.getPrincipal().toString()));
+        if (sub.isAuthenticated())
+            logger.info(String.format("%s administrator: %s userId: %s", ctx.getMethod(), sub.hasRole("administrator")
+                    , sub.getPrincipal().toString()));
+        else logger.info(String.format("%s unauthenticated", ctx.getMethod()));
         return ctx.proceed();
     }
 }

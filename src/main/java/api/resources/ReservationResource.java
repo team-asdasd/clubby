@@ -4,7 +4,7 @@ import api.contracts.base.BaseRequest;
 import api.contracts.reservations.CreateReservationRequest;
 import api.contracts.reservations.CreateReservationResponse;
 import api.contracts.reservations.GetReservationsResponse;
-import api.handlers.CreateReservationHandler;
+import api.handlers.reservations.CreateReservationHandler;
 import api.handlers.reservations.GetReservationsHandler;
 import api.handlers.utilities.StatusResolver;
 import io.swagger.annotations.Api;

@@ -16,7 +16,8 @@ public class Payment {
     private int frequencyId;
 
     @Id
-    @Column(name = "paymentid")
+    @Column(name = "paymentid", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getPaymentid() {
         return paymentid;
     }

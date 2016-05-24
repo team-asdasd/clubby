@@ -13,7 +13,7 @@ public class PaymentInfoDto {
     public Double Amount;
     public String Currency;
     public boolean Required;
-    public List<LineItemDto> lineItems;
+    public List<LineItemDto> LineItems;
 
     public PaymentInfoDto(Payment payment){
         this.Amount = payment.calculatePrice()/100d;
@@ -22,7 +22,7 @@ public class PaymentInfoDto {
         this.PaymentId = payment.getPaymentid();
         this.PaymentTypeId = payment.getPaymenttypeid();
         this.Required = payment.getRequired();
-        this.lineItems = payment.getLineItems().stream().map(LineItemDto::new).collect(Collectors.toList());
+        this.LineItems = payment.getLineItems().stream().map(LineItemDto::new).collect(Collectors.toList());
     }
 
     public PaymentInfoDto(Object object){

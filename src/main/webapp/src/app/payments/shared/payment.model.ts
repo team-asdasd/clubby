@@ -1,3 +1,5 @@
+import {LineItem} from "./lineItem.model";
+
 export class Payment {
     PaymentId:number;
     PaymentTypeId:number;
@@ -5,4 +7,5 @@ export class Payment {
     Amount:number;
     Currency:string;
     Required:boolean;
+    LineItems:Array<LineItem>
 }

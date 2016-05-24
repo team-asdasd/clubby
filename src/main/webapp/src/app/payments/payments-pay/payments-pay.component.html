@@ -13,7 +13,7 @@
             <div class="row">
                 <div class="col-xs-6 col-sm-6 col-md-6">
                     <address>
-                        <strong>Clubby</strong>
+                        <strong>{{payment.InfoText}}</strong>
                     </address>
                 </div>
                 <div class="col-xs-6 col-sm-6 col-md-6 text-right">
@@ -36,11 +36,11 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td class="col-md-9"><em >{{payment.InfoText}}</em></td>
-                        <td class="col-md-1" style="text-align: center"> 1 </td>
-                        <td class="col-md-1 text-center no-break">{{payment.Amount | currency:payment.Currency:true:'1.2-2'}}</td>
-                        <td class="col-md-1 text-center no-break">{{payment.Amount | currency:payment.Currency:true:'1.2-2'}}</td>
+                    <tr *ngFor="#lineItem of payment.LineItems">
+                        <td class="col-md-9"><em >{{lineItem.title}}</em></td>
+                        <td class="col-md-1" style="text-align: center">{{lineItem.quantity}}</td>
+                        <td class="col-md-1 text-center no-break">{{lineItem.price/lineItem.quantity | currency:payment.Currency:true:'1.2-2'}}</td>
+                        <td class="col-md-1 text-center no-break">{{lineItem.price | currency:payment.Currency:true:'1.2-2'}}</td>
                     </tr>
                     <tr>
                         <td></td>

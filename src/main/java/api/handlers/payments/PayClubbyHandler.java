@@ -60,7 +60,7 @@ public class PayClubbyHandler extends BaseHandler<PayClubbyRequest, PayClubbyRes
 
         if(balance < payment.calculatePrice()){
             response.Errors = new ArrayList<>();
-            response.Errors.add(new ErrorDto(String.format("Not enough clubby money. Balance %s", balance), ErrorCodes.LOW_BALANCE));
+            response.Errors.add(new ErrorDto(String.format("Not enough clubby money. Balance %s", balance/100d), ErrorCodes.LOW_BALANCE));
             return response;
         }
 

@@ -8,4 +8,4 @@ CREATE TABLE main.form_fields
     visible BOOLEAN,
     description TEXT
 );
-CREATE UNIQUE INDEX formfields_name_uindex ON main.formfields (name);
+CREATE UNIQUE INDEX formfields_name_uindex ON main.form_fields (name);

@@ -81,6 +81,7 @@
         <table class="table table-striped table-bordered table-hover">
             <thead>
             <tr>
+                <th>Picture</th>
                 <th>Id</th>
                 <th>Name</th>
                 <th>Email</th>
@@ -89,6 +90,7 @@
             <tbody class="searchable">
             <% _.each(users, function(user){ %>
             <tr>
+                <td><img src="<%= user.picture %>" style="max-width: 50px; max-height: 50px;"/></td>
                 <td><%= _.escape(user.id) %></td>
                 <td><%= _.escape(user.name) %></td>
                 <td><%= _.escape(user.email) %></td>

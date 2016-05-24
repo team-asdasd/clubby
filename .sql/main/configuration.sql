@@ -4,5 +4,6 @@ CREATE TABLE main.configuration (
   description TEXT
 );
   
-INSERT INTO main.configuration(key, value) VALUES ('min_recommendation_required', '2');
-INSERT INTO main.configuration(key, value) VALUES ('max_recommendation_request', '5');
+INSERT INTO main.configuration(key, value, description) VALUES ('min_recommendation_required', '2', 'Max recommendation requests.');
+INSERT INTO main.configuration(key, value, description) VALUES ('max_recommendation_request', '5', 'Min recommendation required to become member.');
+INSERT INTO main.configuration(key, value, description) VALUES ('default_user_picture_url', '5', 'Default picture for users without picture.');

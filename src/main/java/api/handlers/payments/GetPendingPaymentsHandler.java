@@ -1,24 +1,19 @@
 package api.handlers.payments;
 
-import api.business.entities.Payment;
 import api.business.entities.User;
 import api.business.services.interfaces.IPaymentsService;
 import api.business.services.interfaces.IUserService;
-import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.contracts.dto.PaymentInfoDto;
 import api.contracts.payments.GetPendingPaymentsRequest;
 import api.contracts.payments.GetPendingPaymentsResponse;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Stateless
 public class GetPendingPaymentsHandler extends BaseHandler<GetPendingPaymentsRequest, GetPendingPaymentsResponse> {

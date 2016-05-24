@@ -7,6 +7,7 @@ import api.business.services.interfaces.IPaymentsService;
 import api.contracts.dto.PaymentInfoDto;
 import api.contracts.enums.*;
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
+import logging.audit.Audit;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -24,6 +25,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Stateless
+@Audit
 public class PaymentsService implements IPaymentsService {
 
     @PersistenceContext

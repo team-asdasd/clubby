@@ -1,7 +1,16 @@
 package api.business.entities;
 
+import api.contracts.enums.*;
+import api.contracts.enums.TransactionStatus;
+import api.helpers.DatesHelper;
+import org.joda.time.Instant;
+import org.joda.time.Interval;
+import org.joda.time.Months;
+
 import javax.persistence.*;
+import java.time.Month;
 import java.util.Collection;
+import java.util.Date;
 
 @Entity
 @Table(name = "payments", schema = "payment", catalog = "clubby")
@@ -158,5 +167,33 @@ public class Payment {
         }
 
         return (int) price;
+    }
+
+    @Transient
+    public boolean canAcces(User user) {
+        boolean canAcces = getPendingPayments().size() == 0 ||
+                getPendingPayments().stream().filter(p -> p.getUserId() == user.getId()).findFirst().isPresent();
+
+        if(canAcces){
+            if(getFrequencyId() == PaymentsFrequency.once.getValue()){
+                canAcces = !user.getTransactions().stream().filter(f ->
+                        f.getStatus() == TransactionStatus.approved.getValue()
+                            && f.getPayment().getPaymentid() == paymentid).findAny().isPresent();
+            }else if(getFrequencyId() == PaymentsFrequency.monthly.getValue()){
+               canAcces = !user.getTransactions().stream()
+                        .filter(f ->
+                                f.getStatus() == TransactionStatus.approved.getValue()
+                                        && DatesHelper.inThisMonth(f.getCreationTime())
+                                        && f.getPayment().getPaymentid() == paymentid).findAny().isPresent();
+           }else if(getFrequencyId() == PaymentsFrequency.yearly.getValue()){
+                canAcces = !user.getTransactions().stream()
+                        .filter(f ->
+                                f.getStatus() == TransactionStatus.approved.getValue()
+                                        && DatesHelper.inThisYear(f.getCreationTime())
+                                        && f.getPayment().getPaymentid() == paymentid).findAny().isPresent();
+            }
+        }
+
+        return canAcces;
     }
 }

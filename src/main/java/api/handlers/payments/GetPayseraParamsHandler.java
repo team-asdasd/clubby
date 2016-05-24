@@ -59,6 +59,12 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
         User user = userService.get();
         PaymentsSettings paymentsSettings = payment.getSettings();
 
+        if(!payment.canAcces(user)){
+            response.Errors = new ArrayList<>();
+            response.Errors.add(new ErrorDto("Cant access this payment", ErrorCodes.VALIDATION_ERROR));
+            return response;
+        }
+
         if(paymentsSettings == null){
             response.Errors = new ArrayList<>();
             response.Errors.add(new ErrorDto(String.format("Payment %s does not have payments settings"

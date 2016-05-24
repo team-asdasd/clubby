@@ -56,6 +56,12 @@ public class PayClubbyHandler extends BaseHandler<PayClubbyRequest, PayClubbyRes
 
         User user = userService.get();
 
+        if(!payment.canAcces(user)){
+            response.Errors = new ArrayList<>();
+            response.Errors.add(new ErrorDto("Cant access this payment", ErrorCodes.VALIDATION_ERROR));
+            return response;
+        }
+
         int balance = paymentsService.getMyBalance(user.getId());
 
         if(balance < payment.calculatePrice()){

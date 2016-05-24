@@ -13,6 +13,7 @@ public class Reservation {
 
     @Id
     @Column(name = "reservationid", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getReservationid() {
         return reservationid;
     }

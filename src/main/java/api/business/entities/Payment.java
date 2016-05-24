@@ -140,7 +140,7 @@ public class Payment {
 
     private Collection<PendingPayment> pendingPayments;
 
-    @OneToMany(mappedBy = "payment")
+    @OneToMany(mappedBy = "payment", cascade = CascadeType.PERSIST)
     public Collection<PendingPayment> getPendingPayments() {
         return pendingPayments;
     }
@@ -151,7 +151,7 @@ public class Payment {
 
     private Collection<LineItem> lineItems;
 
-    @OneToMany(mappedBy = "payment")
+    @OneToMany(mappedBy = "payment", cascade = CascadeType.PERSIST)
     public Collection<LineItem> getLineItems() {
         return lineItems;
     }

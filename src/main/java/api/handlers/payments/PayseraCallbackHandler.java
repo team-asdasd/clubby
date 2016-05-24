@@ -63,7 +63,7 @@ public class PayseraCallbackHandler extends BaseHandler<PayseraCallbackRequest, 
             return response;
         }
 
-        if(callbackParams.Amount != mt.getPayment().getAmount()){
+        if(callbackParams.Amount != mt.getPayment().calculatePrice()){
             response.Errors = new ArrayList<>();
             response.Errors.add(new ErrorDto(String.format("Not equal money amount. Paysera : %s, clubby : %s"
                     ,callbackParams.Amount, mt.getPayment()), ErrorCodes.VALIDATION_ERROR));

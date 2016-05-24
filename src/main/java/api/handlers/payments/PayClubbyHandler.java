@@ -58,7 +58,7 @@ public class PayClubbyHandler extends BaseHandler<PayClubbyRequest, PayClubbyRes
 
         int balance = paymentsService.getMyBalance(user.getId());
 
-        if(balance < payment.getAmount()){
+        if(balance < payment.calculatePrice()){
             response.Errors = new ArrayList<>();
             response.Errors.add(new ErrorDto(String.format("Not enough clubby money. Balance %s", balance), ErrorCodes.LOW_BALANCE));
             return response;
@@ -71,7 +71,7 @@ public class PayClubbyHandler extends BaseHandler<PayClubbyRequest, PayClubbyRes
         mt.setTransactionid(UUID.randomUUID().toString());
         mt.setCreationTime(new Date());
         mt.setTransactionTypeId(TransactionTypes.clubby.getValue());
-        mt.setAmount(payment.getAmount());
+        mt.setAmount(payment.calculatePrice());
         mt.setCurrency(Currency.ClubbyCoin);
 
         paymentsService.createMoneyTransaction(mt);

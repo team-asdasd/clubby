@@ -8,7 +8,6 @@ import java.util.Collection;
 public class Payment {
     private int paymentid;
     private int paymenttypeid;
-    private int amount;
     private String currency;
     private String paytext;
     private boolean active;
@@ -54,16 +53,6 @@ public class Payment {
 
     public void setRequired(boolean required) {
         this.required = required;
-    }
-
-    @Basic
-    @Column(name = "amount")
-    public int getAmount() {
-        return amount;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
     }
 
     @Basic

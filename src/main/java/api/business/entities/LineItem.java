@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class LineItem {
     private int id;
     private String title;
-    private double price;
+    private int price;
     private int quantity;
     private Payment payment;
 
@@ -33,11 +33,11 @@ public class LineItem {
 
     @Basic
     @Column(name = "price", nullable = true, precision = 0)
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 

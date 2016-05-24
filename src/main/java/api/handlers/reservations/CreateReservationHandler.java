@@ -72,8 +72,6 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
         Collection<LineItem> lineItems = getLineItems(request);
         payment.setLineItems(lineItems);
 
-        payment.setAmount(payment.calculatePrice());
-
         int id = paymentsService.createPayment(payment);
         return paymentsService.getPayment(id);
     }

@@ -9,38 +9,42 @@
                         aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="reservationModalLabel">Reservation form</h4>
             </div>
-            <div class="modal-body">
-                <form>
-                </form>
-                <form class="form-horizontal">
+            <form class="form-horizontal"
+                  (ngSubmit)="onSubmit()">
+                <div class="modal-body">
                     <fieldset>
                         <div class="control-group">
                             <!-- Start date -->
-                            <label class="control-label"  for="startDate">Start date</label>
+                            <label class="control-label" for="startDate">Start date</label>
                             <div class="controls">
-                                <!--TODO:Sorry safari users :(-->
-                                <input id="startDate" type="date"/>
-                                <p class="help-block">Reservation starts on Monday</p>
+                                <!--TODO:implement a cross-browser solution. sorry safari users :(-->
+                                <input id="startDate"
+                                       type="date"
+                                       [(ngModel)]="reservation.StartDate"
+                                       required/>
+                                <p class="help-block">Reservation must start on Monday</p>
                             </div>
                         </div>
                         <div class="control-group">
                             <!-- End date -->
-                            <label class="control-label"  for="endDate">End date</label>
+                            <label class="control-label" for="endDate">End date</label>
                             <div class="controls">
-                                <!--TODO:Sorry safari users :(-->
-                                <input id="endDate" type="date"/>
-                                <p class="help-block">Reservation ends on Sunday</p>
+                                <!--TODO:implement a cross-browser solution. sorry safari users :(-->
+                                <input id="endDate"
+                                       type="date"
+                                       [(ngModel)]="reservation.EndDate"
+                                       required/>
+                                <p class="help-block">Reservation must end on Sunday</p>
                             </div>
                         </div>
-
-
                     </fieldset>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Submit</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+
         </div>
     </div>
 </div>

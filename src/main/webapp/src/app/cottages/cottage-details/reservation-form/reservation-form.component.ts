@@ -3,25 +3,31 @@ import {CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/common';
 import {Component} from 'angular2/core';
 import {Cottage} from '../../shared/cottage.model';
 import {RouteParams} from 'angular2/router';
-import {CottageService} from '../../shared/cottages.service';
+import {Reservation} from "../../shared/reservation.model";
+import {ReservationService} from "../../shared/reservation.service";
 
 @Component({
     selector: 'reservation-form',
     template: require('./reservation-form.component.html'),
     styles: [],
-    providers: [],
+    providers: [ReservationService],
     directives: [CORE_DIRECTIVES, FORM_DIRECTIVES]
 })
 
 export class ReservationForm {
     cottage: Cottage;
-    public dt:Date = new Date();
+    reservation = new Reservation();
 
     constructor(private routeParams: RouteParams,
-                private cottageService: CottageService) {
+                private reservationService: ReservationService) {
         let id = this.routeParams.get('id');
         console.log(id);
-        //TODO: handle server error
+        this.reservation.CottageId = <number>id;
     }
 
+    onSubmit() {
+        console.log(this.reservation);
+        this.reservationService.reserveCottage(this.reservation)
+            .subscribe(x => console.log(x));
+    }
 }

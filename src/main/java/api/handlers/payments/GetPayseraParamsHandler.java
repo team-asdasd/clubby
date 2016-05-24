@@ -73,7 +73,7 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
         mt.setTransactionid(UUID.randomUUID().toString());
         mt.setCreationTime(new Date());
         mt.setTransactionTypeId(TransactionTypes.direct.getValue());
-        mt.setAmount(payment.calculatePrice());
+        mt.setAmount(payment.calculatePrice()); // TODO: Move to strategy (so CDI Decorators could possibly work)
         mt.setCurrency(payment.getCurrency());
 
         paymentsService.createMoneyTransaction(mt);

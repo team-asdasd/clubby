@@ -63,8 +63,6 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
         setPendingPayment(payment);
         addRentLineItem(request, payment);
 
-        payment.setAmount(payment.calculatePrice()); // TODO: Move to strategy (so CDI Decorators could possibly work)
-
         int id = paymentsService.createPayment(payment);
         return paymentsService.getPayment(id);
     }

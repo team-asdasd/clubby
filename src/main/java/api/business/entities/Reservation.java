@@ -9,6 +9,7 @@ public class Reservation {
     private int status;
     private Cottage cottage;
     private User user;
+    private Payment payment;
 
     @Id
     @Column(name = "reservationid", nullable = false)
@@ -68,5 +69,15 @@ public class Reservation {
 
     public void setCottage(Cottage cottage) {
         this.cottage = cottage;
+    }
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "paymentid", referencedColumnName = "paymentid")
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
     }
 }

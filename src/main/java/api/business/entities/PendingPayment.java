@@ -10,6 +10,7 @@ public class PendingPayment {
 
     @Id
     @Column(name = "pendingPaymentId")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getPendingPaymentId() {
         return pendingPaymentId;
     }

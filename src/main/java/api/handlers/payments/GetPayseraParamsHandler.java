@@ -73,7 +73,7 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
         mt.setTransactionid(UUID.randomUUID().toString());
         mt.setCreationTime(new Date());
         mt.setTransactionTypeId(TransactionTypes.direct.getValue());
-        mt.setAmount(payment.getAmount());
+        mt.setAmount(payment.calculatePrice());
         mt.setCurrency(payment.getCurrency());
 
         paymentsService.createMoneyTransaction(mt);
@@ -101,7 +101,7 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
         queryParams.put("p_firstname", firstName);
         queryParams.put("p_lastname", lastName);
         queryParams.put("p_email", user.getLogin().getEmail());
-        queryParams.put("amount", Integer.toString(payment.getAmount()));
+        queryParams.put("amount", Integer.toString(payment.calculatePrice()));
         queryParams.put("test", "1");
         queryParams.put("accepturl", baseUrl + "/pay/accepted");
         queryParams.put("cancelurl", baseUrl + "/pay/cancelled");

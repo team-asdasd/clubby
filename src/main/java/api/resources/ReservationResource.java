@@ -22,7 +22,7 @@ public class ReservationResource {
 
     @GET
     @Path("")
-    @ApiOperation(value = "", response = GetReservationsResponse.class)
+    @ApiOperation(value = "Get reservations", response = GetReservationsResponse.class)
     public Response get() {
         BaseRequest request = new BaseRequest();
 

@@ -12,6 +12,7 @@
         <class>api.business.entities.Field</class>
         <class>api.business.entities.FormResult</class>
         <class>api.business.entities.Reservation</class>
+        <class>api.business.entities.LineItem</class>
         <properties>
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>

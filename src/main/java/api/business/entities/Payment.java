@@ -102,7 +102,7 @@ public class Payment {
 
         Payment payment = (Payment) o;
 
-        if (paymentid  != payment.paymentid)
+        if (paymentid != payment.paymentid)
             return false;
         return true;
     }
@@ -146,5 +146,16 @@ public class Payment {
 
     public void setPendingPayments(Collection<PendingPayment> pendingPayments) {
         this.pendingPayments = pendingPayments;
+    }
+
+    private Collection<LineItem> lineItems;
+
+    @OneToMany(mappedBy = "payment")
+    public Collection<LineItem> getLineItems() {
+        return lineItems;
+    }
+
+    public void setLineItems(Collection<LineItem> lineitems) {
+        this.lineItems = lineitems;
     }
 }

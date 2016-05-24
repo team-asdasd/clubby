@@ -158,4 +158,15 @@ public class Payment {
     public void setLineItems(Collection<LineItem> lineitems) {
         this.lineItems = lineitems;
     }
+
+    @Transient
+    public int calculatePrice() {
+        float price = 0;
+
+        for (LineItem item : lineItems) {
+            price += item.getPrice() * item.getQuantity();
+        }
+
+        return (int) price;
+    }
 }

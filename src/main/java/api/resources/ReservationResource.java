@@ -1,7 +1,8 @@
 package api.resources;
 
 import api.contracts.base.BaseRequest;
-import api.contracts.base.BaseResponse;
+import api.contracts.reservations.CreateReservationRequest;
+import api.contracts.reservations.CreateReservationResponse;
 import api.contracts.reservations.GetReservationsResponse;
 import api.handlers.CreateReservationHandler;
 import api.handlers.reservations.GetReservationsHandler;

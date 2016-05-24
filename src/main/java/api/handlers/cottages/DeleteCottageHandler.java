@@ -33,8 +33,8 @@ public class DeleteCottageHandler extends BaseHandler<DeleteCottageRequest, Base
             errors.add(new ErrorDto("Insufficient permissions.", ErrorCodes.AUTHENTICATION_ERROR));
         }
 
-        if (cottageService.get(request.Id) == null) {
-            errors.add(new ErrorDto("Cottage not found", ErrorCodes.NOT_FOUND));
+        if (cottageService.get(request.id) == null) {
+            errors.add(new ErrorDto("cottage not found", ErrorCodes.NOT_FOUND));
         }
         
         return errors;
@@ -42,7 +42,7 @@ public class DeleteCottageHandler extends BaseHandler<DeleteCottageRequest, Base
 
     @Override
     public BaseResponse handleBase(DeleteCottageRequest request) {
-        cottageService.delete(request.Id);
+        cottageService.delete(request.id);
 
         return createResponse();
     }

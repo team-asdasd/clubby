@@ -31,8 +31,8 @@ public class GetCottageHandler extends BaseHandler<GetCottageRequest, GetCottage
             errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
         }
 
-        if (cottageService.get(request.Id) == null) {
-            errors.add(new ErrorDto("Cottage not found", ErrorCodes.NOT_FOUND));
+        if (cottageService.get(request.id) == null) {
+            errors.add(new ErrorDto("cottage not found", ErrorCodes.NOT_FOUND));
         }
 
         return errors;
@@ -42,9 +42,9 @@ public class GetCottageHandler extends BaseHandler<GetCottageRequest, GetCottage
     public GetCottageResponse handleBase(GetCottageRequest request) {
         GetCottageResponse response = createResponse();
 
-        Cottage cottage = cottageService.get(request.Id);
+        Cottage cottage = cottageService.get(request.id);
 
-        response.Cottage = new CottageDto(cottage);
+        response.cottage = new CottageDto(cottage);
 
         return response;
     }

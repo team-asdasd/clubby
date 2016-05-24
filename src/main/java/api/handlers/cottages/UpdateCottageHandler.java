@@ -26,7 +26,7 @@ public class UpdateCottageHandler extends BaseHandler<UpdateCottageRequest, Upda
         Subject currentUser = SecurityUtils.getSubject();
 
         ArrayList<ErrorDto> errors = Validator.checkAllNotNull(request);
-        errors.addAll(Validator.checkAllNotNull(request.Cottage));
+        errors.addAll(Validator.checkAllNotNull(request.cottage));
 
         if (!errors.isEmpty()) {
             return errors;
@@ -40,8 +40,8 @@ public class UpdateCottageHandler extends BaseHandler<UpdateCottageRequest, Upda
             errors.add(new ErrorDto("Insufficient permissions.", ErrorCodes.AUTHENTICATION_ERROR));
         }
 
-        if (cottageService.get(request.Cottage.Id) == null) {
-            errors.add(new ErrorDto("Cottage not found", ErrorCodes.NOT_FOUND));
+        if (cottageService.get(request.cottage.id) == null) {
+            errors.add(new ErrorDto("cottage not found", ErrorCodes.NOT_FOUND));
         }
 
         return errors;
@@ -51,13 +51,13 @@ public class UpdateCottageHandler extends BaseHandler<UpdateCottageRequest, Upda
     public UpdateCottageResponse handleBase(UpdateCottageRequest request) {
         UpdateCottageResponse response = createResponse();
 
-        Cottage cottage = cottageService.get(request.Cottage.Id);
+        Cottage cottage = cottageService.get(request.cottage.id);
 
-        cottage.setTitle(request.Cottage.Title);
-        cottage.setBedcount(request.Cottage.Beds);
-        cottage.setImageurl(request.Cottage.Image);
+        cottage.setTitle(request.cottage.title);
+        cottage.setBedcount(request.cottage.beds);
+        cottage.setImageurl(request.cottage.image);
 
-        response.Cottage = new CottageDto(cottage);
+        response.cottage = new CottageDto(cottage);
 
         return response;
     }

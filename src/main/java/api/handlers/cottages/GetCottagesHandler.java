@@ -41,7 +41,7 @@ public class GetCottagesHandler extends BaseHandler<GetCottagesRequest, GetCotta
 
         List<Cottage> allCottages = cottageService.getByFilters(request.title, request.bedcount);
 
-        response.Cottages = allCottages.stream().map(CottageDto::new).collect(Collectors.toList());
+        response.cottages = allCottages.stream().map(CottageDto::new).collect(Collectors.toList());
 
         return response;
     }

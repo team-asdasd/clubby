@@ -9,6 +9,7 @@ import api.contracts.payments.GetPaymentsRequest;
 import api.contracts.payments.GetPaymentsResponse;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
+import logging.audit.Audit;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -31,6 +32,7 @@ public class GetPaymentsHandler extends BaseHandler<GetPaymentsRequest, GetPayme
     }
 
     @Override
+    @Audit
     public GetPaymentsResponse handleBase(GetPaymentsRequest request) {
         GetPaymentsResponse response = createResponse();
 

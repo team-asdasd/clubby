@@ -5,7 +5,6 @@ import api.business.entities.Role;
 import api.business.entities.User;
 import api.business.services.interfaces.IUserService;
 import clients.facebook.responses.FacebookUserDetails;
-import logging.audit.Audit;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authc.credential.PasswordService;

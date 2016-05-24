@@ -5,10 +5,10 @@
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
         <File name="FileLogger" fileName="logs/app.log">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %msg%n"/>
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} $sep$ %-5level $sep$ %logger{36} $sep$ %msg%n"/>
         </File>
         <File name="PaymentsLogger" fileName="logs/payments.log">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} $sep$ %-5level $sep$ %logger{36} $sep$ %msg%n"/>
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %msg%n"/>
         </File>
         <SlackAppender name="Slack"/>
 

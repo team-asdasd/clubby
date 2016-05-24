@@ -9,6 +9,7 @@ import api.contracts.payments.GetBalanceRequest;
 import api.contracts.payments.GetBalanceResponse;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
+import logging.audit.Audit;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -30,6 +31,7 @@ public class GetBalanceHandler extends BaseHandler<GetBalanceRequest, GetBalance
     }
 
     @Override
+    @Audit
     public GetBalanceResponse handleBase(GetBalanceRequest request) {
         GetBalanceResponse response = createResponse();
         User user = userService.get();

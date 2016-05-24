@@ -7,6 +7,7 @@ import javax.persistence.*;
 public class Reservation {
     private int reservationid;
     private int status;
+    private Cottage cottage;
     private User user;
 
     @Id
@@ -57,5 +58,15 @@ public class Reservation {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "cottageid", referencedColumnName = "id")
+    public Cottage getCottage() {
+        return cottage;
+    }
+
+    public void setCottage(Cottage cottage) {
+        this.cottage = cottage;
     }
 }

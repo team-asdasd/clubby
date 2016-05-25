@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CottageDto {
+    public int version;
     public int id;
     public String title;
     public int beds;
@@ -24,6 +25,7 @@ public class CottageDto {
 
     public CottageDto(Cottage cottage) {
         this();
+        version = cottage.getVersion();
         id = cottage.getId();
         title = cottage.getTitle();
         beds = cottage.getBedcount();

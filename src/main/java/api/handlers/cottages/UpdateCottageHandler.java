@@ -21,6 +21,7 @@ import javax.persistence.PersistenceContext;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Stateless
@@ -35,7 +36,6 @@ public class UpdateCottageHandler extends BaseHandler<UpdateCottageRequest, Upda
         Subject currentUser = SecurityUtils.getSubject();
 
         ArrayList<ErrorDto> errors = Validator.checkAllNotNull(request);
-        errors.addAll(Validator.checkAllNotNull(request.cottage));
 
         if (!errors.isEmpty()) {
             return errors;
@@ -50,7 +50,34 @@ public class UpdateCottageHandler extends BaseHandler<UpdateCottageRequest, Upda
         }
 
         if (cottageService.get(request.cottage.id) == null) {
-            errors.add(new ErrorDto("cottage not found", ErrorCodes.NOT_FOUND));
+            errors.add(new ErrorDto("Cottage not found", ErrorCodes.NOT_FOUND));
+        }
+        if (cottageService.get(request.cottage.id).getVersion() != request.cottage.version) {
+            errors.add(new ErrorDto("Someone was faster then you, try reload page", ErrorCodes.NOT_FOUND));
+        }
+
+        if (request.cottage.title == null || request.cottage.title.length() < 5) {
+            errors.add(new ErrorDto("Title must be at least 5 characters long", ErrorCodes.VALIDATION_ERROR));
+        }
+
+        if (request.cottage.image == null || request.cottage.image.length() < 1) {
+            errors.add(new ErrorDto("Image url must be provided", ErrorCodes.VALIDATION_ERROR));
+        }
+
+        if (request.cottage.beds <= 0) {
+            errors.add(new ErrorDto("Bed count must be higher than zero.", ErrorCodes.VALIDATION_ERROR));
+        }
+
+        if (request.cottage.description == null || request.cottage.description.isEmpty()) {
+            errors.add(new ErrorDto("Description must be provided.", ErrorCodes.VALIDATION_ERROR));
+        }
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
+            sdf.setLenient(false);
+            Date date = sdf.parse(request.cottage.availableFrom);
+            Date date2 = sdf.parse(request.cottage.availableTo);
+        } catch (ParseException e) {
+            errors.add(new ErrorDto("Incorrect date format", ErrorCodes.VALIDATION_ERROR));
         }
 
         return errors;
@@ -71,26 +98,25 @@ public class UpdateCottageHandler extends BaseHandler<UpdateCottageRequest, Upda
         try {
             cottage.setAvailableFrom(sdf.parse(request.cottage.availableFrom));
             cottage.setAvailableTo(sdf.parse(request.cottage.availableTo));
-        } catch (ParseException ignored) {
-
-        }
+        } catch (ParseException ignored) {}
 
         em.merge(cottage);
         List<Service> existingServices = cottageService.getCottageServices(request.cottage.id);
-        for (ExistingServiceDto dto : request.cottage.services) {
-            Service service = em.find(Service.class, dto.id);
-            if (service == null)
-                service = new Service();
-            else {
-                existingServices.remove(service);
+        if (request.cottage.services != null)
+            for (ExistingServiceDto dto : request.cottage.services) {
+                Service service = em.find(Service.class, dto.id);
+                if (service == null)
+                    service = new Service();
+                else {
+                    existingServices.remove(service);
+                }
+                service.setDescription(dto.description);
+                service.setCottage(cottage);
+                service.setMaxCount(dto.maxCount);
+                service.setPrice(dto.price);
+                em.merge(service);
             }
-            service.setDescription(dto.description);
-            service.setCottage(cottage);
-            service.setMaxCount(dto.maxCount);
-            service.setPrice(dto.price);
-            em.merge(service);
-        }
-        for (Service s : existingServices){
+        for (Service s : existingServices) {
             em.remove(s);
         }
         em.flush();

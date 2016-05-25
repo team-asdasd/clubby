@@ -4,5 +4,6 @@ CREATE TABLE main.services
     cottage_id INT NOT NULL,
     price INTEGER NOT NULL,
     description TEXT,
+	max_count INTEGER,
     CONSTRAINT Service_cottages_id_fk FOREIGN KEY (cottage_id) REFERENCES cottages (id) ON DELETE CASCADE ON UPDATE CASCADE
 );

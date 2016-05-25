@@ -10,6 +10,7 @@ import {Profile} from "./profile/profile.component";
 import {Cottages} from "./cottages/cottages.component";
 import {CottageService} from "./cottages/shared/cottages.service";
 import {PaymentsService} from "./payments/shared/payments.service";
+import {RecommendationService} from "./members/shared/recommendation.service";
 import {PaymentsCentral} from "./payments/payments.component";
 import {Members} from "./members/members.component";
 
@@ -19,7 +20,7 @@ import {Members} from "./members/members.component";
  */
 @Component({
     selector: 'app', // <app></app>
-    providers: [...FORM_PROVIDERS, UserService, CottageService, PaymentsService],
+    providers: [...FORM_PROVIDERS, UserService, CottageService, PaymentsService, RecommendationService],
     directives: [...ROUTER_DIRECTIVES],
     pipes: [],
     styles: [require('./app.component.scss')],

@@ -6,18 +6,20 @@
     <div  class="col-md-12" [hidden]="!active">HahaHa</div>
 </div>-->
 
-<div class="col-md-4">
+<div class="col-md-4" style="margin-top: 15px">
     <div class="card" >
-        <div class="header-bg" ></div>
         <div class="avatar" >
             <img class="small-img img-thumbnail img-responsive img-circle" title="{{member.name}}" src="{{member.picture}}" alt="">
         </div>
-        <div class="content">
-            <p>{{member.name}}<br>{{member.email}}</p>
-            <form [hidden]="!active" [fields]="member.fields" ></form>
-            <p>
-                <button type="button" (click)="toggle()" class="btn btn-default">More info</button>
-            </p>
+        <div class="title">{{member.name}}</div>
+        <div id="button">
+            <button type="button" (click)="togglePopup()" class="btn btn-default">More info</button>
+        </div>
+        <div *ngIf="expanded">
+            <div id="background-shadow"></div>
+            <div id="popUp">
+
+            </div>
         </div>
     </div>
 </div>

@@ -12,9 +12,9 @@ import {Form} from './../../form/form.component';
 })
 export class Member {
     @Input() member: User;
-    active: boolean;
+    expanded: boolean = false;
 
-    toggle() {
-        this.active = !this.active;
+    togglePopup() {
+        this.expanded = !this.expanded;
     }
 }

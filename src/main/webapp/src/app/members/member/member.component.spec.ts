@@ -14,7 +14,7 @@ describe('About Component', () => {
 
     it('should ...', injectAsync([TestComponentBuilder], (tcb:TestComponentBuilder) => {
         return tcb.createAsync(Member).then((fixture) => {
-            fixture.detectChanges();
+            //fixture.detectChanges();
         });
     }));
 });

@@ -1,22 +1,27 @@
 import {Component} from 'angular2/core';
 import {User} from './../shared/user.model';
 import {UserService} from "./../shared/user.service";
+import {RecommendationService} from "./shared/recommendation.service";
 import {Member} from "./member/member.component";
+import {Recommendation} from "./shared/recommendation.model";
+import {RecommendationRequest} from "./recommendation-request/recommendation-request.component";
 
 @Component({
     selector: 'members',
     template: require('./members.component.html'),
     styles: [require('./members.component.scss')],
     providers: [],
-    directives: [Member],
+    directives: [Member, RecommendationRequest],
     pipes: []
 })
 export class Members {
     users: Array<User>;
+    recommendations: Array<Recommendation>;
     active: string;
 
-    constructor(userService: UserService) {
+    constructor(userService: UserService, recommendationService: RecommendationService) {
         userService.getUsers().subscribe(resp => this.users = resp.users);
+        recommendationService.getReceivedRecommendations().subscribe(resp => this.recommendations = resp);
     }
 
     expand(u: User) {

@@ -4,19 +4,21 @@ import api.business.entities.*;
 import api.business.persistance.ISimpleEntityManager;
 import api.business.services.interfaces.IPaymentsService;
 import api.business.services.interfaces.IUserService;
+import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.contracts.enums.PaymentTypes;
 import api.contracts.enums.PaymentsFrequency;
 import api.contracts.reservations.CreateReservationRequest;
 import api.contracts.reservations.CreateReservationResponse;
+import api.contracts.reservations.services.ServiceSelectionDto;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
+import org.apache.shiro.SecurityUtils;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @Stateless
 public class CreateReservationHandler extends BaseHandler<CreateReservationRequest, CreateReservationResponse> {
@@ -29,7 +31,62 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
 
     @Override
     public ArrayList<ErrorDto> validate(CreateReservationRequest request) {
-        return Validator.checkAllNotNullAndIsAuthenticated(request);
+        ArrayList<ErrorDto> errors = new ArrayList<>();
+        if (!SecurityUtils.getSubject().isAuthenticated()) {
+            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
+            return errors;
+        }
+
+        if (request.cottage <= 0) {
+            errors.add(new ErrorDto("Invalid cottage id.", ErrorCodes.VALIDATION_ERROR));
+            return errors;
+        }
+
+        Cottage cottage = em.getById(Cottage.class, request.cottage);
+        if (cottage == null) {
+            errors.add(new ErrorDto("Cottage not found.", ErrorCodes.NOT_FOUND));
+            return errors;
+        }
+
+        if (request.from == null) {
+            errors.add(new ErrorDto("Date from must be provided.", ErrorCodes.VALIDATION_ERROR));
+        }
+
+        if (request.to == null) {
+            errors.add(new ErrorDto("Date to must be provided.", ErrorCodes.VALIDATION_ERROR));
+        }
+
+        if (request.services != null) {
+            for (ServiceSelectionDto serviceSelection : request.services) {
+                if (serviceSelection.id <= 0) {
+                    errors.add(new ErrorDto("Invalid service id.", ErrorCodes.VALIDATION_ERROR));
+                    return errors;
+                }
+
+                if (serviceSelection.amount <= 0) {
+                    errors.add(new ErrorDto("Invalid service amount.", ErrorCodes.VALIDATION_ERROR));
+                    return errors;
+                }
+
+                Service service = em.getById(Service.class, serviceSelection.id);
+                if (service == null) {
+                    errors.add(new ErrorDto("Service not found.", ErrorCodes.NOT_FOUND));
+                    return errors;
+                }
+
+                if (request.cottage != service.getCottage().getId()) {
+                    errors.add(new ErrorDto("Selected service does not belong to selected cottage.", ErrorCodes.VALIDATION_ERROR));
+                    return errors;
+                }
+
+                if (serviceSelection.amount > service.getMaxCount()) {
+                    errors.add(new ErrorDto("Service amount selection exceeds available service limit.", ErrorCodes.VALIDATION_ERROR));
+                    return errors;
+                }
+            }
+        }
+
+        return errors;
     }
 
     @Override

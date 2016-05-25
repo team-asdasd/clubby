@@ -11,6 +11,17 @@ public class LineItem {
     private int quantity;
     private Payment payment;
 
+    public LineItem() {
+    }
+
+    public LineItem(String title, int price, int quantity, Payment payment) {
+        this();
+        setTitle(title);
+        setPrice(price);
+        setQuantity(quantity);
+        setPayment(payment);
+    }
+
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)

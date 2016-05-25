@@ -39,8 +39,8 @@
                     <tr *ngFor="#lineItem of payment.LineItems">
                         <td class="col-md-9"><em >{{lineItem.title}}</em></td>
                         <td class="col-md-1" style="text-align: center">{{lineItem.quantity}}</td>
-                        <td class="col-md-1 text-center no-break">{{lineItem.price/lineItem.quantity | currency:payment.Currency:true:'1.2-2'}}</td>
                         <td class="col-md-1 text-center no-break">{{lineItem.price | currency:payment.Currency:true:'1.2-2'}}</td>
+                        <td class="col-md-1 text-center no-break">{{lineItem.price * lineItem.quantity | currency:payment.Currency:true:'1.2-2'}}</td>
                     </tr>
                     <tr>
                         <td></td>

@@ -12,7 +12,6 @@ import api.contracts.reservations.CreateReservationRequest;
 import api.contracts.reservations.CreateReservationResponse;
 import api.contracts.reservations.services.ServiceSelectionDto;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
 import org.apache.shiro.SecurityUtils;
 
 import javax.ejb.Stateless;
@@ -119,14 +118,17 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
     private Payment createPayment(CreateReservationRequest request) {
         Payment payment = setupPayment(request);
         setPendingPayment(payment);
-        addRentLineItem(request, payment);
+        addLineItems(request, payment);
 
         int id = paymentsService.createPayment(payment);
         return paymentsService.getPayment(id);
     }
 
     private Payment setupPayment(CreateReservationRequest request) {
+        Cottage cottage = em.getById(Cottage.class, request.cottage);
+
         Payment payment = new Payment();
+        payment.setPaytext("Payment for cottage \"" + cottage.getTitle() + "\"");
         payment.setActive(true);
         payment.setFrequencyId(PaymentsFrequency.once.getValue());
         payment.setPaymenttypeid(PaymentTypes.pay.getValue());
@@ -134,9 +136,6 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
         settings.setPaymentsettingsid(1);
         payment.setSettings(settings);
         payment.setCurrency("EUR");
-
-        Cottage cottage = em.getById(Cottage.class, request.cottage);
-        payment.setPaytext("Payment for cottage \"" + cottage.getTitle() + "\"");
 
         return payment;
     }
@@ -155,17 +154,20 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
         payment.setPendingPayments(pendingPayments);
     }
 
-    private void addRentLineItem(CreateReservationRequest request, Payment payment) {
+    private void addLineItems(CreateReservationRequest request, Payment payment) {
         Collection<LineItem> lineItems = new ArrayList<>();
 
         Cottage cottage = em.getById(Cottage.class, request.cottage);
 
-        LineItem rent = new LineItem();
-        rent.setTitle("Rent for cottage \"" + cottage.getTitle() + "\"");
-        rent.setPrice(cottage.getPrice());
-        rent.setQuantity(1);
-        rent.setPayment(payment);
+        LineItem rent = new LineItem("Rent for cottage \"" + cottage.getTitle() + "\"", cottage.getPrice(), 1, payment);
         lineItems.add(rent);
+
+        if (request.services != null) {
+            for (ServiceSelectionDto serviceSelection : request.services) {
+                Service service = em.getById(Service.class, serviceSelection.id);
+                lineItems.add(new LineItem("Payment for service \"" + service.getDescription() + "\"", service.getPrice(), serviceSelection.amount, payment));
+            }
+        }
 
         payment.setLineItems(lineItems);
     }

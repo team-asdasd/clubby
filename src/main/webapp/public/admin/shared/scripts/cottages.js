@@ -7,13 +7,64 @@ var dashboardMessage = $("#dashboard-message-box");
 $(function () {
     initializeFileUpload();
 
-    $("#create-cottage-modal").find("#save").click(handleCreate);
+    $("#add-cottage-modal").find("#save").click(handleCreate);
 
     load();
 });
 
 function handleCreate() {
-    var modal = $("#cottage-modal");
+    var modal = $("#add-cottage-modal");
+    modal.find("#modal-title").html("Add Cottage");
+
+    var modalMessage = modal.find("#modal-message-box");
+
+    var title = modal.find("#title");
+    var bedcount = modal.find("#bedcount");
+    var imageUrl = modal.find("#image");
+    var description = modal.find("#description");
+    var price = modal.find("#price");
+    var availableFrom = modal.find("#availableFrom");
+    var availableTo = modal.find("#availableTo");
+
+    var request = {
+        "title": title.val(),
+        "beds": bedcount.val(),
+        "image": imageUrl.val(),
+        "description": description.val(),
+        "price": price.val(),
+        "availableFrom": availableFrom.val(),
+        "availableTo": availableTo.val(),
+    };
+
+    $.ajax({
+        type: "POST",
+        url: "/api/cottage",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify(request)
+    }).done(function () {
+        modalMessage.html("");
+        dashboardMessage.html(alertComponent({title: "Success!", message: "Cottage created.", severity: "success"}));
+
+        title.val("");
+        bedcount.val("");
+        imageUrl.val("");
+        $('.preview').html("");
+
+        modal.modal("hide");
+
+        load();
+    }).fail(function (response) {
+        modalMessage.html("");
+
+        var message = getErrorMessageFromResponse(response) || "Error creating cottage!";
+        modalMessage.html(alertComponent({title: "Error!", message: message, severity: "danger"}));
+    });
+}
+
+function handleEdit(event) {
+    var id = $(event.target).attr("data-cottage-id");
+    var modal = $("#add-cottage-modal");
     modal.find("#modal-title").html("Add Cottage");
 
     var modalMessage = modal.find("#modal-message-box");
@@ -52,40 +103,6 @@ function handleCreate() {
         var message = getErrorMessageFromResponse(response) || "Error creating cottage!";
         modalMessage.html(alertComponent({title: "Error!", message: message, severity: "danger"}));
     });
-}
-
-function handleEdit(event) {
-    var id = $(event.target).attr("data-cottage-id");
-
-    var dialog = $(dialogComponent({title: "Delete cottage?", body: "Are you sure you want to delete cottage?"}));
-
-    dialog.find(".dialog-yes").click(function () {
-        return $.ajax({
-            type: "DELETE",
-            url: "/api/cottage/" + id
-        }).done(function () {
-            dialog.modal("hide");
-
-            load().done(function () {
-                dashboardMessage.html(alertComponent({
-                    title: "Success!",
-                    message: "Cottage deleted.",
-                    severity: "success"
-                }));
-            });
-        }).fail(function (response) {
-            dialog.modal("hide");
-
-            var message = getErrorMessageFromResponse(response) || "Unknown error.";
-            dashboardMessage.html(alertComponent({title: "Error!", message: message, severity: "danger"}));
-        });
-    });
-
-    dialog.find(".dialog-no").click(function () {
-        dialog.modal("hide");
-    });
-
-    dialog.modal("show");
 }
 
 function handleDelete(event) {

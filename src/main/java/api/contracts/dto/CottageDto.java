@@ -28,8 +28,8 @@ public class CottageDto {
         image = cottage.getImageurl();
         price = cottage.getPrice();
         description = cottage.getDescription();
-        availableFrom = cottage.getAvailableFrom().toString();
-        availableTo = cottage.getAvailableTo().toString();
+        availableFrom = String.format("%02d-%02d", cottage.getAvailableFrom().getMonth() +1, cottage.getAvailableFrom().getDate());
+        availableTo = String.format("%02d-%02d", cottage.getAvailableTo().getMonth() +1, cottage.getAvailableTo().getDate());
         services = new ArrayList<>();
         for(Service s : cottage.getServices()){
             ServiceDto dto = new ServiceDto();

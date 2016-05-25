@@ -14,8 +14,11 @@ import org.apache.shiro.subject.Subject;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Stateless
 public class CreateCottageHandler extends BaseHandler<CreateCottageRequest, CreateCottageResponse> {
@@ -25,8 +28,7 @@ public class CreateCottageHandler extends BaseHandler<CreateCottageRequest, Crea
     @Override
     public ArrayList<ErrorDto> validate(CreateCottageRequest request) {
         Subject currentUser = SecurityUtils.getSubject();
-
-        ArrayList<ErrorDto> errors = Validator.checkAllNotNull(request);
+        ArrayList<ErrorDto> errors = new ArrayList<>();
 
         if (!currentUser.isAuthenticated()) {
             errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
@@ -36,23 +38,30 @@ public class CreateCottageHandler extends BaseHandler<CreateCottageRequest, Crea
             errors.add(new ErrorDto("Insufficient permissions.", ErrorCodes.AUTHENTICATION_ERROR));
         }
 
-        if (request.title.length() < 5) {
+        if (request.title == null ||request.title.length() < 5) {
             errors.add(new ErrorDto("Title must be at least 5 characters long", ErrorCodes.VALIDATION_ERROR));
         }
 
-        if (request.image.length() < 1) {
+        if (request.image == null ||request.image.length() < 1) {
             errors.add(new ErrorDto("Image url must be provided", ErrorCodes.VALIDATION_ERROR));
         }
 
         if (request.beds <= 0) {
             errors.add(new ErrorDto("Bed count must be higher than zero.", ErrorCodes.VALIDATION_ERROR));
         }
-        try {
-            Date date = new Date(0, Integer.parseInt(request.availableFrom.split("-")[0]), Integer.parseInt(request.availableFrom.split("-")[1]));
-        } catch (Exception e){
-            errors.add(new ErrorDto("Incorrect date format", ErrorCodes.VALIDATION_ERROR));
+
+        if (request.description == null ||request.description.isEmpty()) {
+            errors.add(new ErrorDto("Description must be provided.", ErrorCodes.VALIDATION_ERROR));
         }
 
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
+            sdf.setLenient(false);
+            Date date = sdf.parse(request.availableFrom);
+            Date date2 = sdf.parse(request.availableTo);
+        } catch (ParseException e) {
+            errors.add(new ErrorDto("Incorrect date format", ErrorCodes.VALIDATION_ERROR));
+        }
 
         return errors;
     }
@@ -64,10 +73,14 @@ public class CreateCottageHandler extends BaseHandler<CreateCottageRequest, Crea
         cottage.setBedcount(request.beds);
         cottage.setImageurl(request.image);
         cottage.setDescription(request.description);
-        Date dateFrom = new Date(0, Integer.parseInt(request.availableFrom.split("-")[0]), Integer.parseInt(request.availableFrom.split("-")[1]));
-        cottage.setAvailableFrom(dateFrom);
-        Date dateTo = new Date(0, Integer.parseInt(request.availableTo.split("-")[0]), Integer.parseInt(request.availableFrom.split("-")[1]));
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
+        sdf.setLenient(false);
+        try {
+            cottage.setAvailableFrom(sdf.parse(request.availableFrom));
+            cottage.setAvailableTo(sdf.parse(request.availableTo));
+        } catch (ParseException e) {
 
+        }
 
         cottageService.save(cottage);
         CreateCottageResponse response = createResponse();

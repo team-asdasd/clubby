@@ -3,7 +3,7 @@ import {Component} from 'angular2/core';
 import {Observable} from "rxjs/Observable";
 
 import {Cottage} from '../../shared/cottage.model';
-import {RouteParams} from 'angular2/router';
+import {Router, RouteParams} from 'angular2/router';
 import {Reservation} from "../../shared/reservation.model";
 import {ReservationService} from "../../shared/reservation.service";
 
@@ -20,7 +20,8 @@ export class ReservationForm {
     reservation = new Reservation();
 
     constructor(private routeParams: RouteParams,
-                private reservationService: ReservationService) {
+                private reservationService: ReservationService,
+                private router: Router) {
         let id = this.routeParams.get('id');
         console.log(id);
         this.reservation.cottage = Number(id);
@@ -30,7 +31,7 @@ export class ReservationForm {
         console.log(this.reservation);
         this.reservationService.reserveCottage(this.reservation)
             .subscribe(
-                x => console.log(x),
+                payment => this.router.navigate( ['/payments/' + payment.id] ),
                 error => this.handleError(error));
     }
 

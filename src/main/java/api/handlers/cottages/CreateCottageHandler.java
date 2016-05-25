@@ -42,11 +42,11 @@ public class CreateCottageHandler extends BaseHandler<CreateCottageRequest, Crea
             errors.add(new ErrorDto("Insufficient permissions.", ErrorCodes.AUTHENTICATION_ERROR));
         }
 
-        if (request.title == null ||request.title.length() < 5) {
+        if (request.title == null || request.title.length() < 5) {
             errors.add(new ErrorDto("Title must be at least 5 characters long", ErrorCodes.VALIDATION_ERROR));
         }
 
-        if (request.image == null ||request.image.length() < 1) {
+        if (request.image == null || request.image.length() < 1) {
             errors.add(new ErrorDto("Image url must be provided", ErrorCodes.VALIDATION_ERROR));
         }
 
@@ -54,7 +54,7 @@ public class CreateCottageHandler extends BaseHandler<CreateCottageRequest, Crea
             errors.add(new ErrorDto("Bed count must be higher than zero.", ErrorCodes.VALIDATION_ERROR));
         }
 
-        if (request.description == null ||request.description.isEmpty()) {
+        if (request.description == null || request.description.isEmpty()) {
             errors.add(new ErrorDto("Description must be provided.", ErrorCodes.VALIDATION_ERROR));
         }
 
@@ -87,14 +87,18 @@ public class CreateCottageHandler extends BaseHandler<CreateCottageRequest, Crea
         }
 
         em.persist(cottage);
-        for(ServiceDto dto : request.services){
-            Service service = new Service();
-            service.setDescription(dto.description);
-            service.setCottage(cottage);
-            service.setMaxCount(dto.maxCount);
-            service.setPrice(dto.price);
-            em.persist(em);
+
+        if (request.services != null) {
+            for (ServiceDto dto : request.services) {
+                Service service = new Service();
+                service.setDescription(dto.description);
+                service.setCottage(cottage);
+                service.setMaxCount(dto.maxCount);
+                service.setPrice(dto.price);
+                em.persist(em);
+            }
         }
+
         CreateCottageResponse response = createResponse();
         response.cottage = new CottageDto(cottage);
 

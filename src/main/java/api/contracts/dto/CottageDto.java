@@ -34,13 +34,16 @@ public class CottageDto {
         availableFrom = df.format(cottage.getAvailableFrom());
         availableTo = df.format(cottage.getAvailableTo());
         services = new ArrayList<>();
-        for (Service s : cottage.getServices()) {
-            ExistingServiceDto dto = new ExistingServiceDto();
-            dto.description = s.getDescription();
-            dto.price = s.getPrice();
-            dto.maxCount = s.getMaxCount();
-            dto.id = s.getId();
-            services.add(dto);
+
+        if (cottage.getServices() != null) {
+            for (Service s : cottage.getServices()) {
+                ExistingServiceDto dto = new ExistingServiceDto();
+                dto.description = s.getDescription();
+                dto.price = s.getPrice();
+                dto.maxCount = s.getMaxCount();
+                dto.id = s.getId();
+                services.add(dto);
+            }
         }
     }
 }

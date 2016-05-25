@@ -14,7 +14,6 @@ import api.contracts.reservations.CreateReservationResponse;
 import api.contracts.reservations.services.ServiceSelectionDto;
 import api.handlers.base.BaseHandler;
 import org.apache.shiro.SecurityUtils;
-import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 
@@ -22,7 +21,6 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 @Stateless
@@ -79,10 +77,8 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
             return errors;
         }
 
-        LocalDate from;
-        try {
-            from = LocalDate.parse(fromDateString);
-        } catch (Exception e) {
+        LocalDate from = parseLocalDate(fromDateString);
+        if (from == null) {
             errors.add(new ErrorDto("Invalid 'from' date format.", ErrorCodes.VALIDATION_ERROR));
             return errors;
         }
@@ -91,10 +87,8 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
             errors.add(new ErrorDto("Date 'from' must be Monday.", ErrorCodes.VALIDATION_ERROR));
         }
 
-        LocalDate to;
-        try {
-            to = LocalDate.parse(toDateString);
-        } catch (Exception e) {
+        LocalDate to = parseLocalDate(toDateString);
+        if (to == null) {
             errors.add(new ErrorDto("Invalid 'to' date format.", ErrorCodes.VALIDATION_ERROR));
             return errors;
         }
@@ -147,6 +141,14 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
         }
 
         return errors;
+    }
+
+    private LocalDate parseLocalDate(String dateStr) {
+        try {
+            return LocalDate.parse(dateStr);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override

@@ -3,6 +3,8 @@ package api.contracts.dto;
 import api.business.entities.Cottage;
 import api.business.entities.Service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +17,7 @@ public class CottageDto {
     public String description;
     public String availableFrom;
     public String availableTo;
-    public List<ServiceDto> services;
+    public List<ExistingServiceDto> services;
 
     public CottageDto() {
     }
@@ -28,13 +30,16 @@ public class CottageDto {
         image = cottage.getImageurl();
         price = cottage.getPrice();
         description = cottage.getDescription();
-        availableFrom = String.format("%02d-%02d", cottage.getAvailableFrom().getMonth() +1, cottage.getAvailableFrom().getDate());
-        availableTo = String.format("%02d-%02d", cottage.getAvailableTo().getMonth() +1, cottage.getAvailableTo().getDate());
+        DateFormat df = new SimpleDateFormat("MM-dd");
+        availableFrom = df.format(cottage.getAvailableFrom());
+        availableTo = df.format(cottage.getAvailableTo());
         services = new ArrayList<>();
-        for(Service s : cottage.getServices()){
-            ServiceDto dto = new ServiceDto();
+        for (Service s : cottage.getServices()) {
+            ExistingServiceDto dto = new ExistingServiceDto();
             dto.description = s.getDescription();
             dto.price = s.getPrice();
+            dto.maxCount = s.getMaxCount();
+            dto.id = s.getId();
             services.add(dto);
         }
     }

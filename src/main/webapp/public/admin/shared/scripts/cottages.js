@@ -9,7 +9,7 @@ $(function () {
     initializeFileUpload();
 
     modal.find("#save").click(handleCreate);
-
+    $("#add-service").click(addService)
     load();
 });
 
@@ -137,7 +137,10 @@ function handleDelete(event) {
 
     dialog.modal("show");
 }
-
+function addService() {
+    var services = $(".services");
+    services.prepend().html("<table></table>")
+}
 function load() {
     var template = _.template($("#cottages-table-template").html());
     var table = $("#cottages-table");

@@ -20,8 +20,13 @@ public class UserService implements IUserService {
     private EntityManager em;
 
     public User get(int id) {
-        return em.find(User.class, id);
+        try {
+            return em.find(User.class, id);
+        } catch (Exception e) {
+            return null;
+        }
     }
+
     public User get() {
         return get(Integer.parseInt(SecurityUtils.getSubject().getPrincipal().toString()));
     }

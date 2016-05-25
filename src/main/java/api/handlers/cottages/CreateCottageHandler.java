@@ -15,6 +15,7 @@ import org.apache.shiro.subject.Subject;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Date;
 
 @Stateless
 public class CreateCottageHandler extends BaseHandler<CreateCottageRequest, CreateCottageResponse> {
@@ -39,13 +40,19 @@ public class CreateCottageHandler extends BaseHandler<CreateCottageRequest, Crea
             errors.add(new ErrorDto("Title must be at least 5 characters long", ErrorCodes.VALIDATION_ERROR));
         }
 
-        if (request.imageurl.length() < 1) {
+        if (request.image.length() < 1) {
             errors.add(new ErrorDto("Image url must be provided", ErrorCodes.VALIDATION_ERROR));
         }
 
-        if (request.bedcount <= 0) {
+        if (request.beds <= 0) {
             errors.add(new ErrorDto("Bed count must be higher than zero.", ErrorCodes.VALIDATION_ERROR));
         }
+        try {
+            Date date = new Date(0, Integer.parseInt(request.availableFrom.split("-")[0]), Integer.parseInt(request.availableFrom.split("-")[1]));
+        } catch (Exception e){
+            errors.add(new ErrorDto("Incorrect date format", ErrorCodes.VALIDATION_ERROR));
+        }
+
 
         return errors;
     }
@@ -54,12 +61,17 @@ public class CreateCottageHandler extends BaseHandler<CreateCottageRequest, Crea
     public CreateCottageResponse handleBase(CreateCottageRequest request) {
         Cottage cottage = new Cottage();
         cottage.setTitle(request.title);
-        cottage.setBedcount(request.bedcount);
-        cottage.setImageurl(request.imageurl);
+        cottage.setBedcount(request.beds);
+        cottage.setImageurl(request.image);
+        cottage.setDescription(request.description);
+        Date dateFrom = new Date(0, Integer.parseInt(request.availableFrom.split("-")[0]), Integer.parseInt(request.availableFrom.split("-")[1]));
+        cottage.setAvailableFrom(dateFrom);
+        Date dateTo = new Date(0, Integer.parseInt(request.availableTo.split("-")[0]), Integer.parseInt(request.availableFrom.split("-")[1]));
+
 
         cottageService.save(cottage);
         CreateCottageResponse response = createResponse();
-        response.Cottage = new CottageDto(cottage);
+        response.cottage = new CottageDto(cottage);
 
         return response;
     }

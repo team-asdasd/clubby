@@ -15,8 +15,7 @@ import api.contracts.payments.PayClubbyRequest;
 import api.contracts.payments.PayClubbyResponse;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
+import logging.audit.Audit;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -38,6 +37,7 @@ public class PayClubbyHandler extends BaseHandler<PayClubbyRequest, PayClubbyRes
     }
 
     @Override
+    @Audit
     public PayClubbyResponse handleBase(PayClubbyRequest request) {
         PayClubbyResponse response = createResponse();
         Payment payment = paymentsService.getPayment(request.PaymentId);

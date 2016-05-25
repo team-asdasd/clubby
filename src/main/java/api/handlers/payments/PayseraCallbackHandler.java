@@ -11,6 +11,7 @@ import api.handlers.base.BaseHandler;
 import api.helpers.Parser;
 import api.helpers.Validator;
 import api.contracts.dto.PayseraCallbackParamsDto;
+import logging.audit.Audit;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -36,6 +37,7 @@ public class PayseraCallbackHandler extends BaseHandler<PayseraCallbackRequest, 
     }
 
     @Override
+    @Audit
     public PayseraCallbackResponse handleBase(PayseraCallbackRequest request) {
         logger.info(String.format("paysera callback: {data:%s,ss1:%s,ss2:%s}",request.data,request.ss1,request.ss2));
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="WARN"  packages="logging">
+<Configuration status="WARN" packages="logging">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
@@ -7,15 +7,21 @@
         <File name="FileLogger" fileName="logs/app.log">
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} $sep$ %-5level $sep$ %logger{36} $sep$ %msg%n"/>
         </File>
+        <File name="PaymentsLogger" fileName="logs/payments.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %msg%n"/>
+        </File>
         <SlackAppender name="Slack"/>
 
     </Appenders>
 
-    <loggers>
+    <Loggers>
         <root level="all">
             <appender-ref ref="Slack" level="warn"/>
             <appender-ref ref="Console" level="all"/>
             <appender-ref ref="FileLogger" level="all"/>
         </root>
-    </loggers>
+        <logger name="auditLogger" additivity="false">
+            <appender-ref ref="PaymentsLogger"/>
+        </logger>
+    </Loggers>
 </Configuration>

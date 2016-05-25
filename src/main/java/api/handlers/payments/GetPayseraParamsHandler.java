@@ -16,6 +16,7 @@ import api.contracts.payments.GetPayseraParamsResponse;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
 import api.contracts.enums.TransactionStatus;
+import logging.audit.Audit;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -37,6 +38,7 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
     }
 
     @Override
+    @Audit
     public GetPayseraParamsResponse handleBase(GetPayseraParamsRequest request) {
         GetPayseraParamsResponse response = createResponse();
 

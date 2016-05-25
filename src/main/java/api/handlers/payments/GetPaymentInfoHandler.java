@@ -11,6 +11,7 @@ import api.contracts.payments.GetPaymentInfoRequest;
 import api.contracts.payments.GetPaymentInfoResponse;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
+import logging.audit.Audit;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -32,13 +33,14 @@ public class GetPaymentInfoHandler extends BaseHandler<GetPaymentInfoRequest, Ge
     }
 
     @Override
+    @Audit
     public GetPaymentInfoResponse handleBase(GetPaymentInfoRequest request) {
         GetPaymentInfoResponse response = createResponse();
         Payment payment = paymentsService.getPayment(request.PaymentId);
 
-        if(payment == null){
+        if (payment == null) {
             response.Errors = new ArrayList<>();
-            response.Errors.add(new ErrorDto(String.format("Payment %s not found",request.PaymentId), ErrorCodes.NOT_FOUND));
+            response.Errors.add(new ErrorDto(String.format("Payment %s not found", request.PaymentId), ErrorCodes.NOT_FOUND));
             return response;
         }
 

@@ -1,6 +1,7 @@
 package api.business.entities;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "reservations", schema = "main", catalog = "clubby")
@@ -9,6 +10,8 @@ public class Reservation {
     private Cottage cottage;
     private User user;
     private Payment payment;
+    private Date dateFrom;
+    private Date dateTo;
 
     @Id
     @Column(name = "reservationid", nullable = false)
@@ -19,6 +22,26 @@ public class Reservation {
 
     public void setReservationid(int reservationid) {
         this.reservationid = reservationid;
+    }
+
+    @Basic
+    @Column(name = "datefrom")
+    public Date getDateFrom() {
+        return dateFrom;
+    }
+
+    public void setDateFrom(Date dateFrom) {
+        this.dateFrom = dateFrom;
+    }
+
+    @Basic
+    @Column(name = "dateto")
+    public Date getDateTo() {
+        return dateTo;
+    }
+
+    public void setDateTo(Date dateTo) {
+        this.dateTo = dateTo;
     }
 
     @Override

@@ -6,6 +6,7 @@ import api.business.services.interfaces.IPaymentsService;
 import api.business.services.interfaces.IUserService;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
+import api.contracts.dto.PaymentInfoDto;
 import api.contracts.enums.PaymentTypes;
 import api.contracts.enums.PaymentsFrequency;
 import api.contracts.reservations.CreateReservationRequest;
@@ -13,11 +14,16 @@ import api.contracts.reservations.CreateReservationResponse;
 import api.contracts.reservations.services.ServiceSelectionDto;
 import api.handlers.base.BaseHandler;
 import org.apache.shiro.SecurityUtils;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.LocalDate;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 @Stateless
 public class CreateReservationHandler extends BaseHandler<CreateReservationRequest, CreateReservationResponse> {
@@ -36,6 +42,20 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
             return errors;
         }
 
+        if (!SecurityUtils.getSubject().hasRole("member")) {
+            errors.add(new ErrorDto("User is not a member.", ErrorCodes.AUTHENTICATION_ERROR));
+            return errors;
+        }
+
+        User user = userService.get();
+        List<PaymentInfoDto> pendingPaymentsForUser = paymentsService.getPendingPaymentsForUser(user.getId());
+        boolean hasDebts = pendingPaymentsForUser.stream().anyMatch(p -> p.Required);
+
+        if (hasDebts) {
+            errors.add(new ErrorDto("User has unpaid required payments.", ErrorCodes.VALIDATION_ERROR));
+            return errors;
+        }
+
         if (request.cottage <= 0) {
             errors.add(new ErrorDto("Invalid cottage id.", ErrorCodes.VALIDATION_ERROR));
             return errors;
@@ -47,12 +67,53 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
             return errors;
         }
 
-        if (request.from == null) {
-            errors.add(new ErrorDto("Date from must be provided.", ErrorCodes.VALIDATION_ERROR));
+        String fromDateString = request.from;
+        if (fromDateString == null) {
+            errors.add(new ErrorDto("Date 'from' must be provided.", ErrorCodes.VALIDATION_ERROR));
+            return errors;
         }
 
-        if (request.to == null) {
-            errors.add(new ErrorDto("Date to must be provided.", ErrorCodes.VALIDATION_ERROR));
+        String toDateString = request.to;
+        if (toDateString == null) {
+            errors.add(new ErrorDto("Date 'to' must be provided.", ErrorCodes.VALIDATION_ERROR));
+            return errors;
+        }
+
+        LocalDate from;
+        try {
+            from = LocalDate.parse(fromDateString);
+        } catch (Exception e) {
+            errors.add(new ErrorDto("Invalid 'from' date format.", ErrorCodes.VALIDATION_ERROR));
+            return errors;
+        }
+
+        if (from.getDayOfWeek() != DateTimeConstants.MONDAY) {
+            errors.add(new ErrorDto("Date 'from' must be Monday.", ErrorCodes.VALIDATION_ERROR));
+        }
+
+        LocalDate to;
+        try {
+            to = LocalDate.parse(toDateString);
+        } catch (Exception e) {
+            errors.add(new ErrorDto("Invalid 'to' date format.", ErrorCodes.VALIDATION_ERROR));
+            return errors;
+        }
+
+        if (to.getDayOfWeek() != DateTimeConstants.SUNDAY) {
+            errors.add(new ErrorDto("Date 'to' must be Sunday.", ErrorCodes.VALIDATION_ERROR));
+        }
+
+        LocalDate today = LocalDate.now();
+        if (from.isBefore(today)) {
+            errors.add(new ErrorDto("Date 'from' must be in the future.", ErrorCodes.VALIDATION_ERROR));
+        }
+
+        if (to.isBefore(today)) {
+            errors.add(new ErrorDto("Date 'to' must be in the future.", ErrorCodes.VALIDATION_ERROR));
+        }
+
+        if (from.isAfter(to)) {
+            errors.add(new ErrorDto("Date 'to' must be after 'from'.", ErrorCodes.VALIDATION_ERROR));
         }
 
         if (request.services != null) {
@@ -104,6 +165,12 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
     private Reservation createReservation(CreateReservationRequest request, Payment payment) {
         Reservation reservation = new Reservation();
 
+        LocalDate from = LocalDate.parse(request.from);
+        LocalDate to = LocalDate.parse(request.to);
+
+        reservation.setDateFrom(from.toDate());
+        reservation.setDateTo(to.toDate());
+
         Cottage cottage = em.getById(Cottage.class, request.cottage);
         reservation.setCottage(cottage);
 
@@ -130,6 +197,7 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
         Payment payment = new Payment();
         payment.setPaytext("Payment for cottage \"" + cottage.getTitle() + "\"");
         payment.setActive(true);
+        payment.setRequired(false);
         payment.setFrequencyId(PaymentsFrequency.once.getValue());
         payment.setPaymenttypeid(PaymentTypes.pay.getValue());
         PaymentsSettings settings = new PaymentsSettings();
@@ -159,7 +227,8 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
 
         Cottage cottage = em.getById(Cottage.class, request.cottage);
 
-        LineItem rent = new LineItem("Rent for cottage \"" + cottage.getTitle() + "\"", cottage.getPrice(), 1, payment);
+        int weeks = 1;
+        LineItem rent = new LineItem("Weekly rent for cottage \"" + cottage.getTitle() + "\"", cottage.getPrice(), weeks, payment);
         lineItems.add(rent);
 
         if (request.services != null) {

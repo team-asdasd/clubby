@@ -18,6 +18,7 @@ import {ReservationService} from "../../shared/reservation.service";
 export class ReservationForm {
     cottage: Cottage;
     reservation = new Reservation();
+    isButtonActive = true;
 
     constructor(private routeParams: RouteParams,
                 private reservationService: ReservationService,
@@ -29,10 +30,16 @@ export class ReservationForm {
 
     onSubmit() {
         console.log(this.reservation);
+        this.isButtonActive = false;
         this.reservationService.reserveCottage(this.reservation)
             .subscribe(
-                payment => this.router.navigate( ['/payments/' + payment.id] ),
-                error => this.handleError(error));
+                payment => {
+                    this.router.navigate(['/payments/' + payment.id])
+                },
+                error => {
+                    this.handleError(error);
+                    this.isButtonActive = true;
+                });
     }
 
     private handleError(error: any) {

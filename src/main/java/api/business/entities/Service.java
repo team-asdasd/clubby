@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class Service {
     private int id;
     private int price;
+    private int maxCount;
     private String description;
     private Cottage cottage;
 
@@ -32,6 +33,16 @@ public class Service {
     }
 
     @Basic
+    @Column(name = "max_count")
+    public int getMaxCount() {
+        return maxCount;
+    }
+
+    public void setMaxCount(int maxCount) {
+        this.maxCount = maxCount;
+    }
+
+    @Basic
     @Column(name = "description")
     public String getDescription() {
         return description;
@@ -45,9 +56,11 @@ public class Service {
     public Cottage getCottage() {
         return cottage;
     }
+
     public void setCottage(Cottage cottage) {
         this.cottage = cottage;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

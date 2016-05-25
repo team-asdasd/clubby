@@ -19,12 +19,20 @@ export class Members {
     recommendations: Array<Recommendation>;
     active: string;
 
-    constructor(userService: UserService, recommendationService: RecommendationService) {
+    constructor(private userService: UserService, private recommendationService: RecommendationService) {
         userService.getUsers().subscribe(resp => this.users = resp.users);
         recommendationService.getReceivedRecommendations().subscribe(resp => this.recommendations = resp);
     }
 
     expand(u: User) {
         this.active = u.email;
+    }
+
+    recommend(id: String) {
+        this.recommendationService.confirmRecommendation(id).subscribe(resp => console.log(resp));
+        this.users = null;
+        this.recommendations = null;
+        this.userService.getUsers().subscribe(resp => this.users = resp.users);
+        this.recommendationService.getReceivedRecommendations().subscribe(resp => this.recommendations = resp);
     }
 }

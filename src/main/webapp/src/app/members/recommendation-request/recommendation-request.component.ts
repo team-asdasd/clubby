@@ -1,4 +1,4 @@
-import {Component, Input} from 'angular2/core';
+import {Component, Input, Output, EventEmitter} from 'angular2/core';
 import {Recommendation} from './../shared/recommendation.model';
 import {User} from "../../shared/user.model";
 import {UserService} from "../../shared/user.service";
@@ -12,6 +12,7 @@ import {UserService} from "../../shared/user.service";
 })
 export class RecommendationRequest {
     @Input() recommendation: Recommendation;
+    @Output() recommendRequest = new EventEmitter();
     user: User;
 
     constructor(private userService: UserService) {
@@ -21,4 +22,7 @@ export class RecommendationRequest {
         this.userService.getUserById(this.recommendation.userId).subscribe(resp => this.user = resp);
     }
 
+    sendRecRequest() {
+        this.recommendRequest.emit(this.recommendation.requestCode);
+    }
 }

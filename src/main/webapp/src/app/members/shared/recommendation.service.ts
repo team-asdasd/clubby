@@ -1,5 +1,5 @@
 import {Injectable} from 'angular2/core';
-import {Http, Response} from 'angular2/http';
+import {Http, Response, Headers, RequestOptions} from 'angular2/http';
 import {Observable} from "../../../../node_modules/rxjs/Observable";
 import {Recommendation} from "./recommendation.model.ts";
 
@@ -8,7 +8,8 @@ export class RecommendationService {
 
     receivedUrl: string = "/api/recommendation/received";
     sentUrl: string = "/api/recommendation/sent";
-    confirmUrl: string = "/api/confirm/";
+    confirmUrl: string = "/api/recommendation/confirm/";
+    sendUrl: string = "/api/recommendation/send/";
 
     constructor(private http: Http) {
     }
@@ -21,8 +22,20 @@ export class RecommendationService {
         return this.http.get(this.sentUrl).map(this.parse).catch(this.handleError);
     }
 
-    public confirmRecommendation(id: String): void {
-        this.http.post(this.confirmUrl + id, null).catch(this.handleError);
+    public confirmRecommendation(id: String): Observable<any> {
+
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.post(this.confirmUrl + id, "", options).catch(this.handleError);
+    }
+
+    public sendRecommendationRequest(email: String): Observable<any> {
+
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.post(this.sendUrl + email, "", options).map(this.parse).catch(this.handleError);
     }
 
     private parse(res: Response): Array<Recommendation> {
@@ -37,8 +50,9 @@ export class RecommendationService {
 
     private handleError(error: any) {
         // In a real world app, we might send the error to remote logging infrastructure
-        let errMsg = error.message || 'Server error';
-        console.error(errMsg); // log to console instead
-        return Observable.throw(errMsg);
+        let response  = JSON.parse(error._body) || 'Server error';
+
+        //console.error(errMsg); // log to console instead
+        return Observable.throw(response);
     }
 }

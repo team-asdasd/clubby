@@ -6,7 +6,6 @@ import javax.persistence.*;
 @Table(name = "reservations", schema = "main", catalog = "clubby")
 public class Reservation {
     private int reservationid;
-    private int status;
     private Cottage cottage;
     private User user;
     private Payment payment;
@@ -22,16 +21,6 @@ public class Reservation {
         this.reservationid = reservationid;
     }
 
-    @Basic
-    @Column(name = "status", nullable = true)
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -39,17 +28,12 @@ public class Reservation {
 
         Reservation that = (Reservation) o;
 
-        if (reservationid != that.reservationid) return false;
-        if (status != that.status) return false;
-
-        return true;
+        return reservationid == that.reservationid;
     }
 
     @Override
     public int hashCode() {
-        int result = reservationid;
-        result = 31 * result + status;
-        return result;
+        return reservationid;
     }
 
     @ManyToOne(optional = false)

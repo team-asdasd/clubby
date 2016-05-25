@@ -16,6 +16,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Stateless
 public class CreateReservationHandler extends BaseHandler<CreateReservationRequest, CreateReservationResponse> {
@@ -104,7 +105,7 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
 
         LineItem rent = new LineItem();
         rent.setTitle("Rent for cottage \"" + cottage.getTitle() + "\"");
-        rent.setPrice(50);
+        rent.setPrice(cottage.getPrice());
         rent.setQuantity(1);
         rent.setPayment(payment);
         lineItems.add(rent);

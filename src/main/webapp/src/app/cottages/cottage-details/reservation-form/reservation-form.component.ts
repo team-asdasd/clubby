@@ -1,5 +1,6 @@
 import {CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/common';
 import {Component} from 'angular2/core';
+import {Observable} from "rxjs/Observable";
 
 import {Cottage} from '../../shared/cottage.model';
 import {RouteParams} from 'angular2/router';
@@ -28,6 +29,15 @@ export class ReservationForm {
     onSubmit() {
         console.log(this.reservation);
         this.reservationService.reserveCottage(this.reservation)
-            .subscribe(x => console.log(x));
+            .subscribe(
+                x => console.log(x),
+                error => this.handleError(error));
+    }
+
+    private handleError(error: any) {
+        // In a real world app, we might send the error to remote logging infrastructure
+        let errMsg = error.message || 'Server error';
+        console.error(errMsg); // log to console instead
+        return Observable.throw(errMsg);
     }
 }

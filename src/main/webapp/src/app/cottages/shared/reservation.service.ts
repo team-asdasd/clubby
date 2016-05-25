@@ -1,6 +1,6 @@
 import {Injectable} from 'angular2/core';
 import {Http, Response} from 'angular2/http';
-import {Observable} from '../../../../node_modules/rxjs/Observable';
+import {Observable} from 'rxjs/Observable';
 import {Reservation} from './reservation.model';
 
 @Injectable()

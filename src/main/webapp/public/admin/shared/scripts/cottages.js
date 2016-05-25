@@ -3,17 +3,17 @@ $.cloudinary.config({cloud_name: 'teamasdasd'});
 var dialogComponent = window.Clubby.Dialog();
 var alertComponent = window.Clubby.Alert();
 var dashboardMessage = $("#dashboard-message-box");
+var modal = $("#add-cottage-modal");
 
 $(function () {
     initializeFileUpload();
 
-    $("#add-cottage-modal").find("#save").click(handleCreate);
+    modal.find("#save").click(handleCreate);
 
     load();
 });
 
 function handleCreate() {
-    var modal = $("#add-cottage-modal");
     modal.find("#modal-title").html("Add Cottage");
 
     var modalMessage = modal.find("#modal-message-box");
@@ -64,7 +64,6 @@ function handleCreate() {
 
 function handleEdit(event) {
     var id = $(event.target).attr("data-cottage-id");
-    var modal = $("#add-cottage-modal");
     modal.find("#modal-title").html("Add Cottage");
 
     var modalMessage = modal.find("#modal-message-box");
@@ -187,7 +186,7 @@ function initializeFileUpload() {
 
             $('.preview').html(image);
 
-            $("#create-cottage-modal").find("#image").val(data.result.url);
+            modal.find("#image").val(data.result.url);
         }
     );
 

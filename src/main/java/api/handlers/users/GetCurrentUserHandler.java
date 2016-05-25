@@ -1,6 +1,7 @@
 package api.handlers.users;
 
 import api.business.entities.Configuration;
+import api.business.entities.Role;
 import api.business.entities.User;
 import api.business.persistance.ISimpleEntityManager;
 import api.business.services.interfaces.IFormService;
@@ -64,6 +65,7 @@ public class GetCurrentUserHandler extends BaseHandler<BaseRequest, GetUserInfoR
         response.email = user.getLogin().getEmail();
         response.picture = mapper.getPicture(user, defaultPic);
         response.fields = user.getFormResults().stream().map(FormInfoDto::new).collect(Collectors.toList());
+        response.roles = user.getLogin().getRoles().stream().map(Role::getRoleName).collect(Collectors.toList());
 
         return response;
     }

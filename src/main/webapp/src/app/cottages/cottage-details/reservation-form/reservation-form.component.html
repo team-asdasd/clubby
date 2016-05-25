@@ -26,7 +26,7 @@
                                 <!--TODO:implement a cross-browser solution. sorry safari users :(-->
                                 <input id="startDate"
                                        type="date"
-                                       [(ngModel)]="reservation.StartDate"
+                                       [(ngModel)]="reservation.from"
                                        required/>
                                 <p class="help-block">Reservation must start on Monday</p>
                             </div>
@@ -39,7 +39,7 @@
                                 <!--TODO:implement a cross-browser solution. sorry safari users :(-->
                                 <input id="endDate"
                                        type="date"
-                                       [(ngModel)]="reservation.EndDate"
+                                       [(ngModel)]="reservation.to"
                                        required/>
                                 <p class="help-block">Reservation must end on Sunday</p>
                             </div>

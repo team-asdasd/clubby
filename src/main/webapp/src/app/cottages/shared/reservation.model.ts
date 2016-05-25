@@ -1,5 +1,5 @@
 export class Reservation {
-    CottageId: number;
-    StartDate: Date;
-    EndDate: Date;
+    cottage: number;
+    from: Date;
+    to: Date;
 }

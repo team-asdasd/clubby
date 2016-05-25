@@ -22,7 +22,7 @@ export class ReservationForm {
                 private reservationService: ReservationService) {
         let id = this.routeParams.get('id');
         console.log(id);
-        this.reservation.CottageId = Number(id);
+        this.reservation.cottage = Number(id);
     }
 
     onSubmit() {

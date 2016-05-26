@@ -30,7 +30,7 @@ public class CottageDto {
         title = cottage.getTitle();
         beds = cottage.getBedcount();
         image = cottage.getImageurl();
-        price = cottage.getPrice();
+        price = cottage.getPrice() / 100;
         description = cottage.getDescription();
         DateFormat df = new SimpleDateFormat("MM-dd");
         availableFrom = df.format(cottage.getAvailableFrom());

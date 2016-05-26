@@ -16,8 +16,8 @@ export class RoomsSelector {
 
     ngOnInit() {
         for(var cottage of this.cottages) {
-            if (!this.options.some(x => x === cottage.Beds)) {
-                this.options.push(cottage.Beds);
+            if (!this.options.some(x => x === cottage.beds)) {
+                this.options.push(cottage.beds);
             }
         }
         this.options.sort((n1, n2) => n1 - n2);

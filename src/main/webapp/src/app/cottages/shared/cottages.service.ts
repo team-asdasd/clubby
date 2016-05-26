@@ -23,8 +23,8 @@ export class CottageService {
             throw new Error('Bad response status: ' + res.status);
         }
 
-        let result: Array<Cottage> = res.json().Cottages;
-
+        let result: Array<Cottage> = res.json().cottages;
+        console.log(result);
         return result;
     }
 

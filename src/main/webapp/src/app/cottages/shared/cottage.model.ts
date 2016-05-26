@@ -1,6 +1,9 @@
 export class Cottage {
-    Id:number;
-    Title:string;
-    Beds:number;
-    Image:string;
+    id:number;
+    title:string;
+    beds:number;
+    image:string;
+    price:number;
+    availableFrom:string;
+    availableTo:string;
 }

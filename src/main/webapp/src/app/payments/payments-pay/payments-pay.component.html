@@ -7,7 +7,7 @@
         <div *ngIf="payment && !failed && !loading" class="payment">
             <ul *ngIf="errors" class="text-danger">
                 <li *ngFor="#err of errors; #i = index">
-                {{err.Message}}
+                    {{err.Message}}
                 </li>
             </ul>
             <div class="row">
@@ -37,7 +37,7 @@
                     </thead>
                     <tbody>
                     <tr *ngFor="#lineItem of payment.LineItems">
-                        <td class="col-md-9"><em >{{lineItem.title}}</em></td>
+                        <td class="col-md-9"><em>{{lineItem.title}}</em></td>
                         <td class="col-md-1" style="text-align: center">{{lineItem.quantity}}</td>
                         <td class="col-md-1 text-center no-break">{{lineItem.price | currency:payment.Currency:true:'1.2-2'}}</td>
                         <td class="col-md-1 text-center no-break">{{lineItem.price * lineItem.quantity | currency:payment.Currency:true:'1.2-2'}}</td>
@@ -46,7 +46,7 @@
                         <td></td>
                         <td></td>
                         <td class="text-right"><h4><strong>Total:</strong></h4></td>
-                        <td class="text-center text-danger no-break"><h4><strong >{{payment.Amount | currency:payment.Currency:true:'1.2-2'}}</strong></h4></td>
+                        <td class="text-center text-danger no-break"><h4><strong>{{payment.Amount | currency:payment.Currency:true:'1.2-2'}}</strong></h4></td>
                     </tr>
                     </tbody>
                 </table>

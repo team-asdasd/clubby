@@ -32,7 +32,7 @@ export class CottagesList {
     }
 
     public onSelect(cottage: Cottage) {
-        console.log('navigating to cottage ', cottage.Id);
-        this.router.navigate( ['CottageDetails', { id: cottage.Id }] );
+        console.log('navigating to cottage ', cottage.id);
+        this.router.navigate( ['CottageDetails', { id: cottage.id }] );
     }
 }

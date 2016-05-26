@@ -74,7 +74,7 @@
                     <div class="form-group">
                         <label for="price" class="col-sm-2 control-label">Price</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="price" placeholder="Price Eur">
+                            <input type="number" class="form-control" id="price" placeholder="Price Eur">
                         </div>
                     </div>
 
@@ -150,7 +150,7 @@
                 <td><%= _.escape(cottage.id) %></td>
                 <td><%= _.escape(cottage.title) %></td>
                 <td><%= _.escape(cottage.beds) %></td>
-                <td><%= _.escape(cottage.price)%>&#8364</td>
+                <td><%= _.escape(cottage.price / 100)%>&#8364</td>
                 <td><%= _.escape(cottage.description) %></td>
                 <td><%= _.escape(cottage.availableFrom) %> / <%= _.escape(cottage.availableTo) %></td>
                 <td>

@@ -81,14 +81,6 @@ public class UpdateCottageHandler extends BaseHandler<UpdateCottageRequest, Upda
             errors.add(new ErrorDto("Incorrect date format", ErrorCodes.VALIDATION_ERROR));
         }
 
-        try {
-            Double price = Double.parseDouble(request.cottage.price.replaceAll(",","."));
-            for (ServiceDto dto: request.cottage.services)
-                price = Double.parseDouble(dto.price.replaceAll(",","."));
-        } catch (Exception e){
-            errors.add(new ErrorDto("Incorrect number format", ErrorCodes.VALIDATION_ERROR));
-        }
-
         return errors;
     }
 
@@ -102,8 +94,7 @@ public class UpdateCottageHandler extends BaseHandler<UpdateCottageRequest, Upda
         cottage.setBedcount(request.cottage.beds);
         cottage.setImageurl(request.cottage.image);
         cottage.setDescription(request.cottage.description);
-        Double price = Double.parseDouble(request.cottage.price.replaceAll(",","."))* 100d;
-        cottage.setPrice(price.intValue());
+        cottage.setPrice(request.cottage.price);
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
         sdf.setLenient(false);
         try {
@@ -124,7 +115,7 @@ public class UpdateCottageHandler extends BaseHandler<UpdateCottageRequest, Upda
                 service.setDescription(dto.description);
                 service.setCottage(cottage);
                 service.setMaxCount(dto.maxCount);
-                service.setPrice(((Double)(Double.parseDouble(dto.price.replaceAll(",","."))* 100d)).intValue());
+                service.setPrice(dto.price);
                 em.merge(service);
             }
         for (Service s : existingServices) {

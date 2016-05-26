@@ -48,7 +48,7 @@ function handleCreate() {
         "beds": bedcount.val(),
         "image": imageUrl.val(),
         "description": description.val(),
-        "price": price.val(),
+        "price": parseInt(price.val()*100),
         "availableFrom": availableFrom.val(),
         "availableTo": availableTo.val(),
         services: []
@@ -130,7 +130,7 @@ function handleEdit(event) {
         imageUrl.attr('src', response.cottage.image);
         modal.find("#image").val(response.cottage.image);
         description.val(response.cottage.description);
-        price.val(response.cottage.price);
+        price.val(response.cottage.price/100);
         availableFrom.val(response.cottage.availableFrom);
         availableTo.val(response.cottage.availableTo);
 
@@ -173,7 +173,7 @@ function sendUpdate() {
         "beds": bedcount.val(),
         "image": imageUrl.val(),
         "description": description.val(),
-        "price": price.val(),
+        "price": parseInt(price.val().replace(',','.')*100),
         "availableFrom": availableFrom.val(),
         "availableTo": availableTo.val(),
         services: []

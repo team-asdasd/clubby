@@ -67,12 +67,14 @@ $('#submit').click(function () {
             field["value"] = input.val();
             request.fields.push(field);
         }
-        request['name'] = $('#name').val();
-        request['email'] = $('#email').val();
-        request['picture'] = $('#photo').val();
-        request['password'] = $('#password').val();
-        request['passwordConfirm'] = $('#passwordConfirm').val();
     });
+
+    request['name'] = $('#name').val();
+    request['email'] = $('#email').val();
+    request['picture'] = $('#photo').val();
+    request['password'] = $('#password').val();
+    request['passwordConfirm'] = $('#passwordConfirm').val();
+
     if (!isValid) return false;
 
     $.ajax({

@@ -56,11 +56,17 @@ public class PayClubbyHandler extends BaseHandler<PayClubbyRequest, PayClubbyRes
 
         User user = userService.get();
 
+        if(!payment.canAcces(user)){
+            response.Errors = new ArrayList<>();
+            response.Errors.add(new ErrorDto("Cant access this payment", ErrorCodes.VALIDATION_ERROR));
+            return response;
+        }
+
         int balance = paymentsService.getMyBalance(user.getId());
 
-        if(balance < payment.getAmount()){
+        if(balance < payment.calculatePrice()){
             response.Errors = new ArrayList<>();
-            response.Errors.add(new ErrorDto(String.format("Not enough clubby money. Balance %s", balance), ErrorCodes.LOW_BALANCE));
+            response.Errors.add(new ErrorDto(String.format("Not enough clubby money. Balance %s", balance/100d), ErrorCodes.LOW_BALANCE));
             return response;
         }
 
@@ -71,7 +77,7 @@ public class PayClubbyHandler extends BaseHandler<PayClubbyRequest, PayClubbyRes
         mt.setTransactionid(UUID.randomUUID().toString());
         mt.setCreationTime(new Date());
         mt.setTransactionTypeId(TransactionTypes.clubby.getValue());
-        mt.setAmount(payment.getAmount());
+        mt.setAmount(payment.calculatePrice()); // TODO: Move to strategy (so CDI Decorators could possibly work)
         mt.setCurrency(Currency.ClubbyCoin);
 
         paymentsService.createMoneyTransaction(mt);

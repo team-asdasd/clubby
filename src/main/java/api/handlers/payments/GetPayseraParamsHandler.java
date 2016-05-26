@@ -61,6 +61,12 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
         User user = userService.get();
         PaymentsSettings paymentsSettings = payment.getSettings();
 
+        if(!payment.canAcces(user)){
+            response.Errors = new ArrayList<>();
+            response.Errors.add(new ErrorDto("Cant access this payment", ErrorCodes.VALIDATION_ERROR));
+            return response;
+        }
+
         if(paymentsSettings == null){
             response.Errors = new ArrayList<>();
             response.Errors.add(new ErrorDto(String.format("Payment %s does not have payments settings"
@@ -75,7 +81,7 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
         mt.setTransactionid(UUID.randomUUID().toString());
         mt.setCreationTime(new Date());
         mt.setTransactionTypeId(TransactionTypes.direct.getValue());
-        mt.setAmount(payment.getAmount());
+        mt.setAmount(payment.calculatePrice()); // TODO: Move to strategy (so CDI Decorators could possibly work)
         mt.setCurrency(payment.getCurrency());
 
         paymentsService.createMoneyTransaction(mt);
@@ -103,7 +109,7 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
         queryParams.put("p_firstname", firstName);
         queryParams.put("p_lastname", lastName);
         queryParams.put("p_email", user.getLogin().getEmail());
-        queryParams.put("amount", Integer.toString(payment.getAmount()));
+        queryParams.put("amount", Integer.toString(payment.calculatePrice()));
         queryParams.put("test", "1");
         queryParams.put("accepturl", baseUrl + "/pay/accepted");
         queryParams.put("cancelurl", baseUrl + "/pay/cancelled");

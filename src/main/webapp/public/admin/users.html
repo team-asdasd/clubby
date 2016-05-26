@@ -90,10 +90,10 @@
             <tbody class="searchable">
             <% _.each(users, function(user){ %>
             <tr>
-                <td><img src="<%= user.picture %>" style="max-width: 50px; max-height: 50px;"/></td>
-                <td><%= user.id %></td>
-                <td><%= user.name %></td>
-                <td><%= user.email %></td>
+                <td><img src="<%= user.picture %>" class="img-circle" style="max-width: 50px; max-height: 50px;"/></td>
+                <td><%= _.escape(user.id) %></td>
+                <td><%= _.escape(user.name) %></td>
+                <td><%= _.escape(user.email) %></td>
             </tr>
             <% }); %>
             </tbody>

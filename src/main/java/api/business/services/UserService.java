@@ -65,7 +65,6 @@ public class UserService implements IUserService {
         user.setLogin(login);
 
         login.setEmail(details.Email);
-        login.setUser(user);
 
         PasswordService passwordService = new DefaultPasswordService();
         String encryptedPassword = passwordService.encryptPassword(UUID.randomUUID().toString());

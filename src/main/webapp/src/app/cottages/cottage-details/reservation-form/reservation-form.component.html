@@ -21,6 +21,12 @@
             </div>
             <form class="form-horizontal"
                   (ngSubmit)="onSubmit()">
+                <!--TODO: use notification system-->
+                <ul>
+                    <li *ngFor="#error of errors; #idx = index" style="color: red">
+                        {{error.Message}}
+                    </li>
+                </ul>
                 <div class="modal-body">
                     <fieldset>
                         <div class="control-group">
@@ -47,12 +53,23 @@
                                 <p class="help-block">Reservation must end on Sunday</p>
                             </div>
                         </div>
-                        <!--TODO: use notification system-->
-                        <ul>
-                            <li *ngFor="#error of errors; #idx = index" style="color: red">
-                                {{error.Message}}
-                            </li>
-                        </ul>
+                    </fieldset>
+                    <fieldset>
+                        <div class="control-group"
+                             *ngFor="#service of cottage.services; #idx = index">
+                            <label class="control-label"
+                                   for="endDate">{{service.description}}</label>
+                            - &nbsp;<span>{{service.price | currency:"EUR":true:'1.2-2'}} per item</span>
+                            <div class="controls">
+                                <input id="{{service.id}}"
+                                       type="number"
+                                       [(ngModel)]="service.amount"
+                                       min="0"
+                                       max="{{service.maxCount}}"
+                                       value="0"/>
+                                <p class="help-block">Max amount: {{service.maxCount}}</p>
+                            </div>
+                        </div>
                     </fieldset>
                 </div>
                 <div class="modal-footer">

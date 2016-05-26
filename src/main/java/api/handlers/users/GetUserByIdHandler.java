@@ -38,7 +38,15 @@ public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserI
 
     @Override
     public ArrayList<ErrorDto> validate(GetUserByIdRequest request) {
-        return Validator.checkAllNotNullAndIsAuthenticated(request);
+        ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
+
+        User user = userInfoService.get(request.id);
+
+        if (user == null) {
+            errors.add(new ErrorDto("user not found", ErrorCodes.NOT_FOUND));
+        }
+
+        return errors;
     }
 
     @Override
@@ -48,22 +56,6 @@ public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserI
         
         GetUserInfoResponse response = createResponse();
         User user = userInfoService.get(request.id);
-
-        if (user == null) {
-            logger.warn(String.format("User %s not found", request.id));
-            return handleException("User not found", ErrorCodes.NOT_FOUND);
-        }
-
-        if (user.isFacebookUser()) {
-            try {
-                FacebookUserDetails userDetails = facebookClient.getUserDetailsById(user.getLogin().getFacebookId());
-                if (!userDetails.Picture.isSilhouette()) {
-                    response.picture = userDetails.Picture.getUrl();
-                }
-            } catch (IOException e) {
-                handleException(e);
-            }
-        }
 
         response.id = user.getId();
         response.name = user.getName();

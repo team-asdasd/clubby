@@ -48,6 +48,11 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
             return errors;
         }
 
+        if (!cottageService.isNowReservationPeriod()) {
+            errors.add(new ErrorDto("Now is not reservation period.", ErrorCodes.VALIDATION_ERROR));
+            return errors;
+        }
+
         User user = userService.get();
         List<PaymentInfoDto> pendingPaymentsForUser = paymentsService.getPendingPaymentsForUser(user.getId());
         boolean hasDebts = pendingPaymentsForUser.stream().anyMatch(p -> p.Required);
@@ -113,7 +118,7 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
             errors.add(new ErrorDto("Date 'to' must be after 'from'.", ErrorCodes.VALIDATION_ERROR));
         }
 
-        List<Cottage> availableCottages = cottageService.getByFilters("", 0, fromDateString, toDateString, 0, 0);
+        List<Cottage> availableCottages = cottageService.getAvailableCottageForFultPeriod(from, to);
         boolean cottageAvailable = availableCottages.stream().anyMatch(c -> c.getId() == request.cottage);
 
         if (!cottageAvailable) {

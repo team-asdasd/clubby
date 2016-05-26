@@ -4,11 +4,14 @@ import api.business.entities.Cottage;
 import api.business.entities.Service;
 import api.business.services.interfaces.ICottageService;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Stateless
@@ -69,6 +72,17 @@ public class CottageService implements ICottageService {
         return query.getResultList();
     }
 
+    public List<Cottage> getAvailableCottageForFultPeriod(LocalDate from, LocalDate to){
+        List<Cottage> cottages = new ArrayList<>();
+        while (from.isBefore(to)){
+            LocalDate newTo = from.plusWeeks(1);
+            cottages.addAll(getByFilters("",0, from.toString("YYYY-MM-dd"), newTo.toString("YYYY-MM-dd"), 0, 0));
+            from = newTo;
+        }
+
+        return cottages;
+    }
+
     @Override
     public void save(Cottage cottage) {
         try {
@@ -94,5 +108,14 @@ public class CottageService implements ICottageService {
     @Override
     public List<Service> getCottageServices(int id) {
         return em.createQuery("SELECT S FROM Service S WHERE S.cottage.id = :cottageId", Service.class).setParameter("cottageId", id).getResultList();
+    }
+
+    public boolean isNowReservationPeriod() {
+        return (Boolean) em.createNativeQuery("SELECT " +
+                "EXISTS(" +
+                "SELECT * FROM main.reservationsperiods " +
+                "WHERE :dateToCheck BETWEEN fromdate AND todate)")
+                .setParameter("dateToCheck", new Date())
+                .getSingleResult();
     }
 }

@@ -1,5 +1,5 @@
 import {Injectable} from 'angular2/core';
-import {Http, Response} from 'angular2/http';
+import {Http, Response, Headers} from 'angular2/http';
 import {Observable} from 'rxjs/Observable';
 import {Reservation} from './reservation.model';
 
@@ -11,9 +11,14 @@ export class ReservationService {
     }
 
     public reserveCottage(reservation: Reservation): Observable<any> {
-        console.log(reservation);
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('Accept', 'application/json');
+
         return this.http
-            .post(this.url, JSON.stringify(reservation))
+            .post(this.url, JSON.stringify(reservation), {
+                headers: headers
+            })
             .map(this.parse)
             .catch(this.handleError);
     }
@@ -31,6 +36,6 @@ export class ReservationService {
         // In a real world app, we might send the error to remote logging infrastructure
         let errMsg = error.message || 'Server error';
         console.error(errMsg); // log to console instead
-        return Observable.throw(errMsg);
+        return Observable.throw(JSON.parse(error._body).Errors);
     }
 }

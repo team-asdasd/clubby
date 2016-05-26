@@ -45,8 +45,7 @@ export class CottageService {
         if (res.status < 200 || res.status >= 300) {
             throw new Error('Bad response status: ' + res.status);
         }
-        
-        return res.json().Cottage;
+        return res.json().cottage;
     }
 
     private handleError(error: any) {

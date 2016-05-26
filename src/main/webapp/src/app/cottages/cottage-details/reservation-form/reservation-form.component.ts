@@ -19,6 +19,7 @@ export class ReservationForm {
     cottage: Cottage;
     reservation = new Reservation();
     isButtonActive = true;
+    errors = [];
 
     constructor(private routeParams: RouteParams,
                 private reservationService: ReservationService,
@@ -29,7 +30,7 @@ export class ReservationForm {
     }
 
     onSubmit() {
-        console.log(this.reservation);
+        this.errors = [];
         this.isButtonActive = false;
         this.reservationService.reserveCottage(this.reservation)
             .subscribe(
@@ -37,6 +38,7 @@ export class ReservationForm {
                     this.router.navigateByUrl( `/Payments/${payment.id}`);
                 },
                 error => {
+                    this.errors = error;
                     this.handleError(error);
                     this.isButtonActive = true;
                 });

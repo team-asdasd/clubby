@@ -124,6 +124,7 @@ function handleEdit(event) {
         dataType: "json"
     }).done(function (response) {
         modalMessage.html("");
+        window.version = response.cottage.version;
         title.val(response.cottage.title);
         bedcount.val(response.cottage.beds);
         imageUrl.attr('src', response.cottage.image);
@@ -166,6 +167,7 @@ function sendUpdate() {
     var availableFrom = modal.find("#availableFrom");
     var availableTo = modal.find("#availableTo");
     var cottage = {
+        "version": window.version,
         "id": id,
         "title": title.val(),
         "beds": bedcount.val(),

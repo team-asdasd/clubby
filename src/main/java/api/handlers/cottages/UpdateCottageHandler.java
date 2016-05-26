@@ -53,9 +53,9 @@ public class UpdateCottageHandler extends BaseHandler<UpdateCottageRequest, Upda
         if (cottageService.get(request.cottage.id) == null) {
             errors.add(new ErrorDto("Cottage not found", ErrorCodes.NOT_FOUND));
         }
-//        if (cottageService.get(request.cottage.id).getVersion() != request.cottage.version) {
-//            errors.add(new ErrorDto("Someone was faster then you, try reload page", ErrorCodes.NOT_FOUND));
-//        }
+        if (cottageService.get(request.cottage.id).getVersion() != request.cottage.version) {
+            errors.add(new ErrorDto("Someone was faster then you, try reload page", ErrorCodes.NOT_FOUND));
+        }
 
         if (request.cottage.title == null || request.cottage.title.length() < 5) {
             errors.add(new ErrorDto("Title must be at least 5 characters long", ErrorCodes.VALIDATION_ERROR));

@@ -31,8 +31,12 @@ public class CottageDto {
         title = cottage.getTitle();
         beds = cottage.getBedcount();
         image = cottage.getImageurl();
+<<<<<<< Updated upstream
+        price = cottage.getPrice() / 100;
+=======
         DecimalFormat def = new DecimalFormat("#.00");
         price = def.format(cottage.getPrice() /100d);
+>>>>>>> Stashed changes
         description = cottage.getDescription();
         DateFormat df = new SimpleDateFormat("MM-dd");
         availableFrom = df.format(cottage.getAvailableFrom());

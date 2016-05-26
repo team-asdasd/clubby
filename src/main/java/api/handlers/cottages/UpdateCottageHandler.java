@@ -9,6 +9,7 @@ import api.contracts.cottages.UpdateCottageRequest;
 import api.contracts.cottages.UpdateCottageResponse;
 import api.contracts.dto.CottageDto;
 import api.contracts.dto.ExistingServiceDto;
+import api.contracts.dto.ServiceDto;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
 import org.apache.shiro.SecurityUtils;
@@ -52,9 +53,9 @@ public class UpdateCottageHandler extends BaseHandler<UpdateCottageRequest, Upda
         if (cottageService.get(request.cottage.id) == null) {
             errors.add(new ErrorDto("Cottage not found", ErrorCodes.NOT_FOUND));
         }
-        if (cottageService.get(request.cottage.id).getVersion() != request.cottage.version) {
-            errors.add(new ErrorDto("Someone was faster then you, try reload page", ErrorCodes.NOT_FOUND));
-        }
+//        if (cottageService.get(request.cottage.id).getVersion() != request.cottage.version) {
+//            errors.add(new ErrorDto("Someone was faster then you, try reload page", ErrorCodes.NOT_FOUND));
+//        }
 
         if (request.cottage.title == null || request.cottage.title.length() < 5) {
             errors.add(new ErrorDto("Title must be at least 5 characters long", ErrorCodes.VALIDATION_ERROR));
@@ -80,6 +81,14 @@ public class UpdateCottageHandler extends BaseHandler<UpdateCottageRequest, Upda
             errors.add(new ErrorDto("Incorrect date format", ErrorCodes.VALIDATION_ERROR));
         }
 
+        try {
+            Double price = Double.parseDouble(request.cottage.price.replaceAll(",","."));
+            for (ServiceDto dto: request.cottage.services)
+                price = Double.parseDouble(dto.price.replaceAll(",","."));
+        } catch (Exception e){
+            errors.add(new ErrorDto("Incorrect number format", ErrorCodes.VALIDATION_ERROR));
+        }
+
         return errors;
     }
 
@@ -93,6 +102,8 @@ public class UpdateCottageHandler extends BaseHandler<UpdateCottageRequest, Upda
         cottage.setBedcount(request.cottage.beds);
         cottage.setImageurl(request.cottage.image);
         cottage.setDescription(request.cottage.description);
+        Double price = Double.parseDouble(request.cottage.price.replaceAll(",","."))* 100d;
+        cottage.setPrice(price.intValue());
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
         sdf.setLenient(false);
         try {
@@ -113,7 +124,7 @@ public class UpdateCottageHandler extends BaseHandler<UpdateCottageRequest, Upda
                 service.setDescription(dto.description);
                 service.setCottage(cottage);
                 service.setMaxCount(dto.maxCount);
-                service.setPrice(dto.price);
+                service.setPrice(((Double)(Double.parseDouble(dto.price.replaceAll(",","."))* 100d)).intValue());
                 em.merge(service);
             }
         for (Service s : existingServices) {

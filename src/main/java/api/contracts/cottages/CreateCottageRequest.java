@@ -10,7 +10,7 @@ public class CreateCottageRequest extends BaseRequest{
     public String title;
     public int beds;
     public String image;
-    public int price;
+    public String price;
     public String description;
     public String availableFrom;
     public String availableTo;

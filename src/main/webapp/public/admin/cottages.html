@@ -2,12 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head th:include="shared/head::head">
     <meta charset="UTF-8">
+
 </head>
 <body>
 <div class="row">
     <div class="col-md-10 col-md-offset-1">
         <h2 class="sub-header">Cottages
-            <button type="button" data-toggle="modal" data-target="#add-cottage-modal"
+            <button type="button" data-toggle="modal" data-target="#add-cottage-modal" id="add-cottage"
                     class="btn btn-success pull-right">
                 Add Cottage
             </button>
@@ -16,8 +17,12 @@
         <div id="cottages-table"></div>
     </div>
 </div>
-
-<!-- Add Modal -->
+<style>
+    .table-borderless tbody tr td, .table-borderless tbody tr th, .table-borderless thead tr th {
+        border: none;
+    }
+</style>
+<!-- Modal -->
 <div class="modal fade" id="add-cottage-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -46,7 +51,7 @@
                     <div class="form-group">
                         <label for="price" class="col-sm-2 control-label">Price</label>
                         <div class="col-sm-10">
-                            <input type="number" class="form-control" id="price" placeholder="Price Eur">
+                            <input type="text" class="form-control" id="price" placeholder="Price Eur">
                         </div>
                     </div>
 
@@ -60,18 +65,21 @@
                     <div class="form-group">
                         <label for="availableFrom" class="col-sm-2 control-label">Available after</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="availableFrom" placeholder="MM-dd" pattern="dd-dd">
+                            <input type="text" class="form-control" id="availableFrom" placeholder="MM-dd"
+                                   pattern="dd-dd">
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="availableTo" class="col-sm-2 control-label">Available till</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="availableTo" placeholder="MM-dd" pattern="dd-dd">
+                            <input type="text" class="form-control" id="availableTo" placeholder="MM-dd"
+                                   pattern="dd-dd">
                         </div>
                     </div>
-                    <div id="services">
-                        <button type="button" class="btn btn-default" id="add-service">Add services</button>
+                    <div class="form-group">
+                        <label for="services" class="col-sm-2 control-label">Services</label>
+                        <div id="services"></div>
                     </div>
 
                     <div class="form-group" id="image-upload">
@@ -115,16 +123,19 @@
                 <td><%= _.escape(cottage.id) %></td>
                 <td><%= _.escape(cottage.title) %></td>
                 <td><%= _.escape(cottage.beds) %></td>
-                <td><%= _.escape(cottage.price) %></td>
+                <td><%= _.escape(cottage.price)%>&#8364</td>
                 <td><%= _.escape(cottage.description) %></td>
-                <td><%= _.escape(cottage.availableFrom)  %> / <%= _.escape(cottage.availableTo)  %></td>
+                <td><%= _.escape(cottage.availableFrom) %> / <%= _.escape(cottage.availableTo) %></td>
                 <td>
-                    <a class="btn btn-default edit-cottage" data-cottage-id="<%= _.escape(cottage.id) %>">
-                        <span class="glyphicon glyphicon-pencil" data-cottage-id="<%= _.escape(cottage.id) %>" aria-hidden="true"></span>
+                    <a class="btn btn-default edit-cottage" data-toggle="modal" data-target="#add-cottage-modal"
+                       data-cottage-id="<%= _.escape(cottage.id) %>">
+                        <span class="glyphicon glyphicon-pencil" data-cottage-id="<%= _.escape(cottage.id) %>"
+                              aria-hidden="true"></span>
                         <span style="font-size: 16px;" data-cottage-id="<%= _.escape(cottage.id) %>"> Edit</span>
                     </a>
                     <a class="btn btn-default remove-cottage" data-cottage-id="<%= _.escape(cottage.id) %>">
-                        <span class="glyphicon glyphicon-remove" data-cottage-id="<%= _.escape(cottage.id) %>" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-remove" data-cottage-id="<%= _.escape(cottage.id) %>"
+                              aria-hidden="true"></span>
                         <span style="font-size: 16px;" data-cottage-id="<%= _.escape(cottage.id) %>"> Delete</span>
                     </a>
                 </td>
@@ -132,6 +143,39 @@
             <% }); %>
             </tbody>
         </table>
+    </div>
+</script>
+
+<script id="services-table-template" type="text/template">
+    <div class="col-md-10">
+        <table class="table table-borderless " style="border: none">
+            <thead>
+            <div class="row">
+                <tr>
+                    <th>Description</th>
+                    <th class="col-sm-2">Price</th>
+                    <th class="col-sm-2">Max count</th>
+                </tr>
+            </div>
+            </thead>
+            <tbody class="services" id="services-table-body">
+            <% _.each(services, function(service){ %>
+            <tr id="<%=service.id%>">
+                <td><input class="form-control" type="text" value="<%= _.escape(service.description) %>"></td>
+                <td><input class="form-control" type="text" value="<%= _.escape(service.price) %>"></td>
+                <td><input class="form-control" type="number" value="<%= _.escape(service.maxCount) %>"></td>
+                <td><a class="btn btn-default remove-service" data-service-id="<%= _.escape(service.id) %>">
+                        <span class="glyphicon glyphicon-remove" data-service-id="<%= _.escape(service.id) %>"
+                              aria-hidden="true"></span>
+                    <span style="font-size: 16px;" data-cottage-id="<%= _.escape(service.id) %>"> Remove</span>
+                </a></td>
+            </tr>
+            <% }); %>
+            </tbody>
+        </table>
+        <button type="button" class="btn btn-default " id="add-service" style="margin-bottom: 15px;">Add service
+        </button>
+
     </div>
 </script>
 

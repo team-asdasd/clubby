@@ -15,12 +15,11 @@ import {ReservationForm} from './reservation-form/reservation-form.component';
 })
 
 export class CottageDetails {
-    cottage: Cottage;
+    public cottage = new Cottage();
 
     constructor(private router: Router,
                 private routeParams: RouteParams,
                 private cottageService: CottageService) {
-        this.cottage = new Cottage();
         let id = this.routeParams.get('id');
         cottageService.getCottage(id)
             .subscribe(

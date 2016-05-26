@@ -6,4 +6,5 @@ export class Cottage {
     price: number;
     availableFrom: string;
     availableTo: string;
+    services: any;
 }

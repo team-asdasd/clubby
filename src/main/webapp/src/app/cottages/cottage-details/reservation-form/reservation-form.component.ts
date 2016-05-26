@@ -34,8 +34,8 @@ export class ReservationForm {
         this.isButtonActive = false;
         this.reservationService.reserveCottage(this.reservation)
             .subscribe(
-                payment => {
-                    this.router.navigateByUrl( `/Payments/${payment.id}`);
+                details => {
+                    this.router.navigateByUrl( `/Payments/${details.payment}`);
                 },
                 error => {
                     this.errors = error;

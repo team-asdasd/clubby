@@ -1,4 +1,4 @@
-package api.business.services;
+package api.business.services.GroupsAssigners;
 
 import api.business.entities.Configuration;
 import api.business.entities.Reservationgroup;

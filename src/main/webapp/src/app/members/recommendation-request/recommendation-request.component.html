@@ -1,0 +1,12 @@
+<div *ngIf="user" class="col-md-4" style="padding-top: 15px;">
+    <div class="card">
+        <div class="avatar">
+            <img class="small-img img-thumbnail img-responsive img-circle" title="{{user.name}}" src="{{user.picture}}" alt="">
+        </div>
+        <div class="title">{{user.name}}</div>
+        <div class="subtitle">{{user.name}} wants you to recommend him!</div>
+        <div id="button">
+            <button type="button" (click)="sendRecRequest()" class="btn btn-default">Recommend</button>
+        </div>
+    </div>
+</div>

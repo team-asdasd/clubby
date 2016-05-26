@@ -1,23 +1,24 @@
 package api.business.services;
 
-import api.business.entities.*;
-import api.contracts.dto.RecommendationDto;
+import api.business.entities.Configuration;
+import api.business.entities.Recommendation;
+import api.business.entities.Role;
+import api.business.entities.User;
 import api.business.services.interfaces.IEmailService;
 import api.business.services.interfaces.IRecommendationService;
 import api.business.services.interfaces.IUserService;
+import api.contracts.dto.RecommendationDto;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.shiro.SecurityUtils;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.mail.MessagingException;
-import javax.persistence.*;
-import javax.ws.rs.BadRequestException;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Stateless
 public class RecommendationService implements IRecommendationService {
@@ -54,9 +55,13 @@ public class RecommendationService implements IRecommendationService {
                     .setParameter("username", userTo.getLogin().getEmail())
                     .getSingleResult();
             em.remove(lr);
-            logger.trace("User " + userTo.getLogin().getEmail() + " is not candidate anymore");
+            Role r = new Role();
+            r.setUsername(userTo.getLogin().getEmail());
+            r.setRoleName("member");
+            em.persist(r);
+            logger.info("User " + userTo.getLogin().getEmail() + " is member");
         }
-        logger.trace("User " + userTo.getLogin().getEmail() + " received recommendation from " + userFrom.getLogin().getEmail());
+        logger.info("User " + userTo.getLogin().getEmail() + " received recommendation from " + userFrom.getLogin().getEmail());
     }
 
     public void sendRecommendationRequest(String userEmail) throws MessagingException {

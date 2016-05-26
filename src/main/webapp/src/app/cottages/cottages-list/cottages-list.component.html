@@ -22,15 +22,22 @@
                 <th></th>
                 <th>Title</th>
                 <th>Number of Beds</th>
+                <th>Weekly Payment</th>
+                <th>Available from</th>
+                <th>Available to</th>
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="#cottage of cottages">
+            <tr *ngFor="#cottage of cottages"
+                (click)="onSelect(cottage)">
                 <td>
-                    <img src="{{cottage.Image}}" class="img-thumbnail">
+                    <img src="{{cottage.image}}" class="img-thumbnail"/>
                 </td>
-                <td>{{cottage.Title}}</td>
-                <td>{{cottage.Beds}}</td>
+                <td>{{cottage.title}}</td>
+                <td>{{cottage.beds}}</td>
+                <td>{{cottage.price | currency:"EUR":true:'1.2-2'}}</td>
+                <td>{{cottage.availableFrom}}</td>
+                <td>{{cottage.availableTo}}</td>
             </tr>
             </tbody>
         </table>

@@ -12,6 +12,18 @@
                         <p>
                             <i class="glyphicon glyphicon-envelope"></i>{{user.email}}
                         </p>
+                        <h4>Roles</h4>
+                        <p *ngFor="#r of user.roles">
+                            {{r}}
+                            <button *ngIf="r == 'candidate'"
+                                    id="recommendationButton"
+                                    type="button"
+                                    (click)="toggleRecommendationPopup()"
+                                    class="btn btn-default">
+                                Ask for recommendation
+                            </button>
+                        </p>
+
                         <!-- Split button -->
                         <!--TODO: enable social button.. till we can make it *social*-->
                         <!--<div class="btn-group">-->
@@ -30,6 +42,22 @@
                         <!--</ul>-->
                         <!--</div>-->
                     </div>
+
+                    <div id="fullscreen" *ngIf="recommendationPopup">
+                        <div id="popUp">
+                            <div *ngIf="requestingRecommendationState == 'default'">
+                                <p>Enter email adress:</p>
+                                <input type="text" class="form-control" #emailInput>
+                                <button type="submit" (click)="sendRecommendationRequest(emailInput.value)" class="btn btn-default">Submit</button>
+                            </div>
+                            <div *ngIf="requestingRecommendationState == 'waiting'" class="loader"></div>
+                            <div #recommendationMessage></div>
+                            <div id="close-button" (click)="toggleRecommendationPopup()">X</div>
+                        </div>
+
+                        <div id="background-shadow" (click)="toggleRecommendationPopup()"></div>
+                    </div>
+
                 </div>
             </div>
         </div>

@@ -3,17 +3,68 @@ $.cloudinary.config({cloud_name: 'teamasdasd'});
 var dialogComponent = window.Clubby.Dialog();
 var alertComponent = window.Clubby.Alert();
 var dashboardMessage = $("#dashboard-message-box");
+var modal = $("#add-cottage-modal");
 
 $(function () {
     initializeFileUpload();
 
-    $("#create-cottage-modal").find("#save").click(handleCreate);
-
+    modal.find("#save").click(handleCreate);
+    $("#add-service").click(addService)
     load();
 });
 
 function handleCreate() {
-    var modal = $("#create-cottage-modal");
+    modal.find("#modal-title").html("Add Cottage");
+
+    var modalMessage = modal.find("#modal-message-box");
+
+    var title = modal.find("#title");
+    var bedcount = modal.find("#bedcount");
+    var imageUrl = modal.find("#image");
+    var description = modal.find("#description");
+    var price = modal.find("#price");
+    var availableFrom = modal.find("#availableFrom");
+    var availableTo = modal.find("#availableTo");
+
+    var request = {
+        "title": title.val(),
+        "beds": bedcount.val(),
+        "image": imageUrl.val(),
+        "description": description.val(),
+        "price": price.val(),
+        "availableFrom": availableFrom.val(),
+        "availableTo": availableTo.val(),
+    };
+
+    $.ajax({
+        type: "POST",
+        url: "/api/cottage",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify(request)
+    }).done(function () {
+        modalMessage.html("");
+        dashboardMessage.html(alertComponent({title: "Success!", message: "Cottage created.", severity: "success"}));
+
+        title.val("");
+        bedcount.val("");
+        imageUrl.val("");
+        $('.preview').html("");
+
+        modal.modal("hide");
+
+        load();
+    }).fail(function (response) {
+        modalMessage.html("");
+
+        var message = getErrorMessageFromResponse(response) || "Error creating cottage!";
+        modalMessage.html(alertComponent({title: "Error!", message: message, severity: "danger"}));
+    });
+}
+
+function handleEdit(event) {
+    var id = $(event.target).attr("data-cottage-id");
+    modal.find("#modal-title").html("Add Cottage");
 
     var modalMessage = modal.find("#modal-message-box");
 
@@ -86,7 +137,10 @@ function handleDelete(event) {
 
     dialog.modal("show");
 }
-
+function addService() {
+    var services = $(".services");
+    services.prepend().html("<table></table>")
+}
 function load() {
     var template = _.template($("#cottages-table-template").html());
     var table = $("#cottages-table");
@@ -100,6 +154,7 @@ function load() {
     }).done(function (response) {
         table.html(template(response));
         $("#cottages-table").find(".remove-cottage").click(handleDelete);
+        $("#cottages-table").find(".edit-cottage").click(handleEdit);
     }).fail(function (response) {
         table.html("");
         var message = getErrorMessageFromResponse(response) || "Unknown error.";
@@ -134,7 +189,7 @@ function initializeFileUpload() {
 
             $('.preview').html(image);
 
-            $("#create-cottage-modal").find("#image").val(data.result.url);
+            modal.find("#image").val(data.result.url);
         }
     );
 

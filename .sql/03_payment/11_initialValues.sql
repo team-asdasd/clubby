@@ -59,7 +59,7 @@ WHERE paymentSettingsId = 1);
 
 /* insert payment types */
 INSERT INTO payment.paymenttypes
-SELECT * FROM (SELECT 1, 'direct', 'Direct payment with money') a
+SELECT * FROM (SELECT 1, 'buy', 'Direct payment with money') a
 WHERE NOT EXISTS (
 SELECT * FROM payment.paymenttypes
 WHERE paymentTypeId = 1);
@@ -98,25 +98,37 @@ WHERE transactionTypeId = 3);
 
 /* insert payments*/
 INSERT INTO payment.payments
-SELECT * FROM (SELECT 1, 1, 10000,'EUR', 'Yearly membership payment', 1, true, true, 2) a
+SELECT * FROM (SELECT 1, 1,'EUR', 'Yearly membership payment', 1, true, true, 2) a
 WHERE NOT EXISTS (
 SELECT * FROM payment.payments
 WHERE paymentId = 1);
 
 INSERT INTO payment.payments
-SELECT * FROM (SELECT 2, 2, 10000,'EUR', 'Buy 100 Clubby coins', 1, true, false, 0) a
+SELECT * FROM (SELECT 2, 2,'EUR', 'Buy 100 Clubby coins', 1, true, false, 0) a
 WHERE NOT EXISTS (
 SELECT * FROM payment.payments
 WHERE paymentId = 2);
 
 INSERT INTO payment.payments
-SELECT * FROM (SELECT 3, 1, 1000,'EUR', 'Monthly payment for no reason', 1, true, true, 1) a
-WHERE NOT EXISTS (
-SELECT * FROM payment.payments
-WHERE paymentId = 3);
-
-INSERT INTO payment.payments
-SELECT * FROM (SELECT 4, 3, 1000,'EUR', '10 CB gift', 1, true, false, 0) a
+SELECT * FROM (SELECT 4, 3, 'EUR', '10 CB gift', 1, true, false, 0) a
 WHERE NOT EXISTS (
 SELECT * FROM payment.payments
 WHERE paymentId = 4);
+
+INSERT INTO payment.lineitems
+SELECT * FROM (SELECT nextval('lineitems_id_seq'),'Membership payment', 10000, 1, 1) a
+WHERE NOT EXISTS (
+SELECT * FROM payment.lineitems
+WHERE payment_id = 1);
+
+INSERT INTO payment.lineitems
+SELECT * FROM (SELECT nextval('lineitems_id_seq'),'Buy clubby coins', 10000, 1, 2) a
+WHERE NOT EXISTS (
+SELECT * FROM payment.lineitems
+WHERE payment_id = 2);
+
+INSERT INTO payment.lineitems
+SELECT * FROM (SELECT nextval('lineitems_id_seq'),'Gift', 1000, 1, 4) a
+WHERE NOT EXISTS (
+SELECT * FROM payment.lineitems
+WHERE payment_id = 4);

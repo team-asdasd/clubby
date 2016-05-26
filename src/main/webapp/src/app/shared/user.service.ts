@@ -2,6 +2,7 @@ import {Injectable} from 'angular2/core';
 import {User} from "./user.model";
 import {Http, Response} from 'angular2/http';
 import {Observable} from "../../../node_modules/rxjs/Observable";
+import {GetAllUsersResponse} from "../members/shared/getAllUsers.response.ts";
 
 @Injectable()
 export class UserService {
@@ -12,6 +13,14 @@ export class UserService {
 
     public getUserInfo(): Observable<User> {
         return this.http.get(`${this.url}/me`).map(UserService.parse).catch(UserService.handleError);
+    }
+
+    public getUsers(): Observable<GetAllUsersResponse> {
+        return this.http.get(`${this.url}`).map(UserService.parse).catch(UserService.handleError);
+    }
+
+    public getUserById(id: number): Observable<User> {
+        return this.http.get(`${this.url}/${id}`).map(UserService.parse).catch(UserService.handleError);
     }
 
     public hasRole(role: string): Observable<boolean> {

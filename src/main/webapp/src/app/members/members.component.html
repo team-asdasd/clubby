@@ -1,0 +1,9 @@
+<div *ngIf="!users || !recommendations" class="loader"></div>
+<div *ngIf="users && recommendations" class="user-list">
+
+    <recommendation-request (recommendRequest)="recommend($event)" *ngFor="#r of recommendations" [recommendation]="r">
+    </recommendation-request>
+
+    <member *ngFor="#u of users" [member]="u">
+    </member>
+</div>

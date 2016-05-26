@@ -12,7 +12,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
-import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -34,7 +33,7 @@ public class CottageResource {
 
     @GET
     @Path("")
-    @ApiOperation(value = "Returns all Cottages.", notes = "Specific roles: []</br>The results can be filtered using optional parameters.</br>See parameters for more details.", response = GetCottagesResponse.class)
+    @ApiOperation(value = "Returns all cottages.", notes = "Specific roles: []</br>The results can be filtered using optional parameters.</br>See parameters for more details.", response = GetCottagesResponse.class)
     public Response getCottages(@QueryParam("title") @ApiParam(value = "Filters results by title, returns every cottage with given string in the title. Empty string means the filter is not set. Case insensitive.") String title,
                                 @QueryParam("beds") @ApiParam(value = "Filters results by number of beds, returns every cottage with given bed count. 0 means the filter is not set") int beds) {
         GetCottagesRequest request = new GetCottagesRequest();
@@ -50,10 +49,10 @@ public class CottageResource {
 
     @GET
     @Path("{cottageId}")
-    @ApiOperation(value = "Returns selected Cottage.", notes = "Specific roles: []", response = GetCottageResponse.class)
-    public Response getSingleCottage(@PathParam("cottageId") @ApiParam(value = "Id of selected cottage", required = true) int cottageId) {
+    @ApiOperation(value = "Returns selected cottage.", notes = "Specific roles: []", response = GetCottageResponse.class)
+    public Response getSingleCottage(@PathParam("cottageId") @ApiParam(value = "id of selected cottage", required = true) int cottageId) {
         GetCottageRequest request = new GetCottageRequest();
-        request.Id = cottageId;
+        request.id = cottageId;
 
         GetCottageResponse response = getCottageHandler.handle(request);
 
@@ -64,7 +63,7 @@ public class CottageResource {
 
     @POST
     @Path("")
-    @ApiOperation(value = "Creates Cottage", notes = "Specific roles: [administrator]", response = BaseResponse.class)
+    @ApiOperation(value = "Creates cottage", notes = "Specific roles: [administrator]", response = BaseResponse.class)
     public Response createCottage(CreateCottageRequest request) {
         BaseResponse response = createCottagesHandler.handle(request);
 
@@ -75,7 +74,7 @@ public class CottageResource {
 
     @PUT
     @Path("")
-    @ApiOperation(value = "Updates selected Cottage.", notes = "Specific roles: [administrator]", response = UpdateCottageResponse.class)
+    @ApiOperation(value = "Updates selected cottage.", notes = "Specific roles: [administrator]", response = BaseResponse.class)
     public Response deleteCottage(UpdateCottageRequest request) {
         UpdateCottageResponse response = updateCottageHandler.handle(request);
 
@@ -86,10 +85,10 @@ public class CottageResource {
 
     @DELETE
     @Path("{cottageId}")
-    @ApiOperation(value = "Removes selected Cottage.", notes = "Specific roles: [administrator]", response = BaseResponse.class)
-    public Response deleteCottage(@PathParam("cottageId") @ApiParam(value = "Id of cottage for deletion", required = true) int cottageId) {
+    @ApiOperation(value = "Removes selected cottage.", notes = "Specific roles: [administrator]", response = BaseResponse.class)
+    public Response deleteCottage(@PathParam("cottageId") @ApiParam(value = "id of cottage for deletion", required = true) int cottageId) {
         DeleteCottageRequest request = new DeleteCottageRequest();
-        request.Id = cottageId;
+        request.id = cottageId;
 
         BaseResponse response = deleteCottageHandler.handle(request);
 

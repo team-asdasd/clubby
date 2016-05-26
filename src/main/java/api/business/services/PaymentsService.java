@@ -7,6 +7,7 @@ import api.business.services.interfaces.IPaymentsService;
 import api.contracts.dto.PaymentInfoDto;
 import api.contracts.enums.*;
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
+import logging.audit.Audit;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -24,6 +25,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Stateless
+@Audit
 public class PaymentsService implements IPaymentsService {
 
     @PersistenceContext
@@ -233,27 +235,27 @@ public class PaymentsService implements IPaymentsService {
 
     public List<PaymentInfoDto> getPendingPaymentsForUser(int userId){
 
-        Query q = em.createNativeQuery("\n" +
-                "\n" +
-                "WITH pendingPaymentsIds AS (\n" +
-                "SELECT \n" +
+        Query q = em.createNativeQuery("WITH pendingPaymentsIds AS (\n" +
+                "SELECT\n" +
                 "        DISTINCT p.paymentId\n" +
                 "FROM payment.payments p\n" +
                 "LEFT JOIN payment.pendingpayments pp ON p.paymentid = pp.paymentid\n" +
                 "WHERE p.frequencyid <> 0 AND COALESCE(pp.userid, :userId) = :userId  AND p.active\n" +
                 "\n" +
                 "EXCEPT\n" +
-                " \n" +
+                "\n" +
                 "SELECT p.paymentId FROM payment.moneytransactions mt\n" +
                 "INNER JOIN payment.payments p ON mt.paymentId = p.paymentId\n" +
                 "WHERE mt.userId = :userId AND mt.Status = 4\n" +
                 "GROUP BY p.paymentId, frequencyid\n" +
-                "HAVING \n" +
+                "HAVING\n" +
                 "(frequencyid = 1 AND MAX(COALESCE(EXTRACT(MONTH FROM creationtime),0)) = EXTRACT(MONTH FROM current_date))\n" +
                 "OR (frequencyid = 2 AND MAX(COALESCE(EXTRACT(YEAR FROM creationtime),0)) = EXTRACT(YEAR FROM current_date))\n" +
                 "OR (frequencyid = 3 AND MAX(creationtime) IS NOT NULL))\n" +
-                "SELECT p.* FROM payment.payments p\n" +
-                "INNER JOIN pendingPaymentsIds pp ON p.paymentId = pp.paymentId")
+                "SELECT p.paymentid, p.paymenttypeid, SUM(li.price) price, p.currency, p.paytext, p.required FROM payment.payments p\n" +
+                "INNER JOIN pendingPaymentsIds pp ON p.paymentId = pp.paymentId\n" +
+                "INNER JOIN payment.lineitems li ON p.paymentid = li.payment_id\n" +
+                "GROUP BY p.paymentid, p.paymenttypeid,p.currency, p.paytext, p.required;")
                 .setParameter("userId", userId);
 
         List l = q.getResultList();

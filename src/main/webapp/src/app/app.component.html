@@ -21,6 +21,8 @@
                     </li>
                     <li [class.active]="isRouteActive(['Payments'])">
                         <a [routerLink]="['Payments']">Payments</a>
+                    <li [class.active]="isRouteActive(['Members'])">
+                        <a [routerLink]="['Members']">Members</a>
                     </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
@@ -29,6 +31,7 @@
                         <a href="/app/#/Payments/buyclubbycoins">+</a></span></li>
                     <li [class.active]="isRouteActive(['Profile'])">
                         <a [routerLink]="['Profile']">Profile</a></li>
+                    <li><a href="/logout">Logout</a></li>
                 </ul>
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->

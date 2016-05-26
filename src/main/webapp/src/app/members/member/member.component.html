@@ -1,0 +1,42 @@
+<!--<div class="row main-info">
+    <div  class="col-md-2"><img title="{{member.name}}" src="{{member.picture}}" class="small-img img-thumbnail img-responsive img-circle"></div>
+    <div  class="col-md-4 cap">{{member.name}}</div>
+    <div  class="col-md-4 cap">{{member.email}}</div>
+    <div  class="col-md-2"><a (click)="toggle()" class="glyphicon glyphicon-plus"></a></div>
+    <div  class="col-md-12" [hidden]="!active">HahaHa</div>
+</div>-->
+
+<div class="col-md-4" style="margin-top: 15px">
+    <div class="card" >
+        <div class="avatar" >
+            <img class="small-img img-thumbnail img-responsive img-circle" title="{{member.name}}" src="{{member.picture}}" alt="">
+        </div>
+        <div class="title">{{member.name}}</div>
+        <div id="button">
+            <button type="button" (click)="togglePopup()" class="btn btn-default">More info</button>
+        </div>
+        <div id="fullscreen" *ngIf="expanded">
+            <div id="popUp">
+                <div id="picture">
+                    <img class="small-img img-thumbnail img-responsive img-circle" title="{{member.name}}" src="{{member.picture}}" alt="">
+                </div>
+                <div>
+                    <div style="font-weight: bold">{{member.name}}</div>
+                    <div>{{member.email}}</div>
+                </div>
+                <div *ngFor="#f of member.fields">
+                    <div style="font-weight: bold">{{f.description}}</div>
+                    <div>{{f.value}}</div>
+                </div>
+                <div>
+                    <div style="font-weight: bold">Roles</div>
+                    <div *ngFor="#r of member.roles">
+                        <div>{{r}}</div>
+                    </div>
+                </div>
+                <div id="close-button" (click)="togglePopup()">X</div>
+            </div>
+            <div id="background-shadow" (click)="togglePopup()"></div>
+        </div>
+    </div>
+</div>

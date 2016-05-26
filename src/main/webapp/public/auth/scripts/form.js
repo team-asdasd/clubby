@@ -33,9 +33,9 @@ $.getJSON("/api/form", function (data) {
                 type: field.type, id: field.name, class: "form-control", required: field.required,
                 placeholder: field.description, pattern: field.validationRegex
             }))).prependTo('.generated-form');
-        $('.panel-body').show();
-        $('.loader').hide();
     });
+    $('.panel-body').show();
+    $('.loader').hide();
 });
 
 $('#submit').click(function () {

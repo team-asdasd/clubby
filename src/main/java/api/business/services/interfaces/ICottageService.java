@@ -10,7 +10,7 @@ public interface ICottageService {
 
     Cottage get(int id);
 
-    List<Cottage> getByFilters(String title, int beds);
+    List<Cottage> getByFilters(String title, int beds, String dateFrom, String dateTo, int priceFrom, int priceTo);
 
     void delete(int id);
 

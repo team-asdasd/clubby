@@ -35,10 +35,19 @@ public class CottageResource {
     @Path("")
     @ApiOperation(value = "Returns all cottages.", notes = "Specific roles: []</br>The results can be filtered using optional parameters.</br>See parameters for more details.", response = GetCottagesResponse.class)
     public Response getCottages(@QueryParam("title") @ApiParam(value = "Filters results by title, returns every cottage with given string in the title. Empty string means the filter is not set. Case insensitive.") String title,
-                                @QueryParam("beds") @ApiParam(value = "Filters results by number of beds, returns every cottage with given bed count. 0 means the filter is not set") int beds) {
+                                @QueryParam("beds") @ApiParam(value = "Filters results by number of beds, returns every cottage with given bed count. 0 means the filter is not set") int beds,
+                                @QueryParam("dateFrom") @ApiParam(value = "Filters results from date") String dateFrom,
+                                @QueryParam("dateTo") @ApiParam(value = "Filters results to date") String dateTo,
+                                @QueryParam("priceFrom") @ApiParam(value = "Filters results from price. Price in cents") int priceFrom,
+                                @QueryParam("priceTo") @ApiParam(value = "Filters results to price") int priceTo)
+    {
         GetCottagesRequest request = new GetCottagesRequest();
         request.title = title;
         request.bedcount = beds;
+        request.dateFrom = dateFrom;
+        request.dateTo = dateTo;
+        request.priceFrom = priceFrom;
+        request.priceTo = priceTo;
 
         GetCottagesResponse response = getCottagesHandler.handle(request);
 

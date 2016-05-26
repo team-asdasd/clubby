@@ -110,12 +110,6 @@ SELECT * FROM payment.payments
 WHERE paymentId = 2);
 
 INSERT INTO payment.payments
-SELECT * FROM (SELECT 3, 1, 'EUR', 'Monthly payment for no reason', 1, true, true, 1) a
-WHERE NOT EXISTS (
-SELECT * FROM payment.payments
-WHERE paymentId = 3);
-
-INSERT INTO payment.payments
 SELECT * FROM (SELECT 4, 3, 'EUR', '10 CB gift', 1, true, false, 0) a
 WHERE NOT EXISTS (
 SELECT * FROM payment.payments
@@ -132,12 +126,6 @@ SELECT * FROM (SELECT nextval('lineitems_id_seq'),'Buy clubby coins', 10000, 1, 
 WHERE NOT EXISTS (
 SELECT * FROM payment.lineitems
 WHERE payment_id = 2);
-
-INSERT INTO payment.lineitems
-SELECT * FROM (SELECT nextval('lineitems_id_seq'),'No reason payment', 1000, 1, 3) a
-WHERE NOT EXISTS (
-SELECT * FROM payment.lineitems
-WHERE payment_id = 3);
 
 INSERT INTO payment.lineitems
 SELECT * FROM (SELECT nextval('lineitems_id_seq'),'Gift', 1000, 1, 4) a

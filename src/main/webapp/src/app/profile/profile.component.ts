@@ -14,13 +14,23 @@ import 'rxjs/add/operator/catch';
 })
 export class Profile {
     @ViewChild('recommendationMessage') recommendationMessage;
+    @ViewChild('infoTable') infoTable;
 
     user: User;
     recommendationPopup: boolean = false;
     requestingRecommendationState: String = "default";
+    isCandidate: boolean = false;
 
     constructor(userService: UserService, private recommendationService: RecommendationService) {
-        userService.getUserInfo().subscribe(user => this.user = user);
+        userService.getUserInfo().subscribe(user => this.initUser(user));
+    }
+
+    initUser(user: User) {
+        this.user = user;
+
+        if (user["roles"].indexOf("candidate") > -1) {
+            this.isCandidate = true;
+        }
     }
 
     toggleRecommendationPopup() {
@@ -37,6 +47,10 @@ export class Profile {
                        err => this.handleError(err));
 
         this.requestingRecommendationState = "waiting";
+    }
+
+    submitChanges() {
+
     }
 
     handleRecommendationResponse(resp: any) {

@@ -1,6 +1,6 @@
 import {Injectable} from 'angular2/core';
 import {User} from "./user.model";
-import {Http, Response} from 'angular2/http';
+import {Http, Response, Headers, RequestOptions} from 'angular2/http';
 import {Observable} from "../../../node_modules/rxjs/Observable";
 import {GetAllUsersResponse} from "../members/shared/getAllUsers.response.ts";
 
@@ -29,6 +29,14 @@ export class UserService {
 
     public hasPermission(permission: string): Observable<boolean> {
         return this.http.get(`${this.url}/me/hasPermission/${permission}`).map(UserService.parse).catch(UserService.handleError);
+    }
+
+    public patch(body: string) : Observable<any> {
+
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.patch(this.url, body, options).catch(UserService.handleError);
     }
 
     private static parse<T>(res: Response): T {

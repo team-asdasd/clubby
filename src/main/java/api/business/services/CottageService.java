@@ -9,7 +9,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Stateless
@@ -20,10 +19,10 @@ public class CottageService implements ICottageService {
     @Override
     public List<Cottage> getByFilters(String title, int beds, String dateFrom, String dateTo, int priceFrom, int priceTo) {
         String titleFilter = title != null ? '%' + title + '%' : "";
-        dateFrom = dateFrom == null? DateTime.now().toString("YYYY-MM-dd") : dateFrom;
-        dateTo = dateTo == null? DateTime.now().plusYears(1).toString("YYYY-MM-dd") : dateTo;
+        dateFrom = dateFrom == null ? DateTime.now().toString("YYYY-MM-dd") : dateFrom;
+        dateTo = dateTo == null ? DateTime.now().plusYears(1).toString("YYYY-MM-dd") : dateTo;
 
-        if(priceTo == 0){
+        if (priceTo == 0) {
             priceTo = Integer.MAX_VALUE;
         }
 
@@ -34,17 +33,17 @@ public class CottageService implements ICottageService {
                 "  WHERE (:title = '' OR lower(C.title) LIKE lower(:title))\n" +
                 "        AND (:beds = 0 OR c.bedcount = :beds)\n" +
                 "        AND\n" +
-                "        (((EXTRACT(MONTH FROM c.availablefrom) BETWEEN EXTRACT(MONTH FROM cast(:dateFrom as date)) and EXTRACT(MONTH FROM cast(:dateTo as date))\n" +
-                "           AND  EXTRACT(MONTH FROM c.availablefrom) BETWEEN EXTRACT(DOY FROM cast(:dateFrom as date)) and EXTRACT(DOY FROM cast(:dateTo as date)))\n" +
+                "        (((EXTRACT(MONTH FROM c.availablefrom) BETWEEN EXTRACT(MONTH FROM cast(:dateFrom AS DATE)) AND EXTRACT(MONTH FROM cast(:dateTo AS DATE))\n" +
+                "           AND  EXTRACT(MONTH FROM c.availablefrom) BETWEEN EXTRACT(DOY FROM cast(:dateFrom AS DATE)) AND EXTRACT(DOY FROM cast(:dateTo AS DATE)))\n" +
                 "          OR\n" +
-                "          (EXTRACT(MONTH FROM cast(:dateFrom as date)) BETWEEN EXTRACT(MONTH FROM c.availablefrom) AND EXTRACT(MONTH FROM c.availableto)\n" +
-                "           AND EXTRACT(DOY FROM cast(:dateFrom as date)) BETWEEN EXTRACT(DOY FROM c.availablefrom) AND EXTRACT(DOY FROM c.availableto)))\n" +
+                "          (EXTRACT(MONTH FROM cast(:dateFrom AS DATE)) BETWEEN EXTRACT(MONTH FROM c.availablefrom) AND EXTRACT(MONTH FROM c.availableto)\n" +
+                "           AND EXTRACT(DOY FROM cast(:dateFrom AS DATE)) BETWEEN EXTRACT(DOY FROM c.availablefrom) AND EXTRACT(DOY FROM c.availableto)))\n" +
                 "         OR\n" +
-                "         ((EXTRACT(MONTH FROM c.availableto) BETWEEN EXTRACT(MONTH FROM cast(:dateFrom as date)) and EXTRACT(MONTH FROM cast(:dateTo as date))\n" +
-                "           AND  EXTRACT(MONTH FROM c.availableto) BETWEEN EXTRACT(DOY FROM cast(:dateFrom as date)) and EXTRACT(DOY FROM cast(:dateTo as date)))\n" +
+                "         ((EXTRACT(MONTH FROM c.availableto) BETWEEN EXTRACT(MONTH FROM cast(:dateFrom AS DATE)) AND EXTRACT(MONTH FROM cast(:dateTo AS DATE))\n" +
+                "           AND  EXTRACT(MONTH FROM c.availableto) BETWEEN EXTRACT(DOY FROM cast(:dateFrom AS DATE)) AND EXTRACT(DOY FROM cast(:dateTo AS DATE)))\n" +
                 "          OR\n" +
-                "          (EXTRACT(MONTH FROM cast(:dateTo as date)) BETWEEN EXTRACT(MONTH FROM c.availablefrom) AND EXTRACT(MONTH FROM c.availableto)\n" +
-                "           AND EXTRACT(DOY FROM cast(:dateTo as date)) BETWEEN EXTRACT(DOY FROM c.availablefrom) AND EXTRACT(DOY FROM c.availableto))))\n" +
+                "          (EXTRACT(MONTH FROM cast(:dateTo AS DATE)) BETWEEN EXTRACT(MONTH FROM c.availablefrom) AND EXTRACT(MONTH FROM c.availableto)\n" +
+                "           AND EXTRACT(DOY FROM cast(:dateTo AS DATE)) BETWEEN EXTRACT(DOY FROM c.availablefrom) AND EXTRACT(DOY FROM c.availableto))))\n" +
                 "        AND (c.price BETWEEN :priceFrom AND :priceTo) " +
                 "  EXCEPT\n" +
                 "\n" +
@@ -52,9 +51,9 @@ public class CottageService implements ICottageService {
                 "  FROM main.reservations r\n" +
                 "    INNER JOIN main.cottages c ON r.cottageid = c.id\n" +
                 "    LEFT JOIN payment.moneytransactions m ON r.paymentid = m.paymentid\n" +
-                "  WHERE m.status = 4 AND :dateTo NOT LIKE '' AND :dateFrom NOT LIKE '' AND r.datefrom BETWEEN cast(:dateFrom as date) AND cast(:dateTo as date)\n" +
+                "  WHERE m.status = 4 AND :dateTo NOT LIKE '' AND :dateFrom NOT LIKE '' AND r.datefrom BETWEEN cast(:dateFrom AS DATE) AND cast(:dateTo AS DATE)\n" +
                 "  GROUP BY r.cottageid, c.availableto, c.availablefrom\n" +
-                "  HAVING SUM(LEAST(r.dateTo , cast(:dateTo as date)) -  r.datefrom) >= (cast(LEAST((c.availableto + cast(((EXTRACT(YEAR FROM cast(:dateTo as date)) - EXTRACT(YEAR FROM c.availableto))|| ' year') as interval)), cast(:dateTo as date)) as DATE) -  cast(GREATEST((c.availableFrom + cast(((EXTRACT(YEAR FROM cast(:dateFrom as date)) - EXTRACT(YEAR FROM c.availablefrom))|| ' year') as interval)), cast(:dateFrom as date)) as DATE))\n" +
+                "  HAVING SUM(LEAST(r.dateTo , cast(:dateTo AS DATE)) -  r.datefrom) >= (cast(LEAST((c.availableto + cast(((EXTRACT(YEAR FROM cast(:dateTo AS DATE)) - EXTRACT(YEAR FROM c.availableto))|| ' year') AS INTERVAL)), cast(:dateTo AS DATE)) AS DATE) -  cast(GREATEST((c.availableFrom + cast(((EXTRACT(YEAR FROM cast(:dateFrom AS DATE)) - EXTRACT(YEAR FROM c.availablefrom))|| ' year') AS INTERVAL)), cast(:dateFrom AS DATE)) AS DATE))\n" +
                 ")\n" +
                 "\n" +
                 "SELECT C.* FROM main.cottages C\n" +

@@ -2,6 +2,7 @@ package api.handlers.reservations;
 
 import api.business.entities.*;
 import api.business.persistance.ISimpleEntityManager;
+import api.business.services.interfaces.ICottageService;
 import api.business.services.interfaces.IPaymentsService;
 import api.business.services.interfaces.IUserService;
 import api.contracts.base.ErrorCodes;
@@ -29,6 +30,8 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
     private ISimpleEntityManager em;
     @Inject
     private IPaymentsService paymentsService;
+    @Inject
+    private ICottageService cottageService;
     @Inject
     private IUserService userService;
 
@@ -108,6 +111,14 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
 
         if (from.isAfter(to)) {
             errors.add(new ErrorDto("Date 'to' must be after 'from'.", ErrorCodes.VALIDATION_ERROR));
+        }
+
+        List<Cottage> availableCottages = cottageService.getByFilters("", 0, fromDateString, toDateString, 0, 0);
+        boolean cottageAvailable = availableCottages.stream().anyMatch(c -> c.getId() == request.cottage);
+
+        if (!cottageAvailable) {
+            errors.add(new ErrorDto("Cottage is not available in that period.", ErrorCodes.VALIDATION_ERROR));
+            return errors;
         }
 
         if (request.services != null) {

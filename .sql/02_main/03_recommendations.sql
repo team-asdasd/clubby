@@ -8,6 +8,7 @@ CREATE TABLE main.recommendations
   user_from integer,
   user_to integer,
   recommendation_code text,
+  status integer,
   CONSTRAINT pk_recommendations_id PRIMARY KEY (id),
   CONSTRAINT fk_recommendations_users1 FOREIGN KEY (user_to)
       REFERENCES main.users (id) MATCH SIMPLE

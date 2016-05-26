@@ -11,12 +11,24 @@ public class DatesHelper {
     }
 
     public static boolean inThisYear(Date date){
-        GregorianCalendar nowGc = new GregorianCalendar();
-        nowGc.setTime(new Date());
-        GregorianCalendar otherGc = new GregorianCalendar();
-        nowGc.setTime(date);
+        GregorianCalendar nowGc = createGregorianCalendar(new Date());
+        GregorianCalendar otherGc = createGregorianCalendar(date);
 
         return nowGc.get(Calendar.YEAR) == otherGc.get(Calendar.YEAR);
+    }
+
+    public static boolean inPastYear(Date date){
+        GregorianCalendar nowGc = createGregorianCalendar(new Date());
+        GregorianCalendar otherGc = createGregorianCalendar(date);
+
+        return otherGc.get(Calendar.YEAR) == nowGc.get(Calendar.YEAR);
+    }
+
+    public static GregorianCalendar createGregorianCalendar(Date date){
+        GregorianCalendar gc = new GregorianCalendar();
+        gc.setTime(date);
+
+        return gc;
     }
 
     private static boolean isAfter(Date startingDate,int field, int add){

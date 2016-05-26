@@ -1,10 +1,12 @@
 package api.resources;
 
 import api.contracts.base.BaseRequest;
+import api.contracts.base.BaseResponse;
 import api.contracts.reservations.CreateReservationRequest;
 import api.contracts.reservations.CreateReservationResponse;
 import api.contracts.reservations.GetReservationsResponse;
 import api.handlers.reservations.CreateReservationHandler;
+import api.handlers.reservations.CreateReservationsGroupsHandler;
 import api.handlers.reservations.GetReservationsHandler;
 import api.handlers.utilities.StatusResolver;
 import io.swagger.annotations.Api;
@@ -25,6 +27,8 @@ public class ReservationResource {
     private GetReservationsHandler getReservationsHandler;
     @Inject
     private CreateReservationHandler createReservationHandler;
+    @Inject
+    CreateReservationsGroupsHandler createReservationsGroupsHandler;
 
     @GET
     @Path("")
@@ -44,6 +48,18 @@ public class ReservationResource {
     @ApiOperation(value = "Creates new reservation and adds a payment.", response = CreateReservationResponse.class)
     public Response createReservation(CreateReservationRequest request) {
         CreateReservationResponse response = createReservationHandler.handle(request);
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
+    }
+
+    @POST
+    @Path("groups")
+    @ApiOperation(value = "Creates users groups", response = BaseResponse.class)
+    public Response createUser() {
+        BaseRequest request = new BaseRequest();
+        BaseResponse response = createReservationsGroupsHandler.handle(request);
 
         int statusCode = StatusResolver.getStatusCode(response);
 

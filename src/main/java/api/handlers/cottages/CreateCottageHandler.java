@@ -99,7 +99,7 @@ public class CreateCottageHandler extends BaseHandler<CreateCottageRequest, Crea
                 service.setCottage(cottage);
                 service.setMaxCount(dto.maxCount);
                 service.setPrice(((Double)(Double.parseDouble(dto.price)* 100d)).intValue());
-                em.persist(em);
+                em.persist(service);
             }
         }
 

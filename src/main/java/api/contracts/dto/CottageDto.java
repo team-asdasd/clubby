@@ -31,7 +31,7 @@ public class CottageDto {
         title = cottage.getTitle();
         beds = cottage.getBedcount();
         image = cottage.getImageurl();
-        DecimalFormat def = new DecimalFormat("#.00");
+        DecimalFormat def = new DecimalFormat("#0.##");
         price = def.format(cottage.getPrice() /100d);
         description = cottage.getDescription();
         DateFormat df = new SimpleDateFormat("MM-dd");

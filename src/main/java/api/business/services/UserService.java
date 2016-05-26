@@ -8,6 +8,7 @@ import clients.facebook.responses.FacebookUserDetails;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authc.credential.PasswordService;
+import org.apache.shiro.subject.Subject;
 
 import javax.ejb.Stateless;
 import javax.persistence.*;
@@ -28,7 +29,10 @@ public class UserService implements IUserService {
     }
 
     public User get() {
-        return get(Integer.parseInt(SecurityUtils.getSubject().getPrincipal().toString()));
+        Subject sub = SecurityUtils.getSubject();
+        if (sub.isAuthenticated())
+            return get(Integer.parseInt(sub.getPrincipal().toString()));
+        return null;
     }
 
     public User getByEmail(String email) {

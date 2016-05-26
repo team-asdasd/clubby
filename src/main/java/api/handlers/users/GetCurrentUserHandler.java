@@ -42,7 +42,7 @@ public class GetCurrentUserHandler extends BaseHandler<BaseRequest, GetUserInfoR
     @Override
     public ArrayList<ErrorDto> validate(BaseRequest request) {
         ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
-
+        if (!errors.isEmpty()) return errors;
         User user = userService.get();
 
         if (user == null) {
@@ -56,7 +56,7 @@ public class GetCurrentUserHandler extends BaseHandler<BaseRequest, GetUserInfoR
     public GetUserInfoResponse handleBase(BaseRequest request) {
         Configuration default_user_picture_url = em.getById(Configuration.class, "default_user_picture_url");
         String defaultPic = default_user_picture_url != null ? default_user_picture_url.getValue() : "";
-        
+
         User user = userService.get();
 
         GetUserInfoResponse response = createResponse();

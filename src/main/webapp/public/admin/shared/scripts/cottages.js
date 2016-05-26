@@ -8,9 +8,10 @@ var modal = $("#add-cottage-modal");
 
 $(function () {
     initializeFileUpload();
-
+    $("#loading").hide();
     $("#add-service").click(addService);
     $("#add-cottage").click(function () {
+        $("#currentImage").attr('src', "");
         $("#services-table-body").find("tr").remove();
         $("form").find("input").val("");
         $(".preview").html("");
@@ -30,6 +31,8 @@ $(function () {
 
 function handleCreate() {
 
+    $("#loading").show();
+    $("#save").prop("disabled", true);
     var modalMessage = modal.find("#modal-message-box");
 
     var title = modal.find("#title");
@@ -79,21 +82,28 @@ function handleCreate() {
         $('.preview').html("");
 
         modal.modal("hide");
-
+        $("#loading").hide();
+        $("#save").prop("disabled", false);
         load();
     }).fail(function (response) {
         modalMessage.html("");
 
         var message = getErrorMessageFromResponse(response) || "Error creating cottage!";
         modalMessage.html(alertComponent({title: "Error!", message: message, severity: "danger"}));
+        $("#loading").hide();
+        $("#save").prop("disabled", false);
     });
 }
 
 function handleEdit(event) {
-
+    $("#currentImage").attr('src', "");
+    $("#services-table-body").find("tr").remove();
+    $("form").find("input").val("");
+    $(".preview").html("");
     $("#modal-message-box").html("");
     $("#save").off('click').click(sendUpdate);
     var id = $(event.target).attr("data-cottage-id");
+
     window.id = id;
     var modal = $("#add-cottage-modal");
     modal.find("#myModalLabel").html("Edit cottage");
@@ -102,7 +112,7 @@ function handleEdit(event) {
 
     var title = modal.find("#title");
     var bedcount = modal.find("#bedcount");
-    var imageUrl = modal.find("#image");
+    var imageUrl = modal.find("#currentImage");
     var description = modal.find("#description");
     var price = modal.find("#price");
     var availableFrom = modal.find("#availableFrom");
@@ -116,7 +126,8 @@ function handleEdit(event) {
         modalMessage.html("");
         title.val(response.cottage.title);
         bedcount.val(response.cottage.beds);
-        imageUrl.val(response.cottage.image);
+        imageUrl.attr('src', response.cottage.image);
+        modal.find("#image").val(response.cottage.image);
         description.val(response.cottage.description);
         price.val(response.cottage.price);
         availableFrom.val(response.cottage.availableFrom);
@@ -129,20 +140,24 @@ function handleEdit(event) {
         });
 
         $("#add-service").click(addService);
+        $("#loading").hide();
+        $("#save").prop("disabled", false);
     }).fail(function (response) {
         modalMessage.html("");
 
         var message = getErrorMessageFromResponse(response) || "Error editing cottage!";
         modalMessage.html(alertComponent({title: "Error!", message: message, severity: "danger"}));
+        $("#loading").hide();
+        $("#save").prop("disabled", false);
     });
 }
 function sendUpdate() {
-
+    $("#loading").show();
+    $("#save").prop("disabled", true);
     var id = window.id;
     var modal = $("#add-cottage-modal");
     modal.find("#ModalLabel").html("Edit cottage");
     var modalMessage = modal.find("#modal-message-box");
-    var request = {};
     var title = modal.find("#title");
     var bedcount = modal.find("#bedcount");
     var imageUrl = modal.find("#image");
@@ -184,12 +199,16 @@ function sendUpdate() {
     }).done(function (response) {
         modalMessage.html(alertComponent({title: "Success!", message: "Cottage created.", severity: "success"}));
         modal.modal("hide");
+        $("#loading").hide();
+        $("#save").prop("disabled", false);
         load();
     }).fail(function (response) {
         modalMessage.html("");
 
         var message = getErrorMessageFromResponse(response) || "Error editing cottage!";
         modalMessage.html(alertComponent({title: "Error!", message: message, severity: "danger"}));
+        $("#loading").hide();
+        $("#save").prop("disabled", false);
     });
 }
 function handleDelete(event) {
@@ -280,9 +299,9 @@ function initializeFileUpload() {
     fileUpload.children().first().attr("accept", "image/*");
     fileUpload.bind('cloudinarydone', function (e, data) {
             $("#image-upload").find("#progressbar").html("");
-
+            $("#currentImage").attr('src', "");
             var image = $.cloudinary.image(data.result.public_id, {
-                crop: 'thumb', gravity: 'face', effect: 'saturation:50'
+                width: 300, height: 300,
             }).addClass("img-thumbnail img-responsive");
 
             $('.preview').html(image);

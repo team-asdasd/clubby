@@ -13,7 +13,6 @@ public class ApplicationConfiguration extends Application {
     private Set<Class<?>> classes = new HashSet<>();
 
     public ApplicationConfiguration() {
-
         BeanConfig beanConfig = new BeanConfig();
         beanConfig.setVersion("1.0.0");
         beanConfig.setSchemes(new String[]{"http"});
@@ -36,6 +35,7 @@ public class ApplicationConfiguration extends Application {
         classes.add(PayseraResource.class);
         classes.add(FormResource.class);
         classes.add(SettingsResource.class);
+        classes.add(ReservationResource.class);
 
         classes.add(io.swagger.jaxrs.listing.ApiListingResource.class);
         classes.add(io.swagger.jaxrs.listing.SwaggerSerializers.class);

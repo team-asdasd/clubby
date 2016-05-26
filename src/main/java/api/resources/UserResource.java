@@ -33,6 +33,8 @@ public class UserResource {
     private HasPermissionHandler hasPermissionHandler;
     @Inject
     private HasRoleHandler hasRoleHandler;
+    @Inject
+    private SendInvitationEmailHandler sendInvitationEmailHandler;
 
     @GET
     @ApiOperation(value = "Gets user information for all users.", response = GetAllUsersResponse.class)
@@ -120,4 +122,16 @@ public class UserResource {
 
         return Response.status(statusCode).entity(response).build();
     }
+
+    @POST
+    @Path("/invite")
+    @ApiOperation(value = "Sends invitation email", response = BaseResponse.class)
+    public Response sendInvitationEmail(SendInvitationEmailRequest request) {
+        BaseResponse response = sendInvitationEmailHandler.handle(request);
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
+    }
+
+
 }

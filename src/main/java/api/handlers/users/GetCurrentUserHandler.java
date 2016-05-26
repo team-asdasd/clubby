@@ -1,6 +1,7 @@
 package api.handlers.users;
 
 import api.business.entities.Configuration;
+import api.business.entities.Role;
 import api.business.entities.User;
 import api.business.persistance.ISimpleEntityManager;
 import api.business.services.interfaces.IFormService;
@@ -9,6 +10,7 @@ import api.business.services.interfaces.IUserService;
 import api.contracts.base.BaseRequest;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
+import api.contracts.dto.FormInfoDto;
 import api.contracts.users.GetUserInfoResponse;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
@@ -20,6 +22,7 @@ import org.apache.shiro.subject.Subject;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @Stateless
 public class GetCurrentUserHandler extends BaseHandler<BaseRequest, GetUserInfoResponse> {
@@ -61,7 +64,8 @@ public class GetCurrentUserHandler extends BaseHandler<BaseRequest, GetUserInfoR
         response.name = user.getName();
         response.email = user.getLogin().getEmail();
         response.picture = mapper.getPicture(user, defaultPic);
-        response.fields = formService.getFormByUserId(user.getId());
+        response.fields = user.getFormResults().stream().map(FormInfoDto::new).collect(Collectors.toList());
+        response.roles = user.getLogin().getRoles().stream().map(Role::getRoleName).collect(Collectors.toList());
 
         return response;
     }

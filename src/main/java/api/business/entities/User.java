@@ -62,6 +62,7 @@ public class User {
     public Login getLogin() {
         return login;
     }
+
     public void setLogin(Login login) {
         this.login = login;
     }
@@ -77,6 +78,27 @@ public class User {
         this.transactions = transactions;
     }
 
+    private Collection<FormResult> formResults;
+    private Collection<Reservation> reservations;
+
+    @OneToMany(mappedBy = "user")
+    public Collection<FormResult> getFormResults() {
+        return formResults;
+    }
+
+    public void setFormResults(Collection<FormResult> formResults) {
+        this.formResults = formResults;
+    }
+
+    @OneToMany(mappedBy = "user")
+    public Collection<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(Collection<Reservation> reservations) {
+        this.reservations = reservations;
+    }
+
     @Basic
     @Column(name = "picture", length = -1)
     public String getPicture() {
@@ -86,5 +108,4 @@ public class User {
     public void setPicture(String picture) {
         this.picture = picture;
     }
-
 }

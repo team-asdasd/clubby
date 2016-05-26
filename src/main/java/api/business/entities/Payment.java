@@ -1,14 +1,22 @@
 package api.business.entities;
 
+import api.contracts.enums.*;
+import api.contracts.enums.TransactionStatus;
+import api.helpers.DatesHelper;
+import org.joda.time.Instant;
+import org.joda.time.Interval;
+import org.joda.time.Months;
+
 import javax.persistence.*;
+import java.time.Month;
 import java.util.Collection;
+import java.util.Date;
 
 @Entity
 @Table(name = "payments", schema = "payment", catalog = "clubby")
 public class Payment {
     private int paymentid;
     private int paymenttypeid;
-    private int amount;
     private String currency;
     private String paytext;
     private boolean active;
@@ -16,7 +24,8 @@ public class Payment {
     private int frequencyId;
 
     @Id
-    @Column(name = "paymentid")
+    @Column(name = "paymentid", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getPaymentid() {
         return paymentid;
     }
@@ -56,16 +65,6 @@ public class Payment {
     }
 
     @Basic
-    @Column(name = "amount")
-    public int getAmount() {
-        return amount;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
-
-    @Basic
     @Column(name = "currency")
     public String getCurrency() {
         return currency;
@@ -102,7 +101,7 @@ public class Payment {
 
         Payment payment = (Payment) o;
 
-        if (paymentid  != payment.paymentid)
+        if (paymentid != payment.paymentid)
             return false;
         return true;
     }
@@ -139,12 +138,62 @@ public class Payment {
 
     private Collection<PendingPayment> pendingPayments;
 
-    @OneToMany(mappedBy = "payment")
+    @OneToMany(mappedBy = "payment", cascade = CascadeType.PERSIST)
     public Collection<PendingPayment> getPendingPayments() {
         return pendingPayments;
     }
 
     public void setPendingPayments(Collection<PendingPayment> pendingPayments) {
         this.pendingPayments = pendingPayments;
+    }
+
+    private Collection<LineItem> lineItems;
+
+    @OneToMany(mappedBy = "payment", cascade = CascadeType.PERSIST)
+    public Collection<LineItem> getLineItems() {
+        return lineItems;
+    }
+
+    public void setLineItems(Collection<LineItem> lineitems) {
+        this.lineItems = lineitems;
+    }
+
+    @Transient
+    public int calculatePrice() {
+        float price = 0;
+
+        for (LineItem item : lineItems) {
+            price += item.getPrice() * item.getQuantity();
+        }
+
+        return (int) price;
+    }
+
+    @Transient
+    public boolean canAcces(User user) {
+        boolean canAcces = getPendingPayments().size() == 0 ||
+                getPendingPayments().stream().filter(p -> p.getUserId() == user.getId()).findFirst().isPresent();
+
+        if(canAcces){
+            if(getFrequencyId() == PaymentsFrequency.once.getValue()){
+                canAcces = !user.getTransactions().stream().filter(f ->
+                        f.getStatus() == TransactionStatus.approved.getValue()
+                            && f.getPayment().getPaymentid() == paymentid).findAny().isPresent();
+            }else if(getFrequencyId() == PaymentsFrequency.monthly.getValue()){
+               canAcces = !user.getTransactions().stream()
+                        .filter(f ->
+                                f.getStatus() == TransactionStatus.approved.getValue()
+                                        && DatesHelper.inThisMonth(f.getCreationTime())
+                                        && f.getPayment().getPaymentid() == paymentid).findAny().isPresent();
+           }else if(getFrequencyId() == PaymentsFrequency.yearly.getValue()){
+                canAcces = !user.getTransactions().stream()
+                        .filter(f ->
+                                f.getStatus() == TransactionStatus.approved.getValue()
+                                        && DatesHelper.inThisYear(f.getCreationTime())
+                                        && f.getPayment().getPaymentid() == paymentid).findAny().isPresent();
+            }
+        }
+
+        return canAcces;
     }
 }

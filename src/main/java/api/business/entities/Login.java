@@ -66,15 +66,6 @@ public class Login implements Serializable{
         return result;
     }
 
-    @OneToOne(mappedBy = "login")
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     @OneToMany
     @JoinColumn(name="username", referencedColumnName = "username")
     public List<Role> getRoles() {

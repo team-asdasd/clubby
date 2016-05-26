@@ -12,6 +12,7 @@ import api.contracts.payments.GetMyHistoryPaymetsRequest;
 import api.contracts.payments.GetMyHistoryPaymetsResponse;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
+import logging.audit.Audit;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -34,13 +35,14 @@ public class GetMyHistoryPamentsHandler extends BaseHandler<GetMyHistoryPaymetsR
     }
 
     @Override
+    @Audit
     public GetMyHistoryPaymetsResponse handleBase(GetMyHistoryPaymetsRequest request) {
         GetMyHistoryPaymetsResponse response = createResponse();
         User user = userService.get();
 
         List<MoneyTransaction> payments = paymentsService.getMoneyTransactionsByUserId(user.getId());
 
-        response.payments =  payments.stream().map(MoneyTransactionDto::new).collect(Collectors.toList());
+        response.payments = payments.stream().map(MoneyTransactionDto::new).collect(Collectors.toList());
 
         return response;
     }

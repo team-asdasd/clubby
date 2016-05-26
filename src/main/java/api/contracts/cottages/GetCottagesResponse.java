@@ -6,5 +6,5 @@ import api.contracts.dto.CottageDto;
 import java.util.List;
 
 public class GetCottagesResponse extends BaseResponse {
-    public List<CottageDto> Cottages;
+    public List<CottageDto> cottages;
 }

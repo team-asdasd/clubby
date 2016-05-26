@@ -2,7 +2,6 @@ CREATE TABLE payment.payments
 (
   paymentId SERIAL NOT NULL,
   paymentTypeId INT  NOT NULL,
-  amount INT  NOT NULL,
   currency TEXT  NOT NULL,
   paytext TEXT  NOT NULL,
   paymentSettingsId INT,

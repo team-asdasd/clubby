@@ -1,6 +1,7 @@
 package api.business.services;
 
 import api.business.entities.Cottage;
+import api.business.entities.Service;
 import api.business.services.interfaces.ICottageService;
 
 import javax.ejb.Stateless;
@@ -45,5 +46,10 @@ public class CottageService implements ICottageService {
     public void delete(int id) {
         Cottage cottage = get(id);
         em.remove(cottage);
+    }
+
+    @Override
+    public List<Service> getCottageServices(int id) {
+        return em.createQuery("SELECT S FROM Service S WHERE S.cottage.id = :cottageId", Service.class).setParameter("cottageId", id).getResultList();
     }
 }

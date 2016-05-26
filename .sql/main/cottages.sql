@@ -4,5 +4,9 @@ CREATE TABLE main.cottages
     title TEXT,
     bedcount INTEGER,
     imageurl TEXT,
-    version INTEGER
+    version INTEGER,
+	price INTEGER NOT NULL,
+	availablefrom DATE,
+	availableto DATE,
+	description TEXT
 );

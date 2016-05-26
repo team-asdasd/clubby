@@ -93,7 +93,6 @@ public class CreateUserHandler extends BaseHandler<CreateUserRequest, BaseRespon
 
             login.setEmail(request.email);
             login.setPassword(encryptedPassword);
-            login.setUser(user);
 
             userService.createUser(user, login);
             em.refresh(login);

@@ -1,0 +1,76 @@
+<button type="button" class="btn btn-success" data-toggle="modal" data-target="#reservationModal">Reserve</button>
+
+<!-- Modal -->
+<div class="modal fade"
+     id="reservationModal"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="reservationModalLabel"
+     data-backdrop="false">
+    <div class="modal-dialog"
+         role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"
+                    id="reservationModalLabel">Reservation form</h4>
+            </div>
+            <form class="form-horizontal"
+                  (ngSubmit)="onSubmit()">
+                <div class="modal-body">
+                    <fieldset>
+                        <div class="control-group">
+                            <!-- Start date -->
+                            <label class="control-label"
+                                   for="startDate">Start date</label>
+                            <div class="controls">
+                                <!--TODO:implement a cross-browser solution. sorry safari users :(-->
+                                <input id="startDate"
+                                       type="date"
+                                       [(ngModel)]="reservation.from"
+                                       required/>
+                                <p class="help-block">Reservation must start on Monday</p>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <!-- End date -->
+                            <label class="control-label"
+                                   for="endDate">End date</label>
+                            <div class="controls">
+                                <!--TODO:implement a cross-browser solution. sorry safari users :(-->
+                                <input id="endDate"
+                                       type="date"
+                                       [(ngModel)]="reservation.to"
+                                       required/>
+                                <p class="help-block">Reservation must end on Sunday</p>
+                            </div>
+                        </div>
+                        <!--TODO: use notification system-->
+                        <ul>
+                            <li *ngFor="#error of errors; #idx = index" style="color: red">
+                                {{error.Message}}
+                            </li>
+                        </ul>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-default"
+                            data-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="submit"
+                            class="btn btn-primary"
+                            [disabled]="!isButtonActive">
+                        Submit
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

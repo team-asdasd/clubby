@@ -11,14 +11,27 @@ export class CottageService {
     }
 
     public getAllCottages(): Observable<Array<Cottage>> {
-        return this.http.get(this.url).map(this.parse).catch(this.handleError);
+        return this.http
+            .get(this.url)
+            .map(this.parseArray)
+            .catch(this.handleError);
     }
 
+    public getCottage(id: string): Observable<Cottage> {
+        return this.http
+            .get(this.url + '/' + id)
+            .map(this.parse)
+            .catch(this.handleError);
+    }
+    
     public getFilteredCottages(query: string): Observable<Array<Cottage>> {
-        return this.http.get(this.url + query).map(this.parse).catch(this.handleError);
+        return this.http
+            .get(this.url + query)
+            .map(this.parseArray)
+            .catch(this.handleError);
     }
 
-    private parse(res: Response): Array<Cottage> {
+    private parseArray(res: Response): Array<Cottage> {
         if (res.status < 200 || res.status >= 300) {
             throw new Error('Bad response status: ' + res.status);
         }
@@ -26,6 +39,13 @@ export class CottageService {
         let result: Array<Cottage> = res.json().cottages;
         console.log(result);
         return result;
+    }
+
+    private parse(res: Response): Cottage {
+        if (res.status < 200 || res.status >= 300) {
+            throw new Error('Bad response status: ' + res.status);
+        }
+        return res.json().cottage;
     }
 
     private handleError(error: any) {

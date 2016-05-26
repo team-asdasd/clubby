@@ -23,9 +23,11 @@ export class CottagesList {
         cottageService.getAllCottages().subscribe(resp => this.cottages = resp);
     }
 
-    public filterCottages(title: String, beds) {
+    public filterCottages(title: string, beds, priceFrom: string, priceTo: string) {
         var query = "?";
         query += title.length > 0 ? "title=" + title + "&" : "";
+        query += priceFrom ? "priceFrom=" + parseInt(priceFrom) + "&" : "";
+        query += priceTo ? "priceTo=" + parseInt(priceTo) + "&" : "";
         query += beds !== "Any" ? "beds=" + beds + "&" : "";
         query = query.substring(0, query.length - 1);
         this.cottageService.getFilteredCottages(query).subscribe(resp => this.cottages = resp);

@@ -77,6 +77,17 @@ public class User {
         this.transactions = transactions;
     }
 
+    private Collection<FormResult> formResults;
+
+    @OneToMany(mappedBy = "user")
+    public Collection<FormResult> getFormResults() {
+        return formResults;
+    }
+
+    public void setFormResults(Collection<FormResult> formResults) {
+        this.formResults = formResults;
+    }
+
     @Basic
     @Column(name = "picture", length = -1)
     public String getPicture() {

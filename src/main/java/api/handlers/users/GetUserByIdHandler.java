@@ -1,12 +1,14 @@
 package api.handlers.users;
 
 import api.business.entities.Configuration;
+import api.business.entities.Role;
 import api.business.entities.User;
 import api.business.persistance.ISimpleEntityManager;
 import api.business.services.interfaces.IFormService;
 import api.business.services.interfaces.IUserService;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
+import api.contracts.dto.FormInfoDto;
 import api.contracts.users.GetUserByIdRequest;
 import api.contracts.users.GetUserInfoResponse;
 import api.handlers.base.BaseHandler;
@@ -19,6 +21,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @Stateless
 public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserInfoResponse> {
@@ -35,7 +38,15 @@ public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserI
 
     @Override
     public ArrayList<ErrorDto> validate(GetUserByIdRequest request) {
-        return Validator.checkAllNotNullAndIsAuthenticated(request);
+        ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
+
+        User user = userInfoService.get(request.id);
+
+        if (user == null) {
+            errors.add(new ErrorDto("user not found", ErrorCodes.NOT_FOUND));
+        }
+
+        return errors;
     }
 
     @Override
@@ -46,16 +57,12 @@ public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserI
         GetUserInfoResponse response = createResponse();
         User user = userInfoService.get(request.id);
 
-        if (user == null) {
-            logger.warn(String.format("User %s not found", request.id));
-            return handleException("User not found", ErrorCodes.NOT_FOUND);
-        }
-
         response.id = user.getId();
         response.name = user.getName();
         response.email = user.getLogin().getEmail();
         response.picture = mapper.getPicture(user, defaultPic);
-        response.fields = formService.getFormByUserId(request.id);
+        response.fields = user.getFormResults().stream().map(FormInfoDto::new).collect(Collectors.toList());
+        response.roles = user.getLogin().getRoles().stream().map(Role::getRoleName).collect(Collectors.toList());
 
         return response;
     }

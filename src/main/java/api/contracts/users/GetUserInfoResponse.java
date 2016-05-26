@@ -16,4 +16,8 @@ public class GetUserInfoResponse extends BaseResponse {
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     public List<FormInfoDto> fields;
+
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+    public List<String> roles;
+
 }

@@ -57,7 +57,7 @@ public class FormResult {
         return result;
     }
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @JsonIgnore
     public User getUser() {

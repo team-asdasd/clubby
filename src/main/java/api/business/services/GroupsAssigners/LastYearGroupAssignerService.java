@@ -1,7 +1,7 @@
 package api.business.services.GroupsAssigners;
 
 import api.business.entities.Configuration;
-import api.business.entities.Reservationgroup;
+import api.business.entities.ReservationGroup;
 import api.business.entities.User;
 import api.business.persistance.ISimpleEntityManager;
 import api.business.services.interfaces.IGroupsAssignmentService;
@@ -40,7 +40,7 @@ public class LastYearGroupAssignerService implements IGroupsAssignmentService {
 
         for(int i = 0; i < sorted.size(); i++){
             UserGroup group = sorted.get(i);
-            Reservationgroup rg = new Reservationgroup(group.userId, generationNumber, i/step+1);
+            ReservationGroup rg = new ReservationGroup(group.userId, generationNumber, i/step+1);
             simpleEntityManager.insert(rg);
         }
     }

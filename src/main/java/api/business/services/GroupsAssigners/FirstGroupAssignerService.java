@@ -1,19 +1,15 @@
 package api.business.services.GroupsAssigners;
 
-import api.business.entities.Reservationgroup;
+import api.business.entities.ReservationGroup;
 import api.business.entities.User;
 import api.business.persistance.ISimpleEntityManager;
-import api.business.persistance.SimpleEntityManager;
 import api.business.services.interfaces.IGroupsAssignmentService;
-import api.contracts.reservations.groups.UserGroup;
 
-import javax.ejb.Stateless;
 import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Alternative
 public class FirstGroupAssignerService implements IGroupsAssignmentService {
@@ -27,7 +23,7 @@ public class FirstGroupAssignerService implements IGroupsAssignmentService {
         int generationNumber = getLastGenerationNumber() +1;
 
         simpleEntityManager.getAll(User.class).stream().forEach(f ->
-                simpleEntityManager.insert(new Reservationgroup(f.getId(), generationNumber, 1)));
+                simpleEntityManager.insert(new ReservationGroup(f.getId(), generationNumber, 1)));
 
     }
 

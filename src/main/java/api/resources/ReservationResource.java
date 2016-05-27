@@ -3,10 +3,7 @@ package api.resources;
 import api.contracts.base.BaseRequest;
 import api.contracts.base.BaseResponse;
 import api.contracts.reservations.*;
-import api.handlers.reservations.CancelReservationHandler;
-import api.handlers.reservations.CreateReservationHandler;
-import api.handlers.reservations.CreateReservationsGroupsHandler;
-import api.handlers.reservations.GetReservationsHandler;
+import api.handlers.reservations.*;
 import api.handlers.utilities.StatusResolver;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,6 +25,12 @@ public class ReservationResource {
     private CreateReservationsGroupsHandler createReservationsGroupsHandler;
     @Inject
     private CancelReservationHandler cancelReservationsGroupsHandler;
+    @Inject
+    private CreateReservationPeriodHandler createReservationPeriodHandler;
+    @Inject
+    private GetReservationPeriodsHandler getReservationPeriodsHandler;
+    @Inject
+    private DeleteReservationPeriodHandler deleteReservationPeriodHandler;
 
     @GET
     @Path("")
@@ -74,6 +77,46 @@ public class ReservationResource {
     public Response createGroups() {
         BaseRequest request = new BaseRequest();
         BaseResponse response = createReservationsGroupsHandler.handle(request);
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
+    }
+
+    @POST
+    @Path("period")
+    @ApiOperation(value = "Creates reservation period", response = BaseResponse.class)
+    public Response createReservationPeriod(CreateReservationPeriodRequest request) {
+        BaseResponse response = createReservationPeriodHandler.handle(request);
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
+    }
+
+    @GET
+    @Path("period")
+    @ApiOperation(value = "Gets reservations groups", response = GetReservationPeriodsResponse.class)
+    public Response getReservationPeriods(@QueryParam("from") @ApiParam(value = "Reservation periods start time filter. Returns reservation period if period crosses with date") String from,
+                                          @QueryParam("to") @ApiParam(value = "Reservation periods end time filter. Returns reservation period if period crosses with date") String to) {
+        GetReservationPeriodsRequest request = new GetReservationPeriodsRequest();
+        request.from = from;
+        request.to = to;
+
+        BaseResponse response = getReservationPeriodsHandler.handle(request);
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
+    }
+
+    @DELETE
+    @Path("period")
+    @ApiOperation(value = "Creates users groups", response = BaseResponse.class)
+    public Response deleteReservationPeriod(@QueryParam("id") @ApiParam(value = "Reservation period id") int id) {
+        DeleteReservationPeriodRequest request = new DeleteReservationPeriodRequest();
+        request.id = id;
+        BaseResponse response = deleteReservationPeriodHandler.handle(request);
 
         int statusCode = StatusResolver.getStatusCode(response);
 

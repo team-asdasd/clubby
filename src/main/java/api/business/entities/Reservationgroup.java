@@ -4,18 +4,18 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "Reservationgroups", schema = "main", catalog = "clubby")
-public class Reservationgroup {
+public class ReservationGroup {
     private int reservationgroupid;
     private int userid;
     private int generation;
     private int groupnumber;
 
-    public Reservationgroup(int userId, int generation, int groupnumber){
+    public ReservationGroup(int userId, int generation, int groupnumber){
         this.userid = userId;
         this.generation = generation;
         this.groupnumber = groupnumber;
     }
-    public Reservationgroup(){}
+    public ReservationGroup(){}
 
     @Id
     @Column(name = "reservationgroupid")
@@ -63,7 +63,7 @@ public class Reservationgroup {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Reservationgroup that = (Reservationgroup) o;
+        ReservationGroup that = (ReservationGroup) o;
 
         if (reservationgroupid !=  that.reservationgroupid)
             return false;

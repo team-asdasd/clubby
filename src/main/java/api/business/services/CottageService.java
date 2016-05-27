@@ -2,11 +2,13 @@ package api.business.services;
 
 import api.business.entities.Cottage;
 import api.business.entities.Reservation;
+import api.business.entities.ReservationsPeriod;
 import api.business.entities.Service;
 import api.business.persistance.ISimpleEntityManager;
 import api.business.services.interfaces.ICottageService;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -135,5 +137,27 @@ public class CottageService implements ICottageService {
     @Override
     public List<Reservation> getReservations() {
         return sem.getAll(Reservation.class);
+    }
+
+    public void saveReservationPeriod(DateTime from,DateTime to){
+        ReservationsPeriod rp = new ReservationsPeriod();
+        rp.setFromdate(new java.sql.Date(from.getMillis()));
+        rp.setTodate(new java.sql.Date(to.getMillis()));
+
+        sem.insert(rp);
+    }
+
+    public List<ReservationsPeriod> getReservationPeriods(String fromDate, String toDate){
+        toDate = toDate == null ? DateTime.now().plusYears(10).toString("YYYY-MM-dd") : toDate;
+        fromDate = fromDate == null ? DateTime.now().minusYears(10).toString("YYYY-MM-dd") : toDate;
+
+        return em.createNativeQuery("SELECT rp.* FROM main.reservationsperiods rp " +
+                "WHERE :fromDate IS null OR :toDate IS null OR rp.fromDate BETWEEN CAST(:fromDate AS DATE) AND CAST(:toDate AS DATE) " +
+                "OR CAST(:fromDate AS DATE) BETWEEN rp.fromDate AND rp.toDate " +
+                "OR rp.toDate BETWEEN CAST(:fromDate AS DATE) AND CAST(:toDate AS DATE) " +
+                "OR CAST(:toDate AS DATE) BETWEEN rp.fromDate AND rp.toDate", ReservationsPeriod.class)
+                .setParameter("fromDate", fromDate)
+                .setParameter("toDate", toDate)
+                .getResultList();
     }
 }

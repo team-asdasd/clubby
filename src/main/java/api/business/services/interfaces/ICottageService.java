@@ -2,7 +2,9 @@ package api.business.services.interfaces;
 
 import api.business.entities.Cottage;
 import api.business.entities.Reservation;
+import api.business.entities.ReservationsPeriod;
 import api.business.entities.Service;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import java.util.List;
@@ -25,4 +27,9 @@ public interface ICottageService {
     List<Reservation> getUpcomingReservations();
 
     List<Reservation> getReservations();
+
+    void saveReservationPeriod(DateTime from, DateTime to);
+
+    List<ReservationsPeriod> getReservationPeriods(String fromDate, String toDate);
+
 }

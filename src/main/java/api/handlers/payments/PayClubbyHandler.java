@@ -14,7 +14,7 @@ import api.contracts.enums.TransactionTypes;
 import api.contracts.payments.PayClubbyRequest;
 import api.contracts.payments.PayClubbyResponse;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
+import api.helpers.validator.Validator;
 import logging.audit.Audit;
 
 import javax.ejb.Stateless;
@@ -33,7 +33,12 @@ public class PayClubbyHandler extends BaseHandler<PayClubbyRequest, PayClubbyRes
 
     @Override
     public ArrayList<ErrorDto> validate(PayClubbyRequest request) {
-        return Validator.checkAllNotNullAndIsAuthenticated(request);
+        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+
+        if (!authErrors.isEmpty())
+            return authErrors;
+
+        return new Validator().allFieldsSet(request).getErrors();
     }
 
     @Override
@@ -56,7 +61,7 @@ public class PayClubbyHandler extends BaseHandler<PayClubbyRequest, PayClubbyRes
 
         User user = userService.get();
 
-        if(!payment.canAcces(user)){
+        if (!payment.canAcces(user)) {
             response.Errors = new ArrayList<>();
             response.Errors.add(new ErrorDto("Cant access this payment", ErrorCodes.VALIDATION_ERROR));
             return response;
@@ -64,9 +69,9 @@ public class PayClubbyHandler extends BaseHandler<PayClubbyRequest, PayClubbyRes
 
         int balance = paymentsService.getMyBalance(user.getId());
 
-        if(balance < payment.calculatePrice()){
+        if (balance < payment.calculatePrice()) {
             response.Errors = new ArrayList<>();
-            response.Errors.add(new ErrorDto(String.format("Not enough clubby money. Balance %s", balance/100d), ErrorCodes.LOW_BALANCE));
+            response.Errors.add(new ErrorDto(String.format("Not enough clubby money. Balance %s", balance / 100d), ErrorCodes.LOW_BALANCE));
             return response;
         }
 

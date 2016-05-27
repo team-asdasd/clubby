@@ -2,16 +2,13 @@ package api.handlers.payments;
 
 import api.business.services.interfaces.IPaymentsService;
 import api.business.services.interfaces.IUserService;
-import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.contracts.dto.PaymentInfoDto;
 import api.contracts.payments.GetPaymentsRequest;
 import api.contracts.payments.GetPaymentsResponse;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
+import api.helpers.validator.Validator;
 import logging.audit.Audit;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -28,7 +25,11 @@ public class GetPaymentsHandler extends BaseHandler<GetPaymentsRequest, GetPayme
 
     @Override
     public ArrayList<ErrorDto> validate(GetPaymentsRequest request) {
-        return Validator.checkAllNotNullAndIsAuthenticated(request);
+        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+
+        if (!authErrors.isEmpty()) return authErrors;
+
+        return new Validator().allFieldsSet(request).getErrors();
     }
 
     @Override

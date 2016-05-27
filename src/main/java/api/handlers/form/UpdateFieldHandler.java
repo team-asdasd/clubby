@@ -7,7 +7,7 @@ import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.contracts.form.AddFieldRequest;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
+import api.helpers.validator.Validator;
 import org.apache.shiro.SecurityUtils;
 
 import javax.ejb.Stateless;
@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
+
 @Stateless
 public class UpdateFieldHandler extends BaseHandler<AddFieldRequest, BaseResponse> {
     @PersistenceContext
@@ -24,12 +25,13 @@ public class UpdateFieldHandler extends BaseHandler<AddFieldRequest, BaseRespons
 
     @Override
     public ArrayList<ErrorDto> validate(AddFieldRequest request) {
-        ArrayList<ErrorDto> errors = Validator.checkAllNotNull(request);
-        if (!SecurityUtils.getSubject().hasRole("administrator")){
-            errors.add(new ErrorDto("Permission denied", ErrorCodes.UNAUTHENTICATED));
-            return errors;
-        }
-        if(formService.getFieldByName(request.name) == null){
+        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+
+        if (!authErrors.isEmpty()) return authErrors;
+
+        ArrayList<ErrorDto> errors = new Validator().isAdministrator().allFieldsSet(request).getErrors();
+
+        if (formService.getFieldByName(request.name) == null) {
             errors.add(new ErrorDto("Field does not exists", ErrorCodes.VALIDATION_ERROR));
         }
         return errors;

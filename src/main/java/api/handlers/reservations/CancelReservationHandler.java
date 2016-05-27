@@ -9,8 +9,7 @@ import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.contracts.reservations.CancelReservationRequest;
 import api.handlers.base.BaseHandler;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
+import api.helpers.validator.Validator;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -24,17 +23,11 @@ public class CancelReservationHandler extends BaseHandler<CancelReservationReque
 
     @Override
     public ArrayList<ErrorDto> validate(CancelReservationRequest request) {
-        ArrayList<ErrorDto> errors = new ArrayList<>();
-        Subject subject = SecurityUtils.getSubject();
-        if (!subject.isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.UNAUTHENTICATED));
-            return errors;
-        }
+        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
 
-        if (!subject.hasRole("member")) {
-            errors.add(new ErrorDto("User is not a member.", ErrorCodes.UNAUTHENTICATED));
-            return errors;
-        }
+        if (!authErrors.isEmpty()) return authErrors;
+
+        ArrayList<ErrorDto> errors = new Validator().isMember().getErrors();
 
         Reservation reservation = em.getById(Reservation.class, request.id);
         if (reservation == null) {

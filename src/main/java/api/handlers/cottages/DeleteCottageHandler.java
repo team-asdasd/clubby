@@ -6,7 +6,7 @@ import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.contracts.cottages.DeleteCottageRequest;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
+import api.helpers.validator.Validator;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -21,22 +21,16 @@ public class DeleteCottageHandler extends BaseHandler<DeleteCottageRequest, Base
 
     @Override
     public ArrayList<ErrorDto> validate(DeleteCottageRequest request) {
-        Subject currentUser = SecurityUtils.getSubject();
+        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
 
-        ArrayList<ErrorDto> errors = Validator.checkAllNotNull(request);
+        if (!authErrors.isEmpty()) return authErrors;
 
-        if (!currentUser.isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.UNAUTHENTICATED));
-        }
-
-        if (!currentUser.hasRole("administrator")) {
-            errors.add(new ErrorDto("Insufficient permissions.", ErrorCodes.UNAUTHENTICATED));
-        }
+        ArrayList<ErrorDto> errors = new Validator().isAdministrator().allFieldsSet(request).getErrors();
 
         if (cottageService.get(request.id) == null) {
-            errors.add(new ErrorDto("cottage not found", ErrorCodes.NOT_FOUND));
+            errors.add(new ErrorDto("Cottage does not exist.", ErrorCodes.NOT_FOUND));
         }
-        
+
         return errors;
     }
 

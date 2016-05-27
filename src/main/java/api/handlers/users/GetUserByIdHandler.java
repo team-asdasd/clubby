@@ -12,14 +12,12 @@ import api.contracts.dto.FormInfoDto;
 import api.contracts.users.GetUserByIdRequest;
 import api.contracts.users.GetUserInfoResponse;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
+import api.helpers.validator.Validator;
 import api.helpers.mappers.UserMapper;
 import clients.facebook.interfaces.IFacebookClient;
-import clients.facebook.responses.FacebookUserDetails;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -38,10 +36,13 @@ public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserI
 
     @Override
     public ArrayList<ErrorDto> validate(GetUserByIdRequest request) {
-        ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
+        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+
+        if (!authErrors.isEmpty()) return authErrors;
+
+        ArrayList<ErrorDto> errors = new Validator().isAdministrator().allFieldsSet(request).getErrors();
 
         User user = userInfoService.get(request.id);
-
         if (user == null) {
             errors.add(new ErrorDto("user not found", ErrorCodes.NOT_FOUND));
         }
@@ -53,7 +54,7 @@ public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserI
     public GetUserInfoResponse handleBase(GetUserByIdRequest request) {
         Configuration default_user_picture_url = em.getById(Configuration.class, "default_user_picture_url");
         String defaultPic = default_user_picture_url != null ? default_user_picture_url.getValue() : "";
-        
+
         GetUserInfoResponse response = createResponse();
         User user = userInfoService.get(request.id);
 

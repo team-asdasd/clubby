@@ -10,7 +10,7 @@ import api.contracts.cottages.UpdateCottageResponse;
 import api.contracts.dto.CottageDto;
 import api.contracts.dto.ExistingServiceDto;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
+import api.helpers.validator.Validator;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -35,7 +35,7 @@ public class UpdateCottageHandler extends BaseHandler<UpdateCottageRequest, Upda
     public ArrayList<ErrorDto> validate(UpdateCottageRequest request) {
         Subject currentUser = SecurityUtils.getSubject();
 
-        ArrayList<ErrorDto> errors = Validator.checkAllNotNull(request);
+        ArrayList<ErrorDto> errors = new Validator().allFieldsSet(request).getErrors();
 
         if (!errors.isEmpty()) {
             return errors;
@@ -98,7 +98,8 @@ public class UpdateCottageHandler extends BaseHandler<UpdateCottageRequest, Upda
         try {
             cottage.setAvailableFrom(sdf.parse(request.cottage.availableFrom));
             cottage.setAvailableTo(sdf.parse(request.cottage.availableTo));
-        } catch (ParseException ignored) {}
+        } catch (ParseException ignored) {
+        }
 
         em.merge(cottage);
         List<Service> existingServices = cottageService.getCottageServices(request.cottage.id);

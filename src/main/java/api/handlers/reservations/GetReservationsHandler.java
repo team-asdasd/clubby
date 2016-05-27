@@ -2,13 +2,12 @@ package api.handlers.reservations;
 
 import api.business.entities.Reservation;
 import api.business.services.interfaces.ICottageService;
-import api.contracts.base.BaseRequest;
 import api.contracts.base.ErrorDto;
 import api.contracts.dto.ReservationDto;
 import api.contracts.reservations.GetReservationsRequest;
 import api.contracts.reservations.GetReservationsResponse;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
+import api.helpers.validator.Validator;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -23,7 +22,11 @@ public class GetReservationsHandler extends BaseHandler<GetReservationsRequest, 
 
     @Override
     public ArrayList<ErrorDto> validate(GetReservationsRequest request) {
-        return Validator.checkAllNotNullAndIsAuthenticated(request);
+        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+
+        if (!authErrors.isEmpty()) return authErrors;
+
+        return new Validator().isMember().getErrors();
     }
 
     @Override

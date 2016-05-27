@@ -14,7 +14,7 @@ import api.contracts.reservations.CreateReservationRequest;
 import api.contracts.reservations.CreateReservationResponse;
 import api.contracts.reservations.services.ServiceSelectionDto;
 import api.handlers.base.BaseHandler;
-import org.apache.shiro.SecurityUtils;
+import api.helpers.validator.Validator;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 
@@ -37,16 +37,11 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
 
     @Override
     public ArrayList<ErrorDto> validate(CreateReservationRequest request) {
-        ArrayList<ErrorDto> errors = new ArrayList<>();
-        if (!SecurityUtils.getSubject().isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.UNAUTHENTICATED));
-            return errors;
-        }
+        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
 
-        if (!SecurityUtils.getSubject().hasRole("member")) {
-            errors.add(new ErrorDto("User is not a member.", ErrorCodes.ACCESS_DENIED));
-            return errors;
-        }
+        if (!authErrors.isEmpty()) return authErrors;
+
+        ArrayList<ErrorDto> errors = new Validator().isMember().getErrors();
 
         if (!cottageService.isNowReservationPeriod()) {
             errors.add(new ErrorDto("Now is not reservation period.", ErrorCodes.VALIDATION_ERROR));

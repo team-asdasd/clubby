@@ -29,7 +29,7 @@ public class GetCottagesHandler extends BaseHandler<GetCottagesRequest, GetCotta
         ArrayList<ErrorDto> errors = new ArrayList<>();
 
         if (!currentUser.isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
+            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.UNAUTHENTICATED));
         }
 
         return errors;

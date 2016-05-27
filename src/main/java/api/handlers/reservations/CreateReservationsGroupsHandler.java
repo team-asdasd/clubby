@@ -26,12 +26,12 @@ public class CreateReservationsGroupsHandler extends BaseHandler<BaseRequest, Ba
     public ArrayList<ErrorDto> validate(BaseRequest request) {
         ArrayList<ErrorDto> errors = new ArrayList<>();
         if (!SecurityUtils.getSubject().isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
+            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.UNAUTHENTICATED));
             return errors;
         }
 
         if (!SecurityUtils.getSubject().hasRole("administrator")) {
-            errors.add(new ErrorDto("User is not a administrator.", ErrorCodes.AUTHENTICATION_ERROR));
+            errors.add(new ErrorDto("User is not a administrator.", ErrorCodes.UNAUTHENTICATED));
             return errors;
         }
 

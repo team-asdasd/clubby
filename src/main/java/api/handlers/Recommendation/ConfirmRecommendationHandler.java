@@ -35,7 +35,7 @@ public class ConfirmRecommendationHandler extends BaseHandler<ConfirmRecommendat
         ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
 
         if (request.recommendationCode.isEmpty()) {
-            errors.add(new ErrorDto("Bad request", ErrorCodes.BAD_REQUEST));
+            errors.add(new ErrorDto("Recommendation code is required", ErrorCodes.VALIDATION_ERROR));
         }
 
         List<Recommendation> recommendations = em.createQuery("SELECT r FROM Recommendation r JOIN r.userTo u WHERE r.recommendationCode = :recommendationCode AND r.status <> 1", Recommendation.class)

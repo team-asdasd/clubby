@@ -22,15 +22,10 @@ public class ReservationDto {
         user = reservation.getUser().getId();
         cottage = reservation.getCottage().getId();
 
-        Optional<MoneyTransaction> transaction = reservation.getPayment().getTransactions().stream().filter(t -> t.getStatus() == TransactionStatus.approved.getValue()).findFirst();
-        if (transaction.isPresent()) {
-            status = transaction.get().getStatus();
-        } else {
-            status = TransactionStatus.pending.getValue();
-        }
+        status = reservation.getStatus();
 
         payment = reservation.getPayment().getPaymentid();
-        
+
         dateFrom = LocalDate.fromDateFields(reservation.getDateFrom()).toString();
         dateTo = LocalDate.fromDateFields(reservation.getDateTo()).toString();
     }

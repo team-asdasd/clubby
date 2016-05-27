@@ -28,7 +28,7 @@ public class GetCottageHandler extends BaseHandler<GetCottageRequest, GetCottage
         ArrayList<ErrorDto> errors = Validator.checkAllNotNull(request);
 
         if (!currentUser.isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
+            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.UNAUTHENTICATED));
         }
 
         if (cottageService.get(request.id) == null) {

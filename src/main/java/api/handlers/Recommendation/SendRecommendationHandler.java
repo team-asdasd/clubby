@@ -1,7 +1,6 @@
 package api.handlers.Recommendation;
 
 import api.business.entities.Recommendation;
-import api.business.entities.Role;
 import api.business.entities.User;
 import api.business.services.interfaces.IRecommendationService;
 import api.business.services.interfaces.IUserService;
@@ -10,17 +9,13 @@ import api.contracts.recommendations.SendRecommendationResponse;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.shiro.SecurityUtils;
 
-import javax.annotation.PreDestroy;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.mail.MessagingException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.ws.rs.BadRequestException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,7 +34,7 @@ public class SendRecommendationHandler extends BaseHandler<SendRecommendationReq
         ArrayList<ErrorDto> errors = new ArrayList<>();
 
         if (!SecurityUtils.getSubject().isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
+            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.UNAUTHENTICATED));
             return errors;
         }
         if (recommendationService.isRequestLimitReached()) {

@@ -31,5 +31,4 @@ public class GroupAssignmentResource {
 
         return Response.status(statusCode).entity(response).build();
     }
-
 }

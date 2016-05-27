@@ -3,6 +3,7 @@ package api.resources;
 import api.contracts.base.BaseRequest;
 import api.contracts.base.BaseResponse;
 import api.contracts.reservations.*;
+import api.handlers.reservations.CancelReservationHandler;
 import api.handlers.reservations.CreateReservationHandler;
 import api.handlers.reservations.CreateReservationsGroupsHandler;
 import api.handlers.reservations.GetReservationsHandler;
@@ -24,7 +25,9 @@ public class ReservationResource {
     @Inject
     private CreateReservationHandler createReservationHandler;
     @Inject
-    CreateReservationsGroupsHandler createReservationsGroupsHandler;
+    private CreateReservationsGroupsHandler createReservationsGroupsHandler;
+    @Inject
+    private CancelReservationHandler cancelReservationsGroupsHandler;
 
     @GET
     @Path("")
@@ -51,10 +54,24 @@ public class ReservationResource {
         return Response.status(statusCode).entity(response).build();
     }
 
+    @DELETE
+    @Path("")
+    @ApiOperation(value = "Deletes a reservation", response = BaseResponse.class)
+    public Response cancelReservation(@QueryParam("id") @ApiParam(value = "Reservation id") int id) {
+        CancelReservationRequest request = new CancelReservationRequest();
+        request.id = id;
+
+        BaseResponse response = cancelReservationsGroupsHandler.handle(request);
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
+    }
+
     @POST
     @Path("groups")
     @ApiOperation(value = "Creates users groups", response = BaseResponse.class)
-    public Response createUser() {
+    public Response createGroups() {
         BaseRequest request = new BaseRequest();
         BaseResponse response = createReservationsGroupsHandler.handle(request);
 

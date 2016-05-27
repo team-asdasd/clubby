@@ -2,6 +2,7 @@ package api.business.entities;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Optional;
 
 @Entity
 @Table(name = "reservations", schema = "main", catalog = "clubby")
@@ -87,5 +88,18 @@ public class Reservation {
 
     public void setPayment(Payment payment) {
         this.payment = payment;
+    }
+
+    @Transient
+    public int getStatus() {
+        Optional<MoneyTransaction> transaction = getPayment().getTransactions().stream().filter(t -> t.getStatus() == api.contracts.enums.TransactionStatus.approved.getValue()).findFirst();
+        int status;
+        if (transaction.isPresent()) {
+            status = transaction.get().getStatus();
+        } else {
+            status = api.contracts.enums.TransactionStatus.pending.getValue();
+        }
+
+        return status;
     }
 }

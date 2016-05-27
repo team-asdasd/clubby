@@ -26,7 +26,7 @@ public class UpdateFieldHandler extends BaseHandler<AddFieldRequest, BaseRespons
     public ArrayList<ErrorDto> validate(AddFieldRequest request) {
         ArrayList<ErrorDto> errors = Validator.checkAllNotNull(request);
         if (!SecurityUtils.getSubject().hasRole("administrator")){
-            errors.add(new ErrorDto("Permission denied", ErrorCodes.AUTHENTICATION_ERROR));
+            errors.add(new ErrorDto("Permission denied", ErrorCodes.UNAUTHENTICATED));
             return errors;
         }
         if(formService.getFieldByName(request.name) == null){

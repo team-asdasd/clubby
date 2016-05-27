@@ -50,7 +50,7 @@ public class PayClubbyHandler extends BaseHandler<PayClubbyRequest, PayClubbyRes
 
         if (payment.getPaymenttypeid() != PaymentTypes.pay.getValue()) {
             response.Errors = new ArrayList<>();
-            response.Errors.add(new ErrorDto(String.format("Payment %s cannot bee paid with clubby coins", request.PaymentId), ErrorCodes.BAD_REQUEST));
+            response.Errors.add(new ErrorDto(String.format("Payment %s cannot be paid with Clubby coins", request.PaymentId), ErrorCodes.VALIDATION_ERROR));
             return response;
         }
 

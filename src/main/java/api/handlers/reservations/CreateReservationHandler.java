@@ -39,12 +39,12 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
     public ArrayList<ErrorDto> validate(CreateReservationRequest request) {
         ArrayList<ErrorDto> errors = new ArrayList<>();
         if (!SecurityUtils.getSubject().isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
+            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.UNAUTHENTICATED));
             return errors;
         }
 
         if (!SecurityUtils.getSubject().hasRole("member")) {
-            errors.add(new ErrorDto("User is not a member.", ErrorCodes.AUTHENTICATION_ERROR));
+            errors.add(new ErrorDto("User is not a member.", ErrorCodes.ACCESS_DENIED));
             return errors;
         }
 

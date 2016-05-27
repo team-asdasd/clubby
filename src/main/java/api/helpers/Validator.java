@@ -42,7 +42,7 @@ public class Validator {
     public static <T> ArrayList<ErrorDto> checkAllNotNullAndIsAuthenticated(T entity) {
         ArrayList<ErrorDto> errors = new ArrayList<>();
         if (!SecurityUtils.getSubject().isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
+            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.UNAUTHENTICATED));
         }
         return checkAllNotNull(entity, errors);
     }

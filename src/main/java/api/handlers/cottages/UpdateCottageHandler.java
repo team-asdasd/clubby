@@ -42,11 +42,11 @@ public class UpdateCottageHandler extends BaseHandler<UpdateCottageRequest, Upda
         }
 
         if (!currentUser.isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
+            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.UNAUTHENTICATED));
         }
 
         if (!currentUser.hasRole("administrator")) {
-            errors.add(new ErrorDto("Insufficient permissions.", ErrorCodes.AUTHENTICATION_ERROR));
+            errors.add(new ErrorDto("Insufficient permissions.", ErrorCodes.UNAUTHENTICATED));
         }
 
         if (cottageService.get(request.cottage.id) == null) {

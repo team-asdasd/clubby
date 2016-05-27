@@ -1,13 +1,11 @@
 package api.handlers.users;
 
-import api.business.entities.Field;
 import api.business.entities.User;
 import api.business.services.interfaces.IFormService;
 import api.business.services.interfaces.ILoginService;
 import api.business.services.interfaces.IUserService;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
-import api.contracts.dto.SubmitFormDto;
 import api.contracts.users.UpdateUserRequest;
 import api.contracts.users.UpdateUserResponse;
 import api.handlers.base.BaseHandler;
@@ -37,7 +35,7 @@ public class UpdateUserHandler extends BaseHandler<UpdateUserRequest, UpdateUser
         ArrayList<ErrorDto> errors = new ArrayList<>();
 
         if (!SecurityUtils.getSubject().isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
+            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.UNAUTHENTICATED));
             return errors;
         }
 

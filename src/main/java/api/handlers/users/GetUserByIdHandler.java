@@ -43,7 +43,9 @@ public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserI
         User user = userInfoService.get(request.id);
 
         if (user == null) {
-            errors.add(new ErrorDto("user not found", ErrorCodes.NOT_FOUND));
+            errors.add(new ErrorDto("User not found.", ErrorCodes.NOT_FOUND));
+        } else if (user.getLogin().isDisabled()) {
+            errors.add(new ErrorDto("User is disabled.", ErrorCodes.VALIDATION_ERROR));
         }
 
         return errors;
@@ -53,7 +55,7 @@ public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserI
     public GetUserInfoResponse handleBase(GetUserByIdRequest request) {
         Configuration default_user_picture_url = em.getById(Configuration.class, "default_user_picture_url");
         String defaultPic = default_user_picture_url != null ? default_user_picture_url.getValue() : "";
-        
+
         GetUserInfoResponse response = createResponse();
         User user = userInfoService.get(request.id);
 

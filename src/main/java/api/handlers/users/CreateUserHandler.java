@@ -55,7 +55,7 @@ public class CreateUserHandler extends BaseHandler<CreateUserRequest, BaseRespon
         if (request.email == null || request.email.length() < 5) {
             errors.add(new ErrorDto("Email must be provided", ErrorCodes.VALIDATION_ERROR));
         }
-        User user = userService.getByUsername(request.email);
+        User user = userService.getByEmail(request.email);
         if (user != null) {
             if (SecurityUtils.getSubject().isAuthenticated()) {
                 User current = userService.get();

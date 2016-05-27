@@ -8,6 +8,7 @@ CREATE TABLE security.logins
   username TEXT,
   password TEXT,
   facebook_id TEXT,
+  is_disabled BOOLEAN DEFAULT FALSE,
   CONSTRAINT logins_pkey PRIMARY KEY (id),
   CONSTRAINT logins_username_unique UNIQUE (username)
 )

@@ -2,21 +2,17 @@ package api.resources;
 
 import api.contracts.base.BaseRequest;
 import api.contracts.base.BaseResponse;
-import api.contracts.reservations.CreateReservationRequest;
-import api.contracts.reservations.CreateReservationResponse;
-import api.contracts.reservations.GetReservationsResponse;
+import api.contracts.reservations.*;
 import api.handlers.reservations.CreateReservationHandler;
 import api.handlers.reservations.CreateReservationsGroupsHandler;
 import api.handlers.reservations.GetReservationsHandler;
 import api.handlers.utilities.StatusResolver;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 @Api(value = "reservation")
@@ -32,9 +28,10 @@ public class ReservationResource {
 
     @GET
     @Path("")
-    @ApiOperation(value = "Get reservations", response = GetReservationsResponse.class)
-    public Response getReservations() {
-        BaseRequest request = new BaseRequest();
+    @ApiOperation(value = "Returns reservations. Accepts optional parameters.", response = GetReservationsResponse.class)
+    public Response getReservations(@QueryParam("category") @ApiParam(value = "Returns selected category of reservations. Returns all if not provided.") ReservationCategory category) {
+        GetReservationsRequest request = new GetReservationsRequest();
+        request.category = category;
 
         GetReservationsResponse response = getReservationsHandler.handle(request);
 

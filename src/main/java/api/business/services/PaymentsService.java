@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 @Stateless
 @Audit
 public class PaymentsService implements IPaymentsService {
-
     @PersistenceContext
     private EntityManager em;
 

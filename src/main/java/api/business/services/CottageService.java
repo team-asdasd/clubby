@@ -1,12 +1,15 @@
 package api.business.services;
 
 import api.business.entities.Cottage;
+import api.business.entities.Reservation;
 import api.business.entities.Service;
+import api.business.persistance.ISimpleEntityManager;
 import api.business.services.interfaces.ICottageService;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -18,6 +21,9 @@ import java.util.List;
 public class CottageService implements ICottageService {
     @PersistenceContext
     private EntityManager em;
+
+    @Inject
+    private ISimpleEntityManager sem;
 
     @Override
     public List<Cottage> getByFilters(String title, int beds, String dateFrom, String dateTo, int priceFrom, int priceTo) {
@@ -72,11 +78,11 @@ public class CottageService implements ICottageService {
         return query.getResultList();
     }
 
-    public List<Cottage> getAvailableCottageForFultPeriod(LocalDate from, LocalDate to){
+    public List<Cottage> getAvailableCottagesForFullPeriod(LocalDate from, LocalDate to) {
         List<Cottage> cottages = new ArrayList<>();
-        while (from.isBefore(to)){
+        while (from.isBefore(to)) {
             LocalDate newTo = from.plusWeeks(1);
-            cottages.addAll(getByFilters("",0, from.toString("YYYY-MM-dd"), newTo.toString("YYYY-MM-dd"), 0, 0));
+            cottages.addAll(getByFilters("", 0, from.toString("YYYY-MM-dd"), newTo.toString("YYYY-MM-dd"), 0, 0));
             from = newTo;
         }
 
@@ -117,5 +123,17 @@ public class CottageService implements ICottageService {
                 "WHERE :dateToCheck BETWEEN fromdate AND todate)")
                 .setParameter("dateToCheck", new Date())
                 .getSingleResult();
+    }
+
+    @Override
+    public List<Reservation> getUpcomingReservations() {
+        Query q = em.createQuery("SELECT R FROM Reservation R WHERE R.dateFrom > :date", Reservation.class).setParameter("date", DateTime.now().toDate());
+
+        return q.getResultList();
+    }
+
+    @Override
+    public List<Reservation> getReservations() {
+        return sem.getAll(Reservation.class);
     }
 }

@@ -9,5 +9,6 @@ public enum ErrorCodes {
     DUPLICATE_EMAIL,
     DUPLICATE_USERNAME,
     BAD_REQUEST,
+    LOCKING_ERROR,
     INCORRECT_EMAIL
 }

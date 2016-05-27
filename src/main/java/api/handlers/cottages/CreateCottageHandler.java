@@ -7,6 +7,7 @@ import api.contracts.base.ErrorDto;
 import api.contracts.cottages.CreateCottageRequest;
 import api.contracts.cottages.CreateCottageResponse;
 import api.contracts.dto.CottageDto;
+import api.contracts.dto.ExistingServiceDto;
 import api.contracts.dto.ServiceDto;
 import api.handlers.base.BaseHandler;
 import org.apache.shiro.SecurityUtils;
@@ -62,6 +63,18 @@ public class CreateCottageHandler extends BaseHandler<CreateCottageRequest, Crea
         } catch (ParseException e) {
             errors.add(new ErrorDto("Incorrect date format", ErrorCodes.VALIDATION_ERROR));
         }
+        if (request.services != null)
+            for (ServiceDto dto : request.services) {
+                if(dto.maxCount <= 0){
+                    errors.add(new ErrorDto("Service max count must be at least 1.", ErrorCodes.VALIDATION_ERROR));
+                }
+                if(dto.description.isEmpty()){
+                    errors.add(new ErrorDto("Service description must be provided.", ErrorCodes.VALIDATION_ERROR));
+                }
+                if(dto.price < 0){
+                    errors.add(new ErrorDto("Service price must be higher than zero.", ErrorCodes.VALIDATION_ERROR));
+                }
+            }
 
         return errors;
     }

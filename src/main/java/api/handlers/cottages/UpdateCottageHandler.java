@@ -54,7 +54,7 @@ public class UpdateCottageHandler extends BaseHandler<UpdateCottageRequest, Upda
             errors.add(new ErrorDto("Cottage not found", ErrorCodes.NOT_FOUND));
         }
         if (cottageService.get(request.cottage.id).getVersion() != request.cottage.version) {
-            errors.add(new ErrorDto("Someone was faster then you, try reload page", ErrorCodes.NOT_FOUND));
+            errors.add(new ErrorDto("Someone was faster than you, try to reload page", ErrorCodes.LOCKING_ERROR));
         }
 
         if (request.cottage.title == null || request.cottage.title.length() < 5) {
@@ -81,6 +81,18 @@ public class UpdateCottageHandler extends BaseHandler<UpdateCottageRequest, Upda
             errors.add(new ErrorDto("Incorrect date format", ErrorCodes.VALIDATION_ERROR));
         }
 
+        if (request.cottage.services != null)
+            for (ExistingServiceDto dto : request.cottage.services) {
+                if(dto.maxCount <= 0){
+                    errors.add(new ErrorDto("Service max count must be at least 1.", ErrorCodes.VALIDATION_ERROR));
+                }
+                if(dto.description.isEmpty()){
+                    errors.add(new ErrorDto("Service description must be provided.", ErrorCodes.VALIDATION_ERROR));
+                }
+                if(dto.price < 0){
+                    errors.add(new ErrorDto("Service price must be higher than zero.", ErrorCodes.VALIDATION_ERROR));
+                }
+            }
         return errors;
     }
 

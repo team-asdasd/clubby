@@ -1,5 +1,4 @@
 $.cloudinary.config({cloud_name: 'teamasdasd'});
-var window;
 var dialogComponent = window.Clubby.Dialog();
 var alertComponent = window.Clubby.Alert();
 var dashboardMessage = $("#dashboard-message-box");
@@ -155,6 +154,7 @@ function handleEdit(event) {
 function sendUpdate() {
     $("#loading").show();
     $("#save").prop("disabled", true);
+    $("#modal-message-box").html("");
     var id = window.id;
     var modal = $("#add-cottage-modal");
     modal.find("#ModalLabel").html("Edit cottage");
@@ -179,10 +179,10 @@ function sendUpdate() {
         services: []
     };
 
-    _.forEach($("#services-table-body").find("tr"), function (row) {
+    _.each($("#services-table-body").find("tr"), function (row) {
         var inputs = $(row).find("input");
         var description = $(inputs.get(0)).val();
-        var price = $(inputs.get(1)).val();
+        var price = parseInt($(inputs.get(1)).val().replace(',','.')*100);
         var maxCount = $(inputs.get(2)).val();
         var service = {
             "description": description,
@@ -199,7 +199,7 @@ function sendUpdate() {
         dataType: "json",
         data: JSON.stringify(request)
     }).done(function (response) {
-        modalMessage.html(alertComponent({title: "Success!", message: "Cottage created.", severity: "success"}));
+        modalMessage.html(alertComponent({title: "Success!", message: "Cottage updated.", severity: "success"}));
         modal.modal("hide");
         $("#loading").hide();
         $("#save").prop("disabled", false);

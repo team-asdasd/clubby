@@ -1,7 +1,9 @@
 package security.shiro.application;
 
+import api.business.entities.User;
 import api.business.services.interfaces.IUserService;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authc.credential.PasswordService;
@@ -97,14 +99,17 @@ public class ApplicationRealm extends AuthorizingRealm {
                 upToken.setPassword(password.toCharArray());
             }
             userService = BeanProvider.getContextualReference(IUserService.class, true);
-            info = new SimpleAuthenticationInfo(Integer.toString(userService.getByEmail(email).getId()), password.toCharArray(), getName());
+            User user = userService.getByEmail(email);
+            if(user.getLogin().isDisabled())
+                throw new LockedAccountException("Disabled account");
+            info = new SimpleAuthenticationInfo(Integer.toString(user.getId()), password.toCharArray(), getName());
+
         } catch (SQLException e) {
             final String message = "There was a SQL error while authenticating user [" + email + "]";
             throw new AuthenticationException(message, e);
         } finally {
             JdbcUtils.closeConnection(conn);
         }
-
         return info;
     }
 

@@ -22,7 +22,8 @@ public class UserService implements IUserService {
 
     public User get(int id) {
         try {
-            return em.find(User.class, id);
+            return em.createQuery("SELECT U FROM User U WHERE U.id = :id AND U.login.disabled = false", User.class)
+                    .setParameter("id", id).getSingleResult();
         } catch (Exception e) {
             return null;
         }
@@ -37,7 +38,8 @@ public class UserService implements IUserService {
 
     public User getByEmail(String email) {
         try {
-            TypedQuery<User> users = em.createQuery("SELECT U FROM User U WHERE U.login.email = :email", User.class).setParameter("email", email);
+            TypedQuery<User> users = em.createQuery("SELECT U FROM User U WHERE U.login.email = :email AND U.login.disabled = false", User.class)
+                    .setParameter("email", email);
             return users.getSingleResult();
         } catch (Exception e) {
             return null;
@@ -102,11 +104,20 @@ public class UserService implements IUserService {
 
     @Override
     public User getByUsername(String username) {
-        List<User> userList = em.createQuery("SELECT u FROM User u WHERE u.login.email = :username", User.class)
+        List<User> userList = em.createQuery("SELECT u FROM User u WHERE u.login.email = :username AND u.login.disabled = false ", User.class)
                 .setParameter("username", username)
                 .getResultList();
         if (userList.size() == 0)
             return null;
         return userList.get(0);
+    }
+
+    @Override
+    public void disableUser(int id) {
+        get(id).getLogin().setDisabled(true);
+    }
+
+    public void disableUser() {
+        get().getLogin().setDisabled(true);
     }
 }

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 
-<head  th:include="/shared/head::head">
+<head th:include="/shared/head::head">
     <!-- To work directly from browser -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -24,6 +24,7 @@
         padding-top: 20px;
     }
 </style>
+<script>history.pushState(null,"","/login");</script>
 
 <div class="container">
     <div class="row">
@@ -33,13 +34,16 @@
                     <h3 class="panel-title">Please sign in</h3>
                 </div>
                 <div class="panel-body">
-                    <form name="loginform" action="" method="POST" accept-charset="UTF-8" role="form">
+                    <form name="loginform" action="/login" method="POST" accept-charset="UTF-8" role="form">
                         <fieldset>
                             <div class="form-group">
                                 <input class="form-control" placeholder="Email" name="username" type="text">
                             </div>
                             <div class="form-group">
                                 <input class="form-control" placeholder="Password" name="password" type="password" value="">
+                            </div>
+                            <div>
+                                <p class="text-danger" th:text="${errorMessage}"></p>
                             </div>
                             <div class="checkbox">
                                 <label>
@@ -48,7 +52,8 @@
                             </div>
                             <input class="btn btn-lg btn-success btn-block" type="submit" value="Login">
 
-                            <a th:href="@{https://www.facebook.com/dialog/oauth(client_id=${fbAppId},redirect_uri=${fbRedirect},scope='email')}" class="btn btn-lg btn-block btn-social btn-facebook" style="text-align: center;">
+                            <a th:href="@{https://www.facebook.com/dialog/oauth(client_id=${fbAppId},redirect_uri=${fbRedirect},scope='email')}"
+                               class="btn btn-lg btn-block btn-social btn-facebook" style="text-align: center;">
                                 <span class="fa fa-facebook"></span> Sign in with Facebook
                             </a>
                         </fieldset>

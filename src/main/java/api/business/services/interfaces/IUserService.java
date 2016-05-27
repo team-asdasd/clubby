@@ -20,4 +20,9 @@ public interface IUserService {
     void save(User user);
 
     User getByUsername(String username);
+
+    void disableUser(int id);
+
+    void disableUser();
+
 }

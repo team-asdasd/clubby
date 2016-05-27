@@ -1,7 +1,15 @@
 package api.business.entities;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.mgt.DefaultSecurityManager;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.session.mgt.DefaultSessionManager;
+import org.apache.shiro.subject.Subject;
+
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users", schema = "main", catalog = "clubby")
@@ -107,5 +115,20 @@ public class User {
 
     public void setPicture(String picture) {
         this.picture = picture;
+    }
+
+    @Transient
+    public Boolean isOnline() {
+        DefaultSecurityManager securityManager = (DefaultSecurityManager) SecurityUtils.getSecurityManager();
+        DefaultSessionManager sessionManager = (DefaultSessionManager) securityManager.getSessionManager();
+        Collection<Session> activeSessions = sessionManager.getSessionDAO().getActiveSessions();
+        return activeSessions.stream().anyMatch(this::matchSession);
+    }
+
+    private boolean matchSession(Session s) {
+        Subject subject = new Subject.Builder().sessionId(s.getId()).buildSubject();
+        Object principal = subject.getPrincipal();
+        int id = Integer.parseInt(principal.toString());
+        return id == getId();
     }
 }

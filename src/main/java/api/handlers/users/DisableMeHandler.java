@@ -1,5 +1,6 @@
 package api.handlers.users;
 
+import api.business.entities.User;
 import api.business.services.UserService;
 import api.business.services.interfaces.IUserService;
 import api.contracts.base.BaseRequest;
@@ -31,7 +32,9 @@ public class DisableMeHandler extends BaseHandler<BaseRequest, BaseResponse> {
 
     @Override
     public BaseResponse handleBase(BaseRequest request) {
+        User user = userService.get();
         userService.disableUser();
+        userService.logoutUser(user.getId());
         return createResponse();
     }
 

@@ -250,7 +250,7 @@ function addService() {
 
     $("#services-table-body").append('\
             <tr><td><input class="form-control" type="text" ></td>\
-                <td><input class="form-control" type="text" ></td>\
+                <td><input class="form-control" type="number" value="0"></td>\
                 <td><input class="form-control" type="number"></td>\
                 <td><a class="btn btn-default remove-service">\
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>\

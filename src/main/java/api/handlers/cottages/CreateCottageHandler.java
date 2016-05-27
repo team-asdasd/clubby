@@ -65,14 +65,14 @@ public class CreateCottageHandler extends BaseHandler<CreateCottageRequest, Crea
         }
         if (request.services != null)
             for (ServiceDto dto : request.services) {
-                if(dto.maxCount <= 0){
+                if (dto.maxCount <= 0) {
                     errors.add(new ErrorDto("Service max count must be at least 1.", ErrorCodes.VALIDATION_ERROR));
                 }
-                if(dto.description.isEmpty()){
+                if (dto.description == null || dto.description.isEmpty()) {
                     errors.add(new ErrorDto("Service description must be provided.", ErrorCodes.VALIDATION_ERROR));
                 }
-                if(dto.price < 0){
-                    errors.add(new ErrorDto("Service price must be higher than zero.", ErrorCodes.VALIDATION_ERROR));
+                if (dto.price < 0) {
+                    errors.add(new ErrorDto("Service price can not be negative", ErrorCodes.VALIDATION_ERROR));
                 }
             }
 

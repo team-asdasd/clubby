@@ -54,7 +54,7 @@ public class UpdateCottageHandler extends BaseHandler<UpdateCottageRequest, Upda
             errors.add(new ErrorDto("Cottage not found", ErrorCodes.NOT_FOUND));
         }
         if (cottageService.get(request.cottage.id).getVersion() != request.cottage.version) {
-            errors.add(new ErrorDto("Someone was faster than you, try to reload page", ErrorCodes.LOCKING_ERROR));
+            errors.add(new ErrorDto("Someone else updated this resource before you, reload the page to get latest updates.", ErrorCodes.LOCKING_ERROR));
         }
 
         if (request.cottage.title == null || request.cottage.title.length() < 5) {
@@ -81,18 +81,23 @@ public class UpdateCottageHandler extends BaseHandler<UpdateCottageRequest, Upda
             errors.add(new ErrorDto("Incorrect date format", ErrorCodes.VALIDATION_ERROR));
         }
 
-        if (request.cottage.services != null)
+        if (request.cottage.services != null) {
+            List<Service> services = cottageService.getCottageServices(request.cottage.id);
             for (ExistingServiceDto dto : request.cottage.services) {
-                if(dto.maxCount <= 0){
+                if (dto.id != 0 && !services.stream().anyMatch(s -> s.getId() == dto.id)) {
+                    errors.add(new ErrorDto("Service does not belong to this cottage.", ErrorCodes.VALIDATION_ERROR));
+                }
+                if (dto.maxCount <= 0) {
                     errors.add(new ErrorDto("Service max count must be at least 1.", ErrorCodes.VALIDATION_ERROR));
                 }
-                if(dto.description.isEmpty()){
+                if (dto.description == null || dto.description.isEmpty()) {
                     errors.add(new ErrorDto("Service description must be provided.", ErrorCodes.VALIDATION_ERROR));
                 }
-                if(dto.price < 0){
-                    errors.add(new ErrorDto("Service price must be higher than zero.", ErrorCodes.VALIDATION_ERROR));
+                if (dto.price < 0) {
+                    errors.add(new ErrorDto("Service price can not be negative.", ErrorCodes.VALIDATION_ERROR));
                 }
             }
+        }
         return errors;
     }
 
@@ -112,7 +117,8 @@ public class UpdateCottageHandler extends BaseHandler<UpdateCottageRequest, Upda
         try {
             cottage.setAvailableFrom(sdf.parse(request.cottage.availableFrom));
             cottage.setAvailableTo(sdf.parse(request.cottage.availableTo));
-        } catch (ParseException ignored) {}
+        } catch (ParseException ignored) {
+        }
 
         em.merge(cottage);
         List<Service> existingServices = cottageService.getCottageServices(request.cottage.id);

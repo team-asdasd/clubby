@@ -15,7 +15,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 @Api(value = "groups")
-@Path("/goups")
+@Path("/groups")
 @Produces({"application/json; charset=UTF-8"})
 public class GroupAssignmentResource {
     @Inject

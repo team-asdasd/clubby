@@ -28,6 +28,13 @@
   outline:none;
 }
 
+#price-filter-group{
+  width:150px;
+}
+#price-filter-group .range-group {
+  display: -webkit-box;
+}
+
 .img-thumbnail {
   margin-left: 15px;
   max-width: 200px;

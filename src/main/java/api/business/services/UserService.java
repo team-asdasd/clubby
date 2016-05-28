@@ -8,11 +8,19 @@ import clients.facebook.responses.FacebookUserDetails;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authc.credential.PasswordService;
+import org.apache.shiro.mgt.DefaultSecurityManager;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.session.mgt.DefaultSessionManager;
+import org.apache.shiro.subject.Subject;
 
 import javax.ejb.Stateless;
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Stateless
 public class UserService implements IUserService {
@@ -21,19 +29,24 @@ public class UserService implements IUserService {
 
     public User get(int id) {
         try {
-            return em.find(User.class, id);
+            return em.createQuery("SELECT U FROM User U WHERE U.id = :id AND U.login.disabled = false", User.class)
+                    .setParameter("id", id).getSingleResult();
         } catch (Exception e) {
             return null;
         }
     }
 
     public User get() {
-        return get(Integer.parseInt(SecurityUtils.getSubject().getPrincipal().toString()));
+        Subject sub = SecurityUtils.getSubject();
+        if (sub.isAuthenticated())
+            return get(Integer.parseInt(sub.getPrincipal().toString()));
+        return null;
     }
 
     public User getByEmail(String email) {
         try {
-            TypedQuery<User> users = em.createQuery("SELECT U FROM User U WHERE U.login.email = :email", User.class).setParameter("email", email);
+            TypedQuery<User> users = em.createQuery("SELECT U FROM User U WHERE U.login.email = :email", User.class)
+                    .setParameter("email", email);
             return users.getSingleResult();
         } catch (Exception e) {
             return null;
@@ -97,12 +110,25 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User getByUsername(String username) {
-        List<User> userList = em.createQuery("SELECT u FROM User u WHERE u.login.email = :username", User.class)
-                .setParameter("username", username)
-                .getResultList();
-        if (userList.size() == 0)
-            return null;
-        return userList.get(0);
+    public void disableUser(int id) {
+        get(id).getLogin().setDisabled(true);
+    }
+
+    public void disableUser() {
+        get().getLogin().setDisabled(true);
+    }
+
+    public void logoutUser(int userId){
+        DefaultSecurityManager securityManager = (DefaultSecurityManager) SecurityUtils.getSecurityManager();
+        DefaultSessionManager sessionManager = (DefaultSessionManager) securityManager.getSessionManager();
+        Collection<Session> activeSessions = sessionManager.getSessionDAO().getActiveSessions();
+        List<Session> sessions = activeSessions.stream().filter(s -> matchSession(s, userId)).collect(Collectors.toList());
+        sessions.forEach(Session::stop);
+    }
+    private boolean matchSession(Session s, int userId) {
+        Subject subject = new Subject.Builder().sessionId(s.getId()).buildSubject();
+        Object principal = subject.getPrincipal();
+        int id = Integer.parseInt(principal.toString());
+        return id == userId;
     }
 }

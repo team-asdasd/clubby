@@ -27,7 +27,7 @@ public class SendInvitationEmailHandler extends BaseHandler<SendInvitationEmailR
             errors.add(new ErrorDto("Invalid email", ErrorCodes.INCORRECT_EMAIL));
             return errors;
         }
-        if (userService.getByUsername(request.email) != null) {
+        if (userService.getByEmail(request.email) != null) {
             errors.add(new ErrorDto("User with this email already exist", ErrorCodes.VALIDATION_ERROR));
         }
         return errors;

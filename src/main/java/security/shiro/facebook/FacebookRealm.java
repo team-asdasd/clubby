@@ -1,7 +1,6 @@
 package security.shiro.facebook;
 
 import api.business.entities.User;
-import api.business.services.UserService;
 import api.business.services.interfaces.IUserService;
 import clients.facebook.FacebookSettings;
 import clients.facebook.responses.FacebookOauthResponse;
@@ -15,6 +14,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -24,8 +24,6 @@ import java.net.URL;
 
 
 public class FacebookRealm extends AuthorizingRealm {
-
-    private IUserService userService;
 
     public FacebookRealm() {
         super.setAuthorizationCachingEnabled(false);
@@ -81,24 +79,28 @@ public class FacebookRealm extends AuthorizingRealm {
                         FacebookUserDetails fud = userInfoResponse.parseAs(FacebookUserDetails.class);
                         userInfoResponse.disconnect();
 
-                        userService = BeanProvider.getContextualReference(IUserService.class, true);
-
+                        IUserService userService = BeanProvider.getContextualReference(IUserService.class, true);
                         User user = userService.getByFacebookId(fud.Id);
                         if (user == null) {
                             userService.createFacebookUser(fud);
                             user = userService.getByFacebookId(fud.Id);
-                        }
+                        } else if (user.getLogin().isDisabled())
+                            throw new LockedAccountException("Disabled account");
 
                         info = new FacebookAuthenticationInfo(user.getId(), this.getName());
                     } else {
                         throw new Exception("Facebook auth responded with status code: " + response.getStatusCode());
                     }
+                } catch (LockedAccountException l) {
+                    throw l;
                 } catch (Exception e) {
                     throw new Exception("Failed to login");
                 } finally {
                     response.disconnect();
                 }
             }
+        } catch (LockedAccountException l) {
+            throw l;
         } catch (Exception e) {
             throw new AuthenticationException("Login failed.", e);
         }

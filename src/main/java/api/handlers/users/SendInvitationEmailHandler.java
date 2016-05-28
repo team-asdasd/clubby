@@ -8,7 +8,7 @@ import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.contracts.users.SendInvitationEmailRequest;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
+import api.helpers.validator.Validator;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -24,7 +24,12 @@ public class SendInvitationEmailHandler extends BaseHandler<SendInvitationEmailR
 
     @Override
     public ArrayList<ErrorDto> validate(SendInvitationEmailRequest request) {
-        ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
+        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+
+        if (!authErrors.isEmpty()) return authErrors;
+
+        ArrayList<ErrorDto> errors = new Validator().isAdministrator().allFieldsSet(request).getErrors();
+
         if (!EmailService.isValidEmailAddress(request.email)) {
             errors.add(new ErrorDto("Invalid email", ErrorCodes.INCORRECT_EMAIL));
             return errors;

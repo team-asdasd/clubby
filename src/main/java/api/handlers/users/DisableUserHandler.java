@@ -7,6 +7,7 @@ import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.contracts.users.DisableUserRequest;
 import api.handlers.base.BaseHandler;
+import api.helpers.validator.Validator;
 import org.apache.shiro.SecurityUtils;
 
 import javax.ejb.Stateless;
@@ -20,17 +21,10 @@ public class DisableUserHandler extends BaseHandler<DisableUserRequest, BaseResp
 
     @Override
     public ArrayList<ErrorDto> validate(DisableUserRequest request) {
-        ArrayList<ErrorDto> errors = new ArrayList<>();
+        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+        if (!authErrors.isEmpty()) return authErrors;
 
-        if (!SecurityUtils.getSubject().isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
-            return errors;
-        }
-
-        if (!SecurityUtils.getSubject().hasRole("administrator")) {
-            errors.add(new ErrorDto("Permission denied.", ErrorCodes.AUTHENTICATION_ERROR));
-            return errors;
-        }
+        ArrayList<ErrorDto> errors = new Validator().isAdministrator().getErrors();
 
         User user = userService.get(request.id);
         if (user == null) {
@@ -41,7 +35,6 @@ public class DisableUserHandler extends BaseHandler<DisableUserRequest, BaseResp
 
     @Override
     public BaseResponse handleBase(DisableUserRequest request) {
-
         User user = userService.get(request.id);
         userService.disableUser(request.id);
         userService.logoutUser(user.getId());

@@ -7,7 +7,7 @@ import api.contracts.base.ErrorDto;
 import api.contracts.form.GetFormRequest;
 import api.contracts.form.GetFormResponse;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
+import api.helpers.validator.Validator;
 import org.apache.shiro.SecurityUtils;
 
 import javax.ejb.Stateless;
@@ -24,7 +24,7 @@ public class GetFormHandler extends BaseHandler<GetFormRequest, GetFormResponse>
 
     @Override
     public ArrayList<ErrorDto> validate(GetFormRequest request) {
-        return Validator.checkAllNotNull(request);
+        return new Validator().allFieldsSet(request).getErrors();
     }
 
     @Override
@@ -35,7 +35,7 @@ public class GetFormHandler extends BaseHandler<GetFormRequest, GetFormResponse>
         } else {
             response.fields = formService.getVisibleFields();
         }
-        Collections.sort(response.fields, (a, b) -> Integer.compare(b.getId(),a.getId()));
+        Collections.sort(response.fields, (a, b) -> Integer.compare(b.getId(), a.getId()));
         return response;
     }
 

@@ -7,6 +7,8 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Stateless
@@ -20,7 +22,6 @@ public class SimpleEntityManager implements ISimpleEntityManager {
     public<T> T insert(T entity){
         try {
             em.persist(entity);
-            em.flush();
         } catch (Exception e) {
             em.clear();
             logger.error(e);
@@ -71,5 +72,4 @@ public class SimpleEntityManager implements ISimpleEntityManager {
 
         return em.createQuery(criteria).getResultList();
     }
-
 }

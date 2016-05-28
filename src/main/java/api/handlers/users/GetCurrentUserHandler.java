@@ -1,6 +1,7 @@
 package api.handlers.users;
 
 import api.business.entities.Configuration;
+import api.business.entities.Field;
 import api.business.entities.Role;
 import api.business.entities.User;
 import api.business.persistance.ISimpleEntityManager;
@@ -13,11 +14,9 @@ import api.contracts.base.ErrorDto;
 import api.contracts.dto.FormInfoDto;
 import api.contracts.users.GetUserInfoResponse;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
+import api.helpers.validator.Validator;
 import api.helpers.mappers.UserMapper;
 import clients.facebook.interfaces.IFacebookClient;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -41,8 +40,12 @@ public class GetCurrentUserHandler extends BaseHandler<BaseRequest, GetUserInfoR
 
     @Override
     public ArrayList<ErrorDto> validate(BaseRequest request) {
-        ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
-        if (!errors.isEmpty()) return errors;
+        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+
+        if (!authErrors.isEmpty()) return authErrors;
+
+        ArrayList<ErrorDto> errors = new Validator().isAdministrator().allFieldsSet(request).getErrors();
+
         User user = userService.get();
 
         if (user == null) {
@@ -66,8 +69,12 @@ public class GetCurrentUserHandler extends BaseHandler<BaseRequest, GetUserInfoR
         response.picture = mapper.getPicture(user, defaultPic);
         response.fields = user.getFormResults().stream().map(FormInfoDto::new).collect(Collectors.toList());
         response.roles = user.getLogin().getRoles().stream().map(Role::getRoleName).collect(Collectors.toList());
-
+        response.fields.addAll(formService.getVisibleFields().stream().filter(f -> !haveResult(f, response)).map(FormInfoDto::new).collect(Collectors.toList()));
         return response;
+    }
+
+    private boolean haveResult(Field f,GetUserInfoResponse response ) {
+        return response.fields.stream().map(r -> r.name).collect(Collectors.toList()).contains(f.getName());
     }
 
     @Override

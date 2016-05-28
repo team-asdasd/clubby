@@ -3,15 +3,12 @@ package api.handlers.payments;
 import api.business.entities.User;
 import api.business.services.interfaces.IPaymentsService;
 import api.business.services.interfaces.IUserService;
-import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.contracts.payments.GetBalanceRequest;
 import api.contracts.payments.GetBalanceResponse;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
+import api.helpers.validator.Validator;
 import logging.audit.Audit;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -27,7 +24,11 @@ public class GetBalanceHandler extends BaseHandler<GetBalanceRequest, GetBalance
 
     @Override
     public ArrayList<ErrorDto> validate(GetBalanceRequest request) {
-        return Validator.checkAllNotNullAndIsAuthenticated(request);
+        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+
+        if (!authErrors.isEmpty()) return authErrors;
+
+        return new Validator().isAdministrator().allFieldsSet(request).getErrors();
     }
 
     @Override

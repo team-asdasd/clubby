@@ -1,19 +1,16 @@
 package api.handlers.users;
 
-import api.business.entities.Field;
 import api.business.entities.Login;
 import api.business.entities.User;
 import api.business.services.EmailService;
 import api.business.services.interfaces.IFormService;
 import api.business.services.interfaces.ILoginService;
 import api.business.services.interfaces.IUserService;
-import api.contracts.dto.SubmitFormDto;
 import api.contracts.users.CreateUserRequest;
 import api.contracts.base.BaseResponse;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authc.credential.PasswordService;
@@ -46,7 +43,7 @@ public class CreateUserHandler extends BaseHandler<CreateUserRequest, BaseRespon
         }
 
         if (!sub.isAuthenticated() && request.password.length() < 6) {
-            errors.add(new ErrorDto("Password must bee at least 6 characters length", ErrorCodes.VALIDATION_ERROR));
+            errors.add(new ErrorDto("Password must be at least 6 characters length", ErrorCodes.VALIDATION_ERROR));
         }
 
         if (!sub.isAuthenticated() && !request.password.equals(request.passwordConfirm)) {

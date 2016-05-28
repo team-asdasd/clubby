@@ -20,7 +20,7 @@ public class GetSentRecommendationsHandler extends BaseHandler<GetRecommendation
         ArrayList<ErrorDto> errors = new ArrayList<>();
 
         if (!SecurityUtils.getSubject().isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
+            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.UNAUTHENTICATED));
             return errors;
         }
         return errors;

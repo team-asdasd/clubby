@@ -34,7 +34,6 @@ import {Members} from "./members/members.component";
     {path: '/Members', component: Members, as: 'Members'}
 ])
 export class App {
-    url:string = 'https://github.com/preboot/angular2-webpack';
     balance:number;
     isAdministrator:boolean;
 

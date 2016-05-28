@@ -9,7 +9,7 @@ import api.contracts.payments.PayseraCallbackRequest;
 import api.contracts.payments.PayseraCallbackResponse;
 import api.handlers.base.BaseHandler;
 import api.helpers.Parser;
-import api.helpers.Validator;
+import api.helpers.validator.Validator;
 import api.contracts.dto.PayseraCallbackParamsDto;
 import logging.audit.Audit;
 
@@ -25,12 +25,12 @@ public class PayseraCallbackHandler extends BaseHandler<PayseraCallbackRequest, 
 
     @Override
     public ArrayList<ErrorDto> validate(PayseraCallbackRequest request) {
-        ArrayList<ErrorDto> errors = Validator.checkAllNotNull(request);
+        ArrayList<ErrorDto> errors = new Validator().allFieldsSet(request).getErrors();
 
-        if(errors.size() == 0 && !paymentsService.checkWithMd5(request.data,request.ss1)){
+        if (errors.size() == 0 && !paymentsService.checkWithMd5(request.data, request.ss1)) {
             errors.add(new ErrorDto("Bad signed data from paysera.", ErrorCodes.VALIDATION_ERROR));
 
-            logger.warn(String.format("{data:%s,ss1:%s,ss2:%s}",request.data,request.ss1,request.ss2));
+            logger.warn(String.format("{data:%s,ss1:%s,ss2:%s}", request.data, request.ss1, request.ss2));
         }
 
         return errors;
@@ -39,7 +39,7 @@ public class PayseraCallbackHandler extends BaseHandler<PayseraCallbackRequest, 
     @Override
     @Audit
     public PayseraCallbackResponse handleBase(PayseraCallbackRequest request) {
-        logger.info(String.format("paysera callback: {data:%s,ss1:%s,ss2:%s}",request.data,request.ss1,request.ss2));
+        logger.info(String.format("paysera callback: {data:%s,ss1:%s,ss2:%s}", request.data, request.ss1, request.ss2));
 
         PayseraCallbackResponse response = createResponse();
         String decoded = paymentsService.decodePayseraData(request.data);
@@ -47,63 +47,63 @@ public class PayseraCallbackHandler extends BaseHandler<PayseraCallbackRequest, 
 
         MoneyTransaction mt = paymentsService.getMoneyTransaction(callbackParams.Orderid);
 
-        if(mt == null){
+        if (mt == null) {
             response.Errors = new ArrayList<>();
             response.Errors.add(new ErrorDto(String.format("Order not found. id : %s", callbackParams.Orderid), ErrorCodes.VALIDATION_ERROR));
             return response;
         }
 
-        if(mt.getPayment().getSettings() == null){
+        if (mt.getPayment().getSettings() == null) {
             response.Errors = new ArrayList<>();
             response.Errors.add(new ErrorDto("Not paysera payment", ErrorCodes.VALIDATION_ERROR));
             return response;
         }
 
-        if(callbackParams.Projectid ==  mt.getPayment().getSettings().getProjectid()){
+        if (callbackParams.Projectid == mt.getPayment().getSettings().getProjectid()) {
             response.Errors = new ArrayList<>();
             response.Errors.add(new ErrorDto("Bad project id " + callbackParams.Projectid, ErrorCodes.VALIDATION_ERROR));
             return response;
         }
 
-        if(callbackParams.Amount != mt.getPayment().calculatePrice()){
+        if (callbackParams.Amount != mt.getPayment().calculatePrice()) {
             response.Errors = new ArrayList<>();
             response.Errors.add(new ErrorDto(String.format("Not equal money amount. Paysera : %s, clubby : %s"
-                    ,callbackParams.Amount, mt.getPayment()), ErrorCodes.VALIDATION_ERROR));
+                    , callbackParams.Amount, mt.getPayment()), ErrorCodes.VALIDATION_ERROR));
             return response;
         }
 
-        if(!callbackParams.Currency.equals(mt.getPayment().getCurrency())){
+        if (!callbackParams.Currency.equals(mt.getPayment().getCurrency())) {
             response.Errors = new ArrayList<>();
             response.Errors.add(new ErrorDto(String.format("Not equal money currency. Paysera : %s, clubby : %s"
-                    ,callbackParams.Currency, mt.getPayment().getCurrency()), ErrorCodes.VALIDATION_ERROR));
+                    , callbackParams.Currency, mt.getPayment().getCurrency()), ErrorCodes.VALIDATION_ERROR));
             return response;
         }
 
-        if(callbackParams.Status == 0){
+        if (callbackParams.Status == 0) {
             mt.setStatus(TransactionStatus.cancelled.getValue());
             paymentsService.updateMoneyTransaction(mt);
         }
 
-        if(callbackParams.Status != 1){
+        if (callbackParams.Status != 1) {
             response.Errors = new ArrayList<>();
             response.Errors.add(new ErrorDto(String.format("Wrong status %s", callbackParams.Status), ErrorCodes.VALIDATION_ERROR));
             return response;
         }
 
-        if(callbackParams.Status == 1){
+        if (callbackParams.Status == 1) {
             mt.setStatus(TransactionStatus.approved.getValue());
             response.success = true;
         }
 
 
         //todo remove only for testing
-        if(response.Errors != null){
+        if (response.Errors != null) {
             String resp = "";
-            for(ErrorDto error : response.Errors){
+            for (ErrorDto error : response.Errors) {
                 resp += error.toString();
             }
-            logger.info("paysera callback fail: "+ resp);
-        }else{
+            logger.info("paysera callback fail: " + resp);
+        } else {
             logger.info("paysera callback OK");
         }
 

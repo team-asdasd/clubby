@@ -4,7 +4,6 @@ import api.contracts.base.BaseResponse;
 import api.contracts.base.ErrorCodes;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class StatusResolver {
 
@@ -24,10 +23,13 @@ public class StatusResolver {
                 return HttpStatusCodes.NOT_FOUND;
             }
 
+            if (response.Errors.stream().anyMatch(errorDto -> errorDto.Code.ordinal() == ErrorCodes.LOCKING_ERROR.ordinal())) {
+                return HttpStatusCodes.CONFLICT;
+            }
+
             if (isBadRequest(response)) {
                 return HttpStatusCodes.BAD_REQUEST;
             }
-
 
             return HttpStatusCodes.INTERNAL_SERVER_ERROR;
         }

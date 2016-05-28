@@ -12,13 +12,15 @@ import api.helpers.mappers.UserMapper;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 @Stateless
 public class GetAllUsersHandler extends BaseHandler<GetAllUsersRequest, GetAllUsersResponse> {
-    @Inject
-    private ISimpleEntityManager em;
+    @PersistenceContext
+    private EntityManager em;
     @Inject
     private UserMapper mapper;
 
@@ -33,12 +35,12 @@ public class GetAllUsersHandler extends BaseHandler<GetAllUsersRequest, GetAllUs
 
     @Override
     public GetAllUsersResponse handleBase(GetAllUsersRequest request) {
-        Configuration default_user_picture_url = em.getById(Configuration.class, "default_user_picture_url");
+        Configuration default_user_picture_url = em.find(Configuration.class, "default_user_picture_url");
         String defaultPic = default_user_picture_url != null ? default_user_picture_url.getValue() : "";
 
         GetAllUsersResponse response = createResponse();
 
-        response.users = em.getAll(User.class).stream().map(u -> mapper.map(u, defaultPic)).collect(Collectors.toList());
+        response.users = em.createQuery("SELECT U FROM User U WHERE U.login.disabled = false",User.class).getResultList().stream().map(u -> mapper.map(u, defaultPic)).collect(Collectors.toList());
 
         return response;
     }

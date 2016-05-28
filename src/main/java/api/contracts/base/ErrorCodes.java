@@ -9,5 +9,6 @@ public enum ErrorCodes {
     LOW_BALANCE,
     DUPLICATE_EMAIL,
     DUPLICATE_USERNAME,
+    LOCKING_ERROR,
     INCORRECT_EMAIL
 }

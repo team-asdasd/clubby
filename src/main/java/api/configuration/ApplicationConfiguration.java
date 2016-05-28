@@ -28,7 +28,6 @@ public class ApplicationConfiguration extends Application {
         beanConfig.setScan(true);
 
         classes.add(UserResource.class);
-        classes.add(LoginResource.class);
         classes.add(PaymentsResource.class);
         classes.add(RecommendationResource.class);
         classes.add(CottageResource.class);

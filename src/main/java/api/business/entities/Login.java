@@ -10,9 +10,9 @@ public class Login implements Serializable{
     private int id;
     private String email;
     private String password;
-    private User user;
     private List<Role> roles;
     private String facebookId;
+    private boolean isDisabled;
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -84,6 +84,16 @@ public class Login implements Serializable{
 
     public void setFacebookId(String id) {
         this.facebookId = id;
+    }
+
+    @Basic
+    @Column(name = "is_disabled", nullable = true)
+    public boolean isDisabled() {
+        return isDisabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        isDisabled = disabled;
     }
 
     @Transient

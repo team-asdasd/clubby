@@ -1,5 +1,6 @@
 var alertDialog = window.Clubby.Alert();
 var dashboardMessage = $("#dashboard-message-box");
+var dialogComponent = window.Clubby.Dialog();
 
 var modal = $("#create-user-modal");
 
@@ -19,7 +20,7 @@ function createUser() {
     var pass2 = modal.find("#password2");
 
     var request = {
-        "userName": username.val(),
+        "name": username.val(),
         "email": email.val(),
         "firstName": firstName.val(),
         "lastName": lastName.val(),
@@ -67,6 +68,7 @@ function loadUsers() {
         dataType: "json"
     }).done(function (response) {
         table.html(template(response));
+        $(".delete-user").click(handleDelete);
     }).fail(function (response) {
         table.html("");
         var message = getErrorMessageFromResponse(response) || "Unknown error.";
@@ -74,7 +76,39 @@ function loadUsers() {
         dashboardMessage.html(alertDialog({title: "Error!", message: message, severity: "danger"}));
     });
 }
+function handleDelete(event) {
+    var id = $(event.target).attr("data-user-id");
 
+    var dialog = $(dialogComponent({title: "Delete user?", body: "Are you sure you want to delete this user?"}));
+
+    dialog.find(".dialog-yes").click(function () {
+        return $.ajax({
+            type: "DELETE",
+            url: "/api/user/" + id
+        }).done(function () {
+            dialog.modal("hide");
+
+            loadUsers().done(function () {
+                dashboardMessage.html(alertComponent({
+                    title: "Success!",
+                    message: "User deleted.",
+                    severity: "success"
+                }));
+            });
+        }).fail(function (response) {
+            dialog.modal("hide");
+
+            var message = getErrorMessageFromResponse(response) || "Unknown error.";
+            dashboardMessage.html(alertComponent({title: "Error!", message: message, severity: "danger"}));
+        });
+    });
+
+    dialog.find(".dialog-no").click(function () {
+        dialog.modal("hide");
+    });
+
+    dialog.modal("show");
+}
 function getErrorMessageFromResponse(response) {
     var message;
 

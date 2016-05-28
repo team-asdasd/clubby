@@ -10,12 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * Created by Mindaugas on 03/04/2016.
- */
-
 public class ViewsFilter implements Filter {
-
     static final Logger logger = LogManager.getLogger(ViewsFilter.class.getName());
     private ServletContext servletContext;
     private ApplicationConfiguration application;
@@ -31,16 +26,14 @@ public class ViewsFilter implements Filter {
 
     public void doFilter(final ServletRequest request, final ServletResponse response,
                          final FilterChain chain) throws IOException, ServletException {
-        if (!process((HttpServletRequest)request, (HttpServletResponse)response)) {
+        if (!process((HttpServletRequest) request, (HttpServletResponse) response)) {
             chain.doFilter(request, response);
         }
     }
 
-
     public void destroy() {
         // nothing to do
     }
-
 
     private boolean process(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -64,31 +57,25 @@ public class ViewsFilter implements Filter {
             }
 
             //todo try catch errors
-            if(this.application.getForwarder().forward(request,response,this.servletContext)){
+            if (this.application.getForwarder().forward(request, response, this.servletContext)) {
                 return true;
-            }
-            else{
-                logger.warn("404 "+ request.getRequestURI());
+            } else {
+                logger.warn("404 " + request.getRequestURI());
                 //todo show 404 eroor
                 request.setAttribute("path", request.getRequestURI());
-                if(!this.application.getForwarder().forward("/error/404",request,response,this.servletContext)){
+                if (!this.application.getForwarder().forward("/error/404", request, response, this.servletContext)) {
                     throw new RuntimeException("404 error page load failed");
                 }
                 return true;
             }
-
         } catch (Exception e) {
             logger.error(e);
             //todo send exceptions to error pages and show
-            request.setAttribute("exception",ExceptionHelper.exceptionStacktraceToString(e));
-            if(!this.application.getForwarder().forward("/error/500",request,response,this.servletContext)){
+            request.setAttribute("exception", ExceptionHelper.exceptionStacktraceToString(e));
+            if (!this.application.getForwarder().forward("/error/500", request, response, this.servletContext)) {
                 throw e;
             }
-           return true;
+            return true;
         }
-
     }
-
-
-
 }

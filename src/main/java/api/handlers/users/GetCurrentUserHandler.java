@@ -44,7 +44,7 @@ public class GetCurrentUserHandler extends BaseHandler<BaseRequest, GetUserInfoR
         if (!authErrors.isEmpty()) return authErrors;
 
         ArrayList<ErrorDto> errors = new Validator().isAdministrator().allFieldsSet(request).getErrors();
-        
+
         User user = userService.get();
 
         if (user == null) {

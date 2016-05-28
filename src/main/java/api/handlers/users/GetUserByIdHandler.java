@@ -44,7 +44,9 @@ public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserI
 
         User user = userInfoService.get(request.id);
         if (user == null) {
-            errors.add(new ErrorDto("user not found", ErrorCodes.NOT_FOUND));
+            errors.add(new ErrorDto("User not found.", ErrorCodes.NOT_FOUND));
+        } else if (user.getLogin().isDisabled()) {
+            errors.add(new ErrorDto("User is disabled.", ErrorCodes.VALIDATION_ERROR));
         }
 
         return errors;

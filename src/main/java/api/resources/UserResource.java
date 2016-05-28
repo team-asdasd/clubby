@@ -35,6 +35,10 @@ public class UserResource {
     private HasRoleHandler hasRoleHandler;
     @Inject
     private SendInvitationEmailHandler sendInvitationEmailHandler;
+    @Inject
+    private DisableUserHandler disableUserHandler;
+    @Inject
+    private DisableMeHandler disableMeHandler;
 
     @GET
     @ApiOperation(value = "Gets user information for all users.", response = GetAllUsersResponse.class)
@@ -68,6 +72,32 @@ public class UserResource {
         GetUserByIdRequest request = new GetUserByIdRequest();
         request.id = id;
         GetUserInfoResponse response = getUserByIdHandler.handle(request);
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @ApiOperation(value = "Disable user by id.", response = BaseResponse.class)
+    public Response disableUserById(@PathParam("id") int id) {
+        DisableUserRequest request = new DisableUserRequest();
+        request.id = id;
+        BaseResponse response = disableUserHandler.handle(request);
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
+    }
+
+    @DELETE
+    @Path("me")
+    @ApiOperation(value = "Disable current user.", response = BaseResponse.class)
+    public Response disableMe() {
+        BaseRequest request = new BaseRequest();
+
+        BaseResponse response = disableMeHandler.handle(request);
 
         int statusCode = StatusResolver.getStatusCode(response);
 

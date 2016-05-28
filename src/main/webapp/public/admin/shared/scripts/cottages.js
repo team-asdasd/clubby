@@ -1,21 +1,37 @@
 $.cloudinary.config({cloud_name: 'teamasdasd'});
-
 var dialogComponent = window.Clubby.Dialog();
 var alertComponent = window.Clubby.Alert();
 var dashboardMessage = $("#dashboard-message-box");
 var modal = $("#add-cottage-modal");
 
+
 $(function () {
     initializeFileUpload();
-
-    modal.find("#save").click(handleCreate);
-    $("#add-service").click(addService)
+    $("#loading").hide();
+    $("#add-service").click(addService);
+    $("#add-cottage").click(function () {
+        $("#currentImage").attr('src', "");
+        $("#services-table-body").find("tr").remove();
+        $("form").find("input").val("");
+        $(".preview").html("");
+        $("#modal-message-box").html("");
+        $("#save").off('click').click(handleCreate);
+        var template = _.template($("#services-table-template").html());
+        $("#services").html(template());
+        $('.remove-service').click(function (e) {
+            $(this).closest('tr').remove();
+        });
+        var modal = $("#add-cottage-modal");
+        modal.find("#myModalLabel").html("Add cottage");
+        $("#add-service").click(addService);
+    });
     load();
 });
 
 function handleCreate() {
-    modal.find("#modal-title").html("Add Cottage");
 
+    $("#loading").show();
+    $("#save").prop("disabled", true);
     var modalMessage = modal.find("#modal-message-box");
 
     var title = modal.find("#title");
@@ -31,10 +47,23 @@ function handleCreate() {
         "beds": bedcount.val(),
         "image": imageUrl.val(),
         "description": description.val(),
-        "price": price.val(),
+        "price": parseInt(price.val()*100),
         "availableFrom": availableFrom.val(),
         "availableTo": availableTo.val(),
+        services: []
     };
+    _.forEach($("#services-table-body").find("tr"), function (row) {
+        var inputs = $(row).find("input");
+        var description = $(inputs.get(0)).val();
+        var price = $(inputs.get(1)).val();
+        var maxCount = $(inputs.get(2)).val();
+        var service = {
+            "description": description,
+            "price": price,
+            "maxCount": maxCount
+        };
+        request.services.push(service);
+    });
 
     $.ajax({
         type: "POST",
@@ -52,58 +81,138 @@ function handleCreate() {
         $('.preview').html("");
 
         modal.modal("hide");
-
+        $("#loading").hide();
+        $("#save").prop("disabled", false);
         load();
     }).fail(function (response) {
         modalMessage.html("");
 
         var message = getErrorMessageFromResponse(response) || "Error creating cottage!";
         modalMessage.html(alertComponent({title: "Error!", message: message, severity: "danger"}));
+        $("#loading").hide();
+        $("#save").prop("disabled", false);
     });
 }
 
 function handleEdit(event) {
+    $("#currentImage").attr('src', "");
+    $("#services-table-body").find("tr").remove();
+    $("form").find("input").val("");
+    $(".preview").html("");
+    $("#modal-message-box").html("");
+    $("#save").off('click').click(sendUpdate);
     var id = $(event.target).attr("data-cottage-id");
-    modal.find("#modal-title").html("Add Cottage");
 
-    var modalMessage = modal.find("#modal-message-box");
+    window.id = id;
+    var modal = $("#add-cottage-modal");
+    modal.find("#myModalLabel").html("Edit cottage");
+
+    var modalMessage = modal.find("#edit-modal-message-box");
 
     var title = modal.find("#title");
     var bedcount = modal.find("#bedcount");
-    var imageUrl = modal.find("#image");
+    var imageUrl = modal.find("#currentImage");
+    var description = modal.find("#description");
+    var price = modal.find("#price");
+    var availableFrom = modal.find("#availableFrom");
+    var availableTo = modal.find("#availableTo");
+    $.ajax({
+        type: "GET",
+        url: "/api/cottage/" + id,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json"
+    }).done(function (response) {
+        modalMessage.html("");
+        window.version = response.cottage.version;
+        title.val(response.cottage.title);
+        bedcount.val(response.cottage.beds);
+        imageUrl.attr('src', response.cottage.image);
+        modal.find("#image").val(response.cottage.image);
+        description.val(response.cottage.description);
+        price.val(response.cottage.price/100);
+        availableFrom.val(response.cottage.availableFrom);
+        availableTo.val(response.cottage.availableTo);
 
-    var request = {
+        var template = _.template($("#services-table-template").html());
+        $("#services").html(template(response.cottage));
+        $('.remove-service').click(function (e) {
+            $(this).closest('tr').remove();
+        });
+
+        $("#add-service").click(addService);
+        $("#loading").hide();
+        $("#save").prop("disabled", false);
+    }).fail(function (response) {
+        modalMessage.html("");
+
+        var message = getErrorMessageFromResponse(response) || "Error editing cottage!";
+        modalMessage.html(alertComponent({title: "Error!", message: message, severity: "danger"}));
+        $("#loading").hide();
+        $("#save").prop("disabled", false);
+    });
+}
+function sendUpdate() {
+    $("#loading").show();
+    $("#save").prop("disabled", true);
+    $("#modal-message-box").html("");
+    var id = window.id;
+    var modal = $("#add-cottage-modal");
+    modal.find("#ModalLabel").html("Edit cottage");
+    var modalMessage = modal.find("#modal-message-box");
+    var title = modal.find("#title");
+    var bedcount = modal.find("#bedcount");
+    var imageUrl = modal.find("#image");
+    var description = modal.find("#description");
+    var price = modal.find("#price");
+    var availableFrom = modal.find("#availableFrom");
+    var availableTo = modal.find("#availableTo");
+    var cottage = {
+        "version": window.version,
+        "id": id,
         "title": title.val(),
-        "bedcount": bedcount.val(),
-        "imageurl": imageUrl.val()
+        "beds": bedcount.val(),
+        "image": imageUrl.val(),
+        "description": description.val(),
+        "price": parseInt(price.val().replace(',','.')*100),
+        "availableFrom": availableFrom.val(),
+        "availableTo": availableTo.val(),
+        services: []
     };
 
+    _.each($("#services-table-body").find("tr"), function (row) {
+        var inputs = $(row).find("input");
+        var description = $(inputs.get(0)).val();
+        var price = parseInt($(inputs.get(1)).val().replace(',','.')*100);
+        var maxCount = $(inputs.get(2)).val();
+        var service = {
+            "description": description,
+            "price": price,
+            "maxCount": maxCount
+        };
+        cottage.services.push(service);
+    });
+    request = {"cottage": cottage};
     $.ajax({
-        type: "POST",
+        type: "PUT",
         url: "/api/cottage",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         data: JSON.stringify(request)
-    }).done(function () {
-        modalMessage.html("");
-        dashboardMessage.html(alertComponent({title: "Success!", message: "Cottage created.", severity: "success"}));
-
-        title.val("");
-        bedcount.val("");
-        imageUrl.val("");
-        $('.preview').html("");
-
+    }).done(function (response) {
+        modalMessage.html(alertComponent({title: "Success!", message: "Cottage updated.", severity: "success"}));
         modal.modal("hide");
-
+        $("#loading").hide();
+        $("#save").prop("disabled", false);
         load();
     }).fail(function (response) {
         modalMessage.html("");
 
-        var message = getErrorMessageFromResponse(response) || "Error creating cottage!";
+        var message = getErrorMessageFromResponse(response) || "Error editing cottage!";
         modalMessage.html(alertComponent({title: "Error!", message: message, severity: "danger"}));
+        $("#loading").hide();
+        $("#save").prop("disabled", false);
     });
 }
-
 function handleDelete(event) {
     var id = $(event.target).attr("data-cottage-id");
 
@@ -138,8 +247,18 @@ function handleDelete(event) {
     dialog.modal("show");
 }
 function addService() {
-    var services = $(".services");
-    services.prepend().html("<table></table>")
+
+    $("#services-table-body").append('\
+            <tr><td><input class="form-control" type="text" ></td>\
+                <td><input class="form-control" type="number" value="0"></td>\
+                <td><input class="form-control" type="number"></td>\
+                <td><a class="btn btn-default remove-service">\
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>\
+                    <span style="font-size: 16px;"> Remove</span></a></td>\
+            </tr>');
+    $('.remove-service').click(function (e) {
+        $(this).closest('tr').remove();
+    });
 }
 function load() {
     var template = _.template($("#cottages-table-template").html());
@@ -182,9 +301,9 @@ function initializeFileUpload() {
     fileUpload.children().first().attr("accept", "image/*");
     fileUpload.bind('cloudinarydone', function (e, data) {
             $("#image-upload").find("#progressbar").html("");
-
+            $("#currentImage").attr('src', "");
             var image = $.cloudinary.image(data.result.public_id, {
-                crop: 'thumb', gravity: 'face', effect: 'saturation:50'
+                width: 300, height: 300,
             }).addClass("img-thumbnail img-responsive");
 
             $('.preview').html(image);

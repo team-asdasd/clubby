@@ -25,7 +25,8 @@
             <div class="form-group required">
                 <label for="name" class="col-sm-2 control-label">Name</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="name" placeholder="First and Last names" required="required">
+                    <input type="text" class="form-control" id="name" placeholder="First and Last names"
+                           required="required">
                 </div>
             </div>
             <div class="form-group required">
@@ -38,13 +39,15 @@
             <div class="form-group required password">
                 <label for="password" class="col-sm-2 control-label">Password</label>
                 <div class="col-sm-10">
-                    <input type="password" class="form-control" id="password" placeholder="Password" required="required">
+                    <input type="password" class="form-control" id="password" placeholder="Password"
+                           required="required">
                 </div>
             </div>
             <div class="form-group required password">
                 <label for="passwordConfirm" class="col-sm-2 control-label">Password</label>
                 <div class="col-sm-10">
-                    <input type="password" class="form-control" id="passwordConfirm" placeholder="Confirm password" required="required">
+                    <input type="password" class="form-control" id="passwordConfirm" placeholder="Confirm password"
+                           required="required">
                 </div>
             </div>
             <div class="photo form-group">
@@ -53,17 +56,15 @@
                     <div class="uploadinput btn btn-info">
                         <label for="photo" class="col-sm-2 control-label">Add photo</label>
                     </div>
-                    <div class="progress" style="display: none">
-                        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0"
-                             aria-valuemax="100">
-                        </div>
-                    </div>
+                    <div id="progressbar"></div>
                 </div>
                 <div class="thumbnail">
                     <img id="fbpicture" src="">
                 </div>
             </div>
-            <button type="button" class="btn btn-primary btn-block" id="submit">Save</button>
+            <button type="button" class="btn btn-primary btn-block" id="submit"><span
+                    class="glyphicon glyphicon-refresh glyphicon-refresh-animate" id="loading"> </span> Save
+            </button>
         </form>
     </div>
 </div>

@@ -15,8 +15,7 @@ import api.contracts.reservations.CreateReservationResponse;
 import api.contracts.reservations.services.ServiceSelectionDto;
 import api.handlers.base.BaseHandler;
 import api.helpers.validator.Validator;
-import org.joda.time.DateTimeConstants;
-import org.joda.time.LocalDate;
+import org.joda.time.*;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -240,7 +239,8 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
 
         Cottage cottage = em.getById(Cottage.class, request.cottage);
 
-        int weeks = 1;
+        int weeks = calculateWeeks(request);
+
         LineItem rent = new LineItem("Weekly rent for cottage \"" + cottage.getTitle() + "\"", cottage.getPrice(), weeks, payment);
         lineItems.add(rent);
 
@@ -252,6 +252,13 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
         }
 
         payment.setLineItems(lineItems);
+    }
+
+    private int calculateWeeks(CreateReservationRequest request) {
+        LocalDate from = LocalDate.parse(request.from);
+        LocalDate to = LocalDate.parse(request.to).plusDays(1); // Add one day, so weekly periods are full-weeks.
+
+        return Weeks.weeksBetween(from, to).getWeeks();
     }
 
     @Override

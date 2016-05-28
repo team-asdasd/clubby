@@ -38,9 +38,7 @@ public class GetPendingPaymentsHandler extends BaseHandler<GetPendingPaymentsReq
         GetPendingPaymentsResponse response = createResponse();
         User user = userService.get();
 
-        List<PaymentInfoDto> pendingPpayments = paymentsService.getPendingPaymentsForUser(user.getId());
-
-        response.pendingPayments = pendingPpayments;
+        response.pendingPayments = paymentsService.getPendingPaymentsForUser(user.getId());
         return response;
     }
 

@@ -251,7 +251,7 @@ public class PaymentsService implements IPaymentsService {
                 "(frequencyid = 1 AND MAX(COALESCE(EXTRACT(MONTH FROM creationtime),0)) = EXTRACT(MONTH FROM current_date))\n" +
                 "OR (frequencyid = 2 AND MAX(COALESCE(EXTRACT(YEAR FROM creationtime),0)) = EXTRACT(YEAR FROM current_date))\n" +
                 "OR (frequencyid = 3 AND MAX(creationtime) IS NOT NULL))\n" +
-                "SELECT p.paymentid, p.paymenttypeid, SUM(li.price) price, p.currency, p.paytext, p.required FROM payment.payments p\n" +
+                "SELECT p.paymentid, p.paymenttypeid, SUM(li.price * li.quantity) price, p.currency, p.paytext, p.required FROM payment.payments p\n" +
                 "INNER JOIN pendingPaymentsIds pp ON p.paymentId = pp.paymentId\n" +
                 "INNER JOIN payment.lineitems li ON p.paymentid = li.payment_id\n" +
                 "GROUP BY p.paymentid, p.paymenttypeid,p.currency, p.paytext, p.required;")

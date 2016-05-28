@@ -1,16 +1,15 @@
 package api.handlers.users;
 
-import api.business.entities.Field;
 import api.business.entities.User;
 import api.business.services.interfaces.IFormService;
 import api.business.services.interfaces.ILoginService;
 import api.business.services.interfaces.IUserService;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
-import api.contracts.dto.SubmitFormDto;
 import api.contracts.users.UpdateUserRequest;
 import api.contracts.users.UpdateUserResponse;
 import api.handlers.base.BaseHandler;
+import api.helpers.validator.Validator;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authc.credential.PasswordService;
@@ -35,13 +34,10 @@ public class UpdateUserHandler extends BaseHandler<UpdateUserRequest, UpdateUser
 
     @Override
     public ArrayList<ErrorDto> validate(UpdateUserRequest request) {
-        ArrayList<ErrorDto> errors = new ArrayList<>();
+        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+        if (!authErrors.isEmpty()) return authErrors;
 
-        Subject subject = SecurityUtils.getSubject();
-        if (!subject.isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
-            return errors;
-        }
+        ArrayList<ErrorDto> errors = new ArrayList<>();
 
         if (request == null) {
             errors.add(new ErrorDto("request is missing", ErrorCodes.VALIDATION_ERROR));
@@ -53,9 +49,10 @@ public class UpdateUserHandler extends BaseHandler<UpdateUserRequest, UpdateUser
             return errors;
         }
 
+        Subject subject = SecurityUtils.getSubject();
         User current = userService.get();
         if (current.getId() != request.id && !subject.hasRole("administrator")) {
-            errors.add(new ErrorDto("can not edit other users", ErrorCodes.BAD_REQUEST));
+            errors.add(new ErrorDto("can not edit other users", ErrorCodes.ACCESS_DENIED));
             return errors;
         }
 

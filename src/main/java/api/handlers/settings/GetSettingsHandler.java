@@ -22,11 +22,11 @@ public class GetSettingsHandler extends BaseHandler<BaseRequest, GetSettingsResp
     public ArrayList<ErrorDto> validate(BaseRequest request) {
         ArrayList<ErrorDto> errors = new ArrayList<>();
         if (!SecurityUtils.getSubject().isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
+            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.UNAUTHENTICATED));
             return errors;
         }
         if (!SecurityUtils.getSubject().hasRole("administrator")) {
-            errors.add(new ErrorDto("Permission denied", ErrorCodes.AUTHENTICATION_ERROR));
+            errors.add(new ErrorDto("Permission denied", ErrorCodes.UNAUTHENTICATED));
             return errors;
         }
 

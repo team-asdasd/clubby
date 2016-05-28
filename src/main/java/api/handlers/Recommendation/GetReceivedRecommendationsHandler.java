@@ -5,7 +5,7 @@ import api.contracts.recommendations.GetRecommendationsRequest;
 import api.contracts.recommendations.GetRecommendationsResponse;
 import api.contracts.base.ErrorDto;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
+import api.helpers.validator.Validator;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -18,8 +18,11 @@ public class GetReceivedRecommendationsHandler extends BaseHandler<GetRecommenda
 
     @Override
     public ArrayList<ErrorDto> validate(GetRecommendationsRequest request) {
+        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
 
-        return Validator.checkAllNotNullAndIsAuthenticated(request);
+        if (!authErrors.isEmpty()) return authErrors;
+
+        return new Validator().isAdministrator().allFieldsSet(request).getErrors();
     }
 
     @Override

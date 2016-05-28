@@ -9,6 +9,7 @@ import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.contracts.users.DisableUserRequest;
 import api.handlers.base.BaseHandler;
+import api.helpers.validator.Validator;
 import org.apache.shiro.SecurityUtils;
 
 import javax.inject.Inject;
@@ -20,14 +21,7 @@ public class DisableMeHandler extends BaseHandler<BaseRequest, BaseResponse> {
 
     @Override
     public ArrayList<ErrorDto> validate(BaseRequest request) {
-        ArrayList<ErrorDto> errors = new ArrayList<>();
-
-        if (!SecurityUtils.getSubject().isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
-            return errors;
-        }
-
-        return errors;
+        return new Validator().isAuthenticated().getErrors();
     }
 
     @Override

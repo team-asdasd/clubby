@@ -2,6 +2,7 @@ package api.business.entities;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Optional;
 
 @Entity
 @Table(name = "reservations", schema = "main", catalog = "clubby")
@@ -12,6 +13,8 @@ public class Reservation {
     private Payment payment;
     private Date dateFrom;
     private Date dateTo;
+    private boolean cancelled;
+    private Date created;
 
     @Id
     @Column(name = "reservationid", nullable = false)
@@ -42,6 +45,26 @@ public class Reservation {
 
     public void setDateTo(Date dateTo) {
         this.dateTo = dateTo;
+    }
+
+    @Basic
+    @Column(name = "created")
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    @Basic
+    @Column(name = "cancelled")
+    public boolean getCancelled() {
+        return this.cancelled;
+    }
+
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 
     @Override
@@ -87,5 +110,18 @@ public class Reservation {
 
     public void setPayment(Payment payment) {
         this.payment = payment;
+    }
+
+    @Transient
+    public int getStatus() {
+        Optional<MoneyTransaction> transaction = getPayment().getTransactions().stream().filter(t -> t.getStatus() == api.contracts.enums.TransactionStatus.approved.getValue()).findFirst();
+        int status;
+        if (transaction.isPresent()) {
+            status = transaction.get().getStatus();
+        } else {
+            status = api.contracts.enums.TransactionStatus.pending.getValue();
+        }
+
+        return status;
     }
 }

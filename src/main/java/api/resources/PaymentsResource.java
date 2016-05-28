@@ -9,10 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 @Api(value = "payments")
@@ -31,6 +28,8 @@ public class PaymentsResource {
     private GetBalanceHandler getBalanceHandler;
     @Inject
     private GetPaymentsHandler getPaymentsHandler;
+    @Inject
+    private GiftPointsHandler giftPointsHandler;
 
     @GET
     @Path("{paymentId}")
@@ -115,6 +114,18 @@ public class PaymentsResource {
         request.paymentTypeId = paymentTypeId;
 
         BaseResponse response = getPaymentsHandler.handle(request);
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
+    }
+
+    @POST
+    @Produces("application/json")
+    @Path("points/give")
+    @ApiOperation(value = "Gives a gift of points to a user.", response = BaseResponse.class)
+    public Response getPayments(GiftPointsRequest request) {
+        BaseResponse response = giftPointsHandler.handle(request);
 
         int statusCode = StatusResolver.getStatusCode(response);
 

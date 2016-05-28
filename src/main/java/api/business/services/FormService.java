@@ -99,7 +99,7 @@ public class FormService implements IFormService {
             for (SubmitFormDto dto : fields) {
                 Field field = getFieldByName(dto.name);
                 if (field == null)
-                    errors.add(new ErrorDto("Field " + dto.name + " not found", ErrorCodes.BAD_REQUEST));
+                    errors.add(new ErrorDto("Field " + dto.name + " not found", ErrorCodes.VALIDATION_ERROR));
                 else if (field.getValidationRegex() != null && !field.getValidationRegex().isEmpty() && !dto.value.matches(field.getValidationRegex())) {
                     errors.add(new ErrorDto("Field " + field.getDescription() + " does not match pattern", ErrorCodes.VALIDATION_ERROR));
                 }

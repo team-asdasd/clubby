@@ -25,11 +25,11 @@ public class UpdateSettingsHandler extends BaseHandler<UpdateSettingsRequest, Ba
         ArrayList<ErrorDto> errors = new ArrayList<>();
 
         if (!SecurityUtils.getSubject().isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
+            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.UNAUTHENTICATED));
             return errors;
         }
         if (!SecurityUtils.getSubject().hasRole("administrator")) {
-            errors.add(new ErrorDto("Permission denied", ErrorCodes.AUTHENTICATION_ERROR));
+            errors.add(new ErrorDto("Permission denied", ErrorCodes.UNAUTHENTICATED));
             return errors;
         }
         for (UpdateSettingsDto dto : request.settings) {

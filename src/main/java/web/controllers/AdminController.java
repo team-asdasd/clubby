@@ -108,10 +108,19 @@ public class AdminController {
     @PathMapping("settings")
     public void settings(WebContext ctx) throws Exception {
         ctx.setVariable("pageTitle", "Settings");
-        ctx.setVariable("navbarSearch", false);
+        ctx.setVariable("navbarSearch", true);
         ctx.setVariable("layout", "admin/shared/_adminLayout");
 
         Sender.sendView(ctx, "admin/settings");
+    }
+
+    @PathMapping("form")
+    public void form(WebContext ctx) throws Exception {
+        ctx.setVariable("pageTitle", "Form");
+        ctx.setVariable("navbarSearch", true);
+        ctx.setVariable("layout", "admin/shared/_adminLayout");
+
+        Sender.sendView(ctx, "admin/form");
     }
 
 }

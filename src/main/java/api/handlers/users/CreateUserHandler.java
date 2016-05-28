@@ -3,6 +3,7 @@ package api.handlers.users;
 import api.business.entities.Field;
 import api.business.entities.Login;
 import api.business.entities.User;
+import api.business.services.EmailService;
 import api.business.services.interfaces.IFormService;
 import api.business.services.interfaces.ILoginService;
 import api.business.services.interfaces.IUserService;
@@ -54,6 +55,8 @@ public class CreateUserHandler extends BaseHandler<CreateUserRequest, BaseRespon
 
         if (request.email == null || request.email.length() < 5) {
             errors.add(new ErrorDto("Email must be provided", ErrorCodes.VALIDATION_ERROR));
+        }else if(!EmailService.isValidEmailAddress(request.email)) {
+            errors.add(new ErrorDto("Invalid email", ErrorCodes.INCORRECT_EMAIL));
         }
         User user = userService.getByEmail(request.email);
         if (user != null) {

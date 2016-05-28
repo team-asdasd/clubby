@@ -28,14 +28,14 @@ function load() {
 
 function handleEdit(event) {
     var key = $(event.target).attr("data-setting-key");
-
     var modal = $("#settings-modal");
-    modal.find("#key-label").html(key);
-
+    var data = $(event.target).closest('tr');
     modal.find('input').val('');
-    
+
+    modal.find("#key-label").html(data.find('.description').html());
+    modal.find('input').val(data.find('.value').html());
     var button = modal.find("#save");
-    button.click(function () {
+    button.off().click(function () {
         button.button('loading');
 
         var request = {

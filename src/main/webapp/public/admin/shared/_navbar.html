@@ -20,6 +20,8 @@
                         href="/admin/dashboard">Admin Dashboard</a></li>
                 <li th:classappend="${#httpServletRequest.getRequestURI().contains('/swagger') ? 'active':''}"><a
                         href="/admin/swagger">API Docs</a></li>
+                <li th:classappend="${#httpServletRequest.getRequestURI().contains('/logs') ? 'active':''}">
+                    <a href="/admin/logs">Logs</a></li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right">

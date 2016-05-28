@@ -8,18 +8,12 @@ import api.contracts.base.ErrorDto;
 import api.contracts.users.DisableUserRequest;
 import api.handlers.base.BaseHandler;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.mgt.DefaultSecurityManager;
-import org.apache.shiro.session.Session;
-import org.apache.shiro.session.mgt.DefaultSessionManager;
-import org.apache.shiro.subject.Subject;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
+@Stateless
 public class DisableUserHandler extends BaseHandler<DisableUserRequest, BaseResponse> {
     @Inject
     private IUserService userService;

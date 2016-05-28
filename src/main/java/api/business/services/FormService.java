@@ -66,20 +66,21 @@ public class FormService implements IFormService {
     }
 
     public void saveFormResults(List<SubmitFormDto> formDtos, User user) {
-        for (SubmitFormDto dto : formDtos) {
-            if (!dto.value.isEmpty()) {
-                FormResult fr = getFormResult(dto.name, user.getId());
-                if (fr != null)
-                    fr = em.merge(fr);
-                else {
-                    fr = new FormResult();
+        if (formDtos != null)
+            for (SubmitFormDto dto : formDtos) {
+                if (!dto.value.isEmpty()) {
+                    FormResult fr = getFormResult(dto.name, user.getId());
+                    if (fr != null)
+                        fr = em.merge(fr);
+                    else {
+                        fr = new FormResult();
+                    }
+                    fr.setUser(user);
+                    fr.setField(getFieldByName(dto.name));
+                    fr.setValue(dto.value);
+                    em.merge(fr);
                 }
-                fr.setUser(user);
-                fr.setField(getFieldByName(dto.name));
-                fr.setValue(dto.value);
-                em.merge(fr);
             }
-        }
         Optional<Role> role = user.getLogin().getRoles().stream().filter(u -> u.getRoleName().equals("potentialCandidate")).findFirst();
         if (role.isPresent()) {
             Role r = new Role();

@@ -10,10 +10,12 @@ import api.contracts.users.SendInvitationEmailRequest;
 import api.handlers.base.BaseHandler;
 import api.helpers.Validator;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.mail.MessagingException;
 import java.util.ArrayList;
 
+@Stateless
 public class SendInvitationEmailHandler extends BaseHandler<SendInvitationEmailRequest, BaseResponse> {
     @Inject
     private IUserService userService;

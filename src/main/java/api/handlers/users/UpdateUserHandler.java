@@ -14,6 +14,7 @@ import api.handlers.base.BaseHandler;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authc.credential.PasswordService;
+import org.apache.shiro.subject.Subject;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -36,7 +37,8 @@ public class UpdateUserHandler extends BaseHandler<UpdateUserRequest, UpdateUser
     public ArrayList<ErrorDto> validate(UpdateUserRequest request) {
         ArrayList<ErrorDto> errors = new ArrayList<>();
 
-        if (!SecurityUtils.getSubject().isAuthenticated()) {
+        Subject subject = SecurityUtils.getSubject();
+        if (!subject.isAuthenticated()) {
             errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
             return errors;
         }
@@ -51,6 +53,12 @@ public class UpdateUserHandler extends BaseHandler<UpdateUserRequest, UpdateUser
             return errors;
         }
 
+        User current = userService.get();
+        if (current.getId() != request.id && !subject.hasRole("administrator")) {
+            errors.add(new ErrorDto("can not edit other users", ErrorCodes.BAD_REQUEST));
+            return errors;
+        }
+
         User user = userService.get(request.id);
         if (user == null) {
             errors.add(new ErrorDto("User does not exist", ErrorCodes.NOT_FOUND));
@@ -61,7 +69,7 @@ public class UpdateUserHandler extends BaseHandler<UpdateUserRequest, UpdateUser
         }
 
         if (request.password != null && request.password.length() < 6) {
-            errors.add(new ErrorDto("Password must bee at least 6 characters length", ErrorCodes.VALIDATION_ERROR));
+            errors.add(new ErrorDto("Password must be at least 6 characters length", ErrorCodes.VALIDATION_ERROR));
         }
 
         if (request.password != null && request.passwordConfirm != null && !request.password.equals(request.passwordConfirm)) {
@@ -72,7 +80,6 @@ public class UpdateUserHandler extends BaseHandler<UpdateUserRequest, UpdateUser
             errors.add(new ErrorDto("Email must be provided", ErrorCodes.VALIDATION_ERROR));
         }
 
-        User current = userService.get();
         if (!current.equals(user)) {
             errors.add(new ErrorDto("Email already taken", ErrorCodes.DUPLICATE_EMAIL));
         }

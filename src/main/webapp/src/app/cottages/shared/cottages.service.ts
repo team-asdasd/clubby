@@ -23,7 +23,7 @@ export class CottageService {
             .map(this.parse)
             .catch(this.handleError);
     }
-    
+
     public getFilteredCottages(query: string): Observable<Array<Cottage>> {
         return this.http
             .get(this.url + query)

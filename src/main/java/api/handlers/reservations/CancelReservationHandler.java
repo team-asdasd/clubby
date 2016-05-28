@@ -1,5 +1,6 @@
 package api.handlers.reservations;
 
+import api.business.entities.Configuration;
 import api.business.entities.Reservation;
 import api.business.entities.User;
 import api.business.persistance.ISimpleEntityManager;
@@ -11,15 +12,20 @@ import api.contracts.base.ErrorDto;
 import api.contracts.reservations.CancelReservationRequest;
 import api.handlers.base.BaseHandler;
 import api.helpers.validator.Validator;
+import org.joda.time.DateTime;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 
 @Stateless
 public class CancelReservationHandler extends BaseHandler<CancelReservationRequest, BaseResponse> {
+    @PersistenceContext
+    private EntityManager em;
     @Inject
-    private ISimpleEntityManager em;
+    private ISimpleEntityManager sem;
     @Inject
     private IUserService userService;
     @Inject
@@ -33,7 +39,7 @@ public class CancelReservationHandler extends BaseHandler<CancelReservationReque
 
         ArrayList<ErrorDto> errors = new Validator().isMember().getErrors();
 
-        Reservation reservation = em.getById(Reservation.class, request.id);
+        Reservation reservation = sem.getById(Reservation.class, request.id);
         if (reservation == null) {
             errors.add(new ErrorDto("Reservation not found.", ErrorCodes.NOT_FOUND));
             return errors;
@@ -50,8 +56,13 @@ public class CancelReservationHandler extends BaseHandler<CancelReservationReque
             return errors;
         }
 
-        // TODO Check if cancellation deadline is met
-                /*if(status == TransactionStatus.cancelled.getValue() || status == TransactionStatus.cancelled.getValue())*/
+        DateTime dateFrom = new DateTime(reservation.getDateFrom());
+        int daysBefore = daysBeforeCancellationPeriodEnds();
+        DateTime cancellationPeriodEnd = dateFrom.minusDays(daysBefore);
+        if (cancellationPeriodEnd.isBefore(DateTime.now())) {
+            errors.add(new ErrorDto(String.format("Reservation cannot be cancelled %d days until it starts.", daysBefore), ErrorCodes.VALIDATION_ERROR));
+            return errors;
+        }
 
         return errors;
     }
@@ -71,5 +82,25 @@ public class CancelReservationHandler extends BaseHandler<CancelReservationReque
     @Override
     public BaseResponse createResponse() {
         return new BaseResponse();
+    }
+
+    public int daysBeforeCancellationPeriodEnds() {
+        int defaultDays = 14;
+
+        Configuration configuration = em.find(Configuration.class, "days_before_cancellation_period_ends");
+        if (configuration == null) {
+            return defaultDays;
+        }
+
+        String setting = configuration.getValue();
+        if (setting == null) {
+            return defaultDays;
+        }
+
+        try {
+            return Integer.parseInt(setting);
+        } catch (Exception e) {
+            return defaultDays;
+        }
     }
 }

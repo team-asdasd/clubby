@@ -90,7 +90,6 @@ public class ScheduledReservationService {
             logger.warn(String.format("Reservation payment threshold invalid (%s). Using default threshold (%d min).", e.getMessage(), defaultMinutes));
             return defaultMinutes;
         }
-
     }
 
     private int returnDefault(int defaultMinutes) {

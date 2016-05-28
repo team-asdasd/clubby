@@ -8,6 +8,7 @@ import api.contracts.base.ErrorDto;
 import api.contracts.payments.GiftPointsRequest;
 import api.handlers.base.BaseHandler;
 import api.helpers.validator.Validator;
+import logging.audit.Audit;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -42,6 +43,7 @@ public class GiftPointsHandler extends BaseHandler<GiftPointsRequest, BaseRespon
     }
 
     @Override
+    @Audit
     public BaseResponse handleBase(GiftPointsRequest request) {
         paymentsService.createGift(request.user, request.reason, request.amount);
 

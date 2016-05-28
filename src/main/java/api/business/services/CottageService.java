@@ -130,14 +130,23 @@ public class CottageService implements ICottageService {
 
     @Override
     public List<Reservation> getUpcomingReservations() {
-        Query q = em.createQuery("SELECT R FROM Reservation R WHERE R.dateFrom > :date", Reservation.class).setParameter("date", DateTime.now().toDate());
+        Query q = em.createQuery("SELECT R FROM Reservation R WHERE R.dateFrom > :date AND R.cancelled = FALSE", Reservation.class).setParameter("date", DateTime.now().toDate());
+
+        return q.getResultList();
+    }
+
+    @Override
+    public List<Reservation> getPassedReservations() {
+        Query q = em.createQuery("SELECT R FROM Reservation R WHERE R.dateFrom < :date AND R.cancelled = FALSE", Reservation.class).setParameter("date", DateTime.now().toDate());
 
         return q.getResultList();
     }
 
     @Override
     public List<Reservation> getReservations() {
-        return sem.getAll(Reservation.class);
+        Query q = em.createQuery("SELECT R FROM Reservation R WHERE R.cancelled = FALSE", Reservation.class);
+
+        return q.getResultList();
     }
 
     public void saveReservationPeriod(DateTime from, DateTime to) {

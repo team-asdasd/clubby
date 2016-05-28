@@ -40,7 +40,7 @@ public class Validator implements IRequestValidator {
     }
 
     public <T> IRequestValidator allFieldsSet(T entity) {
-        errors.addAll(checkAllNotNull(entity, errors));
+        checkAllNotNull(entity, this.errors);
         return this;
     }
 
@@ -53,7 +53,7 @@ public class Validator implements IRequestValidator {
         return this;
     }
 
-    private <T> ArrayList<ErrorDto> checkAllNotNull(T entity, ArrayList<ErrorDto> errors) {
+    private <T> void checkAllNotNull(T entity, ArrayList<ErrorDto> errors) {
         if (entity == null) {
             errors.add(new ErrorDto("Entity missing", ErrorCodes.VALIDATION_ERROR));
         } else {
@@ -65,7 +65,6 @@ public class Validator implements IRequestValidator {
                 e.printStackTrace();
             }
         }
-        return errors;
     }
 
     private <T> void checkNotNull(List<ErrorDto> errors, String field, T entity) throws NoSuchFieldException, IllegalAccessException {

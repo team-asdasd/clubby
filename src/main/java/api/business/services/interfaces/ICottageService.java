@@ -26,6 +26,8 @@ public interface ICottageService {
 
     List<Reservation> getUpcomingReservations();
 
+    List<Reservation> getPassedReservations();
+
     List<Reservation> getReservations();
 
     void saveReservationPeriod(DateTime from, DateTime to);

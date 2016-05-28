@@ -2,7 +2,8 @@ package api.contracts.reservations;
 
 public enum ReservationCategory {
     all(0),
-    upcoming(1);
+    upcoming(1),
+    passed(2);
 
     private final int val;
 

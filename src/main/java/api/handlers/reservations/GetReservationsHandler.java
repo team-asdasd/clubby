@@ -26,7 +26,7 @@ public class GetReservationsHandler extends BaseHandler<GetReservationsRequest, 
 
         if (!authErrors.isEmpty()) return authErrors;
 
-        return new Validator().isMember().getErrors();
+        return new Validator().allFieldsSet(request).isMember().getErrors();
     }
 
     @Override
@@ -42,6 +42,10 @@ public class GetReservationsHandler extends BaseHandler<GetReservationsRequest, 
             }
             case upcoming: {
                 reservations = cottageService.getUpcomingReservations();
+                break;
+            }
+            case passed: {
+                reservations = cottageService.getPassedReservations();
                 break;
             }
         }

@@ -1,12 +1,7 @@
 package api.contracts.dto;
 
-import api.business.entities.MoneyTransaction;
 import api.business.entities.Reservation;
-import api.contracts.enums.TransactionStatus;
 import org.joda.time.LocalDate;
-
-import java.util.Date;
-import java.util.Optional;
 
 public class ReservationDto {
     public int id;

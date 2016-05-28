@@ -19,9 +19,8 @@ import org.joda.time.*;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Stateless
 public class CreateReservationHandler extends BaseHandler<CreateReservationRequest, CreateReservationResponse> {
@@ -185,6 +184,7 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
 
         Cottage cottage = em.getById(Cottage.class, request.cottage);
         reservation.setCottage(cottage);
+        reservation.setCreated(DateTime.now(DateTimeZone.UTC).toDate());
 
         User user = userService.get();
         reservation.setUser(user);

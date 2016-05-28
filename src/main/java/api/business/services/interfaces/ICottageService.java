@@ -32,4 +32,5 @@ public interface ICottageService {
 
     List<ReservationsPeriod> getReservationPeriods(String fromDate, String toDate);
 
+    boolean cancelReservation(int reservation);
 }

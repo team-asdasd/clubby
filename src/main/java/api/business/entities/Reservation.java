@@ -13,6 +13,8 @@ public class Reservation {
     private Payment payment;
     private Date dateFrom;
     private Date dateTo;
+    private boolean cancelled;
+    private Date created;
 
     @Id
     @Column(name = "reservationid", nullable = false)
@@ -43,6 +45,26 @@ public class Reservation {
 
     public void setDateTo(Date dateTo) {
         this.dateTo = dateTo;
+    }
+
+    @Basic
+    @Column(name = "created")
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    @Basic
+    @Column(name = "cancelled")
+    public boolean getCancelled() {
+        return this.cancelled;
+    }
+
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 
     @Override

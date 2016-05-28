@@ -3,6 +3,7 @@ package api.handlers.reservations;
 import api.business.entities.Reservation;
 import api.business.entities.User;
 import api.business.persistance.ISimpleEntityManager;
+import api.business.services.interfaces.ICottageService;
 import api.business.services.interfaces.IUserService;
 import api.contracts.base.BaseResponse;
 import api.contracts.base.ErrorCodes;
@@ -11,15 +12,18 @@ import api.contracts.reservations.CancelReservationRequest;
 import api.handlers.base.BaseHandler;
 import api.helpers.validator.Validator;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.ArrayList;
 
+@Stateless
 public class CancelReservationHandler extends BaseHandler<CancelReservationRequest, BaseResponse> {
     @Inject
     private ISimpleEntityManager em;
-
     @Inject
     private IUserService userService;
+    @Inject
+    private ICottageService cottageService;
 
     @Override
     public ArrayList<ErrorDto> validate(CancelReservationRequest request) {
@@ -41,12 +45,27 @@ public class CancelReservationHandler extends BaseHandler<CancelReservationReque
             return errors;
         }
 
+        if (reservation.getCancelled()) {
+            errors.add(new ErrorDto("Reservation is already cancelled.", ErrorCodes.VALIDATION_ERROR));
+            return errors;
+        }
+
+        // TODO Check if cancellation deadline is met
+                /*if(status == TransactionStatus.cancelled.getValue() || status == TransactionStatus.cancelled.getValue())*/
+
         return errors;
     }
 
     @Override
     public BaseResponse handleBase(CancelReservationRequest request) {
-        return null;
+        BaseResponse response = createResponse();
+
+        boolean cancelled = cottageService.cancelReservation(request.id);
+        if (!cancelled) {
+            response.Errors.add(new ErrorDto("Reservation could not be canceled", ErrorCodes.GENERAL_ERROR));
+        }
+
+        return response;
     }
 
     @Override

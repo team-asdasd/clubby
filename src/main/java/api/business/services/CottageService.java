@@ -6,9 +6,9 @@ import api.business.entities.ReservationsPeriod;
 import api.business.entities.Service;
 import api.business.persistance.ISimpleEntityManager;
 import api.business.services.interfaces.ICottageService;
+import api.contracts.enums.TransactionStatus;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -61,8 +61,7 @@ public class CottageService implements ICottageService {
                 "  SELECT r.cottageid\n" +
                 "  FROM main.reservations r\n" +
                 "    INNER JOIN main.cottages c ON r.cottageid = c.id\n" +
-                "    LEFT JOIN payment.moneytransactions m ON r.paymentid = m.paymentid\n" +
-                "  WHERE m.status = 4 AND :dateTo NOT LIKE '' AND :dateFrom NOT LIKE '' AND r.datefrom BETWEEN cast(:dateFrom AS DATE) AND cast(:dateTo AS DATE)\n" +
+                "  WHERE r.cancelled = FALSE AND :dateTo NOT LIKE '' AND :dateFrom NOT LIKE '' AND r.datefrom BETWEEN cast(:dateFrom AS DATE) AND cast(:dateTo AS DATE)\n" +
                 "  GROUP BY r.cottageid, c.availableto, c.availablefrom\n" +
                 "  HAVING SUM(LEAST(r.dateTo , cast(:dateTo AS DATE)) -  r.datefrom) >= (cast(LEAST((c.availableto + cast(((EXTRACT(YEAR FROM cast(:dateTo AS DATE)) - EXTRACT(YEAR FROM c.availableto))|| ' year') AS INTERVAL)), cast(:dateTo AS DATE)) AS DATE) -  cast(GREATEST((c.availableFrom + cast(((EXTRACT(YEAR FROM cast(:dateFrom AS DATE)) - EXTRACT(YEAR FROM c.availablefrom))|| ' year') AS INTERVAL)), cast(:dateFrom AS DATE)) AS DATE))\n" +
                 ")\n" +
@@ -139,7 +138,7 @@ public class CottageService implements ICottageService {
         return sem.getAll(Reservation.class);
     }
 
-    public void saveReservationPeriod(DateTime from,DateTime to){
+    public void saveReservationPeriod(DateTime from, DateTime to) {
         ReservationsPeriod rp = new ReservationsPeriod();
         rp.setFromdate(new java.sql.Date(from.getMillis()));
         rp.setTodate(new java.sql.Date(to.getMillis()));
@@ -147,17 +146,49 @@ public class CottageService implements ICottageService {
         sem.insert(rp);
     }
 
-    public List<ReservationsPeriod> getReservationPeriods(String fromDate, String toDate){
+    public List<ReservationsPeriod> getReservationPeriods(String fromDate, String toDate) {
         toDate = toDate == null ? DateTime.now().plusYears(10).toString("YYYY-MM-dd") : toDate;
         fromDate = fromDate == null ? DateTime.now().minusYears(10).toString("YYYY-MM-dd") : toDate;
 
         return em.createNativeQuery("SELECT rp.* FROM main.reservationsperiods rp " +
-                "WHERE :fromDate IS null OR :toDate IS null OR rp.fromDate BETWEEN CAST(:fromDate AS DATE) AND CAST(:toDate AS DATE) " +
+                "WHERE :fromDate IS NULL OR :toDate IS NULL OR rp.fromDate BETWEEN CAST(:fromDate AS DATE) AND CAST(:toDate AS DATE) " +
                 "OR CAST(:fromDate AS DATE) BETWEEN rp.fromDate AND rp.toDate " +
                 "OR rp.toDate BETWEEN CAST(:fromDate AS DATE) AND CAST(:toDate AS DATE) " +
                 "OR CAST(:toDate AS DATE) BETWEEN rp.fromDate AND rp.toDate", ReservationsPeriod.class)
                 .setParameter("fromDate", fromDate)
                 .setParameter("toDate", toDate)
                 .getResultList();
+    }
+
+    @Override
+    public boolean cancelReservation(int id) {
+        Reservation reservation = sem.getById(Reservation.class, id);
+        int status = reservation.getStatus();
+
+        if (status == TransactionStatus.pending.getValue()) {
+            reservation.setCancelled(true);
+            reservation.getPayment().setActive(false);
+            return true;
+        }
+
+        if (status == TransactionStatus.approved.getValue()) {
+            reservation.getPayment().getTransactions().stream().forEach(t -> t.setStatus(TransactionStatus.cancelled.getValue()));
+            reservation.setCancelled(true);
+            reservation.getPayment().setActive(false);
+            // todo refund EUR
+
+            return true;
+        }
+
+        if (status == TransactionStatus.cancelled.getValue()) {
+            return false;
+        }
+
+        if (status == TransactionStatus.failed.getValue()) {
+            reservation.setCancelled(true);
+            return false;
+        }
+
+        return false;
     }
 }

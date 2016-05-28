@@ -1,11 +1,13 @@
 package api.business.services;
 
 import api.business.entities.*;
-import api.business.entities.TransactionStatus;
 import api.business.persistance.ISimpleEntityManager;
 import api.business.services.interfaces.IPaymentsService;
+import api.contracts.constants.Currency;
 import api.contracts.dto.PaymentInfoDto;
-import api.contracts.enums.*;
+import api.contracts.enums.PaymentTypes;
+import api.contracts.enums.PaymentsFrequency;
+import api.contracts.enums.TransactionTypes;
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
 import logging.audit.Audit;
 
@@ -20,8 +22,7 @@ import java.math.BigInteger;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Stateless
@@ -141,8 +142,7 @@ public class PaymentsService implements IPaymentsService {
         return simpleEm.getById(Payment.class, id);
     }
 
-    public List<PaymentInfoDto> getPaymentsByType(int paymentTypeId){
-
+    public List<PaymentInfoDto> getPaymentsByType(int paymentTypeId) {
         Query q = em.createQuery("SELECT p FROM Payment  p WHERE :paymenttypeid = 0 OR p.paymenttypeid = :paymenttypeid", Payment.class)
                 .setParameter("paymenttypeid", paymentTypeId);
 
@@ -202,7 +202,7 @@ public class PaymentsService implements IPaymentsService {
 
     //region clubby payments
 
-    public int getMyCredit(int userId){
+    public int getMyCredit(int userId) {
         BigInteger credit = (BigInteger) em
                 .createNativeQuery("SELECT COALESCE(SUM(moneytransactions.amount),0) FROM payment.moneytransactions INNER JOIN payment.payments p ON moneytransactions.paymentid = p.paymentid WHERE paymenttypeid = :paymentTypeId AND userid = :userId AND moneytransactions.transactiontypeid = :transactionTypeId AND moneytransactions.status = :status")
                 .setParameter("userId", userId)
@@ -213,7 +213,7 @@ public class PaymentsService implements IPaymentsService {
         return credit.intValue();
     }
 
-    public int getMyDebit(int userId){
+    public int getMyDebit(int userId) {
         BigInteger debit = (BigInteger) em
                 .createNativeQuery("SELECT COALESCE(SUM(moneytransactions.amount),0) FROM payment.moneytransactions INNER JOIN payment.payments p ON moneytransactions.paymentid = p.paymentid WHERE (paymenttypeid = :paymentTypeId1 OR paymenttypeid = :paymentTypeId2) AND userid = :userId AND moneytransactions.status = :status")
                 .setParameter("userId", userId)
@@ -224,7 +224,7 @@ public class PaymentsService implements IPaymentsService {
         return debit.intValue();
     }
 
-    public int getMyBalance(int userId){
+    public int getMyBalance(int userId) {
         return getMyDebit(userId) - getMyCredit(userId);
     }
 
@@ -232,8 +232,7 @@ public class PaymentsService implements IPaymentsService {
 
     //region Pending payments
 
-    public List<PaymentInfoDto> getPendingPaymentsForUser(int userId){
-
+    public List<PaymentInfoDto> getPendingPaymentsForUser(int userId) {
         Query q = em.createNativeQuery("WITH pendingPaymentsIds AS (\n" +
                 "SELECT\n" +
                 "        DISTINCT p.paymentId\n" +
@@ -259,10 +258,45 @@ public class PaymentsService implements IPaymentsService {
 
         List l = q.getResultList();
 
-
         List<PaymentInfoDto> a = (List<PaymentInfoDto>) l.stream().map(PaymentInfoDto::new).collect(Collectors.toList());
 
         return a;
+    }
+
+    @Override
+    public void createGift(int userId, String text, int amount) {
+        Payment payment = new Payment();
+        payment.setPaytext(text);
+        payment.setActive(false);
+        payment.setRequired(false);
+        payment.setFrequencyId(PaymentsFrequency.once.getValue());
+        payment.setPaymenttypeid(PaymentTypes.free.getValue());
+        PaymentsSettings settings = new PaymentsSettings();
+        settings.setPaymentsettingsid(1);
+        payment.setSettings(settings);
+        payment.setCurrency(Currency.ClubbyCoin);
+
+        User user = em.find(User.class, userId);
+
+        ArrayList<LineItem> lis = new ArrayList<>();
+        LineItem li = new LineItem(text, amount, 1, payment);
+        lis.add(li);
+        payment.setLineItems(lis);
+
+        ArrayList<MoneyTransaction> mts = new ArrayList<>();
+        MoneyTransaction mt = new MoneyTransaction();
+        mt.setStatus(api.contracts.enums.TransactionStatus.approved.getValue());
+        mt.setPayment(payment);
+        mt.setUser(user);
+        mt.setTransactionid(UUID.randomUUID().toString());
+        mt.setCreationTime(new Date());
+        mt.setTransactionTypeId(TransactionTypes.clubby.getValue());
+        mt.setAmount(payment.calculatePrice());
+        mt.setCurrency(Currency.ClubbyCoin);
+        payment.setTransactions(mts);
+
+        createPayment(payment);
+        createMoneyTransaction(mt);
     }
 
     //endregion

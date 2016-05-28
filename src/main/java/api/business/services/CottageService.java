@@ -6,6 +6,7 @@ import api.business.entities.ReservationsPeriod;
 import api.business.entities.Service;
 import api.business.persistance.ISimpleEntityManager;
 import api.business.services.interfaces.ICottageService;
+import api.business.services.interfaces.IPaymentsService;
 import api.contracts.enums.TransactionStatus;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -23,9 +24,10 @@ import java.util.List;
 public class CottageService implements ICottageService {
     @PersistenceContext
     private EntityManager em;
-
     @Inject
     private ISimpleEntityManager sem;
+    @Inject
+    private IPaymentsService paymentsService;
 
     @Override
     public List<Cottage> getByFilters(String title, int beds, String dateFrom, String dateTo, int priceFrom, int priceTo) {
@@ -175,7 +177,13 @@ public class CottageService implements ICottageService {
             reservation.getPayment().getTransactions().stream().forEach(t -> t.setStatus(TransactionStatus.cancelled.getValue()));
             reservation.setCancelled(true);
             reservation.getPayment().setActive(false);
-            // todo refund EUR
+
+            String currency = reservation.getPayment().getCurrency();
+            if (currency.equals("EUR")) {
+                paymentsService.createGift(reservation.getUser().getId(),
+                        String.format("Refund for reservation of cottage \"%s\".", reservation.getCottage().getTitle()),
+                        reservation.getPayment().calculatePrice());
+            }
 
             return true;
         }

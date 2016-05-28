@@ -127,7 +127,7 @@ public class Payment {
 
     private Collection<MoneyTransaction> transactions;
 
-    @OneToMany(mappedBy = "payment")
+    @OneToMany(mappedBy = "payment", cascade = CascadeType.PERSIST)
     public Collection<MoneyTransaction> getTransactions() {
         return transactions;
     }
@@ -174,18 +174,18 @@ public class Payment {
         boolean canAcces = getPendingPayments().size() == 0 ||
                 getPendingPayments().stream().filter(p -> p.getUserId() == user.getId()).findFirst().isPresent();
 
-        if(canAcces){
-            if(getFrequencyId() == PaymentsFrequency.once.getValue()){
+        if (canAcces) {
+            if (getFrequencyId() == PaymentsFrequency.once.getValue()) {
                 canAcces = !user.getTransactions().stream().filter(f ->
                         f.getStatus() == TransactionStatus.approved.getValue()
-                            && f.getPayment().getPaymentid() == paymentid).findAny().isPresent();
-            }else if(getFrequencyId() == PaymentsFrequency.monthly.getValue()){
-               canAcces = !user.getTransactions().stream()
+                                && f.getPayment().getPaymentid() == paymentid).findAny().isPresent();
+            } else if (getFrequencyId() == PaymentsFrequency.monthly.getValue()) {
+                canAcces = !user.getTransactions().stream()
                         .filter(f ->
                                 f.getStatus() == TransactionStatus.approved.getValue()
                                         && DatesHelper.inThisMonth(f.getCreationTime())
                                         && f.getPayment().getPaymentid() == paymentid).findAny().isPresent();
-           }else if(getFrequencyId() == PaymentsFrequency.yearly.getValue()){
+            } else if (getFrequencyId() == PaymentsFrequency.yearly.getValue()) {
                 canAcces = !user.getTransactions().stream()
                         .filter(f ->
                                 f.getStatus() == TransactionStatus.approved.getValue()

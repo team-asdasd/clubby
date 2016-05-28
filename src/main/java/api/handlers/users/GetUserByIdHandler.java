@@ -62,6 +62,7 @@ public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserI
         response.id = user.getId();
         response.name = user.getName();
         response.email = user.getLogin().getEmail();
+        response.online = user.isOnline();
         response.picture = mapper.getPicture(user, defaultPic);
         response.fields = user.getFormResults().stream().map(FormInfoDto::new).collect(Collectors.toList());
         response.roles = user.getLogin().getRoles().stream().map(Role::getRoleName).collect(Collectors.toList());

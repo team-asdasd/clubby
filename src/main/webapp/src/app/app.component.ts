@@ -34,10 +34,17 @@ import {Members} from "./members/members.component";
     {path: '/Members', component: Members, as: 'Members'}
 ])
 export class App {
-    url: string = 'https://github.com/preboot/angular2-webpack';
-    balance: number;
+    url:string = 'https://github.com/preboot/angular2-webpack';
+    balance:number;
+    isAdministrator:boolean;
 
-    constructor(private router: Router, private paymentsService: PaymentsService) {
+    constructor(private router:Router, private paymentsService:PaymentsService, private userService:UserService) {
+        
+        userService.hasRole("administrator").subscribe(
+            resp =>this.isAdministrator = resp,
+            error => this.isAdministrator = false
+        );
+
         paymentsService.getBalance().subscribe(
             resp => this.balance = resp,
             error => this.balance = 0

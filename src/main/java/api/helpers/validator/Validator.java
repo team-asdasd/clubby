@@ -1,0 +1,71 @@
+package api.helpers.validator;
+
+import api.contracts.base.ErrorCodes;
+import api.contracts.base.ErrorDto;
+import org.apache.shiro.SecurityUtils;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Validator implements IRequestValidator {
+    private final ArrayList<ErrorDto> errors;
+
+    public Validator() {
+        this.errors = new ArrayList<>();
+    }
+
+    public IAuthenticationValidator isAuthenticated() {
+        if (!SecurityUtils.getSubject().isAuthenticated()) {
+            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.UNAUTHENTICATED));
+        }
+
+        return this;
+    }
+
+    public IRequestValidator isMember() {
+        if (!SecurityUtils.getSubject().hasRole("member")) {
+            errors.add(new ErrorDto("User is not a member.", ErrorCodes.UNAUTHENTICATED));
+        }
+
+        return this;
+    }
+
+    public IRequestValidator isAdministrator() {
+        if (!SecurityUtils.getSubject().hasRole("administrator")) {
+            errors.add(new ErrorDto("User is not an administrator.", ErrorCodes.UNAUTHENTICATED));
+        }
+
+        return this;
+    }
+
+    public <T> IRequestValidator allFieldsSet(T entity) {
+        errors.addAll(checkAllNotNull(entity, errors));
+        return this;
+    }
+
+    private <T> ArrayList<ErrorDto> checkAllNotNull(T entity, ArrayList<ErrorDto> errors) {
+        if (entity == null) {
+            errors.add(new ErrorDto("Entity missing", ErrorCodes.VALIDATION_ERROR));
+        } else {
+            try {
+                for (Field field : entity.getClass().getFields()) {
+                    checkNotNull(errors, field.getName(), entity);
+                }
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return errors;
+    }
+
+    private <T> void checkNotNull(List<ErrorDto> errors, String field, T entity) throws NoSuchFieldException, IllegalAccessException {
+        if (entity.getClass().getField(field).get(entity) == null) {
+            errors.add(new ErrorDto(field + " missing", ErrorCodes.VALIDATION_ERROR));
+        }
+    }
+
+    public ArrayList<ErrorDto> getErrors() {
+        return errors;
+    }
+}

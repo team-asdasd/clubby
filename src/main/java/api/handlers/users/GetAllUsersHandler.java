@@ -7,7 +7,7 @@ import api.contracts.base.ErrorDto;
 import api.contracts.users.GetAllUsersRequest;
 import api.contracts.users.GetAllUsersResponse;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
+import api.helpers.validator.Validator;
 import api.helpers.mappers.UserMapper;
 
 import javax.ejb.Stateless;
@@ -24,7 +24,11 @@ public class GetAllUsersHandler extends BaseHandler<GetAllUsersRequest, GetAllUs
 
     @Override
     public ArrayList<ErrorDto> validate(GetAllUsersRequest request) {
-        return Validator.checkAllNotNullAndIsAuthenticated(request);
+        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+
+        if (!authErrors.isEmpty()) return authErrors;
+
+        return new Validator().isAdministrator().allFieldsSet(request).getErrors();
     }
 
     @Override

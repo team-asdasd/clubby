@@ -33,6 +33,15 @@ public class AddFieldHandler extends BaseHandler<AddFieldRequest, BaseResponse> 
         if (formService.getFieldByName(request.name) != null) {
             errors.add(new ErrorDto("Field with same name already exists", ErrorCodes.VALIDATION_ERROR));
         }
+        if (request.name.isEmpty()) {
+            errors.add(new ErrorDto("Name is required", ErrorCodes.VALIDATION_ERROR));
+        }
+        if (request.type.isEmpty()) {
+            errors.add(new ErrorDto("Type is required", ErrorCodes.VALIDATION_ERROR));
+        }
+        if (request.description.isEmpty()) {
+            errors.add(new ErrorDto("Description is required", ErrorCodes.VALIDATION_ERROR));
+        }
         return errors;
     }
 

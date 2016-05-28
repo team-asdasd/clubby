@@ -12,25 +12,21 @@ $(function () {
 function createUser() {
     var modalMessage = modal.find("#modal-message-box");
 
-    var username = modal.find("#username");
+    var name = modal.find("#name");
     var email = modal.find("#email");
-    var firstName = modal.find("#firstName");
-    var lastName = modal.find("#lastName");
     var pass = modal.find("#password1");
     var pass2 = modal.find("#password2");
 
     var request = {
-        "name": username.val(),
+        "name": name.val(),
         "email": email.val(),
-        "firstName": firstName.val(),
-        "lastName": lastName.val(),
         "password": pass.val(),
         "passwordConfirm": pass2.val()
     };
 
     $.ajax({
         type: "POST",
-        url: "/api/user/create",
+        url: "/api/user",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         data: JSON.stringify(request)
@@ -38,15 +34,11 @@ function createUser() {
         modalMessage.html("");
         dashboardMessage.html(alertDialog({title: "Success!", message: "User created.", severity: "success"}));
 
-        username.val("");
+        name.val("");
         email.val("");
-        firstName.val("");
-        lastName.val("");
         pass.val("");
         pass2.val("");
-
         modal.modal("hide");
-
         loadUsers();
     }).fail(function (response) {
         modalMessage.html("");

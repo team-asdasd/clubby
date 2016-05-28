@@ -44,6 +44,15 @@ public class Validator implements IRequestValidator {
         return this;
     }
 
+    @Override
+    public IRequestValidator isValidId(int id) {
+        if (id <= 0) {
+            errors.add(new ErrorDto("Id cannot be zero or less.", ErrorCodes.VALIDATION_ERROR));
+        }
+
+        return this;
+    }
+
     private <T> ArrayList<ErrorDto> checkAllNotNull(T entity, ArrayList<ErrorDto> errors) {
         if (entity == null) {
             errors.add(new ErrorDto("Entity missing", ErrorCodes.VALIDATION_ERROR));

@@ -6,8 +6,7 @@ import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.contracts.reservations.CreateReservationPeriodRequest;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
-import org.apache.shiro.SecurityUtils;
+import api.helpers.validator.Validator;
 import org.joda.time.DateTime;
 
 import javax.ejb.Stateless;
@@ -21,16 +20,11 @@ public class CreateReservationPeriodHandler extends BaseHandler<CreateReservatio
 
     @Override
     public ArrayList<ErrorDto> validate(CreateReservationPeriodRequest request) {
-        ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
+        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
 
-        if(errors.size() > 0){
-            return errors;
-        }
+        if (!authErrors.isEmpty()) return authErrors;
 
-        if (!SecurityUtils.getSubject().hasRole("administrator")) {
-            errors.add(new ErrorDto("User is not a administrator.", ErrorCodes.UNAUTHENTICATED));
-            return errors;
-        }
+        ArrayList<ErrorDto> errors = new Validator().isAdministrator().allFieldsSet(request).getErrors();
 
         DateTime to = parseDateTime(request.to);
         if (to == null) {
@@ -44,13 +38,13 @@ public class CreateReservationPeriodHandler extends BaseHandler<CreateReservatio
             return errors;
         }
 
-        if(from.isAfter(to)){
+        if (from.isAfter(to)) {
             errors.add(new ErrorDto("To date must be after from date.", ErrorCodes.VALIDATION_ERROR));
             return errors;
         }
 
 
-        if(cottageService.getReservationPeriods(request.from,request.to).size() != 0){
+        if (cottageService.getReservationPeriods(request.from, request.to).size() != 0) {
             errors.add(new ErrorDto("Reservation period dates crosses with other reservation periods.", ErrorCodes.VALIDATION_ERROR));
             return errors;
         }

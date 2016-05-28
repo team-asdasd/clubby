@@ -6,4 +6,6 @@ public interface IRequestValidator extends IAuthenticationValidator {
     IRequestValidator isAdministrator();
 
     <T> IRequestValidator allFieldsSet(T entity);
+
+    IRequestValidator isValidId(int id);
 }

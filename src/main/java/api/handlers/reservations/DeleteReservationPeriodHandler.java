@@ -3,12 +3,10 @@ package api.handlers.reservations;
 import api.business.entities.ReservationsPeriod;
 import api.business.persistance.ISimpleEntityManager;
 import api.contracts.base.BaseResponse;
-import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.contracts.reservations.DeleteReservationPeriodRequest;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
-import org.apache.shiro.SecurityUtils;
+import api.helpers.validator.Validator;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -21,21 +19,18 @@ public class DeleteReservationPeriodHandler extends BaseHandler<DeleteReservatio
 
     @Override
     public ArrayList<ErrorDto> validate(DeleteReservationPeriodRequest request) {
-        ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
+        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
 
-        if (!SecurityUtils.getSubject().hasRole("administrator")) {
-            errors.add(new ErrorDto("User is not a administrator.", ErrorCodes.UNAUTHENTICATED));
-            return errors;
-        }
+        if (!authErrors.isEmpty()) return authErrors;
 
-        return errors;
+        return new Validator().isAdministrator().allFieldsSet(request).isValidId(request.id).getErrors();
     }
 
     @Override
     public BaseResponse handleBase(DeleteReservationPeriodRequest request) {
         ReservationsPeriod rp = simpleEntityManager.getById(ReservationsPeriod.class, request.id);
 
-        if(rp != null){
+        if (rp != null) {
             simpleEntityManager.delete(rp);
         }
 

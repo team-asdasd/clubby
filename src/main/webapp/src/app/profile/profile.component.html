@@ -2,42 +2,51 @@
     <div class="row">
         <div class="">
             <div class="well">
-                <div *ngIf="!user" class="row loader"></div>
-                <div *ngIf="user" class="row">
-                    <div id="pictureContainer" class="col-sm-6 col-md-4">
-                        <img src="{{user.picture}}" alt="" class="img-circle img-responsive center-block" />
-                    </div>
-                    <div id="tableContainer" class="col-sm-6 col-md-8 text-center">
+                <div id="message" #notificationMessage></div>
+                <div *ngIf="loadingState == 'waiting'" class="row loader"></div>
+                <div *ngIf="loadingState == 'done'" class="row">
+                    <div id="tableContainer" class="text-center">
 
                         <table id="infoTable" #infoTable>
                             <tr>
+                                <td class="cell-left">
+                                    <div id="pictureContainer">
+                                        <img src="{{user.picture}}" alt="" class="img-circle img-responsive center-block" />
+                                    </div>
+                                </td>
+                                <td class="cell-right">
+                                </td>
+                            </tr>
+                            <tr>
                                 <td class="cell-left"><h4>Name</h4></td>
                                 <td class="cell-right">
-                                    <input type="text" value="{{user.name}}"/>
+                                    <input type="text" value="{{user.name}}" #name/>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="cell-left"><h4>Email</h4></td>
                                 <td class="cell-right">
-                                    <input type="text" value="{{user.email}}"/>
+                                    <input type="text" value="{{user.email}}" #email/>
                                 </td>
                             </tr>
                             <tr *ngFor="#f of user.fields">
-                                <td class="cell-left"><h4>{{f.description}}</h4></td>
+                                <td class="cell-left">
+                                    <h4>{{f.description}}</h4>
+                                </td>
                                 <td class="cell-right">
-                                    <input type="text" value="{{f.value}}"/>
+                                    <input class="fieldsValues" type="text" value="{{f.value}}"/>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="cell-left"><h4>Change password</h4></td>
                                 <td class="cell-right">
-                                    <input type="text "placeholder="Fill to change" value=""/>
+                                    <input type="text "placeholder="Enter new password" #password value=""/>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="cell-left"><h4>Repeat password</h4></td>
+                                <td class="cell-left"><h4>Repeat new password</h4></td>
                                 <td class="cell-right">
-                                    <input type="text" placeholder="Fill to change" value=""/>
+                                    <input type="text" placeholder="Enter new password" #password2 value=""/>
                                 </td>
                             </tr>
                             <tr>

@@ -26,8 +26,8 @@ export class CottagesList {
     public filterCottages(title: string, beds, priceFrom: string, priceTo: string) {
         var query = "?";
         query += title.length > 0 ? "title=" + title + "&" : "";
-        query += priceFrom ? "priceFrom=" + parseInt(priceFrom) + "&" : "";
-        query += priceTo ? "priceTo=" + parseInt(priceTo) + "&" : "";
+        query += priceFrom ? "priceFrom=" + parseInt(priceFrom) * 100 + "&" : "";
+        query += priceTo ? "priceTo=" + parseInt(priceTo) * 100 + "&" : "";
         query += beds !== "Any" ? "beds=" + beds + "&" : "";
         query = query.substring(0, query.length - 1);
         this.cottageService.getFilteredCottages(query).subscribe(resp => this.cottages = resp);

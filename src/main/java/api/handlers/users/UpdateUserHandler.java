@@ -69,7 +69,7 @@ public class UpdateUserHandler extends BaseHandler<UpdateUserRequest, UpdateUser
         }
 
         if (request.password != null && request.password.length() < 6) {
-            errors.add(new ErrorDto("Password must bee at least 6 characters length", ErrorCodes.VALIDATION_ERROR));
+            errors.add(new ErrorDto("Password must be at least 6 characters length", ErrorCodes.VALIDATION_ERROR));
         }
 
         if (request.password != null && request.passwordConfirm != null && !request.password.equals(request.passwordConfirm)) {

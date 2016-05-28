@@ -4,6 +4,11 @@ body {
   padding-top: 30px;
 }
 
+#message {
+  text-align: center;
+  font-weight: bold;
+}
+
 #recommendationButton {
   display: inline-block;
   margin-top: 10px;
@@ -97,11 +102,13 @@ small {
   margin-left: auto;
   margin-right: auto;
   max-width: 420px;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 #pictureContainer {
-  margin-top: 10px;
+  margin: auto 0px 5px auto;
+  width: 50px;
+  height: 50px;
 }
 
 #infoTable {

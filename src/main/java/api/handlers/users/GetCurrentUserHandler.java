@@ -1,6 +1,7 @@
 package api.handlers.users;
 
 import api.business.entities.Configuration;
+import api.business.entities.Field;
 import api.business.entities.Role;
 import api.business.entities.User;
 import api.business.persistance.ISimpleEntityManager;
@@ -68,8 +69,12 @@ public class GetCurrentUserHandler extends BaseHandler<BaseRequest, GetUserInfoR
         response.picture = mapper.getPicture(user, defaultPic);
         response.fields = user.getFormResults().stream().map(FormInfoDto::new).collect(Collectors.toList());
         response.roles = user.getLogin().getRoles().stream().map(Role::getRoleName).collect(Collectors.toList());
-
+        response.fields.addAll(formService.getVisibleFields().stream().filter(f -> !haveResult(f, response)).map(FormInfoDto::new).collect(Collectors.toList()));
         return response;
+    }
+
+    private boolean haveResult(Field f,GetUserInfoResponse response ) {
+        return response.fields.stream().map(r -> r.name).collect(Collectors.toList()).contains(f.getName());
     }
 
     @Override

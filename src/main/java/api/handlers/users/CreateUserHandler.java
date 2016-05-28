@@ -42,7 +42,7 @@ public class CreateUserHandler extends BaseHandler<CreateUserRequest, BaseRespon
         }
 
         if (!sub.isAuthenticated() && request.password.length() < 6) {
-            errors.add(new ErrorDto("Password must bee at least 6 characters length", ErrorCodes.VALIDATION_ERROR));
+            errors.add(new ErrorDto("Password must be at least 6 characters length", ErrorCodes.VALIDATION_ERROR));
         }
 
         if (!sub.isAuthenticated() && !request.password.equals(request.passwordConfirm)) {

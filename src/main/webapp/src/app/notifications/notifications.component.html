@@ -1,14 +1,17 @@
 <a class="notifications" #container>
-    <div (click)="toggleNotificationsDropdown()">
+    <div (click)="toggleNotificationsDropdown()" role="button" aria-haspopup="true" aria-expanded="false">
+        <span style="color: #fff;">Notifications</span>
         <span class="notifications-icon glyphicon glyphicon-bell" aria-hidden="true"></span>
-        <span class="label label-danger" *ngIf="notifications">{{notifications.length}}</span>
+        <span class="label label-danger" *ngIf="notifications && unreadCount > 0">{{unreadCount}}</span>
     </div>
-    <ul class="dropdown-menu" *ngIf="notifications" #dropdown>
-        <li *ngFor="#n of notifications">
+
+    <ul class="notifications-list dropdown-menu dropdown-menu-left" *ngIf="notifications" #dropdown>
+        <div>
+            <a id="notifications-mark-as-read" (click)="handleMarkAllAsReadClick()">Mark All as Read</a>
+        </div>
+        <li class="notifications-item" [ngClass]="{unread: !n.read}" *ngFor="#n of notifications">
+            <div role="separator" class="divider"></div>
             <a (click)="handleNotificationClick($event)" attr.data-notification-id="{{n.id}}">{{n.title}}</a>
         </li>
     </ul>
 </a>
-
-
-

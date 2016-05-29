@@ -1,5 +1,5 @@
 import {Injectable} from 'angular2/core';
-import {Http, Response} from 'angular2/http';
+import {Http, Response, Headers, RequestOptions} from 'angular2/http';
 import {Observable} from "../../../../node_modules/rxjs/Observable";
 import {GetNotificationsResponse} from "./notifications-response";
 
@@ -11,7 +11,20 @@ export class NotificationsService {
     }
 
     public getNotifications():Observable<GetNotificationsResponse> {
-        return this.http.get(`${this.url}`).map(NotificationsService.parse).catch(NotificationsService.handleError);
+        return Observable.interval(10000)
+            .switchMap(() => this.http.get(`${this.url}`).map(NotificationsService.parse).catch(NotificationsService.handleError));
+    }
+
+    public markAsRead(ids:number[]) {
+        var body:any = JSON.stringify({notifications: ids});
+        var options = NotificationsService.getRequestOptions();
+
+        return this.http.post(this.url + "/read", body, options).map(NotificationsService.parse).catch(NotificationsService.handleError);
+    }
+
+    private static getRequestOptions():RequestOptions {
+        let headers = new Headers({'Content-Type': 'application/json'});
+        return new RequestOptions({headers: headers});
     }
 
     private static parse<T>(res:Response):T {

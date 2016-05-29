@@ -2,6 +2,7 @@ import {Component, ViewChild} from 'angular2/core';
 import {NotificationsService} from "./shared/notifications.service.ts";
 import 'rxjs/add/operator/catch';
 import {Notification} from "./shared/notification.model.ts";
+import {GetNotificationsResponse} from "./shared/notifications-response";
 
 @Component({
     selector: 'notifications',
@@ -15,35 +16,54 @@ import {Notification} from "./shared/notification.model.ts";
 export class Notifications {
     @ViewChild('container') container;
     @ViewChild('dropdown') dropdown;
+    unreadCount:number;
 
     private notifications:Array<Notification>;
 
     constructor(private notificationsService:NotificationsService) {
-        notificationsService.getNotifications().subscribe(resp => this.notifications = resp.notifications);
+        this.fetchNotifications();
         document.addEventListener('click', this.offClickHandler.bind(this));
+    }
+
+    private fetchNotifications() {
+        this.notificationsService.getNotifications().subscribe(resp => this.handleResponse(resp));
+    }
+
+    private handleResponse(resp:GetNotificationsResponse) {
+        this.unreadCount = resp.notifications.filter(n => n.read == false).length;
+        this.notifications = resp.notifications;
     }
 
     private toggleNotificationsDropdown() {
         console.log("awdawd", this.dropdown);
-        if (this.dropdown && this.dropdown.nativeElement) {
+        if (this.container && this.container.nativeElement && this.dropdown && this.dropdown.nativeElement) {
+            this.container.nativeElement.classList.add("open");
             this.dropdown.nativeElement.style.display = "block";
         }
     }
 
     private handleNotificationClick(event:any) {
-        var id = parseInt(event.target.attributes["data-notification-id"].value);
+        let id:number = parseInt(event.target.attributes["data-notification-id"].value);
         let model:Notification = this.notifications.find(n => n.id == id);
 
-        this.redirect(model.action);
+        this.redirectTo(model.action);
     }
 
-    private redirect(action:string) {
-        
+    private handleMarkAllAsReadClick() {
+        var ids = this.notifications.map(n => n.id);
+
+        this.notificationsService.markAsRead(ids);
     }
+
+    private redirectTo(action:string) {
+
+    }
+
 
     private offClickHandler(event:any) {
         if (this.dropdown && this.dropdown.nativeElement && this.container && this.container.nativeElement && !this.container.nativeElement.contains(event.target)) {
             this.dropdown.nativeElement.style.display = "none";
+            this.container.nativeElement.classList.remove("open");
         }
     }
 }

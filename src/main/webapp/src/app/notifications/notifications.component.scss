@@ -1,8 +1,21 @@
 @import '../../style/colors';
 
+$unread: #E9EEF1;
+$dropdown-width: 340px;
+
+#notifications-mark-as-read {
+  color: #000;
+  margin-left: 5px;
+}
+
+.notifications:hover {
+  text-decoration: none;
+}
+
 a.notifications {
   display: inline-block;
   padding: 4px 8px;
+  width: 100%;
 }
 
 a.notifications:hover {
@@ -10,8 +23,54 @@ a.notifications:hover {
   cursor: pointer;
 }
 
-.notifications-icon{
+.notifications-icon {
   color: $light;
   padding: 14px 0;
   display: inline-block;
+}
+
+.notifications-item > a {
+  padding: 10px;
+
+  max-width: $dropdown-width;
+  width: $dropdown-width;
+
+  white-space: pre-wrap; /* css-3 */
+  white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+  white-space: -pre-wrap; /* Opera 4-6 */
+  white-space: -o-pre-wrap; /* Opera 7 */
+  word-wrap: break-word; /* Internet Explorer 5.5+ */
+}
+
+.notifications-item.unread a {
+  background-color: $unread;
+}
+
+@media (max-width: 767px) {
+  #notifications-mark-as-read {
+    color: #fff;
+  }
+
+  .notifications > .dropdown-menu li a {
+    color: #fff;
+    background-color: transparent;
+  }
+
+  li.notifications-item.unread {
+    color: $unread;
+    background-color: $darker;
+  }
+
+  div.divider {
+    margin: 0;
+    background-color: $dark;
+  }
+
+  .notifications > .dropdown-menu li:hover {
+    background-color: $darker;
+  }
+
+  a.notifications:hover {
+    background-color: $darkest;
+  }
 }

@@ -1,5 +1,6 @@
 export class Notification {
-    id:string;
+    id:number;
     title:string;
     action:string;
+    read:boolean;
 }

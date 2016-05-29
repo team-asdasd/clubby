@@ -1,7 +1,8 @@
 package api.contracts.enums;
 
 public enum NotificationAction {
-    DISMISS,
+    NOACTION,
     RECOMMENDATIONS,
-    PAYMENTS, RESERVATIONS
+    PAYMENTS,
+    RESERVATIONS
 }

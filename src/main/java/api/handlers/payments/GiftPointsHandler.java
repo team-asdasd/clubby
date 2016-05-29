@@ -24,7 +24,7 @@ public class GiftPointsHandler extends BaseHandler<GiftPointsRequest, BaseRespon
     private IPaymentsService paymentsService;
     @Inject
     private INotificationsService notificationsService;
-    private final String giftReceivedNotification = "Gift received";
+    private final String giftReceivedNotification = "Gift received.";
 
     @Override
     public ArrayList<ErrorDto> validate(GiftPointsRequest request) {
@@ -51,7 +51,7 @@ public class GiftPointsHandler extends BaseHandler<GiftPointsRequest, BaseRespon
     @Audit
     public BaseResponse handleBase(GiftPointsRequest request) {
         paymentsService.createGift(request.user, request.reason, request.amount);
-        notificationsService.create(giftReceivedNotification, NotificationAction.PAYMENTS, request.user);
+        notificationsService.create(giftReceivedNotification, NotificationAction.PAYMENTS, request.user, null);
         return createResponse();
     }
 

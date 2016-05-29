@@ -45,13 +45,15 @@ public class NotificationsService implements INotificationsService {
     public void create(String title, String action) {
         Notification notification = new Notification(title, action);
         em.persist(notification);
-        sem.getAll(User.class).stream().forEach(u -> em.persist(new NotificationView(u.getId(), false, notification)));
+        sem.getAll(User.class).stream().forEach(u -> em.persist(new NotificationView(u.getId(), false, notification, null)));
     }
 
-    public void create(String title, NotificationAction action, int userId) {
+    public void create(String title, NotificationAction action, int userId, String argument) {
+
         Notification notification = new Notification(title, action.name());
         em.persist(notification);
 
-        em.persist(new NotificationView(userId, false, notification));
+        em.persist(new NotificationView(userId, false, notification, argument));
     }
+
 }

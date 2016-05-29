@@ -1,9 +1,12 @@
 package api.business.services;
 
+import api.business.entities.Configuration;
 import api.business.entities.Login;
 import api.business.entities.Role;
 import api.business.entities.User;
 import api.business.services.interfaces.IUserService;
+import api.business.services.interfaces.notifications.INotificationsService;
+import api.contracts.enums.NotificationAction;
 import clients.facebook.responses.FacebookUserDetails;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
@@ -14,6 +17,7 @@ import org.apache.shiro.session.mgt.DefaultSessionManager;
 import org.apache.shiro.subject.Subject;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -26,6 +30,9 @@ import java.util.stream.Collectors;
 public class UserService implements IUserService {
     @PersistenceContext
     private EntityManager em;
+    @Inject
+    private INotificationsService notificationsService;
+    private final String welcomeNotification = "Welcome! You must receive %s recommendations to become a club member.";
 
     public User get(int id) {
         try {
@@ -60,6 +67,8 @@ public class UserService implements IUserService {
             Role lr = new Role();
             lr.setRoleName("potentialCandidate");
             lr.setUsername(user.getLogin().getEmail());
+            Configuration c = em.find(Configuration.class, "min_recommendation_required");
+            notificationsService.create(String.format(welcomeNotification, c == null ? "2" : c.getValue()), NotificationAction.NOACTION, user.getId(), null);
             em.persist(lr);
             em.flush();
         } catch (Exception e) {
@@ -118,13 +127,14 @@ public class UserService implements IUserService {
         get().getLogin().setDisabled(true);
     }
 
-    public void logoutUser(int userId){
+    public void logoutUser(int userId) {
         DefaultSecurityManager securityManager = (DefaultSecurityManager) SecurityUtils.getSecurityManager();
         DefaultSessionManager sessionManager = (DefaultSessionManager) securityManager.getSessionManager();
         Collection<Session> activeSessions = sessionManager.getSessionDAO().getActiveSessions();
         List<Session> sessions = activeSessions.stream().filter(s -> matchSession(s, userId)).collect(Collectors.toList());
         sessions.forEach(Session::stop);
     }
+
     private boolean matchSession(Session s, int userId) {
         Subject subject = new Subject.Builder().sessionId(s.getId()).buildSubject();
         Object principal = subject.getPrincipal();

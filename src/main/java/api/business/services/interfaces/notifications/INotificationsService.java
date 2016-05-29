@@ -14,6 +14,6 @@ public interface INotificationsService {
 
     void create(String title, String action);
 
-    void create(String title, NotificationAction action, int userId);
+    void create(String title, NotificationAction action, int userId, String argument);
 
 }

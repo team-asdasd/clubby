@@ -34,11 +34,11 @@ public class RecommendationService implements IRecommendationService {
     private INotificationsService notificationsService;
 
     private final Logger logger = LogManager.getLogger(getClass().getName());
-    private final String memberMessage = "You are member of club now";
-    private final String confirmedMessage = "%s confirmed recommendation";
+    private final String memberNotification = "You become club member!";
+    private final String confirmedNotification = "%s confirmed recommendation.";
     private final String emailSubject = "Recommendation request";
-    private final String emailMessage = "Hello dear friend! \nYou have received recommendation request from user ";
-    private final String requestReceivedNotification = "Recommendation request received";
+    private final String emailMessage = "Hello dear friend! \nYou have received recommendation request from user %s.";
+    private final String requestReceivedNotification = "Recommendation request received from %s.";
 
     @Override
     public void ConfirmRecommendation(String recommendationCode) {
@@ -52,7 +52,8 @@ public class RecommendationService implements IRecommendationService {
         User userFrom = recommendation.getUserFrom();
 
         recommendation.setStatus(1);
-        notificationsService.create(String.format(confirmedMessage, userFrom.getName()), NotificationAction.DISMISS, userTo.getId());
+        notificationsService.create(String.format(confirmedNotification, userFrom.getName()), NotificationAction.NOACTION,
+                userTo.getId(), Integer.toString(userFrom.getId()));
 
         long count = em.createQuery("SELECT COUNT(r) FROM Recommendation r WHERE r.status = 1 AND r.userTo = :userTo", Long.class)
                 .setParameter("userTo", userTo)
@@ -70,28 +71,34 @@ public class RecommendationService implements IRecommendationService {
             r.setRoleName("member");
             em.persist(r);
             logger.info("User " + userTo.getLogin().getEmail() + " is member");
-            notificationsService.create(memberMessage, NotificationAction.DISMISS, userTo.getId());
+            notificationsService.create(memberNotification, NotificationAction.NOACTION, userTo.getId(), null);
         }
         logger.info("User " + userTo.getLogin().getEmail() + " received recommendation from " + userFrom.getLogin().getEmail());
 
     }
 
     public void sendRecommendationRequest(String userEmail) throws MessagingException {
+        try {
+            User userFrom = userService.getByEmail(userEmail);
 
-        User userFrom = userService.getByEmail(userEmail);
+            User userTo = userService.get();
 
-        User userTo = userService.get();
+            Recommendation r = new Recommendation();
+            r.setRecommendationCode(UUID.randomUUID().toString().replaceAll("-", ""));
+            r.setUserFrom(userFrom);
+            r.setUserTo(userTo);
 
-        Recommendation r = new Recommendation();
-        r.setRecommendationCode(UUID.randomUUID().toString().replaceAll("-", ""));
-        r.setUserFrom(userFrom);
-        r.setUserTo(userTo);
+            em.persist(r);
 
-        em.persist(r);
-
-        emailService.send(userEmail, emailSubject, emailMessage + userTo.getName());
-        notificationsService.create(requestReceivedNotification, NotificationAction.RECOMMENDATIONS, userFrom.getId());
-        logger.trace("Recommendation request from user " + userTo.getLogin().getEmail() + " to " + userFrom.getLogin().getEmail() + " has been sent");
+            emailService.send(userEmail, emailSubject, String.format(emailMessage, userTo.getName()));
+            notificationsService.create(String.format(requestReceivedNotification, userTo.getName()), NotificationAction.RECOMMENDATIONS,
+                    userFrom.getId(), Integer.toString(userTo.getId()));
+            logger.trace("Recommendation request from user " + userTo.getLogin().getEmail() + " to " + userFrom.getLogin().getEmail() + " has been sent");
+        } catch (MessagingException e) {
+            em.clear();
+            logger.warn("Message sending failed: " + e.getMessage());
+            throw e;
+        }
     }
 
     public List<RecommendationDto> getReceivedRecommendationRequests() {

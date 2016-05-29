@@ -9,14 +9,16 @@ public class NotificationView implements Serializable {
     private int userId;
     private boolean isRead;
     private Notification notification;
+    private String argument;
 
     public NotificationView() {
     }
 
-    public NotificationView(int userId, boolean isRead, Notification notification) {
+    public NotificationView(int userId, boolean isRead, Notification notification, String argument) {
         this.userId = userId;
         this.isRead = isRead;
         this.notification = notification;
+        this.argument = argument;
     }
 
     @Id
@@ -37,6 +39,16 @@ public class NotificationView implements Serializable {
 
     public void setRead(boolean read) {
         isRead = read;
+    }
+
+    @Basic
+    @Column(name = "argument", nullable = true)
+    public String getArgument() {
+        return argument;
+    }
+
+    public void setArgument(String argument) {
+        this.argument = argument;
     }
 
     @Override

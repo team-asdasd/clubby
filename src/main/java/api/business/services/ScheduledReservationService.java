@@ -29,7 +29,7 @@ public class ScheduledReservationService {
 
     private String name = getClass().getTypeName();
     private final Logger logger = LogManager.getLogger(name);
-    private final String reservationCanceledMessage = "Reservation has been canceled";
+    private final String reservationCanceledMessage = "Reservation has been canceled.";
 
     @Schedule(minute = "*/1", hour = "*", timezone = "UTC")
     public void cancelUnpaidReservations() throws InterruptedException {
@@ -44,7 +44,7 @@ public class ScheduledReservationService {
                 boolean cancelled = cottageService.cancelReservation(reservation.getReservationid());
                 if (cancelled) {
                     logger.info(String.format("Canceled reservation %d", reservation.getReservationid()));
-                    notificationsService.create(reservationCanceledMessage, NotificationAction.RESERVATIONS, reservation.getUser().getId());
+                    notificationsService.create(reservationCanceledMessage, NotificationAction.RESERVATIONS, reservation.getUser().getId(), null);
                 }
             });
 

@@ -1,4 +1,5 @@
 import {Component} from 'angular2/core';
+import {ROUTER_DIRECTIVES} from 'angular2/router';
 
 
 @Component({
@@ -6,7 +7,7 @@ import {Component} from 'angular2/core';
     template: require('./reservation-list.component.html'),
     styleUrls: [],
     providers: [],
-    directives: [],
+    directives: [...ROUTER_DIRECTIVES],
     pipes: [],
     inputs: ['reservations']
 })

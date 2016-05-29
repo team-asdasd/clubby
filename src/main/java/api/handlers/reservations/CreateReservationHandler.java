@@ -2,8 +2,10 @@ package api.handlers.reservations;
 
 import api.business.entities.*;
 import api.business.persistance.ISimpleEntityManager;
+import api.business.services.interfaces.ICottageService;
 import api.business.services.interfaces.IPaymentsService;
 import api.business.services.interfaces.IUserService;
+import api.business.strategy.IPaymentModifierStrategy;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.contracts.dto.PaymentInfoDto;
@@ -13,15 +15,12 @@ import api.contracts.reservations.CreateReservationRequest;
 import api.contracts.reservations.CreateReservationResponse;
 import api.contracts.reservations.services.ServiceSelectionDto;
 import api.handlers.base.BaseHandler;
-import org.apache.shiro.SecurityUtils;
-import org.joda.time.DateTimeConstants;
-import org.joda.time.LocalDate;
+import api.helpers.validator.Validator;
+import org.joda.time.*;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Stateless
 public class CreateReservationHandler extends BaseHandler<CreateReservationRequest, CreateReservationResponse> {
@@ -30,18 +29,24 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
     @Inject
     private IPaymentsService paymentsService;
     @Inject
+    private ICottageService cottageService;
+    @Inject
     private IUserService userService;
+    /*
+    @Inject
+    private IPaymentModifierStrategy paymentModifierStrategy;
+    */
 
     @Override
     public ArrayList<ErrorDto> validate(CreateReservationRequest request) {
-        ArrayList<ErrorDto> errors = new ArrayList<>();
-        if (!SecurityUtils.getSubject().isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
-            return errors;
-        }
+        ArrayList<ErrorDto> authErrors = new Validator().isMember().getErrors();
 
-        if (!SecurityUtils.getSubject().hasRole("member")) {
-            errors.add(new ErrorDto("User is not a member.", ErrorCodes.AUTHENTICATION_ERROR));
+        if (!authErrors.isEmpty()) return authErrors;
+
+        ArrayList<ErrorDto> errors = new Validator().getErrors();
+
+        if (!cottageService.isNowReservationPeriod()) {
+            errors.add(new ErrorDto("Now is not reservation period.", ErrorCodes.VALIDATION_ERROR));
             return errors;
         }
 
@@ -110,6 +115,14 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
             errors.add(new ErrorDto("Date 'to' must be after 'from'.", ErrorCodes.VALIDATION_ERROR));
         }
 
+        List<Cottage> availableCottages = cottageService.getAvailableCottagesForFullPeriod(from, to);
+        boolean cottageAvailable = availableCottages.stream().anyMatch(c -> c.getId() == request.cottage);
+
+        if (!cottageAvailable) {
+            errors.add(new ErrorDto("Cottage is not available in that period.", ErrorCodes.VALIDATION_ERROR));
+            return errors;
+        }
+
         if (request.services != null) {
             for (ServiceSelectionDto serviceSelection : request.services) {
                 if (serviceSelection.id <= 0) {
@@ -175,6 +188,7 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
 
         Cottage cottage = em.getById(Cottage.class, request.cottage);
         reservation.setCottage(cottage);
+        reservation.setCreated(DateTime.now(DateTimeZone.UTC).toDate());
 
         User user = userService.get();
         reservation.setUser(user);
@@ -229,7 +243,8 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
 
         Cottage cottage = em.getById(Cottage.class, request.cottage);
 
-        int weeks = 1;
+        int weeks = calculateWeeks(request);
+
         LineItem rent = new LineItem("Weekly rent for cottage \"" + cottage.getTitle() + "\"", cottage.getPrice(), weeks, payment);
         lineItems.add(rent);
 
@@ -240,7 +255,16 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
             }
         }
 
+        /*paymentModifierStrategy.modify(payment);*/
+
         payment.setLineItems(lineItems);
+    }
+
+    private int calculateWeeks(CreateReservationRequest request) {
+        LocalDate from = LocalDate.parse(request.from);
+        LocalDate to = LocalDate.parse(request.to).plusDays(1); // Add one day, so weekly periods are full-weeks.
+
+        return Weeks.weeksBetween(from, to).getWeeks();
     }
 
     @Override

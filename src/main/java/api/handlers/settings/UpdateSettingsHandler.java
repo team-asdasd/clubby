@@ -7,6 +7,7 @@ import api.contracts.base.ErrorDto;
 import api.contracts.dto.UpdateSettingsDto;
 import api.contracts.settings.UpdateSettingsRequest;
 import api.handlers.base.BaseHandler;
+import api.helpers.validator.Validator;
 import org.apache.shiro.SecurityUtils;
 
 import javax.ejb.Stateless;
@@ -24,14 +25,9 @@ public class UpdateSettingsHandler extends BaseHandler<UpdateSettingsRequest, Ba
     public ArrayList<ErrorDto> validate(UpdateSettingsRequest request) {
         ArrayList<ErrorDto> errors = new ArrayList<>();
 
-        if (!SecurityUtils.getSubject().isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
-            return errors;
-        }
-        if (!SecurityUtils.getSubject().hasRole("administrator")) {
-            errors.add(new ErrorDto("Permission denied", ErrorCodes.AUTHENTICATION_ERROR));
-            return errors;
-        }
+        errors.addAll(new Validator().isAdministrator().getErrors());
+        if (!errors.isEmpty()) return errors;
+
         for (UpdateSettingsDto dto : request.settings) {
             Configuration c = em.find(Configuration.class, dto.key);
             if (c == null) {

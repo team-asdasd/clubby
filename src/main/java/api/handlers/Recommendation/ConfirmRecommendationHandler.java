@@ -9,14 +9,12 @@ import api.contracts.recommendations.ConfirmRecommendationResponse;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
-import org.apache.commons.lang3.exception.ExceptionUtils;
+import api.helpers.validator.Validator;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.ws.rs.BadRequestException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,10 +30,14 @@ public class ConfirmRecommendationHandler extends BaseHandler<ConfirmRecommendat
 
     @Override
     public ArrayList<ErrorDto> validate(ConfirmRecommendationRequest request) {
-        ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
+        ArrayList<ErrorDto> authErrors = new Validator().isMember().getErrors();
+
+        if (!authErrors.isEmpty()) return authErrors;
+
+        ArrayList<ErrorDto> errors = new Validator().allFieldsSet(request).getErrors();
 
         if (request.recommendationCode.isEmpty()) {
-            errors.add(new ErrorDto("Bad request", ErrorCodes.BAD_REQUEST));
+            errors.add(new ErrorDto("Recommendation code is required", ErrorCodes.VALIDATION_ERROR));
         }
 
         List<Recommendation> recommendations = em.createQuery("SELECT r FROM Recommendation r JOIN r.userTo u WHERE r.recommendationCode = :recommendationCode AND r.status <> 1", Recommendation.class)

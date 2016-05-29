@@ -1,6 +1,6 @@
 import {Injectable} from 'angular2/core';
 import {User} from "./user.model";
-import {Http, Response} from 'angular2/http';
+import {Http, Response, Headers, RequestOptions} from 'angular2/http';
 import {Observable} from "../../../node_modules/rxjs/Observable";
 import {GetAllUsersResponse} from "../members/shared/getAllUsers.response.ts";
 
@@ -31,6 +31,14 @@ export class UserService {
         return this.http.get(`${this.url}/me/hasPermission/${permission}`).map(UserService.parse).catch(UserService.handleError);
     }
 
+    public patch(body: string) : Observable<any> {
+
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.patch(this.url, body, options).catch(UserService.handleError);
+    }
+
     private static parse<T>(res: Response): T {
         UserService.ensureSuccess(res);
         return res.json();
@@ -43,8 +51,10 @@ export class UserService {
     }
 
     private static handleError(error: any) {
-        let errMsg = error.message || 'Server error';
-        console.error(errMsg);
-        return Observable.throw(errMsg);
+        // In a real world app, we might send the error to remote logging infrastructure
+        let response  = JSON.parse(error._body) || 'Server error';
+
+        //console.error(errMsg); // log to console instead
+        return Observable.throw(response);
     }
 }

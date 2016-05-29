@@ -5,7 +5,7 @@ import api.contracts.users.HasRoleResponse;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
+import api.helpers.validator.Validator;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -16,9 +16,11 @@ import java.util.ArrayList;
 public class HasRoleHandler extends BaseHandler<HasRoleRequest, HasRoleResponse> {
     @Override
     public ArrayList<ErrorDto> validate(HasRoleRequest request) {
+        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
 
-        ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
+        if (!authErrors.isEmpty()) return authErrors;
 
+        ArrayList<ErrorDto> errors = new Validator().allFieldsSet(request).getErrors();
         if (request.roleName.isEmpty()) {
             errors.add(new ErrorDto("roleName empty.", ErrorCodes.VALIDATION_ERROR));
             return errors;

@@ -10,7 +10,7 @@ import api.contracts.dto.PaymentInfoDto;
 import api.contracts.payments.GetPaymentInfoRequest;
 import api.contracts.payments.GetPaymentInfoResponse;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
+import api.helpers.validator.Validator;
 import logging.audit.Audit;
 
 import javax.ejb.Stateless;
@@ -27,7 +27,11 @@ public class GetPaymentInfoHandler extends BaseHandler<GetPaymentInfoRequest, Ge
 
     @Override
     public ArrayList<ErrorDto> validate(GetPaymentInfoRequest request) {
-        return Validator.checkAllNotNullAndIsAuthenticated(request);
+        ArrayList<ErrorDto> authErrors = new Validator().isMember().getErrors();
+
+        if (!authErrors.isEmpty()) return authErrors;
+
+        return new Validator().allFieldsSet(request).getErrors();
     }
 
     @Override
@@ -44,7 +48,7 @@ public class GetPaymentInfoHandler extends BaseHandler<GetPaymentInfoRequest, Ge
 
         User user = userService.get();
 
-        if(!payment.canAcces(user)){
+        if (!payment.canAcces(user)) {
             response.Errors = new ArrayList<>();
             response.Errors.add(new ErrorDto("Cant access this payment", ErrorCodes.VALIDATION_ERROR));
             return response;

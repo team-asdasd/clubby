@@ -6,6 +6,7 @@ import api.contracts.base.ErrorDto;
 import api.contracts.recommendations.GetRecommendationsRequest;
 import api.contracts.recommendations.GetRecommendationsResponse;
 import api.handlers.base.BaseHandler;
+import api.helpers.validator.Validator;
 import org.apache.shiro.SecurityUtils;
 
 import javax.inject.Inject;
@@ -17,13 +18,8 @@ public class GetSentRecommendationsHandler extends BaseHandler<GetRecommendation
 
     @Override
     public ArrayList<ErrorDto> validate(GetRecommendationsRequest request) {
-        ArrayList<ErrorDto> errors = new ArrayList<>();
 
-        if (!SecurityUtils.getSubject().isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
-            return errors;
-        }
-        return errors;
+        return new Validator().isAuthenticated().getErrors();
     }
 
     @Override

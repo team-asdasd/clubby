@@ -8,7 +8,7 @@ import api.contracts.dto.PaymentInfoDto;
 import api.contracts.payments.GetPendingPaymentsRequest;
 import api.contracts.payments.GetPendingPaymentsResponse;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
+import api.helpers.validator.Validator;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -25,7 +25,12 @@ public class GetPendingPaymentsHandler extends BaseHandler<GetPendingPaymentsReq
 
     @Override
     public ArrayList<ErrorDto> validate(GetPendingPaymentsRequest request) {
-        return Validator.checkAllNotNullAndIsAuthenticated(request);
+        ArrayList<ErrorDto> authErrors = new Validator().isMember().getErrors();
+
+        if (!authErrors.isEmpty())
+            return authErrors;
+
+        return new Validator().allFieldsSet(request).getErrors();
     }
 
     @Override
@@ -33,9 +38,7 @@ public class GetPendingPaymentsHandler extends BaseHandler<GetPendingPaymentsReq
         GetPendingPaymentsResponse response = createResponse();
         User user = userService.get();
 
-        List<PaymentInfoDto> pendingPpayments = paymentsService.getPendingPaymentsForUser(user.getId());
-
-        response.pendingPayments = pendingPpayments;
+        response.pendingPayments = paymentsService.getPendingPaymentsForUser(user.getId());
         return response;
     }
 

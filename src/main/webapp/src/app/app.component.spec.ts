@@ -29,7 +29,6 @@ describe('App', () => {
         })
     ]);
 
-    it('should have an url', inject([App], (app: App) => {
-        expect(app.url).toEqual('https://github.com/preboot/angular2-webpack');
+    it('', inject([App], (app: App) => {
     }));
 });

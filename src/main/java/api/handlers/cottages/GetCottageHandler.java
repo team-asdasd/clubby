@@ -8,7 +8,7 @@ import api.contracts.cottages.GetCottageRequest;
 import api.contracts.cottages.GetCottageResponse;
 import api.contracts.dto.CottageDto;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
+import api.helpers.validator.Validator;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -23,13 +23,9 @@ public class GetCottageHandler extends BaseHandler<GetCottageRequest, GetCottage
 
     @Override
     public ArrayList<ErrorDto> validate(GetCottageRequest request) {
-        Subject currentUser = SecurityUtils.getSubject();
+        ArrayList<ErrorDto> errors = new Validator().isMember().getErrors();
 
-        ArrayList<ErrorDto> errors = Validator.checkAllNotNull(request);
-
-        if (!currentUser.isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
-        }
+        if (!errors.isEmpty()) return errors;
 
         if (cottageService.get(request.id) == null) {
             errors.add(new ErrorDto("cottage not found", ErrorCodes.NOT_FOUND));

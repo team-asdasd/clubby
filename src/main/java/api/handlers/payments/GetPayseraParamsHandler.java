@@ -4,7 +4,6 @@ import api.business.entities.MoneyTransaction;
 import api.business.entities.Payment;
 import api.business.entities.PaymentsSettings;
 import api.business.entities.User;
-import api.business.services.interfaces.ILoginService;
 import api.business.services.interfaces.IPaymentsService;
 import api.business.services.interfaces.IUserService;
 import api.contracts.base.ErrorCodes;
@@ -14,11 +13,9 @@ import api.contracts.enums.TransactionTypes;
 import api.contracts.payments.GetPayseraParamsRequest;
 import api.contracts.payments.GetPayseraParamsResponse;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
+import api.helpers.validator.Validator;
 import api.contracts.enums.TransactionStatus;
 import logging.audit.Audit;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -34,7 +31,11 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
 
     @Override
     public ArrayList<ErrorDto> validate(GetPayseraParamsRequest request) {
-        return Validator.checkAllNotNullAndIsAuthenticated(request);
+        ArrayList<ErrorDto> authErrors = new Validator().isMember().getErrors();
+
+        if (!authErrors.isEmpty()) return authErrors;
+
+        return new Validator().allFieldsSet(request).getErrors();
     }
 
     @Override
@@ -46,13 +47,13 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
 
         Payment payment = paymentsService.getPayment(request.PaymentId);
 
-        if(payment == null){
+        if (payment == null) {
             response.Errors = new ArrayList<>();
-            response.Errors.add(new ErrorDto(String.format("Payment %s not found",request.PaymentId), ErrorCodes.NOT_FOUND));
+            response.Errors.add(new ErrorDto(String.format("Payment %s not found", request.PaymentId), ErrorCodes.NOT_FOUND));
             return response;
         }
 
-        if(payment.getPaymenttypeid() == PaymentTypes.free.getValue()){
+        if (payment.getPaymenttypeid() == PaymentTypes.free.getValue()) {
             response.Errors = new ArrayList<>();
             response.Errors.add(new ErrorDto("This is free payment", ErrorCodes.VALIDATION_ERROR));
             return response;
@@ -61,16 +62,16 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
         User user = userService.get();
         PaymentsSettings paymentsSettings = payment.getSettings();
 
-        if(!payment.canAcces(user)){
+        if (!payment.canAcces(user)) {
             response.Errors = new ArrayList<>();
             response.Errors.add(new ErrorDto("Cant access this payment", ErrorCodes.VALIDATION_ERROR));
             return response;
         }
 
-        if(paymentsSettings == null){
+        if (paymentsSettings == null) {
             response.Errors = new ArrayList<>();
             response.Errors.add(new ErrorDto(String.format("Payment %s does not have payments settings"
-                    ,request.PaymentId), ErrorCodes.VALIDATION_ERROR));
+                    , request.PaymentId), ErrorCodes.VALIDATION_ERROR));
             return response;
         }
 

@@ -1,19 +1,19 @@
 package api.handlers.users;
 
-import api.business.entities.Field;
 import api.business.entities.User;
 import api.business.services.interfaces.IFormService;
 import api.business.services.interfaces.ILoginService;
 import api.business.services.interfaces.IUserService;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
-import api.contracts.dto.SubmitFormDto;
 import api.contracts.users.UpdateUserRequest;
 import api.contracts.users.UpdateUserResponse;
 import api.handlers.base.BaseHandler;
+import api.helpers.validator.Validator;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authc.credential.PasswordService;
+import org.apache.shiro.subject.Subject;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -34,12 +34,10 @@ public class UpdateUserHandler extends BaseHandler<UpdateUserRequest, UpdateUser
 
     @Override
     public ArrayList<ErrorDto> validate(UpdateUserRequest request) {
-        ArrayList<ErrorDto> errors = new ArrayList<>();
+        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+        if (!authErrors.isEmpty()) return authErrors;
 
-        if (!SecurityUtils.getSubject().isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
-            return errors;
-        }
+        ArrayList<ErrorDto> errors = new ArrayList<>();
 
         if (request == null) {
             errors.add(new ErrorDto("request is missing", ErrorCodes.VALIDATION_ERROR));
@@ -48,6 +46,13 @@ public class UpdateUserHandler extends BaseHandler<UpdateUserRequest, UpdateUser
 
         if (request.id <= 0) {
             errors.add(new ErrorDto("id is not valid", ErrorCodes.VALIDATION_ERROR));
+            return errors;
+        }
+
+        Subject subject = SecurityUtils.getSubject();
+        User current = userService.get();
+        if (current.getId() != request.id && !subject.hasRole("administrator")) {
+            errors.add(new ErrorDto("can not edit other users", ErrorCodes.ACCESS_DENIED));
             return errors;
         }
 
@@ -61,7 +66,7 @@ public class UpdateUserHandler extends BaseHandler<UpdateUserRequest, UpdateUser
         }
 
         if (request.password != null && request.password.length() < 6) {
-            errors.add(new ErrorDto("Password must bee at least 6 characters length", ErrorCodes.VALIDATION_ERROR));
+            errors.add(new ErrorDto("Password must be at least 6 characters length", ErrorCodes.VALIDATION_ERROR));
         }
 
         if (request.password != null && request.passwordConfirm != null && !request.password.equals(request.passwordConfirm)) {
@@ -72,7 +77,6 @@ public class UpdateUserHandler extends BaseHandler<UpdateUserRequest, UpdateUser
             errors.add(new ErrorDto("Email must be provided", ErrorCodes.VALIDATION_ERROR));
         }
 
-        User current = userService.get();
         if (!current.equals(user)) {
             errors.add(new ErrorDto("Email already taken", ErrorCodes.DUPLICATE_EMAIL));
         }

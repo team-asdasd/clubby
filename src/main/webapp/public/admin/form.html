@@ -1,0 +1,109 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="shared/head::head">
+    <meta charset="utf-8">
+</head>
+<body>
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <h2 class="sub-header">Form fields
+            <button type="button" data-toggle="modal" data-target="#field-modal" id="add-field"
+                    class="btn btn-success pull-right">
+                Add field
+            </button>
+        </h2>
+        <div id="dashboard-message-box"></div>
+        <div id="fields-table"></div>
+    </div>
+</div>
+<div class="modal fade" id="field-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Edit</h4>
+                <div id="modal-message-box"></div>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-borderless" id="modal-table">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Validation regex</th>
+                            <th>Description</th>
+                            <th>Required</th>
+                            <th>Visible</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><input class="form-control" type="text" id="name"></td>
+                            <td><input class="form-control" type="text" id="type"></td>
+                            <td><input class="form-control" type="text" id="validationRegex"></td>
+                            <td><input class="form-control" type="text" id="description"></td>
+                            <td><input type="checkbox" id="required"></td>
+                            <td><input type="checkbox" id="visible"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="save" type="button" data-loading-text="Saving ..." class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="field-table-template" type="text/template">
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Validation regex</th>
+                <th>Description</th>
+                <th>Required</th>
+                <th>Visible</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody class="searchable">
+            <% _.each(fields, function(field){ %>
+            <tr data-field-name="<%=_.escape(field.name)%>">
+                <td><%= _.escape(field.name) %></td>
+                <td><%= _.escape(field.type) %></td>
+                <td><%= _.escape(field.validationRegex) %></td>
+                <td><%= _.escape(field.description) %></td>
+                <td><input type="checkbox" <% if(field.required){ %>
+                    <%="checked"%>
+                    <%}%>
+                    disabled="disabled" >
+                </td>
+                <td><input type="checkbox" <% if(field.visible){%>
+                    <%="checked"%>
+                    <%}%>
+                    disabled="disabled" >
+                </td>
+                <td>
+                    <a class="btn btn-default edit-field">
+                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                        <span style="font-size: 16px;"> Edit</span></a>
+                </td>
+            </tr>
+            <% }); %>
+            </tbody>
+        </table>
+    </div>
+</script>
+
+<script src="/public/admin/shared/scripts/clubby/alert.js"></script>
+<script src="/public/admin/shared/scripts/clubby/dialog.js"></script>
+<script src="/public/admin/shared/scripts/form.js"></script>
+</body>
+</html>

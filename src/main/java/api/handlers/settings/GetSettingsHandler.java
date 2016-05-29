@@ -7,6 +7,7 @@ import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.contracts.settings.GetSettingsResponse;
 import api.handlers.base.BaseHandler;
+import api.helpers.validator.Validator;
 import org.apache.shiro.SecurityUtils;
 
 import javax.ejb.Stateless;
@@ -20,18 +21,9 @@ public class GetSettingsHandler extends BaseHandler<BaseRequest, GetSettingsResp
 
     @Override
     public ArrayList<ErrorDto> validate(BaseRequest request) {
-        ArrayList<ErrorDto> errors = new ArrayList<>();
-        if (!SecurityUtils.getSubject().isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
-            return errors;
-        }
-        if (!SecurityUtils.getSubject().hasRole("administrator")) {
-            errors.add(new ErrorDto("Permission denied", ErrorCodes.AUTHENTICATION_ERROR));
-            return errors;
-        }
 
+        return new Validator().isAdministrator().getErrors();
 
-        return errors;
     }
 
     @Override

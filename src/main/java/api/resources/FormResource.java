@@ -3,6 +3,7 @@ package api.resources;
 import api.contracts.base.BaseResponse;
 import api.contracts.form.AddFieldRequest;
 import api.contracts.form.GetFormRequest;
+import api.contracts.form.GetFormResponse;
 import api.handlers.form.AddFieldHandler;
 import api.handlers.form.GetFormHandler;
 import api.handlers.form.UpdateFieldHandler;
@@ -29,11 +30,11 @@ public class FormResource {
     @GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Get form fields", response = BaseResponse.class)
+    @ApiOperation(value = "Get form fields", response = GetFormResponse.class)
     public Response getForm() {
 
         GetFormRequest request = new GetFormRequest();
-        BaseResponse response = getFormHandler.handle(request);
+        GetFormResponse response = getFormHandler.handle(request);
 
         int statusCode = StatusResolver.getStatusCode(response);
 

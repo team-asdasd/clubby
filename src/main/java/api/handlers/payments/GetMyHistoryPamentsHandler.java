@@ -1,20 +1,16 @@
 package api.handlers.payments;
 
 import api.business.entities.MoneyTransaction;
-import api.business.entities.Payment;
 import api.business.entities.User;
 import api.business.services.interfaces.IPaymentsService;
 import api.business.services.interfaces.IUserService;
-import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.contracts.dto.MoneyTransactionDto;
 import api.contracts.payments.GetMyHistoryPaymetsRequest;
 import api.contracts.payments.GetMyHistoryPaymetsResponse;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
+import api.helpers.validator.Validator;
 import logging.audit.Audit;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -31,7 +27,11 @@ public class GetMyHistoryPamentsHandler extends BaseHandler<GetMyHistoryPaymetsR
 
     @Override
     public ArrayList<ErrorDto> validate(GetMyHistoryPaymetsRequest request) {
-        return Validator.checkAllNotNullAndIsAuthenticated(request);
+        ArrayList<ErrorDto> authErrors = new Validator().isMember().getErrors();
+
+        if (!authErrors.isEmpty()) return authErrors;
+
+        return new Validator().allFieldsSet(request).getErrors();
     }
 
     @Override

@@ -32,11 +32,13 @@ public class CreateCottageHandler extends BaseHandler<CreateCottageRequest, Crea
         ArrayList<ErrorDto> errors = new ArrayList<>();
 
         if (!currentUser.isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
+            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.UNAUTHENTICATED));
+            return errors;
         }
 
         if (!currentUser.hasRole("administrator")) {
-            errors.add(new ErrorDto("Insufficient permissions.", ErrorCodes.AUTHENTICATION_ERROR));
+            errors.add(new ErrorDto("Insufficient permissions.", ErrorCodes.UNAUTHENTICATED));
+            return errors;
         }
 
         if (request.title == null || request.title.length() < 5) {

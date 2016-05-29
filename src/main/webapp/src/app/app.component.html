@@ -27,6 +27,11 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li>
+                        <notifications></notifications>
+                    </li>
+                    <li *ngIf="isAdministrator">
+                        <a href="/admin">Admin Dashboard</a></li>
+                    <li>
                         <span class="balance">{{balance | number:'1.2-2'}} CB
                         <a href="/app/#/Payments/buyclubbycoins">+</a></span></li>
                     <li [class.active]="isRouteActive(['Profile'])">

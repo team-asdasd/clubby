@@ -12,14 +12,12 @@ import api.contracts.dto.FormInfoDto;
 import api.contracts.users.GetUserByIdRequest;
 import api.contracts.users.GetUserInfoResponse;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
+import api.helpers.validator.Validator;
 import api.helpers.mappers.UserMapper;
 import clients.facebook.interfaces.IFacebookClient;
-import clients.facebook.responses.FacebookUserDetails;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -38,10 +36,13 @@ public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserI
 
     @Override
     public ArrayList<ErrorDto> validate(GetUserByIdRequest request) {
-        ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
+        ArrayList<ErrorDto> authErrors = new Validator().isMember().getErrors();
+
+        if (!authErrors.isEmpty()) return authErrors;
+
+        ArrayList<ErrorDto> errors = new Validator().allFieldsSet(request).getErrors();
 
         User user = userInfoService.get(request.id);
-
         if (user == null) {
             errors.add(new ErrorDto("User not found.", ErrorCodes.NOT_FOUND));
         } else if (user.getLogin().isDisabled()) {
@@ -62,6 +63,7 @@ public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserI
         response.id = user.getId();
         response.name = user.getName();
         response.email = user.getLogin().getEmail();
+        response.online = user.isOnline();
         response.picture = mapper.getPicture(user, defaultPic);
         response.fields = user.getFormResults().stream().map(FormInfoDto::new).collect(Collectors.toList());
         response.roles = user.getLogin().getRoles().stream().map(Role::getRoleName).collect(Collectors.toList());

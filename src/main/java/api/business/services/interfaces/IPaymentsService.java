@@ -20,7 +20,7 @@ public interface IPaymentsService {
 
     String toMd5(String input);
 
-    String encodeUrl(Map<String,String> map);
+    String encodeUrl(Map<String, String> map);
 
     boolean checkWithMd5(String data, String ss1);
 
@@ -65,4 +65,6 @@ public interface IPaymentsService {
     int getMyBalance(int userId);
 
     List<PaymentInfoDto> getPendingPaymentsForUser(int userId);
+
+    void createGift(int userId, String text, int amount);
 }

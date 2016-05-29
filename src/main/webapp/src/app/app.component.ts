@@ -13,6 +13,8 @@ import {PaymentsService} from "./payments/shared/payments.service";
 import {RecommendationService} from "./members/shared/recommendation.service";
 import {PaymentsCentral} from "./payments/payments.component";
 import {Members} from "./members/members.component";
+import {Notifications} from "./notifications/notifications.component";
+import {NotificationsService} from "./notifications/shared/notifications.service.ts";
 
 /*
  * App Component
@@ -20,8 +22,8 @@ import {Members} from "./members/members.component";
  */
 @Component({
     selector: 'app', // <app></app>
-    providers: [...FORM_PROVIDERS, UserService, CottageService, PaymentsService, RecommendationService],
-    directives: [...ROUTER_DIRECTIVES],
+    providers: [...FORM_PROVIDERS, UserService, CottageService, PaymentsService, RecommendationService, NotificationsService],
+    directives: [...ROUTER_DIRECTIVES, Notifications],
     pipes: [],
     styles: [require('./app.component.scss')],
     template: require('./app.component.html')
@@ -34,10 +36,15 @@ import {Members} from "./members/members.component";
     {path: '/Members', component: Members, as: 'Members'}
 ])
 export class App {
-    url: string = 'https://github.com/preboot/angular2-webpack';
-    balance: number;
+    balance:number;
+    isAdministrator:boolean;
 
-    constructor(private router: Router, private paymentsService: PaymentsService) {
+    constructor(private router:Router, private paymentsService:PaymentsService, private userService:UserService) {
+        userService.hasRole("administrator").subscribe(
+            resp =>this.isAdministrator = resp,
+            error => this.isAdministrator = false
+        );
+
         paymentsService.getBalance().subscribe(
             resp => this.balance = resp,
             error => this.balance = 0

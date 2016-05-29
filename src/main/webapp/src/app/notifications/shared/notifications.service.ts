@@ -10,9 +10,13 @@ export class NotificationsService {
     constructor(private http:Http) {
     }
 
-    public getNotifications():Observable<GetNotificationsResponse> {
+    public pollNotifications():Observable<GetNotificationsResponse> {
         return Observable.interval(10000)
             .switchMap(() => this.http.get(`${this.url}`).map(NotificationsService.parse).catch(NotificationsService.handleError));
+    }
+    
+    public getNotifications():Observable<GetNotificationsResponse> {
+        return this.http.get(`${this.url}`).map(NotificationsService.parse).catch(NotificationsService.handleError);
     }
 
     public markAsRead(ids:number[]) {

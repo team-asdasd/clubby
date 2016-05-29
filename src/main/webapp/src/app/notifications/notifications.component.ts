@@ -3,6 +3,7 @@ import {NotificationsService} from "./shared/notifications.service.ts";
 import 'rxjs/add/operator/catch';
 import {Notification} from "./shared/notification.model.ts";
 import {GetNotificationsResponse} from "./shared/notifications-response";
+import {resolveProvider} from "angular2/src/core/di/provider";
 
 @Component({
     selector: 'notifications',
@@ -26,7 +27,7 @@ export class Notifications {
     }
 
     private fetchNotifications() {
-        this.notificationsService.getNotifications().subscribe(resp => this.handleResponse(resp));
+        this.notificationsService.pollNotifications().subscribe(resp => this.handleResponse(resp));
     }
 
     private handleResponse(resp:GetNotificationsResponse) {
@@ -35,7 +36,6 @@ export class Notifications {
     }
 
     private toggleNotificationsDropdown() {
-        console.log("awdawd", this.dropdown);
         if (this.container && this.container.nativeElement && this.dropdown && this.dropdown.nativeElement) {
             this.container.nativeElement.classList.add("open");
             this.dropdown.nativeElement.style.display = "block";
@@ -52,13 +52,12 @@ export class Notifications {
     private handleMarkAllAsReadClick() {
         var ids = this.notifications.map(n => n.id);
 
-        this.notificationsService.markAsRead(ids).subscribe();
+        this.notificationsService.markAsRead(ids).subscribe(r =>
+            this.notificationsService.getNotifications().subscribe(resp => this.handleResponse(resp)));
     }
 
     private redirectTo(action:string) {
-
     }
-
 
     private offClickHandler(event:any) {
         if (this.dropdown && this.dropdown.nativeElement && this.container && this.container.nativeElement && !this.container.nativeElement.contains(event.target)) {

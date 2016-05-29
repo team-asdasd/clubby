@@ -11,11 +11,11 @@
   <tbody>
   <tr *ngFor="#reservation of reservations">
   <!--<tr>-->
-    <td>1</td>
-    <td>{{reservation.cottage}}</td>
-    <td>{{reservation.user}}</td>
-    <td>{{reservation.dateFrom}}</td>
-    <td>{{reservation.dateTo}}</td>
+    <td>{{reservation?.id}}</td>
+    <td>{{reservation?.cottage}}</td>
+    <td>{{reservation?.user?.name}}</td>
+    <td>{{reservation?.dateFrom}}</td>
+    <td>{{reservation?.dateTo}}</td>
   </tr>
   </tbody>
 </table>

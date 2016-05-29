@@ -17,8 +17,7 @@ import {ReservationForm} from './reservation-form/reservation-form.component';
 export class CottageDetails {
     public cottage = new Cottage();
 
-    constructor(private router: Router,
-                private routeParams: RouteParams,
+    constructor(private routeParams: RouteParams,
                 private cottageService: CottageService) {
         let id = this.routeParams.get('id');
         cottageService.getCottage(id)

@@ -1,13 +1,14 @@
-<a class="notifications" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" (click)="toggleNotificationsDropdown()">
-    <span class="notifications glyphicon glyphicon-bell" aria-hidden="true"></span>
-    <span class="label label-danger" *ngIf="notifications">{{notifications.length}}</span>
-    <ul class="dropdown-menu">
-        <li><a href="#">Action</a></li>
-        <li><a href="#">Another action</a></li>
-        <li><a href="#">Something else here</a></li>
-        <li role="separator" class="divider"></li>
-        <li><a href="#">Separated link</a></li>
-        <li role="separator" class="divider"></li>
-        <li><a href="#">One more separated link</a></li>
+<a class="notifications" #container>
+    <div (click)="toggleNotificationsDropdown()">
+        <span class="notifications-icon glyphicon glyphicon-bell" aria-hidden="true"></span>
+        <span class="label label-danger" *ngIf="notifications">{{notifications.length}}</span>
+    </div>
+    <ul class="dropdown-menu" *ngIf="notifications" #dropdown>
+        <li *ngFor="#n of notifications">
+            <a (click)="handleNotificationClick($event)" attr.data-notification-id="{{n.id}}">{{n.title}}</a>
+        </li>
     </ul>
 </a>
+
+
+

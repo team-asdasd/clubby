@@ -7,10 +7,11 @@ a.notifications {
 
 a.notifications:hover {
   background-color: $darker;
+  cursor: pointer;
 }
 
-span.notifications {
+.notifications-icon{
   color: $light;
-  padding: 14px 0px;
+  padding: 14px 0;
   display: inline-block;
 }

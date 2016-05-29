@@ -25,11 +25,8 @@ public class GetCottagesHandler extends BaseHandler<GetCottagesRequest, GetCotta
 
     @Override
     public ArrayList<ErrorDto> validate(GetCottagesRequest request) {
-        ArrayList<ErrorDto> authErrors = new Validator().isMember().getErrors();
 
-        if (!authErrors.isEmpty()) return authErrors;
-
-        return new Validator().allFieldsSet(request).getErrors();
+        return new Validator().isMember().getErrors();
     }
 
     @Override

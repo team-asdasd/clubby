@@ -14,11 +14,9 @@ import api.contracts.base.ErrorDto;
 import api.contracts.dto.FormInfoDto;
 import api.contracts.users.GetUserInfoResponse;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
+import api.helpers.validator.Validator;
 import api.helpers.mappers.UserMapper;
 import clients.facebook.interfaces.IFacebookClient;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -42,8 +40,12 @@ public class GetCurrentUserHandler extends BaseHandler<BaseRequest, GetUserInfoR
 
     @Override
     public ArrayList<ErrorDto> validate(BaseRequest request) {
-        ArrayList<ErrorDto> errors = Validator.checkAllNotNullAndIsAuthenticated(request);
-        if (!errors.isEmpty()) return errors;
+        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+
+        if (!authErrors.isEmpty()) return authErrors;
+
+        ArrayList<ErrorDto> errors = new Validator().isAdministrator().allFieldsSet(request).getErrors();
+
         User user = userService.get();
 
         if (user == null) {

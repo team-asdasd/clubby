@@ -8,7 +8,7 @@ import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.contracts.form.AddFieldRequest;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
+import api.helpers.validator.Validator;
 import org.apache.shiro.SecurityUtils;
 
 import javax.ejb.Stateless;
@@ -24,13 +24,23 @@ public class AddFieldHandler extends BaseHandler<AddFieldRequest, BaseResponse> 
 
     @Override
     public ArrayList<ErrorDto> validate(AddFieldRequest request) {
-        ArrayList<ErrorDto> errors = Validator.checkAllNotNull(request);
-        if (!SecurityUtils.getSubject().hasRole("administrator")) {
-            errors.add(new ErrorDto("Permission denied", ErrorCodes.AUTHENTICATION_ERROR));
-            return errors;
-        }
+        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+
+        if (!authErrors.isEmpty()) return authErrors;
+
+        ArrayList<ErrorDto> errors = new Validator().isAdministrator().allFieldsSet(request).getErrors();
+
         if (formService.getFieldByName(request.name) != null) {
             errors.add(new ErrorDto("Field with same name already exists", ErrorCodes.VALIDATION_ERROR));
+        }
+        if (request.name.isEmpty()) {
+            errors.add(new ErrorDto("Name is required", ErrorCodes.VALIDATION_ERROR));
+        }
+        if (request.type.isEmpty()) {
+            errors.add(new ErrorDto("Type is required", ErrorCodes.VALIDATION_ERROR));
+        }
+        if (request.description.isEmpty()) {
+            errors.add(new ErrorDto("Description is required", ErrorCodes.VALIDATION_ERROR));
         }
         return errors;
     }

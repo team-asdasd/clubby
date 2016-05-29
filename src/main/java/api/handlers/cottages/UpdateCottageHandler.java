@@ -11,7 +11,7 @@ import api.contracts.dto.CottageDto;
 import api.contracts.dto.ExistingServiceDto;
 import api.contracts.dto.ServiceDto;
 import api.handlers.base.BaseHandler;
-import api.helpers.Validator;
+import api.helpers.validator.Validator;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -36,18 +36,18 @@ public class UpdateCottageHandler extends BaseHandler<UpdateCottageRequest, Upda
     public ArrayList<ErrorDto> validate(UpdateCottageRequest request) {
         Subject currentUser = SecurityUtils.getSubject();
 
-        ArrayList<ErrorDto> errors = Validator.checkAllNotNull(request);
+        ArrayList<ErrorDto> errors = new Validator().allFieldsSet(request).getErrors();
 
         if (!errors.isEmpty()) {
             return errors;
         }
 
         if (!currentUser.isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.AUTHENTICATION_ERROR));
+            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.UNAUTHENTICATED));
         }
 
         if (!currentUser.hasRole("administrator")) {
-            errors.add(new ErrorDto("Insufficient permissions.", ErrorCodes.AUTHENTICATION_ERROR));
+            errors.add(new ErrorDto("Insufficient permissions.", ErrorCodes.UNAUTHENTICATED));
         }
 
         if (cottageService.get(request.cottage.id) == null) {

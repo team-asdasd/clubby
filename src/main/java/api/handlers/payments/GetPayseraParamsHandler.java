@@ -35,7 +35,7 @@ public class GetPayseraParamsHandler extends BaseHandler<GetPayseraParamsRequest
 
         if (!authErrors.isEmpty()) return authErrors;
 
-        return new Validator().isAdministrator().allFieldsSet(request).getErrors();
+        return new Validator().isMember().allFieldsSet(request).getErrors();
     }
 
     @Override

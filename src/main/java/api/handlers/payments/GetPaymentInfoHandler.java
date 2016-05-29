@@ -31,7 +31,7 @@ public class GetPaymentInfoHandler extends BaseHandler<GetPaymentInfoRequest, Ge
 
         if (!authErrors.isEmpty()) return authErrors;
 
-        return new Validator().isAdministrator().allFieldsSet(request).getErrors();
+        return new Validator().isMember().allFieldsSet(request).getErrors();
     }
 
     @Override

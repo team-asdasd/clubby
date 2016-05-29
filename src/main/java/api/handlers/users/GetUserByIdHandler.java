@@ -40,7 +40,7 @@ public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserI
 
         if (!authErrors.isEmpty()) return authErrors;
 
-        ArrayList<ErrorDto> errors = new Validator().isAdministrator().allFieldsSet(request).getErrors();
+        ArrayList<ErrorDto> errors = new Validator().isMember().allFieldsSet(request).getErrors();
 
         User user = userInfoService.get(request.id);
         if (user == null) {

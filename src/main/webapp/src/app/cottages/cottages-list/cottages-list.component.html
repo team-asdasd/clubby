@@ -43,7 +43,7 @@
                 </td>
                 <td>{{cottage.title}}</td>
                 <td>{{cottage.beds}}</td>
-                <td>{{cottage.price | currency:"EUR":true:'1.2-2'}}</td>
+                <td>{{(cottage.price/100) | currency:"EUR":true:'1.2-2'}}</td>
                 <td>{{cottage.availableFrom}}</td>
                 <td>{{cottage.availableTo}}</td>
             </tr>

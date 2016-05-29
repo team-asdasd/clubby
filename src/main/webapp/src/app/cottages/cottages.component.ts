@@ -31,10 +31,10 @@ export class Cottages {
             link: 'CottagesList'
         }, {
             name: 'My Reservations',
-            link: 'Reservations'
+            link: 'UserReservations'
         }, {
             name: 'All Reservations',
-            link: 'Reservations'
+            link: 'AllReservations'
         }];
     }
 

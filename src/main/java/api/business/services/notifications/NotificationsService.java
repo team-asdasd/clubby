@@ -5,6 +5,7 @@ import api.business.entities.notifications.Notification;
 import api.business.entities.notifications.NotificationView;
 import api.business.persistance.ISimpleEntityManager;
 import api.business.services.interfaces.notifications.INotificationsService;
+import api.contracts.enums.NotificationAction;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -27,7 +28,7 @@ public class NotificationsService implements INotificationsService {
     }
 
     public void markAsRead(int notificationId, int userId) {
-        em.createQuery("UPDATE NotificationView SET read = TRUE WHERE Notification.id = :notificationId AND userId = :userId", Notification.class)
+        em.createQuery("UPDATE NotificationView AS NV SET NV.read = TRUE WHERE NV.notification.id = :notificationId AND NV.userId = :userId")
                 .setParameter("notificationId", notificationId)
                 .setParameter("userId", userId)
                 .executeUpdate();
@@ -39,8 +40,8 @@ public class NotificationsService implements INotificationsService {
         sem.getAll(User.class).stream().forEach(u -> em.persist(new NotificationView(u.getId(), false, notification)));
     }
 
-    public void create(String title, String action, int userId) {
-        Notification notification = new Notification(title, action);
+    public void create(String title, NotificationAction action, int userId) {
+        Notification notification = new Notification(title, action.name());
         em.persist(notification);
 
         em.persist(new NotificationView(userId, false, notification));

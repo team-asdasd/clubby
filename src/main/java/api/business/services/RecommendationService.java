@@ -7,7 +7,9 @@ import api.business.entities.User;
 import api.business.services.interfaces.IEmailService;
 import api.business.services.interfaces.IRecommendationService;
 import api.business.services.interfaces.IUserService;
+import api.business.services.interfaces.notifications.INotificationsService;
 import api.contracts.dto.RecommendationDto;
+import api.contracts.enums.NotificationAction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,8 +30,15 @@ public class RecommendationService implements IRecommendationService {
     private IEmailService emailService;
     @Inject
     private IUserService userService;
+    @Inject
+    private INotificationsService notificationsService;
 
     private final Logger logger = LogManager.getLogger(getClass().getName());
+    private final String memberMessage = "You are member of club now";
+    private final String confirmedMessage = "%s confirmed recommendation";
+    private final String emailSubject = "Recommendation request";
+    private final String emailMessage = "Hello dear friend! \nYou have received recommendation request from user ";
+    private final String requestReceivedNotification = "Recommendation request received";
 
     @Override
     public void ConfirmRecommendation(String recommendationCode) {
@@ -43,6 +52,7 @@ public class RecommendationService implements IRecommendationService {
         User userFrom = recommendation.getUserFrom();
 
         recommendation.setStatus(1);
+        notificationsService.create(String.format(confirmedMessage, userFrom.getName()), NotificationAction.DISMISS, userTo.getId());
 
         long count = em.createQuery("SELECT COUNT(r) FROM Recommendation r WHERE r.status = 1 AND r.userTo = :userTo", Long.class)
                 .setParameter("userTo", userTo)
@@ -60,8 +70,10 @@ public class RecommendationService implements IRecommendationService {
             r.setRoleName("member");
             em.persist(r);
             logger.info("User " + userTo.getLogin().getEmail() + " is member");
+            notificationsService.create(memberMessage, NotificationAction.DISMISS, userTo.getId());
         }
         logger.info("User " + userTo.getLogin().getEmail() + " received recommendation from " + userFrom.getLogin().getEmail());
+
     }
 
     public void sendRecommendationRequest(String userEmail) throws MessagingException {
@@ -77,8 +89,8 @@ public class RecommendationService implements IRecommendationService {
 
         em.persist(r);
 
-        emailService.send(userEmail, "Recommendation request", "Hello dear friend! \nYou have received recommendation request from user "
-                + userTo.getName());
+        emailService.send(userEmail, emailSubject, emailMessage + userTo.getName());
+        notificationsService.create(requestReceivedNotification, NotificationAction.RECOMMENDATIONS, userFrom.getId());
         logger.trace("Recommendation request from user " + userTo.getLogin().getEmail() + " to " + userFrom.getLogin().getEmail() + " has been sent");
     }
 

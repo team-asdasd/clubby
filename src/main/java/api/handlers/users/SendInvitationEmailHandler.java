@@ -28,7 +28,7 @@ public class SendInvitationEmailHandler extends BaseHandler<SendInvitationEmailR
 
         if (!authErrors.isEmpty()) return authErrors;
 
-        ArrayList<ErrorDto> errors = new Validator().isAdministrator().allFieldsSet(request).getErrors();
+        ArrayList<ErrorDto> errors = new Validator().isMember().allFieldsSet(request).getErrors();
 
         if (!EmailService.isValidEmailAddress(request.email)) {
             errors.add(new ErrorDto("Invalid email", ErrorCodes.INCORRECT_EMAIL));

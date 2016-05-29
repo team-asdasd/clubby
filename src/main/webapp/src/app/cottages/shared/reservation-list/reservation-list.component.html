@@ -10,12 +10,14 @@
     </thead>
     <tbody>
     <tr *ngFor="#reservation of reservations">
-        <!--<tr>-->
         <td>{{reservation?.id}}</td>
-        <td><a [routerLink]="['CottageDetails', {id: reservation?.cottage?.id}]">{{reservation?.cottage?.title}}</a></td>
+        <td><a [routerLink]="['CottageDetails', {id: reservation?.cottage?.id}]">{{reservation?.cottage?.title}}</a>
+        </td>
         <td>{{reservation?.user?.name}}</td>
         <td>{{reservation?.dateFrom}}</td>
         <td>{{reservation?.dateTo}}</td>
     </tr>
+    <p class="text-center"
+       *ngIf="reservations.length === 0">Nothing found.</p>
     </tbody>
 </table>

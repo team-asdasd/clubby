@@ -1,6 +1,7 @@
 @import '../../style/colors';
 
 $unread: #E9EEF1;
+$unread_hover: $dark;
 $dropdown-width: 340px;
 
 #notifications-mark-as-read {
@@ -46,6 +47,10 @@ a.notifications:hover {
   background-color: $unread;
 }
 
+.notifications-item.unread a:hover {
+  background-color: $unread_hover;
+}
+
 @media (max-width: 767px) {
   #notifications-mark-as-read {
     color: #fff;
@@ -57,6 +62,11 @@ a.notifications:hover {
   }
 
   li.notifications-item.unread {
+    color: $unread;
+    background-color: $unread_hover;
+  }
+
+  li.notifications-item.unread:hover {
     color: $unread;
     background-color: $darker;
   }

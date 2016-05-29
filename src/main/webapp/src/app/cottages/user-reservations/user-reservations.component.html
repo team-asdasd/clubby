@@ -1,22 +1,4 @@
-<table class="table table-hover">
-  <thead>
-  <tr>
-    <th>ID</th>
-    <th>Cottage</th>
-    <th>Reserved by</th>
-    <th>Start Date</th>
-    <th>End Date</th>
-  </tr>
-  </thead>
-  <tbody>
-  <!--<tr *ngFor="#reservation of reservations"-->
-      <!--(click)="onSelect(reservation)">-->
-  <tr>
-    <td>1</td>
-    <td>Cottage 2</td>
-    <td>Jonas Jonmas</td>
-    <td>2015-02-02</td>
-    <td>2015-02-09</td>
-  </tr>
-  </tbody>
-</table>
+<div *ngIf="!reservations" class="loader"></div>
+<div *ngIf="reservations">
+  <reservation-list [reservations]="reservations"></reservation-list>
+</div>

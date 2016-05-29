@@ -7,9 +7,10 @@ import {Component} from 'angular2/core';
     styleUrls: [],
     providers: [],
     directives: [],
-    pipes: []
+    pipes: [],
+    inputs: ['reservations']
 })
 export class ReservationList {
-
-    //constructor() {}
+    constructor() {
+    }
 }

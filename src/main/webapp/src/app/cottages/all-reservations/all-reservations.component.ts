@@ -6,7 +6,6 @@ import {ReservationService} from "../shared/reservation.service";
 import {ReservationListItem} from "../shared/reservation-list-item.model";
 import {UserService} from "../../shared/user.service";
 
-
 @Component({
     selector: 'all-reservations',
     template: require('./all-reservations.component.html'),
@@ -16,12 +15,6 @@ import {UserService} from "../../shared/user.service";
     pipes: []
 })
 export class AllReservations {
-    // reservationsData = [{
-    //     cottage: '22',
-    //     user: '174',
-    //     dateFrom: '2015-02-02',
-    //     dateTo: '2015-02-09'
-    // }];
     reservations: [ReservationListItem];
 
     constructor(private reservationService: ReservationService) {

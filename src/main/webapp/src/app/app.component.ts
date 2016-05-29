@@ -34,11 +34,11 @@ import {Members} from "./members/members.component";
     {path: '/Members', component: Members, as: 'Members'}
 ])
 export class App {
-    balance:number;
-    isAdministrator:boolean;
+    balance: number;
+    isAdministrator: boolean;
 
-    constructor(private router:Router, private paymentsService:PaymentsService, private userService:UserService) {
-        
+    constructor(private router: Router, private paymentsService: PaymentsService, private userService: UserService) {
+
         userService.hasRole("administrator").subscribe(
             resp =>this.isAdministrator = resp,
             error => this.isAdministrator = false

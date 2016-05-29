@@ -25,7 +25,7 @@ public class GetPaymentsHandler extends BaseHandler<GetPaymentsRequest, GetPayme
 
     @Override
     public ArrayList<ErrorDto> validate(GetPaymentsRequest request) {
-        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+        ArrayList<ErrorDto> authErrors = new Validator().isMember().getErrors();
 
         if (!authErrors.isEmpty()) return authErrors;
 

@@ -21,10 +21,10 @@ public class DisableUserHandler extends BaseHandler<DisableUserRequest, BaseResp
 
     @Override
     public ArrayList<ErrorDto> validate(DisableUserRequest request) {
-        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+        ArrayList<ErrorDto> authErrors = new Validator().isAdministrator().getErrors();
         if (!authErrors.isEmpty()) return authErrors;
 
-        ArrayList<ErrorDto> errors = new Validator().isAdministrator().getErrors();
+        ArrayList<ErrorDto> errors = new Validator().getErrors();
 
         User user = userService.get(request.id);
         if (user == null) {

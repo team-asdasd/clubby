@@ -24,11 +24,11 @@ public class SendInvitationEmailHandler extends BaseHandler<SendInvitationEmailR
 
     @Override
     public ArrayList<ErrorDto> validate(SendInvitationEmailRequest request) {
-        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+        ArrayList<ErrorDto> authErrors = new Validator().isMember().getErrors();
 
         if (!authErrors.isEmpty()) return authErrors;
 
-        ArrayList<ErrorDto> errors = new Validator().isMember().allFieldsSet(request).getErrors();
+        ArrayList<ErrorDto> errors = new Validator().allFieldsSet(request).getErrors();
 
         if (!EmailService.isValidEmailAddress(request.email)) {
             errors.add(new ErrorDto("Invalid email", ErrorCodes.INCORRECT_EMAIL));

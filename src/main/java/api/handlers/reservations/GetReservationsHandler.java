@@ -22,11 +22,11 @@ public class GetReservationsHandler extends BaseHandler<GetReservationsRequest, 
 
     @Override
     public ArrayList<ErrorDto> validate(GetReservationsRequest request) {
-        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+        ArrayList<ErrorDto> authErrors = new Validator().isMember().getErrors();
 
         if (!authErrors.isEmpty()) return authErrors;
 
-        return new Validator().allFieldsSet(request).isMember().getErrors();
+        return new Validator().allFieldsSet(request).getErrors();
     }
 
     @Override

@@ -23,7 +23,7 @@ public class GetCottageHandler extends BaseHandler<GetCottageRequest, GetCottage
 
     @Override
     public ArrayList<ErrorDto> validate(GetCottageRequest request) {
-        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+        ArrayList<ErrorDto> authErrors = new Validator().isMember().getErrors();
 
         if (!authErrors.isEmpty()) return authErrors;
 

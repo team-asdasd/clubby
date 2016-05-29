@@ -10,7 +10,7 @@ public interface INotificationsService {
 
     List<NotificationView> getLastRead(int userId, int count);
 
-    void markAsRead(int notifcationId, int userId);
+    void markAsRead(int notificationId, int userId);
 
     void create(String title, String action);
 

@@ -34,20 +34,11 @@ public class UpdateCottageHandler extends BaseHandler<UpdateCottageRequest, Upda
 
     @Override
     public ArrayList<ErrorDto> validate(UpdateCottageRequest request) {
-        Subject currentUser = SecurityUtils.getSubject();
 
-        ArrayList<ErrorDto> errors = new Validator().allFieldsSet(request).getErrors();
+        ArrayList<ErrorDto> errors = new Validator().isAdministrator().allFieldsSet(request).getErrors();
 
         if (!errors.isEmpty()) {
             return errors;
-        }
-
-        if (!currentUser.isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.UNAUTHENTICATED));
-        }
-
-        if (!currentUser.hasRole("administrator")) {
-            errors.add(new ErrorDto("Insufficient permissions.", ErrorCodes.UNAUTHENTICATED));
         }
 
         if (cottageService.get(request.cottage.id) == null) {

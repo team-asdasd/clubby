@@ -3,6 +3,7 @@ package api.helpers.validator;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -10,13 +11,15 @@ import java.util.List;
 
 public class Validator implements IRequestValidator {
     private final ArrayList<ErrorDto> errors;
+    private Subject sub;
 
     public Validator() {
         this.errors = new ArrayList<>();
+        sub = SecurityUtils.getSubject();
     }
 
     public IAuthenticationValidator isAuthenticated() {
-        if (!SecurityUtils.getSubject().isAuthenticated()) {
+        if (!sub.isAuthenticated()) {
             errors.add(new ErrorDto("Not authenticated.", ErrorCodes.UNAUTHENTICATED));
         }
 
@@ -24,7 +27,8 @@ public class Validator implements IRequestValidator {
     }
 
     public IRequestValidator isMember() {
-        if (!SecurityUtils.getSubject().hasRole("member")) {
+        isAuthenticated();
+        if (errors.isEmpty() && !sub.hasRole("member")) {
             errors.add(new ErrorDto("User is not a member.", ErrorCodes.UNAUTHENTICATED));
         }
 
@@ -32,7 +36,8 @@ public class Validator implements IRequestValidator {
     }
 
     public IRequestValidator isAdministrator() {
-        if (!SecurityUtils.getSubject().hasRole("administrator")) {
+        isAuthenticated();
+        if (errors.isEmpty() && !sub.hasRole("administrator")) {
             errors.add(new ErrorDto("User is not an administrator.", ErrorCodes.UNAUTHENTICATED));
         }
 

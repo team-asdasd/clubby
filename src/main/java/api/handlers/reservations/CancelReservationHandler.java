@@ -33,11 +33,11 @@ public class CancelReservationHandler extends BaseHandler<CancelReservationReque
 
     @Override
     public ArrayList<ErrorDto> validate(CancelReservationRequest request) {
-        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+        ArrayList<ErrorDto> authErrors = new Validator().isMember().getErrors();
 
         if (!authErrors.isEmpty()) return authErrors;
 
-        ArrayList<ErrorDto> errors = new Validator().isMember().getErrors();
+        ArrayList<ErrorDto> errors = new Validator().getErrors();
 
         Reservation reservation = sem.getById(Reservation.class, request.id);
         if (reservation == null) {

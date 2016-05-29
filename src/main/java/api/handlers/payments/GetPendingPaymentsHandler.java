@@ -25,7 +25,7 @@ public class GetPendingPaymentsHandler extends BaseHandler<GetPendingPaymentsReq
 
     @Override
     public ArrayList<ErrorDto> validate(GetPendingPaymentsRequest request) {
-        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+        ArrayList<ErrorDto> authErrors = new Validator().isMember().getErrors();
 
         if (!authErrors.isEmpty())
             return authErrors;

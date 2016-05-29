@@ -18,10 +18,10 @@ public class CreateNotificationHandler extends BaseHandler<CreateNotificationReq
 
     @Override
     public ArrayList<ErrorDto> validate(CreateNotificationRequest request) {
-        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+        ArrayList<ErrorDto> authErrors = new Validator().isAdministrator().getErrors();
         if (!authErrors.isEmpty()) return authErrors;
 
-        return new Validator().isAdministrator().allFieldsSet(request).getErrors();
+        return new Validator().allFieldsSet(request).getErrors();
     }
 
     @Override

@@ -59,7 +59,7 @@
                              *ngFor="#service of cottage.services; #idx = index">
                             <label class="control-label"
                                    for="endDate">{{service.description}}</label>
-                            - &nbsp;<span>{{service.price | currency:"EUR":true:'1.2-2'}} per item</span>
+                            - &nbsp;<span>{{(service.price/100) | currency:"EUR":true:'1.2-2'}} per item</span>
                             <div class="controls">
                                 <input id="{{service.id}}"
                                        type="number"

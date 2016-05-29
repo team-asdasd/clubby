@@ -1,4 +1,5 @@
 <div *ngIf="!reservations" class="loader"></div>
 <div *ngIf="reservations">
-  <reservation-list [reservations]="reservations"></reservation-list>
+    <reservation-list [reservations]="reservations"
+                      [personal]="true"></reservation-list>
 </div>

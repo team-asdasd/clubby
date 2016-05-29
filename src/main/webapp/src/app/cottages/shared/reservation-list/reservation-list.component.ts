@@ -9,9 +9,12 @@ import {ROUTER_DIRECTIVES} from 'angular2/router';
     providers: [],
     directives: [...ROUTER_DIRECTIVES],
     pipes: [],
-    inputs: ['reservations']
+    inputs: ['reservations', 'personal']
 })
 export class ReservationList {
-    constructor() {
+    isButtonActive = false;
+
+    onSubmit() {
+        
     }
 }

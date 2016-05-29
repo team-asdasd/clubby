@@ -1,1 +1,4 @@
-<reservation-list [reservations]="reservations"></reservation-list>
+<div *ngIf="!reservations" class="loader"></div>
+<div *ngIf="reservations">
+    <reservation-list [reservations]="reservations"></reservation-list>
+</div>

@@ -12,7 +12,7 @@
   <tr *ngFor="#reservation of reservations">
   <!--<tr>-->
     <td>{{reservation?.id}}</td>
-    <td>{{reservation?.cottage}}</td>
+    <td>{{reservation?.cottage?.title}}</td>
     <td>{{reservation?.user?.name}}</td>
     <td>{{reservation?.dateFrom}}</td>
     <td>{{reservation?.dateTo}}</td>

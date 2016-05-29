@@ -24,37 +24,12 @@ export class AllReservations {
     // }];
     reservations: [ReservationListItem];
 
-    constructor(private reservationService: ReservationService,
-                private userService: UserService) {
+    constructor(private reservationService: ReservationService) {
         reservationService.getReservations('all')
             .subscribe(
-                data => {
-                    // this.reservations = data.reservations;
-                    console.log(data.reservations);
-
-                    this.reservations = data.reservations.map(reservation => {
-                        return {
-                            dateFrom: reservation.dateFrom,
-                            dateTo: reservation.dateTo,
-                            status: reservation.status,
-                            id: reservation.id
-                        }
-                    });
-
-                    data.reservations.forEach((reservation, id) => {
-                        userService.getUserById(reservation.user)
-                            .subscribe(
-                                user => this.reservations[id].user = user,
-                                error => this.handleError(error),
-                                () => console.log(this.reservations[id])
-                            );
-
-                    });
-                },
+                data => this.reservations = data.reservations,
                 error => this.handleError(error)
             );
-
-
     }
 
     private handleError(error: any) {

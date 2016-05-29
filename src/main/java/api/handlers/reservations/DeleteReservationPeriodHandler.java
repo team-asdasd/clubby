@@ -19,11 +19,11 @@ public class DeleteReservationPeriodHandler extends BaseHandler<DeleteReservatio
 
     @Override
     public ArrayList<ErrorDto> validate(DeleteReservationPeriodRequest request) {
-        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+        ArrayList<ErrorDto> authErrors = new Validator().isAdministrator().getErrors();
 
         if (!authErrors.isEmpty()) return authErrors;
 
-        return new Validator().isAdministrator().allFieldsSet(request).isValidId(request.id).getErrors();
+        return new Validator().allFieldsSet(request).isValidId(request.id).getErrors();
     }
 
     @Override

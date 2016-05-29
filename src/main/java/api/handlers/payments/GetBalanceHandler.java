@@ -24,11 +24,11 @@ public class GetBalanceHandler extends BaseHandler<GetBalanceRequest, GetBalance
 
     @Override
     public ArrayList<ErrorDto> validate(GetBalanceRequest request) {
-        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+        ArrayList<ErrorDto> authErrors = new Validator().isMember().getErrors();
 
         if (!authErrors.isEmpty()) return authErrors;
 
-        return new Validator().isAdministrator().allFieldsSet(request).getErrors();
+        return new Validator().allFieldsSet(request).getErrors();
     }
 
     @Override

@@ -20,11 +20,11 @@ public class CreateReservationPeriodHandler extends BaseHandler<CreateReservatio
 
     @Override
     public ArrayList<ErrorDto> validate(CreateReservationPeriodRequest request) {
-        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+        ArrayList<ErrorDto> authErrors = new Validator().isAdministrator().getErrors();
 
         if (!authErrors.isEmpty()) return authErrors;
 
-        ArrayList<ErrorDto> errors = new Validator().isAdministrator().allFieldsSet(request).getErrors();
+        ArrayList<ErrorDto> errors = new Validator().allFieldsSet(request).getErrors();
 
         DateTime to = parseDateTime(request.to);
         if (to == null) {

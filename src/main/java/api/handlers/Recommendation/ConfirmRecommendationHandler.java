@@ -30,11 +30,11 @@ public class ConfirmRecommendationHandler extends BaseHandler<ConfirmRecommendat
 
     @Override
     public ArrayList<ErrorDto> validate(ConfirmRecommendationRequest request) {
-        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+        ArrayList<ErrorDto> authErrors = new Validator().isMember().getErrors();
 
         if (!authErrors.isEmpty()) return authErrors;
 
-        ArrayList<ErrorDto> errors = new Validator().isAdministrator().allFieldsSet(request).getErrors();
+        ArrayList<ErrorDto> errors = new Validator().allFieldsSet(request).getErrors();
 
         if (request.recommendationCode.isEmpty()) {
             errors.add(new ErrorDto("Recommendation code is required", ErrorCodes.VALIDATION_ERROR));

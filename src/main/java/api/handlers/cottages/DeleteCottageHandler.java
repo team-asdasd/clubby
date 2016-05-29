@@ -21,11 +21,11 @@ public class DeleteCottageHandler extends BaseHandler<DeleteCottageRequest, Base
 
     @Override
     public ArrayList<ErrorDto> validate(DeleteCottageRequest request) {
-        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+        ArrayList<ErrorDto> authErrors = new Validator().isAdministrator().getErrors();
 
         if (!authErrors.isEmpty()) return authErrors;
 
-        ArrayList<ErrorDto> errors = new Validator().isAdministrator().allFieldsSet(request).getErrors();
+        ArrayList<ErrorDto> errors = new Validator().allFieldsSet(request).getErrors();
 
         if (cottageService.get(request.id) == null) {
             errors.add(new ErrorDto("Cottage does not exist.", ErrorCodes.NOT_FOUND));

@@ -3,9 +3,9 @@ package api.configuration;
 import api.resources.*;
 import io.swagger.jaxrs.config.BeanConfig;
 
-import java.util.Set;
-import java.util.HashSet;
 import javax.ws.rs.core.Application;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ApplicationConfiguration extends Application {
 
@@ -35,6 +35,7 @@ public class ApplicationConfiguration extends Application {
         classes.add(FormResource.class);
         classes.add(SettingsResource.class);
         classes.add(ReservationResource.class);
+        classes.add(NotificationsResource.class);
 
         classes.add(io.swagger.jaxrs.listing.ApiListingResource.class);
         classes.add(io.swagger.jaxrs.listing.SwaggerSerializers.class);

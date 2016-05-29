@@ -26,11 +26,11 @@ public class GetAllUsersHandler extends BaseHandler<GetAllUsersRequest, GetAllUs
 
     @Override
     public ArrayList<ErrorDto> validate(GetAllUsersRequest request) {
-        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+        ArrayList<ErrorDto> authErrors = new Validator().isMember().getErrors();
 
         if (!authErrors.isEmpty()) return authErrors;
 
-        return new Validator().isAdministrator().allFieldsSet(request).getErrors();
+        return new Validator().allFieldsSet(request).getErrors();
     }
 
     @Override

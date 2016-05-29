@@ -36,11 +36,11 @@ public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserI
 
     @Override
     public ArrayList<ErrorDto> validate(GetUserByIdRequest request) {
-        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+        ArrayList<ErrorDto> authErrors = new Validator().isMember().getErrors();
 
         if (!authErrors.isEmpty()) return authErrors;
 
-        ArrayList<ErrorDto> errors = new Validator().isAdministrator().allFieldsSet(request).getErrors();
+        ArrayList<ErrorDto> errors = new Validator().allFieldsSet(request).getErrors();
 
         User user = userInfoService.get(request.id);
         if (user == null) {

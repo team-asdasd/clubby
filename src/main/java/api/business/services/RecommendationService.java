@@ -72,6 +72,8 @@ public class RecommendationService implements IRecommendationService {
             em.persist(r);
             logger.info("User " + userTo.getLogin().getEmail() + " is member");
             notificationsService.create(memberNotification, NotificationAction.NOACTION, userTo.getId(), null);
+
+            //TODO: Assign to ReservationGroup
         }
         logger.info("User " + userTo.getLogin().getEmail() + " received recommendation from " + userFrom.getLogin().getEmail());
 

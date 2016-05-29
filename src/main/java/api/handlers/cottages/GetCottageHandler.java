@@ -23,11 +23,9 @@ public class GetCottageHandler extends BaseHandler<GetCottageRequest, GetCottage
 
     @Override
     public ArrayList<ErrorDto> validate(GetCottageRequest request) {
-        ArrayList<ErrorDto> authErrors = new Validator().isMember().getErrors();
+        ArrayList<ErrorDto> errors = new Validator().isMember().getErrors();
 
-        if (!authErrors.isEmpty()) return authErrors;
-
-        ArrayList<ErrorDto> errors = new Validator().allFieldsSet(request).getErrors();
+        if (!errors.isEmpty()) return errors;
 
         if (cottageService.get(request.id) == null) {
             errors.add(new ErrorDto("cottage not found", ErrorCodes.NOT_FOUND));

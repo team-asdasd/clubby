@@ -71,6 +71,7 @@ public class UserService implements IUserService {
             notificationsService.create(String.format(welcomeNotification, c == null ? "2" : c.getValue()), NotificationAction.NOACTION, user.getId(), null);
             em.persist(lr);
             em.flush();
+
         } catch (Exception e) {
             em.clear();
             throw e;

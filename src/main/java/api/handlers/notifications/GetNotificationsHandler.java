@@ -1,5 +1,6 @@
 package api.handlers.notifications;
 
+import api.business.entities.notifications.NotificationView;
 import api.business.services.interfaces.IUserService;
 import api.business.services.interfaces.notifications.INotificationsService;
 import api.contracts.base.BaseRequest;
@@ -12,6 +13,7 @@ import api.helpers.validator.Validator;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Stateless
@@ -31,7 +33,12 @@ public class GetNotificationsHandler extends BaseHandler<BaseRequest, Notificati
         NotificationsResponse response = createResponse();
 
         int id = userService.get().getId();
-        response.notifications = notificationsService.getAll(id).stream().map(NotificationDto::new).collect(Collectors.toList());
+        List<NotificationView> notifications = notificationsService.getAllUnread(id);
+        if(notifications.size() < 5){
+            notifications.addAll(notificationsService.getLastRead(id, 5 - notifications.size()));
+        }
+        notifications = notifications.stream().sorted((n1, n2) -> Integer.compare(n2.getNotification().getId(), n1.getNotification().getId())).collect(Collectors.toList());
+        response.notifications = notifications.stream().map(NotificationDto::new).collect(Collectors.toList());
 
         return response;
     }

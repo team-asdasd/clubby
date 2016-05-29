@@ -21,9 +21,17 @@ public class NotificationsService implements INotificationsService {
     @Inject
     private ISimpleEntityManager sem;
 
-    public List<NotificationView> getAll(int userId) {
+    public List<NotificationView> getAllUnread(int userId) {
         return em.createQuery("SELECT NV FROM NotificationView NV WHERE NV.userId = :userId AND NV.read = FALSE", NotificationView.class)
                 .setParameter("userId", userId)
+                .getResultList();
+    }
+
+    public List<NotificationView> getLastRead(int userId, int count) {
+
+        return em.createQuery("SELECT NV FROM NotificationView NV WHERE NV.userId = :userId AND NV.read = TRUE ORDER BY NV.notification.id DESC", NotificationView.class)
+                .setParameter("userId", userId)
+                .setMaxResults(count)
                 .getResultList();
     }
 

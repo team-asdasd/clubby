@@ -6,7 +6,9 @@ import api.contracts.enums.NotificationAction;
 import java.util.List;
 
 public interface INotificationsService {
-    List<NotificationView> getAll(int userId);
+    List<NotificationView> getAllUnread(int userId);
+
+    List<NotificationView> getLastRead(int userId, int count);
 
     void markAsRead(int notifcationId, int userId);
 

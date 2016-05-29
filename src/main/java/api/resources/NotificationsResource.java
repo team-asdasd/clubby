@@ -53,7 +53,7 @@ public class NotificationsResource {
 
     @POST
     @Path("/read")
-    @ApiOperation(value = "Creates new notification", response = BaseResponse.class)
+    @ApiOperation(value = "Mark notifications as read", response = BaseResponse.class)
     public Response create(ReadNotificationsRequest request) {
         BaseResponse response = readNotificationHandler.handle(request);
 

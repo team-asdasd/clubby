@@ -52,7 +52,7 @@ export class Notifications {
     private handleMarkAllAsReadClick() {
         var ids = this.notifications.map(n => n.id);
 
-        this.notificationsService.markAsRead(ids);
+        this.notificationsService.markAsRead(ids).subscribe();
     }
 
     private redirectTo(action:string) {

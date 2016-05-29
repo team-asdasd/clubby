@@ -38,7 +38,6 @@ import {NotificationsService} from "./notifications/shared/notifications.service
 export class App {
     balance:number;
     isAdministrator:boolean;
-    
 
     constructor(private router:Router, private paymentsService:PaymentsService, private userService:UserService) {
         userService.hasRole("administrator").subscribe(

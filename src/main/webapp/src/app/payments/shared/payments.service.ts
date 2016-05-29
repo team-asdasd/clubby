@@ -42,7 +42,7 @@ export class PaymentsService {
             .catch(ApiHelper.handleError);
     }
 
-    public getBalance() {
+    public getBalance(): Observable<number> {
         return Observable.interval(10000).switchMap(() => this.http.get(`${this.url}/me/balance`)
             .map(resp => ApiHelper.parse<GetBalanceResponse>(resp).balance)
             .catch(ApiHelper.handleError));

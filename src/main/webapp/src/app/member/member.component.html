@@ -1,0 +1,59 @@
+<div class="container">
+    <div class="row">
+        <div class="">
+            <div class="well">
+                <div class="message" hidden #notificationMessage></div>
+                <div *ngIf="loadingState == 'waiting'" class="row loader"></div>
+                <div *ngIf="loadingState == 'done'" class="row">
+                    <div id="tableContainer" class="text-center">
+                        <table id="infoTable" #infoTable>
+                            <tr>
+                                <td class="cell-left">
+                                    <div id="pictureContainer">
+                                        <img src="{{member.picture}}" alt="" class="img-circle img-responsive center-block" />
+                                    </div>
+                                </td>
+                                <td class="cell-right">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="cell-left"><h4>Name</h4></td>
+                                <td class="cell-right">
+                                    <div type="text" #name>{{member.name}}</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="cell-left"><h4>Email</h4></td>
+                                <td class="cell-right">
+                                    <div type="text" #email>{{member.email}}</div>
+                                </td>
+                            </tr>
+                            <tr *ngFor="#f of member.fields">
+                                <td class="cell-left">
+                                    <h4>{{f.description}}</h4>
+                                </td>
+                                <td class="cell-right">
+                                    <div class="fieldsValues" type="text">{{f.value}}</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="cell-left"><h4>Roles</h4></td>
+                                <td id="rolesValues" class="cell-right">
+                                    <div *ngFor="#r of member.roles">
+                                        {{r}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div *ngIf="recommendations">
+                        <div *ngIf="matchingRecommendation">
+                            <p class="message" style="margin-top: 10px;">This user wants you to recommend him:</p>
+                            <button id="recommendButton" type="button" (click)="sendRecRequest(matchingRecommendation.requestCode)" class="btn btn-default">Recommend</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

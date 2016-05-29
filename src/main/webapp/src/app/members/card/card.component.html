@@ -13,7 +13,7 @@
         </div>
         <div class="title">{{member.name}}</div>
         <div id="button">
-            <button type="button" (click)="togglePopup()" class="btn btn-default">More info</button>
+            <button type="button" (click)="onSelect(member.id)" class="btn btn-default">More info</button>
         </div>
         <div id="fullscreen" *ngIf="expanded">
             <div id="popUp">

@@ -13,6 +13,7 @@ import {PaymentsService} from "./payments/shared/payments.service";
 import {RecommendationService} from "./members/shared/recommendation.service";
 import {PaymentsCentral} from "./payments/payments.component";
 import {Members} from "./members/members.component";
+import {Member} from "./member/member.component.ts";
 
 /*
  * App Component
@@ -26,13 +27,17 @@ import {Members} from "./members/members.component";
     styles: [require('./app.component.scss')],
     template: require('./app.component.html')
 })
+
 @RouteConfig([
     {path: '/', component: Home, as: 'Home', useAsDefault: true},
     {path: '/Profile', component: Profile, as: 'Profile'},
     {path: '/Cottages/...', component: Cottages, as: 'Cottages'},
     {path: '/Payments/...', component: PaymentsCentral, as: 'Payments'},
-    {path: '/Members', component: Members, as: 'Members'}
+    {path: '/Members/', component: Members, as: 'Members'},
+    {path: '/Member/:id', component: Member, as: 'Member'},
+
 ])
+
 export class App {
     url: string = 'https://github.com/preboot/angular2-webpack';
     balance: number;

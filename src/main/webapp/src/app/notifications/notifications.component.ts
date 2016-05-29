@@ -3,7 +3,6 @@ import {NotificationsService} from "./shared/notifications.service.ts";
 import 'rxjs/add/operator/catch';
 import {Notification} from "./shared/notification.model.ts";
 import {GetNotificationsResponse} from "./shared/notifications-response";
-import {resolveProvider} from "angular2/src/core/di/provider";
 
 @Component({
     selector: 'notifications',
@@ -32,7 +31,7 @@ export class Notifications {
     }
 
     private handleResponse(resp:GetNotificationsResponse) {
-        this.unreadCount = resp.notifications.filter(n => n.read == false).length;
+        this.unreadCount = resp.notifications.filter(n => n.read === false).length;
         this.notifications = resp.notifications;
     }
 
@@ -45,10 +44,10 @@ export class Notifications {
 
     private handleNotificationClick(event:any) {
         let id:number = parseInt(event.target.attributes["data-notification-id"].value);
-        let model:Notification = this.notifications.find(n => n.id == id);
+        let model:Notification = this.notifications.find(n => n.id === id);
 
         this.markAsRead([id]);
-        this.redirectTo(model.action);
+        this.redirectTo(model.action, model.argument);
     }
 
     private handleMarkAllAsReadClick() {
@@ -62,7 +61,8 @@ export class Notifications {
             this.notificationsService.getNotifications().subscribe(resp => this.handleResponse(resp)));
     }
 
-    private redirectTo(action:string) {
+    private redirectTo(action:string, args:string) {
+        console.log(action, args);
     }
 
     private offClickHandler(event:any) {

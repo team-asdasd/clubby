@@ -3,4 +3,5 @@ export class Notification {
     title:string;
     action:string;
     read:boolean;
+    argument:string;
 }

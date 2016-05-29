@@ -5,7 +5,7 @@ import api.business.persistance.ISimpleEntityManager;
 import api.business.services.interfaces.ICottageService;
 import api.business.services.interfaces.IPaymentsService;
 import api.business.services.interfaces.IUserService;
-import api.business.strategy.IPaymentModifierStrategy;
+import api.business.decorators.IPaymentModifier;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.contracts.dto.PaymentInfoDto;
@@ -32,10 +32,8 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
     private ICottageService cottageService;
     @Inject
     private IUserService userService;
-    /*
     @Inject
-    private IPaymentModifierStrategy paymentModifierStrategy;
-    */
+    private IPaymentModifier paymentModifier;
 
     @Override
     public ArrayList<ErrorDto> validate(CreateReservationRequest request) {
@@ -254,10 +252,9 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
                 lineItems.add(new LineItem("Payment for service \"" + service.getDescription() + "\"", service.getPrice(), serviceSelection.amount, payment));
             }
         }
-
-        /*paymentModifierStrategy.modify(payment);*/
-
         payment.setLineItems(lineItems);
+
+        paymentModifier.modify(payment, userService.get());
     }
 
     private int calculateWeeks(CreateReservationRequest request) {

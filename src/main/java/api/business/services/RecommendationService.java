@@ -34,7 +34,7 @@ public class RecommendationService implements IRecommendationService {
     private INotificationsService notificationsService;
 
     private final Logger logger = LogManager.getLogger(getClass().getName());
-    private final String memberNotification = "You become club member!";
+    private final String memberNotification = "You become a club member!";
     private final String confirmedNotification = "%s confirmed recommendation.";
     private final String emailSubject = "Recommendation request";
     private final String emailMessage = "Hello dear friend! \nYou have received recommendation request from user %s.";

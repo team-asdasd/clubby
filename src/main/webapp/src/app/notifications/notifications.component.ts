@@ -27,6 +27,7 @@ export class Notifications {
     }
 
     private fetchNotifications() {
+        this.notificationsService.getNotifications().subscribe(resp => this.handleResponse(resp));
         this.notificationsService.pollNotifications().subscribe(resp => this.handleResponse(resp));
     }
 
@@ -46,12 +47,17 @@ export class Notifications {
         let id:number = parseInt(event.target.attributes["data-notification-id"].value);
         let model:Notification = this.notifications.find(n => n.id == id);
 
+        this.markAsRead([id]);
         this.redirectTo(model.action);
     }
 
     private handleMarkAllAsReadClick() {
         var ids = this.notifications.map(n => n.id);
 
+        this.markAsRead(ids);
+    }
+
+    private markAsRead(ids:number[]) {
         this.notificationsService.markAsRead(ids).subscribe(r =>
             this.notificationsService.getNotifications().subscribe(resp => this.handleResponse(resp)));
     }

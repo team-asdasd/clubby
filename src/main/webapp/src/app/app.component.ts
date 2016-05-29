@@ -36,8 +36,7 @@ import {Member} from "./member/member.component.ts";
     {path: '/Cottages/...', component: Cottages, as: 'Cottages'},
     {path: '/Payments/...', component: PaymentsCentral, as: 'Payments'},
     {path: '/Members/', component: Members, as: 'Members'},
-    {path: '/Member/:id', component: Member, as: 'Member'},
-
+    {path: '/Member/:id', component: Member, as: 'Member'}
 ])
 
 export class App {
@@ -51,6 +50,11 @@ export class App {
         );
 
         paymentsService.getBalance().subscribe(
+            resp => this.balance = resp,
+            error => this.balance = 0
+        );
+        
+        paymentsService.pollBalance().subscribe(
             resp => this.balance = resp,
             error => this.balance = 0
         );

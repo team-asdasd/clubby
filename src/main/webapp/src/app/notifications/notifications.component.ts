@@ -3,6 +3,7 @@ import {NotificationsService} from "./shared/notifications.service.ts";
 import 'rxjs/add/operator/catch';
 import {Notification} from "./shared/notification.model.ts";
 import {GetNotificationsResponse} from "./shared/notifications-response";
+import {Router} from "angular2/router";
 
 @Component({
     selector: 'notifications',
@@ -20,7 +21,7 @@ export class Notifications {
 
     private notifications:Array<Notification>;
 
-    constructor(private notificationsService:NotificationsService) {
+    constructor(private router:Router, private notificationsService:NotificationsService) {
         this.fetchNotifications();
         document.addEventListener('click', this.offClickHandler.bind(this));
     }
@@ -52,7 +53,6 @@ export class Notifications {
 
     private handleMarkAllAsReadClick() {
         var ids = this.notifications.map(n => n.id);
-
         this.markAsRead(ids);
     }
 
@@ -62,6 +62,32 @@ export class Notifications {
     }
 
     private redirectTo(action:string, args:string) {
+        switch (action) {
+            case "PROFILE":
+            {
+                this.router.navigate(['/Profile']);
+                break;
+            }
+            case "RESERVATIONS":
+            {
+                this.router.navigate(['/Cottages/Reservations']);
+                break;
+            }
+            case "PAYMENTS":
+            {
+                this.router.navigate(['/Payments/History']);
+                break;
+            }
+            case "RECOMMENDATIONS":
+            {
+                this.router.navigate(['Member', {id: args}]);
+                break;
+            }
+            case "NOACTION":
+            {
+                break;
+            }
+        }
         console.log(action, args);
     }
 

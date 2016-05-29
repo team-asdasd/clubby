@@ -68,10 +68,9 @@ public class UserService implements IUserService {
             lr.setRoleName("potentialCandidate");
             lr.setUsername(user.getLogin().getEmail());
             Configuration c = em.find(Configuration.class, "min_recommendation_required");
-            notificationsService.create(String.format(welcomeNotification, c == null ? "2" : c.getValue()), NotificationAction.NOACTION, user.getId(), null);
+            notificationsService.create(String.format(welcomeNotification, c == null ? "2" : c.getValue()), NotificationAction.PROFILE, user.getId(), null);
             em.persist(lr);
             em.flush();
-
         } catch (Exception e) {
             em.clear();
             throw e;

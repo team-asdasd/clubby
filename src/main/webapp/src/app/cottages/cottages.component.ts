@@ -2,8 +2,9 @@ import {Component} from 'angular2/core';
 import {RouterOutlet, RouteConfig} from 'angular2/router';
 import {CottagesList} from "./cottages-list/cottages-list.component";
 import {Tabs} from "./tabs/tabs.component";
-import {Reservations} from './reservations/reservations.component';
+import {UserReservations} from './user-reservations/user-reservations.component';
 import {CottageDetails} from "./cottage-details/cottage-details.component";
+import {AllReservations} from "./all-reservations/all-reservations.component";
 
 @Component({
     selector : 'cottages',
@@ -16,7 +17,8 @@ import {CottageDetails} from "./cottage-details/cottage-details.component";
 
 @RouteConfig([
     {path : '/', name : 'CottagesList', component : CottagesList, useAsDefault : true},
-    {path : '/Reservations', name : 'Reservations', component : Reservations},
+    {path : '/Reservations', name : 'UserReservations', component : UserReservations},
+    {path : '/AllReservations', name : 'AllReservations', component : AllReservations},
     {path: '/:id', component: CottageDetails, as: 'CottageDetails'},
 ])
 
@@ -28,7 +30,10 @@ export class Cottages {
             name : 'Cottages',
             link: 'CottagesList'
         }, {
-            name: 'Reservations',
+            name: 'My Reservations',
+            link: 'Reservations'
+        }, {
+            name: 'All Reservations',
             link: 'Reservations'
         }];
     }

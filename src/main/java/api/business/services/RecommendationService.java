@@ -104,7 +104,6 @@ public class RecommendationService implements IRecommendationService {
     }
 
     public List<RecommendationDto> getReceivedRecommendationRequests() {
-
         User user = userService.get();
 
         List<Recommendation> recommendations = em.createQuery("SELECT r FROM Recommendation r WHERE r.userFrom = :userFrom AND r.status = 0", Recommendation.class)
@@ -113,14 +112,13 @@ public class RecommendationService implements IRecommendationService {
 
         List<RecommendationDto> result = new ArrayList<>();
         for (Recommendation r : recommendations) {
-            RecommendationDto res = new RecommendationDto(r.getStatus(), r.getUserTo().getId(), r.getRecommendationCode());
+            RecommendationDto res = new RecommendationDto(r);
             result.add(res);
         }
         return result;
     }
 
     public List<RecommendationDto> getSentRecommendationRequests() {
-
         User user = userService.get();
 
         List<Recommendation> recommendations = em.createQuery("SELECT r FROM Recommendation r WHERE r.userTo = :userTo", Recommendation.class)
@@ -129,7 +127,7 @@ public class RecommendationService implements IRecommendationService {
 
         List<RecommendationDto> result = new ArrayList<>();
         for (Recommendation r : recommendations) {
-            RecommendationDto res = new RecommendationDto(r.getStatus(), r.getUserFrom().getId(), null);
+            RecommendationDto res = new RecommendationDto(r.getStatus(), r.getUserFrom(), null);
             result.add(res);
         }
         return result;

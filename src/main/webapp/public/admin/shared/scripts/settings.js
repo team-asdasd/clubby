@@ -6,6 +6,7 @@ $(function () {
     load();
     loadPeriods();
     $("#save-period").click(handleAddPeriod);
+    $("#set-price").click(handleSetPrice)
 });
 
 function load() {
@@ -101,7 +102,33 @@ function handleEdit(event) {
 
     modal.modal('show', true);
 }
+function handleSetPrice() {
 
+    var button = $("#set-price");
+    button.button('loading');
+    var request = {
+        price: $("#price").val()
+    };
+    return $.ajax({
+        type: "PUT",
+        url: "/api/payments/membership",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify(request)
+    }).done(function () {
+        button.button('reset');
+        dashboardMessage.html(alertComponent({
+            title: "Success!",
+            message: "Price updated.",
+            severity: "success"
+        }));
+
+    }).fail(function (response) {
+        button.button('reset');
+        var message = getErrorMessageFromResponse(response) || "Unknown error.";
+        dashboardMessage.html(alertComponent({title: "Error!", message: message, severity: "danger"}));
+    })
+}
 function handleDeletePeriod(event) {
     var id = $(event.target).attr("data-period-id");
 

@@ -11,6 +11,7 @@ public class GetUserInfoResponse extends BaseResponse {
     public String name;
     public String email;
     public boolean online;
+    public int group;
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     public String picture;

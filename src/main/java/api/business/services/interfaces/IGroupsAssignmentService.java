@@ -4,5 +4,6 @@ import api.business.entities.User;
 import java.util.List;
 
 public interface IGroupsAssignmentService {
-    void Assign(List<User> users);
+    void assign(List<User> users);
+    void assign(User user);
 }

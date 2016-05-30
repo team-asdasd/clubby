@@ -6,14 +6,13 @@ import javax.persistence.*;
 @Table(name = "Reservationgroups", schema = "main", catalog = "clubby")
 public class ReservationGroup {
     private int reservationgroupid;
-    private int userid;
     private int generation;
     private int groupnumber;
 
-    public ReservationGroup(int userId, int generation, int groupnumber){
-        this.userid = userId;
+    public ReservationGroup(User user, int generation, int groupnumber){
         this.generation = generation;
         this.groupnumber = groupnumber;
+        this.setUser(user);
     }
     public ReservationGroup(){}
 
@@ -26,16 +25,6 @@ public class ReservationGroup {
 
     public void setReservationgroupid(int reservationgroupid) {
         this.reservationgroupid = reservationgroupid;
-    }
-
-    @Basic
-    @Column(name = "userid")
-    public int getUserid() {
-        return userid;
-    }
-
-    public void setUserid(int userid) {
-        this.userid = userid;
     }
 
     @Basic
@@ -58,6 +47,18 @@ public class ReservationGroup {
         this.groupnumber = groupnumber;
     }
 
+    private User user;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "userid", referencedColumnName = "id")
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -67,7 +68,6 @@ public class ReservationGroup {
 
         if (reservationgroupid !=  that.reservationgroupid)
             return false;
-        if (userid != that.userid) return false;
         if (generation != that.generation) return false;
         if (groupnumber != that.groupnumber) return false;
 
@@ -77,7 +77,6 @@ public class ReservationGroup {
     @Override
     public int hashCode() {
         int result = reservationgroupid;
-        result = 31 * result + userid;
         result = 31 * result + generation;
         result = 31 * result + groupnumber;
         return result;

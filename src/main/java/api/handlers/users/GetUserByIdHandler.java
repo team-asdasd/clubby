@@ -67,6 +67,7 @@ public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserI
         response.picture = mapper.getPicture(user, defaultPic);
         response.fields = user.getFormResults().stream().map(FormInfoDto::new).collect(Collectors.toList());
         response.roles = user.getLogin().getRoles().stream().map(Role::getRoleName).collect(Collectors.toList());
+        response.group = user.activeGroup();
 
         return response;
     }

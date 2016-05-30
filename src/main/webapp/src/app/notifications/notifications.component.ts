@@ -65,22 +65,22 @@ export class Notifications {
         switch (action) {
             case "PROFILE":
             {
-                this.router.navigate(['/Profile']);
+                this.router.navigateByUrl('/Profile');
                 break;
             }
             case "RESERVATIONS":
             {
-                this.router.navigate(['/Cottages/Reservations']);
+                this.router.navigateByUrl('/Cottages/Reservations');
                 break;
             }
             case "PAYMENTS":
             {
-                this.router.navigate(['/Payments/History']);
+                this.router.navigateByUrl('/Payments/history');
                 break;
             }
             case "RECOMMENDATIONS":
             {
-                this.router.navigate(['Member', {id: args}]);
+                this.router.navigateByUrl(`/Member/${args}`);
                 break;
             }
             case "NOACTION":

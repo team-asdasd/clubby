@@ -31,7 +31,7 @@ public class ChangePaymentPriceHandler extends BaseHandler<ChangePaymentPriceReq
             errors.add(new ErrorDto("Payment not found", ErrorCodes.NOT_FOUND));
         }
         if (request.price < 0) {
-            errors.add(new ErrorDto("Payment price must be higher than 0", ErrorCodes.NOT_FOUND));
+            errors.add(new ErrorDto("Payment price must be higher than 0", ErrorCodes.VALIDATION_ERROR));
             return errors;
         }
         return errors;

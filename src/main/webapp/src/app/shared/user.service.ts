@@ -31,6 +31,23 @@ export class UserService {
         return this.http.get(`${this.url}/me/hasPermission/${permission}`).map(UserService.parse).catch(UserService.handleError);
     }
 
+    public deleteMe(): Observable<any> {
+        return this.http.delete(`${this.url}/me`).map(UserService.parse).catch(UserService.handleError);
+    }
+
+    public inviteFriend(email: String, message: String): Observable<any> {
+
+        let body = JSON.stringify({
+            "email": email,
+            "message": message
+        });
+
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.post(`${this.url}/invite`, body, options).map(UserService.parse).catch(UserService.handleError);
+    }
+
     public patch(body: string) : Observable<any> {
 
         let headers = new Headers({ 'Content-Type': 'application/json' });

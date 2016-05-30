@@ -1,5 +1,6 @@
 import {Component, ViewChild} from 'angular2/core';
 import {User} from './../shared/user.model';
+import {Router} from 'angular2/router';
 import {UserService} from "./../shared/user.service";
 import {RecommendationService} from "../members/shared/recommendation.service";
 import 'rxjs/add/operator/catch';
@@ -28,9 +29,9 @@ export class Profile {
     loadingState: String = "waiting";
     isCandidate: boolean = false;
     hasSentRecommendations: Boolean = false;
-    sentRecommendationsUsers: Array<User> = null;
+    sentRecommendationsUsers: Array<String> = new Array();
 
-    constructor(private userService: UserService, private recommendationService: RecommendationService) {
+    constructor(private router: Router, private userService: UserService, private recommendationService: RecommendationService) {
         userService.getUserInfo().subscribe(user => this.initUser(user));
         recommendationService.getSentRecommendations().subscribe(
             rec => this.initSentRec(rec),
@@ -55,12 +56,8 @@ export class Profile {
 
     initSentRec(rec: any) {
 
-        console.log(rec);
-
-       /* this.sentRecommendationsUsers = rec;
-
         for (var i = 0; i < rec.length; i++) {
-            this.userService.getUserById(rec[i].userId).subscribe(res => this.sentRecommendationsUsers.push(res));
+            this.sentRecommendationsUsers.push(rec[i].email);
         }
 
         if (rec.length > 0) {
@@ -69,7 +66,7 @@ export class Profile {
 
         if (this.user) {
             this.loadingState = "done";
-        }*/
+        }
     }
 
     toggleRecommendationPopup() {
@@ -83,7 +80,7 @@ export class Profile {
     sendRecommendationRequest(email: String) {
         this.recommendationService.sendRecommendationRequest(email)
             .subscribe(resp => this.handleRecommendationResponse(resp),
-                       err => this.handleError(err));
+                       err => this.handleRecError(err));
 
         this.requestingRecommendationState = "waiting";
     }
@@ -124,12 +121,36 @@ export class Profile {
                                                err => this.handlePatchResponse(err));
     }
 
-    inviteFriend(email: String) {
-        console.log(email);
+    inviteFriend(email: String, message: String) {
+
+        this.notificationMessage.nativeElement.innerHTML = "";
+
+        this.loadingState = "waiting";
+
+        this.userService.inviteFriend(email, message).subscribe(
+            res => this.handleInvite(res),
+            error => this.handleError(error)
+        );
+    }
+
+    handleInvite(res: any) {
+
+        var message = "";
+
+        message = "The invite has been sent!";
+
+        this.notificationMessage.nativeElement.hidden = false;
+        this.notificationMessage.nativeElement.innerHTML = message;
+
+        this.loadingState = "done";
     }
 
     leaveClub() {
-        console.log('leaving');
+        this.userService.deleteMe().subscribe(res => this.handleLeave());
+    }
+
+    handleLeave() {
+        window.location.reload();
     }
 
     handlePatchResponse(resp: any) {
@@ -157,6 +178,16 @@ export class Profile {
     }
 
     handleError(resp: any) {
+        this.loadingState = "done";
+
+        if (resp.Errors) {
+            this.notificationMessage.nativeElement.innerHTML = "Error: " + resp.Errors[0].Message;
+        } else {
+            this.notificationMessage.nativeElement.innerHTML = "Error: " + resp;
+        }
+    }
+
+    handleRecError(resp: any) {
         this.requestingRecommendationState = "done";
 
         if (resp.Errors) {

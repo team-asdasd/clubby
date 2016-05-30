@@ -1,32 +1,48 @@
-<table class="table table-hover">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Cottage</th>
-        <th>Reserved by</th>
-        <th>Start Date</th>
-        <th>End Date</th>
-        <th *ngIf="personal"></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="#reservation of reservations">
-        <td>{{reservation?.id}}</td>
-        <td><a [routerLink]="['CottageDetails', {id: reservation?.cottage?.id}]">{{reservation?.cottage?.title}}</a>
-        </td>
-        <td>{{reservation?.user?.name}}</td>
-        <td>{{reservation?.dateFrom}}</td>
-        <td>{{reservation?.dateTo}}</td>
-        <td *ngIf="personal">
-            <button type="button"
-                    class="btn btn-danger"
-                    (click)="onDeleteClick(reservation.id)"
-                    [disabled]="isButtonDisabled">
-                Cancel
-            </button>
-        </td>
-    </tr>
+<div>
+    <div id="filters-container">
+
+        <div id="date-filter-group" class="input-group">
+            <div style="display:-webkit-box;">
+                <div class="input-group-addon" style="width: 30px; padding: 9px 12px;">Interval:</div>
+                <input type="date" class="form-control" style="width: 160px" placeholder="mm/dd/yyyy" #dateFromInput>
+                <input type="date" class="form-control" style="width: 160px" placeholder="mm/dd/yyyy" #dateToInput>
+            </div>
+        </div>
+        <button id="filter-button"
+                (click)="filterReservations(dateFromInput.value, dateToInput.value)"
+                class="btn btn-primary">Filter
+        </button>
+    </div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Cottage</th>
+            <th>Reserved by</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th *ngIf="personal"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="#reservation of reservations">
+            <td>{{reservation?.id}}</td>
+            <td><a [routerLink]="['CottageDetails', {id: reservation?.cottage?.id}]">{{reservation?.cottage?.title}}</a>
+            </td>
+            <td>{{reservation?.user?.name}}</td>
+            <td>{{reservation?.dateFrom}}</td>
+            <td>{{reservation?.dateTo}}</td>
+            <td *ngIf="personal">
+                <button type="button"
+                        class="btn btn-danger"
+                        (click)="onDeleteClick(reservation.id)"
+                        [disabled]="isButtonDisabled">
+                    Cancel
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
     <p class="text-center"
        *ngIf="reservations.length === 0">Nothing found.</p>
-    </tbody>
-</table>
+</div>

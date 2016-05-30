@@ -8,6 +8,7 @@ import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.contracts.dto.CottageDto;
 import api.handlers.base.BaseHandler;
+import api.helpers.validator.Validator;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -24,15 +25,8 @@ public class GetCottagesHandler extends BaseHandler<GetCottagesRequest, GetCotta
 
     @Override
     public ArrayList<ErrorDto> validate(GetCottagesRequest request) {
-        Subject currentUser = SecurityUtils.getSubject();
 
-        ArrayList<ErrorDto> errors = new ArrayList<>();
-
-        if (!currentUser.isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.UNAUTHENTICATED));
-        }
-
-        return errors;
+        return new Validator().isMember().getErrors();
     }
 
     @Override

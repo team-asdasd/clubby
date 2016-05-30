@@ -137,7 +137,7 @@ public class CottageService implements ICottageService {
 
     @Override
     public List<Reservation> getPassedReservations() {
-        Query q = em.createQuery("SELECT R FROM Reservation R WHERE R.dateFrom < :date AND R.cancelled = FALSE", Reservation.class).setParameter("date", DateTime.now().toDate());
+        Query q = em.createQuery("SELECT R FROM Reservation R WHERE R.dateTo < :date AND R.cancelled = FALSE", Reservation.class).setParameter("date", DateTime.now().toDate());
 
         return q.getResultList();
     }

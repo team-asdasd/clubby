@@ -3,6 +3,8 @@ package api.business.services;
 import api.business.entities.Configuration;
 import api.business.entities.Reservation;
 import api.business.services.interfaces.ICottageService;
+import api.business.services.interfaces.notifications.INotificationsService;
+import api.contracts.enums.NotificationAction;
 import api.contracts.enums.TransactionStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,9 +24,12 @@ public class ScheduledReservationService {
     private EntityManager em;
     @Inject
     private ICottageService cottageService;
+    @Inject
+    private INotificationsService notificationsService;
 
     private String name = getClass().getTypeName();
     private final Logger logger = LogManager.getLogger(name);
+    private final String reservationCanceledMessage = "Reservation has been canceled.";
 
     @Schedule(minute = "*/1", hour = "*", timezone = "UTC")
     public void cancelUnpaidReservations() throws InterruptedException {
@@ -39,6 +44,7 @@ public class ScheduledReservationService {
                 boolean cancelled = cottageService.cancelReservation(reservation.getReservationid());
                 if (cancelled) {
                     logger.info(String.format("Canceled reservation %d", reservation.getReservationid()));
+                    notificationsService.create(reservationCanceledMessage, NotificationAction.RESERVATIONS, reservation.getUser().getId(), null);
                 }
             });
 

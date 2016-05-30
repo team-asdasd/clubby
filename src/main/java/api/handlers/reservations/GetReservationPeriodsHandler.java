@@ -7,6 +7,7 @@ import api.contracts.dto.ReservationPeriodDto;
 import api.contracts.reservations.GetReservationPeriodsRequest;
 import api.contracts.reservations.GetReservationPeriodsResponse;
 import api.handlers.base.BaseHandler;
+import api.helpers.validator.Validator;
 import org.apache.shiro.SecurityUtils;
 import org.joda.time.DateTime;
 
@@ -23,15 +24,8 @@ public class GetReservationPeriodsHandler extends BaseHandler<GetReservationPeri
     @Override
     public ArrayList<ErrorDto> validate(GetReservationPeriodsRequest request) {
         ArrayList<ErrorDto> errors = new ArrayList<>();
-        if (!SecurityUtils.getSubject().isAuthenticated()) {
-            errors.add(new ErrorDto("Not authenticated.", ErrorCodes.UNAUTHENTICATED));
-            return errors;
-        }
-
-        if (!SecurityUtils.getSubject().hasRole("administrator")) {
-            errors.add(new ErrorDto("User is not a administrator.", ErrorCodes.UNAUTHENTICATED));
-            return errors;
-        }
+        errors.addAll(new Validator().isAdministrator().getErrors());
+        if (!errors.isEmpty()) return errors;
 
         if (request.from != null){
             DateTime from = parseDateTime(request.from);

@@ -33,10 +33,12 @@ public class CreateCottageHandler extends BaseHandler<CreateCottageRequest, Crea
 
         if (!currentUser.isAuthenticated()) {
             errors.add(new ErrorDto("Not authenticated.", ErrorCodes.UNAUTHENTICATED));
+            return errors;
         }
 
         if (!currentUser.hasRole("administrator")) {
             errors.add(new ErrorDto("Insufficient permissions.", ErrorCodes.UNAUTHENTICATED));
+            return errors;
         }
 
         if (request.title == null || request.title.length() < 5) {

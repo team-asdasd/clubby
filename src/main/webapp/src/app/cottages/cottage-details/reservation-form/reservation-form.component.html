@@ -37,6 +37,7 @@
                                 <input id="startDate"
                                        type="date"
                                        [(ngModel)]="reservation.from"
+                                       placeholder="mm/dd/yyyy"
                                        required/>
                                 <p class="help-block">Reservation must start on Monday</p>
                             </div>
@@ -49,6 +50,7 @@
                                 <input id="endDate"
                                        type="date"
                                        [(ngModel)]="reservation.to"
+                                       placeholder="mm/dd/yyyy"
                                        required/>
                                 <p class="help-block">Reservation must end on Sunday</p>
                             </div>

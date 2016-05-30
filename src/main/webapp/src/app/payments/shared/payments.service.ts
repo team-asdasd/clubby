@@ -1,6 +1,6 @@
 import {Injectable} from 'angular2/core';
 import {Http} from 'angular2/http';
-import {Observable} from "../../../../node_modules/rxjs/Observable.d.ts";
+import {Observable} from "../../../../node_modules/rxjs/Observable";
 import {Payment} from "./payment.model.ts";
 import {PaymentResponse} from "./payment.response.ts";
 import {MoneyTransaction} from "./moneyTransaction.model.ts";
@@ -42,10 +42,16 @@ export class PaymentsService {
             .catch(ApiHelper.handleError);
     }
 
-    public getBalance() {
+    public getBalance(): Observable<number> {
         return this.http.get(`${this.url}/me/balance`)
             .map(resp => ApiHelper.parse<GetBalanceResponse>(resp).balance)
             .catch(ApiHelper.handleError);
+    }
+
+    public pollBalance(): Observable<number> {
+        return Observable.interval(10000).switchMap(() => this.http.get(`${this.url}/me/balance`)
+            .map(resp => ApiHelper.parse<GetBalanceResponse>(resp).balance)
+            .catch(ApiHelper.handleError));
     }
 
     public getAllPaymentsByType(type: number) {

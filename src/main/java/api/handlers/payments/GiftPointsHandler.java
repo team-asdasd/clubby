@@ -2,9 +2,11 @@ package api.handlers.payments;
 
 import api.business.services.interfaces.IPaymentsService;
 import api.business.services.interfaces.IUserService;
+import api.business.services.interfaces.notifications.INotificationsService;
 import api.contracts.base.BaseResponse;
 import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
+import api.contracts.enums.NotificationAction;
 import api.contracts.payments.GiftPointsRequest;
 import api.handlers.base.BaseHandler;
 import api.helpers.validator.Validator;
@@ -20,14 +22,17 @@ public class GiftPointsHandler extends BaseHandler<GiftPointsRequest, BaseRespon
     private IUserService userService;
     @Inject
     private IPaymentsService paymentsService;
+    @Inject
+    private INotificationsService notificationsService;
+    private final String giftReceivedNotification = "Gift received.";
 
     @Override
     public ArrayList<ErrorDto> validate(GiftPointsRequest request) {
-        ArrayList<ErrorDto> authErrors = new Validator().isAuthenticated().getErrors();
+        ArrayList<ErrorDto> authErrors = new Validator().isAdministrator().getErrors();
         if (!authErrors.isEmpty()) return authErrors;
 
 
-        ArrayList<ErrorDto> errors = new Validator().isAdministrator().allFieldsSet(request).isValidId(request.user).getErrors();
+        ArrayList<ErrorDto> errors = new Validator().allFieldsSet(request).isValidId(request.user).getErrors();
 
         if (!errors.isEmpty()) return errors;
 
@@ -46,7 +51,7 @@ public class GiftPointsHandler extends BaseHandler<GiftPointsRequest, BaseRespon
     @Audit
     public BaseResponse handleBase(GiftPointsRequest request) {
         paymentsService.createGift(request.user, request.reason, request.amount);
-
+        notificationsService.create(giftReceivedNotification, NotificationAction.PAYMENTS, request.user, null);
         return createResponse();
     }
 

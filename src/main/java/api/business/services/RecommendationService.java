@@ -60,7 +60,7 @@ public class RecommendationService implements IRecommendationService {
                 .getSingleResult();
         Configuration minRec = em.find(Configuration.class, "min_recommendation_required");
 
-        if (Integer.parseInt(minRec.getValue()) <= count) {
+        if (Integer.parseInt(minRec.getValue()) <= count && userTo.getLogin().getRoles().stream().anyMatch(r -> r.getRoleName().equals("candidate"))) {
             //change role
             Role lr = em.createQuery("SELECT lr FROM Role lr WHERE lr.roleName = 'candidate' AND lr.username = :username", Role.class)
                     .setParameter("username", userTo.getLogin().getEmail())

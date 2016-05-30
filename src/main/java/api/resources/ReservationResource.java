@@ -72,18 +72,6 @@ public class ReservationResource {
     }
 
     @POST
-    @Path("groups")
-    @ApiOperation(value = "Creates users groups", response = BaseResponse.class)
-    public Response createGroups() {
-        BaseRequest request = new BaseRequest();
-        BaseResponse response = createReservationsGroupsHandler.handle(request);
-
-        int statusCode = StatusResolver.getStatusCode(response);
-
-        return Response.status(statusCode).entity(response).build();
-    }
-
-    @POST
     @Path("period")
     @ApiOperation(value = "Creates reservation period", response = BaseResponse.class)
     public Response createReservationPeriod(CreateReservationPeriodRequest request) {

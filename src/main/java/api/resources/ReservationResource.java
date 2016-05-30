@@ -112,7 +112,7 @@ public class ReservationResource {
 
     @DELETE
     @Path("period")
-    @ApiOperation(value = "Creates users groups", response = BaseResponse.class)
+    @ApiOperation(value = "Deletes reservation period", response = BaseResponse.class)
     public Response deleteReservationPeriod(@QueryParam("id") @ApiParam(value = "Reservation period id") int id) {
         DeleteReservationPeriodRequest request = new DeleteReservationPeriodRequest();
         request.id = id;

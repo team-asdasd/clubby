@@ -42,6 +42,7 @@ export class BuyClubbyCoins {
 
         paymentsService.getAllPaymentsByType(2).subscribe(
             resp => {
+                this.code = 200;
                 this.payments = resp;
                 this.loading = false;
             },

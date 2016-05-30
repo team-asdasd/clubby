@@ -22,6 +22,7 @@ export class HistoryPayments {
         this.loading = true;
         paymentsService.getHistroyPayments().subscribe(
             resp => {
+                this.code = 200;
                 this.transactions = resp;
                 this.loading = false;
             },

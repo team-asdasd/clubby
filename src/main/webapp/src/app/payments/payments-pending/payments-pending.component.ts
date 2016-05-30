@@ -14,7 +14,7 @@ import {RequiredOptionalDirective} from "../directives/requiredOptional";
 })
 export class PendingPayments {
     payments: Array<Payment>;
-    code: boolean;
+    code: number;
     loading: boolean;
 
     constructor (private paymentsService: PaymentsService) {
@@ -22,6 +22,7 @@ export class PendingPayments {
 
         paymentsService.getPendingPayments().subscribe(
             resp => {
+                this.code = 200;
                 this.payments = resp;
                 this.loading = false;
             },

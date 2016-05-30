@@ -24,7 +24,7 @@ public class FirstGroupAssignerService implements IGroupsAssignmentService {
         int generationNumber = getLastGenerationNumber() +1;
 
         simpleEntityManager.getAll(User.class).stream().forEach(f ->
-                simpleEntityManager.insert(new ReservationGroup(f.getId(), generationNumber, 1)));
+                simpleEntityManager.insert(new ReservationGroup(f, generationNumber, 1)));
 
     }
 
@@ -32,7 +32,7 @@ public class FirstGroupAssignerService implements IGroupsAssignmentService {
     public void assign(User user) {
         int generationNumber = getLastGenerationNumber();
         Configuration c = em.find(Configuration.class, "groups_count");
-        em.persist(new ReservationGroup(user.getId(), generationNumber, c == null ? 1 : Integer.parseInt(c.getValue())));
+        em.persist(new ReservationGroup(user, generationNumber, c == null ? 1 : Integer.parseInt(c.getValue())));
     }
 
     private int getLastGenerationNumber(){

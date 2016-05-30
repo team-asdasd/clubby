@@ -57,6 +57,11 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
             return errors;
         }
 
+        if(!cottageService.isGroupAvailable()){
+            errors.add(new ErrorDto("Users with current group can not make reservations right now.", ErrorCodes.VALIDATION_ERROR));
+            return errors;
+        }
+
         if (request.cottage <= 0) {
             errors.add(new ErrorDto("Invalid cottage id.", ErrorCodes.VALIDATION_ERROR));
             return errors;

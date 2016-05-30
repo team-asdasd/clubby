@@ -31,7 +31,7 @@ public class ScheduledGroupAssignerService {
     private final Logger logger = LogManager.getLogger(name);
     private final String groupsAssignedNotification = "Reservation groups has been assigned.";
 
-    @Schedule(minute = "0", hour = "0", timezone = "Europe/Helsinki")
+   // @Schedule(minute = "0", hour = "0", timezone = "Europe/Helsinki")
     public void assignGroups() throws InterruptedException {
         try {
             UUID jobId = UUID.randomUUID();

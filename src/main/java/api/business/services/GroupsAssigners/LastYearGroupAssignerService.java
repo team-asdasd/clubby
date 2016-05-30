@@ -34,7 +34,7 @@ public class LastYearGroupAssignerService implements IGroupsAssignmentService {
         int groupsSize = Integer.parseInt(simpleEntityManager.getById(Configuration.class, groupsSizeKey).getValue());
         int generationNumber = getLastGenerationNumber() + 1;
 
-        List<UserGroup> sorted = users.stream().map(u -> new UserGroup(u.getId(), getTotalVacationDays(u)))
+        List<UserGroup> sorted = users.stream().map(u -> new UserGroup(u, getTotalVacationDays(u)))
                 .sorted((o1, o2) -> o1.daysCount - o2.daysCount).collect(Collectors.toList());
 
         int step = sorted.size() <= groupsSize ? 1 : sorted.size() / groupsSize;
@@ -45,7 +45,7 @@ public class LastYearGroupAssignerService implements IGroupsAssignmentService {
 
         for (int i = 0; i < sorted.size(); i++) {
             UserGroup group = sorted.get(i);
-            ReservationGroup rg = new ReservationGroup(group.userId, generationNumber, i / step + 1);
+            ReservationGroup rg = new ReservationGroup(group.user, generationNumber, i / step + 1);
             simpleEntityManager.insert(rg);
         }
     }
@@ -55,7 +55,7 @@ public class LastYearGroupAssignerService implements IGroupsAssignmentService {
         int generationNumber = getLastGenerationNumber();
         Configuration c = em.find(Configuration.class, groupsSizeKey);
         int groupNumber = c == null ? 1 : Integer.parseInt(c.getValue());
-        simpleEntityManager.insert(new ReservationGroup(user.getId(), generationNumber, groupNumber));
+        simpleEntityManager.insert(new ReservationGroup(user, generationNumber, groupNumber));
 
         notificationsService.create(String.format(groupAssignedNotification,generationNumber), NotificationAction.NOACTION, user.getId(), null);
     }

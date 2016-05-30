@@ -88,6 +88,7 @@ public class User {
 
     private Collection<FormResult> formResults;
     private Collection<Reservation> reservations;
+    private Collection<ReservationGroup> reservationGroups;
 
     @OneToMany(mappedBy = "user")
     public Collection<FormResult> getFormResults() {
@@ -105,6 +106,15 @@ public class User {
 
     public void setReservations(Collection<Reservation> reservations) {
         this.reservations = reservations;
+    }
+
+    @OneToMany(mappedBy = "user")
+    public Collection<ReservationGroup> getReservationGroups() {
+        return reservationGroups;
+    }
+
+    public void setReservationGroups(Collection<ReservationGroup> reservationGroups) {
+        this.reservationGroups = reservationGroups;
     }
 
     @Basic

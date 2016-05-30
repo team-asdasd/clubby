@@ -3,6 +3,15 @@
     <div *ngIf="cottages">
 
         <div id="filters-container">
+
+            <div id="date-filter-group" class="input-group">
+                <div style="display:-webkit-box;">
+                    <div class="input-group-addon" style="width: 30px; padding: 9px 12px;">Availability interval:</div>
+                    <input type="date" class="form-control" style="width: 160px" placeholder="mm/dd/yyyy" #dateFromInput>
+                    <input type="date" class="form-control" style="width: 160px" placeholder="mm/dd/yyyy" #dateToInput>
+                </div>
+            </div>
+
             <div id="price-filter-group" class="input-group">
                 <div style="display:-webkit-box;">
                     <div class="input-group-addon" style="width: 30px; padding: 9px 12px;">Price:</div>
@@ -21,7 +30,7 @@
                 <rooms-selector class="form-control" style="padding:6px;" [cottages]="cottages" #roomsInput></rooms-selector>
             </div>
 
-            <button id="filter-button" (click)="filterCottages(titleInput.value, roomsInput.selector.value, priceFromInput.value, priceToInput.value)" class="btn btn-primary">Filter</button>
+            <button id="filter-button" (click)="filterCottages(titleInput.value, roomsInput.selector.value, priceFromInput.value, priceToInput.value, dateFromInput.value, dateToInput.value)" class="btn btn-primary">Filter</button>
         </div>
 
         <table class="table table-hover">
@@ -43,13 +52,14 @@
                 </td>
                 <td>{{cottage.title}}</td>
                 <td>{{cottage.beds}}</td>
-                <td>{{cottage.price | currency:"EUR":true:'1.2-2'}}</td>
+                <td>{{(cottage.price/100) | currency:"EUR":true:'1.2-2'}}</td>
                 <td>{{cottage.availableFrom}}</td>
                 <td>{{cottage.availableTo}}</td>
             </tr>
             </tbody>
         </table>
-
+        <p class="text-center"
+           *ngIf="cottages.length === 0">Nothing found.</p>
     </div>
 
 </div>

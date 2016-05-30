@@ -4,7 +4,64 @@
     <meta charset="UTF-8">
 </head>
 <body>
-<h1 class="page-header">Dashboard</h1>
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <h2 class="sub-header">Dashboard</h2>
+        <div id="dashboard-message-box"></div>
+        <div id="users-stats" style="height: 100px; margin-bottom: 30px;"></div>
+        <div id="other-stats" style="height: 100px; margin-top: 30px;"></div>
+    </div>
+</div>
 
+<script id="users-stats-template" type="text/template">
+    <div class="tile-stats col-md-4">
+        <div class="icon"><i class="fa fa-user"></i></div>
+        <div class="count" style="display: inline-block;"><%= candidateCount %></div>
+        <h4 style="display: inline-block; color: #13BD13;">(<%= candidateOnlineCount %> online)</h4>
+
+        <h3>Candidates</h3>
+        <p>Potential club members awaiting recommendations.</p>
+    </div>
+    <div class="tile-stats col-md-4">
+        <div class="icon"><i class="fa fa-user"></i></div>
+        <div class="count" style="display: inline-block;"><%= memberCount %></div>
+        <h4 style="display: inline-block; color: #13BD13;">(<%= memberOnlineCount %> online)</h4>
+        <h3>Members</h3>
+        <p>Fully privileged club members.</p>
+    </div>
+    <div class="tile-stats col-md-4">
+        <div class="icon"><i class="fa fa-user"></i></div>
+        <div class="count" style="display: inline-block;"><%= adminCount %></div>
+        <h4 style="display: inline-block; color: #13BD13;">(<%= adminOnlineCount %> online)</h4>
+
+        <h3>Administrators</h3>
+        <p>Members with administrative privileges.</p>
+    </div>
+</script>
+
+<script id="other-stats-template" type="text/template">
+    <div class="tile-stats col-md-4">
+        <div class="icon"><i class="fa fa-user"></i></div>
+        <div class="count" style="display: inline-block;"><%= cottageCount %></div>
+
+        <h3>Cottages</h3>
+        <p>A number of houses for club members.</p>
+    </div>
+    <div class="tile-stats col-md-4">
+        <div class="icon"><i class="fa fa-user"></i></div>
+        <div class="count" style="display: inline-block;"><%= upcomingReservationCount %></div>
+        <h3>Upcoming Reservations</h3>
+        <p>A number of upcoming reservations.</p>
+    </div>
+    <div class="tile-stats col-md-4">
+        <div class="icon"><i class="fa fa-user"></i></div>
+        <div class="count" style="display: inline-block;"><%= passedReservationCount %></div>
+        <h3>Passed Reservations</h3>
+        <p>A number of reservations in the past.</p>
+    </div>
+</script>
+
+<script src="/public/admin/shared/scripts/clubby/alert.js"></script>
+<script src="/public/admin/shared/scripts/dashboard.js"></script>
 </body>
 </html>

@@ -4,5 +4,6 @@ public enum NotificationAction {
     NOACTION,
     RECOMMENDATIONS,
     PAYMENTS,
+    PROFILE,
     RESERVATIONS
 }

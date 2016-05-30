@@ -5,6 +5,8 @@ import 'angular2/core';
 import 'angular2/router';
 import 'angular2/http';
 
+import 'angular2-notifications/components.js';
+
 // RxJS
 import 'rxjs';
 

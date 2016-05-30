@@ -7,7 +7,7 @@ import {GetAllUsersResponse} from "../members/shared/getAllUsers.response.ts";
 @Injectable()
 export class UserService {
     url: string = "/api/user";
-
+    
     constructor(private http: Http) {
     }
 

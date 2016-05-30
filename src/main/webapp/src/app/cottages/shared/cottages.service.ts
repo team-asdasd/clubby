@@ -37,7 +37,6 @@ export class CottageService {
         }
 
         let result: Array<Cottage> = res.json().cottages;
-        console.log(result);
         return result;
     }
 

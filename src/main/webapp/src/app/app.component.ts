@@ -40,13 +40,19 @@ import {Member} from "./member/member.component.ts";
 ])
 
 export class App {
-    balance:number;
-    isAdministrator:boolean;
+    balance: number;
+    isAdministrator = false;
+    isCandidate = true;
 
-    constructor(private router:Router, private paymentsService:PaymentsService, private userService:UserService) {
+    constructor(private router: Router, private paymentsService: PaymentsService, private userService: UserService) {
         userService.hasRole("administrator").subscribe(
             resp =>this.isAdministrator = resp,
             error => this.isAdministrator = false
+        );
+
+        userService.hasRole("candidate").subscribe(
+            resp => this.isCandidate = resp,
+            error => this.isCandidate = false
         );
 
         paymentsService.getBalance().subscribe(

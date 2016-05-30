@@ -10,14 +10,14 @@ import {
     beforeEachProviders
 } from 'angular2/testing';
 import {provide} from 'angular2/core';
-import {Reservations} from './reservations.component';
+import {UserReservations} from './user-reservations.component';
 
 describe('Reservations Component', () => {
 
     beforeEachProviders((): any[] => []);
 
     it('should ...', injectAsync([TestComponentBuilder], (tcb:TestComponentBuilder) => {
-       return tcb.createAsync(Reservations).then((fixture) => {
+       return tcb.createAsync(UserReservations).then((fixture) => {
           fixture.detectChanges();
         });
     }));

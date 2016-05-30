@@ -1,30 +1,29 @@
 package api.contracts.dto;
 
 import api.business.entities.Reservation;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-
-import java.util.Date;
 
 public class ReservationDto {
     public int id;
     public int status;
-    public int user;
-    public int cottage;
+    public SlimUserDto user;
+    public SlimCottageDto cottage;
     public int payment;
     public String dateFrom;
     public String dateTo;
-    public Date created;
+    public String created;
 
     public ReservationDto(Reservation reservation) {
         id = reservation.getReservationid();
-        user = reservation.getUser().getId();
-        cottage = reservation.getCottage().getId();
+        user = new SlimUserDto(reservation.getUser());
+        cottage = new SlimCottageDto(reservation.getCottage());
 
         status = reservation.getStatus();
 
         payment = reservation.getPayment().getPaymentid();
 
-        created = reservation.getCreated();
+        created = new DateTime(reservation.getCreated()).toString();
 
         dateFrom = LocalDate.fromDateFields(reservation.getDateFrom()).toString();
         dateTo = LocalDate.fromDateFields(reservation.getDateTo()).toString();

@@ -20,7 +20,7 @@
             <h3>Details</h3>
             <ul>
                 <li>Beds: {{cottage.beds}}</li>
-                <li>Price: {{cottage.price | currency:"EUR":true:'1.2-2'}}</li>
+                <li>Price: {{(cottage.price/100) | currency:"EUR":true:'1.2-2'}}</li>
             </ul>
             <reservation-form [cottage]="cottage"></reservation-form>
         </div>

@@ -1,5 +1,5 @@
 import {Component} from 'angular2/core';
-import {Router, RouteParams} from 'angular2/router';
+import {RouteParams} from 'angular2/router';
 import {Observable} from 'rxjs/Observable';
 
 import {CottageService} from '../shared/cottages.service';
@@ -17,8 +17,7 @@ import {ReservationForm} from './reservation-form/reservation-form.component';
 export class CottageDetails {
     public cottage = new Cottage();
 
-    constructor(private router: Router,
-                private routeParams: RouteParams,
+    constructor(private routeParams: RouteParams,
                 private cottageService: CottageService) {
         let id = this.routeParams.get('id');
         cottageService.getCottage(id)

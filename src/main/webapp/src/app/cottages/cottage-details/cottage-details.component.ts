@@ -1,5 +1,5 @@
 import {Component} from 'angular2/core';
-import {Router, RouteParams} from 'angular2/router';
+import {RouteParams} from 'angular2/router';
 import {Observable} from 'rxjs/Observable';
 
 import {CottageService} from '../shared/cottages.service';

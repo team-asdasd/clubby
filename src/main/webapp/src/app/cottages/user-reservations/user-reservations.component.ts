@@ -71,7 +71,7 @@ export class UserReservations {
 
     private filterMyReservations(reservations: ReservationListItem[]) {
         return reservations
-            .filter(reservation => reservation.user.id === this.currentUser.id)
+            .filter(reservation => reservation.user.id === this.currentUser.id);
     }
 
     private handleError(errors: any) {

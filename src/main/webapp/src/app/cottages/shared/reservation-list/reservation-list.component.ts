@@ -1,5 +1,4 @@
-import {Component, EventEmitter, Input, Output} from 'angular2/core';
-import {Observable} from 'rxjs/Observable';
+import {Component, EventEmitter, Output} from 'angular2/core';
 import {ROUTER_DIRECTIVES} from 'angular2/router';
 
 import {ReservationService} from "../reservation.service";
@@ -16,9 +15,6 @@ import {ReservationService} from "../reservation.service";
 })
 export class ReservationList {
     @Output() onDeleteReservation = new EventEmitter<string>();
-
-    constructor() {
-    }
 
     onDeleteClick(id: string) {
         this.onDeleteReservation.emit(id);

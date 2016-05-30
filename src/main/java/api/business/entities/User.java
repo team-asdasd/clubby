@@ -9,6 +9,7 @@ import org.apache.shiro.subject.Subject;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Entity
@@ -133,6 +134,19 @@ public class User {
         DefaultSessionManager sessionManager = (DefaultSessionManager) securityManager.getSessionManager();
         Collection<Session> activeSessions = sessionManager.getSessionDAO().getActiveSessions();
         return activeSessions.stream().anyMatch(this::matchSession);
+    }
+
+    @Transient
+    public int activeGroup() {
+        int group = 0;
+        Optional<ReservationGroup> rg = this.getReservationGroups().stream()
+                .sorted((s1, s2) -> Integer.compare(s2.getGeneration(), s1.getGeneration()))
+                .findFirst();
+        if(rg.isPresent()){
+            group = rg.get().getGroupnumber();
+        }
+
+        return group;
     }
 
     private boolean matchSession(Session s) {

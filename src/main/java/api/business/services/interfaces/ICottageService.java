@@ -37,6 +37,4 @@ public interface ICottageService {
 
     DateTime getCurrentPeriodStartDate();
 
-    ReservationGroup getMyReservationGroup();
-
 }

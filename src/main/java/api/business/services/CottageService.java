@@ -212,21 +212,13 @@ public class CottageService implements ICottageService {
     }
 
     public boolean isGroupAvailable(){
-        ReservationGroup rg = getMyReservationGroup();
-        if(rg == null) return false;
+        int rg = userService.get().activeGroup();
+        if(rg == 0) return false;
 
         DateTime periodStart = getCurrentPeriodStartDate();
-        boolean isGroupTime = DateTime.now().isAfter(periodStart.plusWeeks(rg.getGroupnumber() -1));
+        boolean isGroupTime = DateTime.now().isAfter(periodStart.plusWeeks(rg -1));
 
         return isGroupTime;
-    }
-
-    public ReservationGroup getMyReservationGroup(){
-        Optional<ReservationGroup> rg = userService.get().getReservationGroups().stream()
-                .sorted((s1, s2) -> Integer.compare(s2.getGeneration(), s1.getGeneration()))
-                .findFirst();
-
-        return rg.isPresent() ? rg.get() : null;
     }
 
     public DateTime getCurrentPeriodStartDate(){

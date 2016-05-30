@@ -70,6 +70,8 @@ public class GetCurrentUserHandler extends BaseHandler<BaseRequest, GetUserInfoR
         response.fields = user.getFormResults().stream().map(FormInfoDto::new).collect(Collectors.toList());
         response.roles = user.getLogin().getRoles().stream().map(Role::getRoleName).collect(Collectors.toList());
         response.fields.addAll(formService.getVisibleFields().stream().filter(f -> !haveResult(f, response)).map(FormInfoDto::new).collect(Collectors.toList()));
+        response.group = user.activeGroup();
+
         return response;
     }
 

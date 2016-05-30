@@ -1,10 +1,12 @@
 package api.contracts.dto;
 
+import api.business.entities.ReservationGroup;
 import api.business.entities.Role;
 import api.business.entities.User;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class UserDto {
@@ -12,6 +14,7 @@ public class UserDto {
     public String name;
     public String email;
     public boolean online;
+    public int group;
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     public String picture;
@@ -36,5 +39,7 @@ public class UserDto {
             roles = u.getLogin().getRoles().stream().map(Role::getRoleName).collect(Collectors.toList());
         }
         online = u.isOnline();
+
+        group = u.activeGroup();
     }
 }

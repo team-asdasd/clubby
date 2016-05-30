@@ -31,7 +31,7 @@ public class ScheduledReservationService {
     private final Logger logger = LogManager.getLogger(name);
     private final String reservationCanceledMessage = "Reservation has been canceled.";
 
-   // @Schedule(minute = "*/1", hour = "*", timezone = "UTC")
+    @Schedule(minute = "*/1", hour = "*", timezone = "UTC")
     public void cancelUnpaidReservations() throws InterruptedException {
         try {
             UUID jobId = UUID.randomUUID();

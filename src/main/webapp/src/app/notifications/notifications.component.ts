@@ -80,7 +80,7 @@ export class Notifications {
             }
             case "RECOMMENDATIONS":
             {
-                this.router.navigateByUrl(`/Member/${args}`);
+                args ? this.router.navigateByUrl(`/Member/${args}`) : this.router.navigateByUrl(`/Profile`);
                 break;
             }
             case "NOACTION":

@@ -45,7 +45,7 @@ export class UserReservations {
     }
 
     updateList() {
-        this.reservations = [new ReservationListItem()];
+        this.reservations = [];
         this.reservationService.getReservations('all')
             .subscribe(
                 data => this.reservations = this.filterMyReservations(data.reservations),

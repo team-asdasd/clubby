@@ -1,8 +1,10 @@
-import {Component} from 'angular2/core';
+import {Component, Input} from 'angular2/core';
 
 @Component({
     selector: 'cb-error',
     directives: [],
     template: require('./templates/errorTemplate.html')
 })
-export class ErrorDirective {}
+export class ErrorDirective {
+    @Input() code: number;
+}

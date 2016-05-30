@@ -15,12 +15,20 @@ import {ErrorDirective} from "../../directives/error.ts";
 })
 export class HistoryPayments {
     transactions: Array<MoneyTransaction>;
-    failed: boolean;
+    code: number;
+    loading: boolean;
 
     constructor(private paymentsService: PaymentsService) {
+        this.loading = true;
         paymentsService.getHistroyPayments().subscribe(
-            resp => this.transactions = resp,
-            error => this.failed = true
+            resp => {
+                this.transactions = resp;
+                this.loading = false;
+            },
+            error => {
+                this.code = error.status;
+                this.loading = false;
+            }
         );
     }
 }

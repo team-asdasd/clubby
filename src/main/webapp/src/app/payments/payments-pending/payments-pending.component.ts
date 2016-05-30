@@ -14,7 +14,7 @@ import {RequiredOptionalDirective} from "../directives/requiredOptional";
 })
 export class PendingPayments {
     payments: Array<Payment>;
-    failed: boolean;
+    code: boolean;
     loading: boolean;
 
     constructor (private paymentsService: PaymentsService) {
@@ -26,7 +26,7 @@ export class PendingPayments {
                 this.loading = false;
             },
             error => {
-                this.failed = true;
+                this.code = error.status;
                 this.loading = false;
             }
         );

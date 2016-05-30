@@ -5,6 +5,8 @@ import api.business.entities.ReservationGroup;
 import api.business.entities.User;
 import api.business.persistance.ISimpleEntityManager;
 import api.business.services.interfaces.IGroupsAssignmentService;
+import api.business.services.interfaces.notifications.INotificationsService;
+import api.contracts.enums.NotificationAction;
 import api.contracts.enums.TransactionStatus;
 import api.contracts.reservations.groups.UserGroup;
 import api.helpers.DatesHelper;
@@ -19,10 +21,13 @@ import java.util.stream.Collectors;
 @Stateless
 public class LastYearGroupAssignerService implements IGroupsAssignmentService {
     @Inject
-    ISimpleEntityManager simpleEntityManager;
+    private ISimpleEntityManager simpleEntityManager;
     @PersistenceContext
     private EntityManager em;
+    @Inject
+    private INotificationsService notificationsService;
     private final String groupsSizeKey = "groups_count";
+    private final String groupAssignedNotification = "Reservation group %d has been assigned";
 
     @Override
     public void assign(List<User> users) {
@@ -48,8 +53,11 @@ public class LastYearGroupAssignerService implements IGroupsAssignmentService {
     @Override
     public void assign(User user) {
         int generationNumber = getLastGenerationNumber();
-        Configuration c = em.find(Configuration.class, "groups_count");
-        simpleEntityManager.insert(new ReservationGroup(user.getId(), generationNumber, c == null ? 1 : Integer.parseInt(c.getValue())));
+        Configuration c = em.find(Configuration.class, groupsSizeKey);
+        int groupNumber = c == null ? 1 : Integer.parseInt(c.getValue());
+        simpleEntityManager.insert(new ReservationGroup(user.getId(), generationNumber, groupNumber));
+
+        notificationsService.create(String.format(groupAssignedNotification,generationNumber), NotificationAction.NOACTION, user.getId(), null);
     }
 
     private int getLastGenerationNumber() {

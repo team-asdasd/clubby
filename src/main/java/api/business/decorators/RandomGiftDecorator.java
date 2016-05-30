@@ -23,7 +23,7 @@ public class RandomGiftDecorator implements IPaymentModifier {
         Random r = new Random();
 
         if (r.nextInt(100) < 50) {
-            LineItem lineItem = new LineItem("Random discount", payment.calculatePrice() / 10, 1, payment);
+            LineItem lineItem = new LineItem("Random discount", payment.calculatePrice() / -10, 1, payment);
             Collection<LineItem> lineItems = payment.getLineItems();
             lineItems.add(lineItem);
             payment.setLineItems(lineItems);

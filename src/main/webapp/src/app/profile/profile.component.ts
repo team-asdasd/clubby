@@ -3,6 +3,7 @@ import {User} from './../shared/user.model';
 import {UserService} from "./../shared/user.service";
 import {RecommendationService} from "../members/shared/recommendation.service";
 import 'rxjs/add/operator/catch';
+import {Recommendation} from "../members/shared/recommendation.model";
 
 @Component({
     selector: 'profile',
@@ -26,21 +27,49 @@ export class Profile {
     requestingRecommendationState: String = "default";
     loadingState: String = "waiting";
     isCandidate: boolean = false;
+    hasSentRecommendations: Boolean = false;
+    sentRecommendationsUsers: Array<User> = null;
 
     constructor(private userService: UserService, private recommendationService: RecommendationService) {
         userService.getUserInfo().subscribe(user => this.initUser(user));
+        recommendationService.getSentRecommendations().subscribe(
+            rec => this.initSentRec(rec),
+            error => this.handleError(error)
+        )
     }
 
     initUser(user: User) {
         this.user = user;
 
-        this.loadingState = "done";
+        if (this.sentRecommendationsUsers) {
+
+            this.loadingState = "done";
+        }
 
         this.notificationMessage.nativeElement.hidden = false;
 
         if (user["roles"].indexOf("candidate") > -1) {
             this.isCandidate = true;
         }
+    }
+
+    initSentRec(rec: any) {
+
+        console.log(rec);
+
+       /* this.sentRecommendationsUsers = rec;
+
+        for (var i = 0; i < rec.length; i++) {
+            this.userService.getUserById(rec[i].userId).subscribe(res => this.sentRecommendationsUsers.push(res));
+        }
+
+        if (rec.length > 0) {
+            this.hasSentRecommendations = true;
+        }
+
+        if (this.user) {
+            this.loadingState = "done";
+        }*/
     }
 
     toggleRecommendationPopup() {
@@ -95,6 +124,14 @@ export class Profile {
                                                err => this.handlePatchResponse(err));
     }
 
+    inviteFriend(email: String) {
+        console.log(email);
+    }
+
+    leaveClub() {
+        console.log('leaving');
+    }
+
     handlePatchResponse(resp: any) {
 
         var message = "";
@@ -113,7 +150,6 @@ export class Profile {
 
         this.userService.getUserInfo().subscribe(user => this.initUser(user));
     }
-
 
     handleRecommendationResponse(resp: any) {
         this.requestingRecommendationState = "done";

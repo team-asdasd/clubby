@@ -78,23 +78,36 @@
                             </tr>
                         </table>
 
-                        <!-- Split button -->
-                        <!--TODO: enable social button.. till we can make it *social*-->
-                        <!--<div class="btn-group">-->
-                        <!--<button type="button" class="btn btn-primary">-->
-                        <!--Social-->
-                        <!--</button>-->
-                        <!--<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">-->
-                        <!--<span class="caret"></span><span class="sr-only">Social</span>-->
-                        <!--</button>-->
-                        <!--<ul class="dropdown-menu" role="menu">-->
-                        <!--<li><a href="#">Twitter</a></li>-->
-                        <!--<li><a href="https://plus.google.com/+Jquery2dotnet/posts">Google +</a></li>-->
-                        <!--<li><a href="https://www.facebook.com/jquery2dotnet">Facebook</a></li>-->
-                        <!--<li class="divider"></li>-->
-                        <!--<li><a href="#">Github</a></li>-->
-                        <!--</ul>-->
-                        <!--</div>-->
+                    </div>
+
+                    <div id="otherContainer">
+                        <h3 style="text-align: center;">Other</h3>
+                        <div>
+                            <h4>Invite a friend</h4>
+                            <input type="text" placeholder="friend@mail.com" #friendEmail style="width: 210px; padding: 6px;"/>
+                            <button id="inviteButton"
+                                    type="button"
+                                    (click)="inviteFriend(friendEmail.value)"
+                                    class="btn btn-default">
+                                Invite
+                            </button>
+                        </div>
+
+                        <div style="margin-top: 40px">
+                            <h4>Leave club</h4>
+                            <button id="leaveButton"
+                                    type="button"
+                                    (click)="leave()"
+                                    class="btn btn-default">
+                               Leave
+                            </button>
+                        </div>
+
+                        <div *ngIf="hasSentRecommendations" style="margin-top: 40px">
+                            <h4>You have sent recommendation requests to:</h4>
+                            <p *ngFor="#user of sentRecommendationsUsers">{{user.name}}</p>
+                        </div>
+
                     </div>
 
                     <div id="fullscreen" *ngIf="recommendationPopup">

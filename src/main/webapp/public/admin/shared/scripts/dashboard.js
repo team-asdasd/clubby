@@ -4,6 +4,7 @@ var dashboardMessage = $("#dashboard-message-box");
 $(function () {
     loadUsers();
     loadCottagesAndReservations();
+    loadChart();
 });
 
 function loadUsers() {
@@ -24,8 +25,8 @@ function loadUsers() {
             candidateOnlineCount: getOnlineRole(users, "candidate") + getOnlineRole(users, "potentialCandidate"),
             memberCount: getRole(users, "member"),
             memberOnlineCount: getOnlineRole(users, "member"),
-            adminCount: getRole(users, "admin"),
-            adminOnlineCount: getOnlineRole(users, "admin")
+            adminCount: getRole(users, "administrator"),
+            adminOnlineCount: getOnlineRole(users, "administrator")
         };
 
         table.html(template(data));
@@ -91,5 +92,62 @@ function loadCottagesAndReservations() {
         table.html("");
         var message = getErrorMessageFromResponse(response) || "Unknown error.";
         dashboardMessage.html(alertDialog({title: "Error!", message: message, severity: "danger"}));
+    });
+}
+
+function loadChart() {
+    var table = $("#chart");
+
+    table.html("<div class='loader'></div>");
+    $.ajax({
+        type: "GET",
+        url: "/api/reservation?category=upcoming",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json"
+    }).done(function (response) {
+        var reservations = response.reservations;
+        var stats = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        _.each(reservations, function (r) {
+            var from = new Date(r.dateFrom);
+            var to = new Date(r.dateTo);
+
+            var j = from.getMonth();
+            var k = to.getMonth();
+            if (j === k) {
+                stats[j]++;
+            } else {
+                for (var i = j; i <= k; i++) {
+                    stats[i]++;
+                }
+            }
+        });
+
+        $('#chart').highcharts({
+            title: {
+                text: 'Monthly Reservations',
+                x: -20 //center
+            },
+            colors: ['#193441'],
+            xAxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            },
+            yAxis: {
+                title: {
+                    text: 'Reservation count'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1
+                }]
+            },
+            series: [{
+                name: 'Reservations',
+                data: stats
+            }],
+            credits: {
+                enabled: false
+            }
+        });
+
     });
 }

@@ -1,5 +1,8 @@
 <div *ngIf="!reservations" class="loader"></div>
 <div *ngIf="reservations">
     <reservation-list [reservations]="reservations"
-                      [personal]="true"></reservation-list>
+                      [personal]="true"
+                      (onDeleteReservation)="deleteReservation($event)"
+                      [isButtonDisabled]="isButtonDisabled"></reservation-list>
+    <simple-notifications [options]="options"></simple-notifications>
 </div>

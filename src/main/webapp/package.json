@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "angular2": "2.0.0-beta.12",
+    "angular2-notifications": "^0.1.3",
     "blueimp-file-upload": "^9.12.1",
     "bootstrap": "3.3.6",
     "bootstrap-validator": "0.10.2",

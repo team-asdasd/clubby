@@ -18,51 +18,15 @@
         <td>{{reservation?.dateFrom}}</td>
         <td>{{reservation?.dateTo}}</td>
         <td *ngIf="personal">
-            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confModal">Cancel</button>
+            <button type="button"
+                    class="btn btn-danger"
+                    (click)="onDeleteClick(reservation.id)"
+                    [disabled]="isButtonDisabled">
+                Cancel
+            </button>
         </td>
     </tr>
     <p class="text-center"
        *ngIf="reservations.length === 0">Nothing found.</p>
     </tbody>
 </table>
-
-
-<!-- Modal -->
-<div class="modal fade"
-     id="confModal"
-     tabindex="-1"
-     role="dialog"
-     aria-labelledby="confirmationModal"
-     data-backdrop="false">
-    <div class="modal-dialog"
-         role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close"><span
-                        aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title"
-                    id="confirmationModal">Confirmation</h4>
-            </div>
-            <form class="form-horizontal"
-                  (ngSubmit)="onSubmit()">
-                <p class="text-center">Are you sure you want to cancel the reservation?</p>
-                <div class="modal-footer">
-                    <button type="button"
-                            class="btn btn-default"
-                            data-dismiss="modal">
-                        Close
-                    </button>
-                    <button type="submit"
-                            class="btn btn-primary"
-                            [disabled]="!isButtonActive">
-                        Submit
-                    </button>
-                </div>
-            </form>
-
-        </div>
-    </div>
-</div>

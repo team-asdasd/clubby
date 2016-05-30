@@ -5,6 +5,7 @@ import api.business.entities.Recommendation;
 import api.business.entities.Role;
 import api.business.entities.User;
 import api.business.services.interfaces.IEmailService;
+import api.business.services.interfaces.IGroupsAssignmentService;
 import api.business.services.interfaces.IRecommendationService;
 import api.business.services.interfaces.IUserService;
 import api.business.services.interfaces.notifications.INotificationsService;
@@ -32,6 +33,8 @@ public class RecommendationService implements IRecommendationService {
     private IUserService userService;
     @Inject
     private INotificationsService notificationsService;
+    @Inject
+    private IGroupsAssignmentService groupsAssignmentService;
 
     private final Logger logger = LogManager.getLogger(getClass().getName());
     private final String memberNotification = "You become a club member!";
@@ -73,7 +76,8 @@ public class RecommendationService implements IRecommendationService {
             logger.info("User " + userTo.getLogin().getEmail() + " is member");
             notificationsService.create(memberNotification, NotificationAction.NOACTION, userTo.getId(), null);
 
-            //TODO: Assign to ReservationGroup
+            groupsAssignmentService.assign(userTo);
+
         }
         logger.info("User " + userTo.getLogin().getEmail() + " received recommendation from " + userFrom.getLogin().getEmail());
 

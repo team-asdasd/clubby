@@ -50,7 +50,7 @@ public class ScheduledGroupAssignerService {
 
     private void assignReservationGroups() {
         List<User> users = em.getAll(User.class);
-        assignmentService.Assign(users);
+        assignmentService.assign(users);
         logger.info("Reservation groups has been assigned.");
         notificationsService.create(groupsAssignedNotification, NotificationAction.NOACTION.name());
     }

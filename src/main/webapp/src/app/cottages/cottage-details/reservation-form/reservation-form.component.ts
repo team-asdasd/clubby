@@ -23,18 +23,13 @@ export class ReservationForm {
     errors = [];
     cottage: Cottage;
 
-    constructor(private routeParams: RouteParams,
-                private reservationService: ReservationService,
+    constructor(private reservationService: ReservationService,
                 private router: Router) {
-        // let id = this.routeParams.get('id');
-        // console.log(id);
     }
 
     onSubmit() {
         this.errors = [];
         this.isButtonActive = false;
-        console.log(this.cottage);
-
         this.reservation.cottage = Number(this.cottage.id);
         this.reservation.services = this.cottage.services
             .filter(service =>

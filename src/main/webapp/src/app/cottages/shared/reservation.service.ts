@@ -23,6 +23,19 @@ export class ReservationService {
             .catch(this.handleError);
     }
 
+    public getReservations(category: string): Observable<any> {
+        return this.http
+            .get(this.url + `?category=${category}`)
+            .map(this.parse)
+            .catch(this.handleError);
+    }
+
+    public deleteReservation(id: string): Observable<any> {
+        return this.http
+            .delete(this.url + `?id=${id}`)
+            .map(this.parse)
+            .catch(this.handleError);
+    }
 
     private parse(res: Response): any {
         if (res.status < 200 || res.status >= 300) {

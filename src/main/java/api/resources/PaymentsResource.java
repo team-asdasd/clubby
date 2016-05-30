@@ -4,7 +4,6 @@ import api.contracts.base.BaseResponse;
 import api.contracts.payments.*;
 import api.handlers.payments.*;
 import api.handlers.utilities.StatusResolver;
-import com.google.api.client.http.HttpStatusCodes;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -30,6 +29,8 @@ public class PaymentsResource {
     private GetPaymentsHandler getPaymentsHandler;
     @Inject
     private GiftPointsHandler giftPointsHandler;
+    @Inject
+    private ChangePaymentPriceHandler changePaymentPriceHandler;
 
     @GET
     @Path("{paymentId}")
@@ -126,6 +127,17 @@ public class PaymentsResource {
     @ApiOperation(value = "Gives a gift of points to a user.", response = BaseResponse.class)
     public Response getPayments(GiftPointsRequest request) {
         BaseResponse response = giftPointsHandler.handle(request);
+
+        int statusCode = StatusResolver.getStatusCode(response);
+
+        return Response.status(statusCode).entity(response).build();
+    }
+    @PUT
+    @Produces("application/json")
+    @Path("membership")
+    @ApiOperation(value = "Changes yearly membership payment price.", response = BaseResponse.class)
+    public Response changePaymentAmount(ChangePaymentPriceRequest request) {
+        BaseResponse response = changePaymentPriceHandler.handle(request);
 
         int statusCode = StatusResolver.getStatusCode(response);
 

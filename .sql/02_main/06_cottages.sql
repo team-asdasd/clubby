@@ -1,6 +1,6 @@
 CREATE TABLE main.cottages
 (
-    id SERIAL NOT NULL,
+    id SERIAL PRIMARY KEY NOT NULL,
     title TEXT,
     bedcount INTEGER,
     imageurl TEXT,

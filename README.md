@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.com/Tony-Mc/asdasd.svg?token=fdKC47jJTuUKGzpgQy8t&branch=master)](https://travis-ci.com/tony-mc/asdasd)
-[![Dependency Status](https://david-dm.org/tony-mc/asdasd.svg?path=src/main/webapp)](https://david-dm.org/tony-mc/asdasd?path=src/main/webapp)
-[![devDependency Status](https://david-dm.org/tony-mc/asdasd/dev-status.svg?path=src/main/webapp)](https://david-dm.org/tony-mc/asdasd?path=src/main/webapp#info=devDependencies)
+[![Build Status](https://travis-ci.com/Tony-Mc/asdasd.svg?token=fdKC47jJTuUKGzpgQy8t&branch=master)](https://travis-ci.com/Tony-Mc/asdasd)
+[![Dependency Status](https://david-dm.org/Tony-Mc/asdasd.svg?path=src/main/webapp)](https://david-dm.org/Tony-Mc/asdasd?path=src/main/webapp)
+[![devDependency Status](https://david-dm.org/Tony-Mc/asdasd/dev-status.svg?path=src/main/webapp)](https://david-dm.org/Tony-Mc/asdasd?path=src/main/webapp#info=devDependencies)
 
 ![awd](/docs/asdasd.png)
 
@@ -46,6 +46,23 @@ From here you can go two ways:
     4. Rename Web Application: Archive file you just created from `clubby.war` (or sth) to `ROOT.war` -> OK
     5. Edit configurations -> Add -> JBoss -> Local
     6. Deployment -> Add -> Artifact -> clubby:war
+
+####DataSource configuration
+1. Download [postgresql driver](https://www.dropbox.com/s/rjxxa6cynt7ped2/postgresql.zip?dl=0)
+2. Extract to `%WILDFLY_HOME%\modules\system\layers\base\org`
+3. Edit `%WILDFLY_HOME%\standalone\configuration\standalone.xml`
+    - Find `<datasources>` tag and replace [with] (https://gist.github.com/elpaulas/214bc090b742abbbad95b389e47214d5)
+    - Find and remove `default-bindings` tag.
+
+####Email service configuration
+1. Edit `%WILDFLY_HOME%\standalone\configuration\standalone.xml`
+    - Find `<remote-destination` tag and replace with `<remote-destination host="smtp.gmail.com" port="465"/>`
+    - Find `<mail-session` tag and replace with
+```xml
+<mail-session name="Gmail" jndi-name="java:jboss/mail/Gmail">
+    <smtp-server password="${env.OPENSHIFT_GMAIL_PASSWORD}" username="${env.OPENSHIFT_GMAIL_USERNAME}" ssl="true" outbound-socket-binding-ref="mail-smtp"/>
+</mail-session>
+```
 
 ## UI Project
 
@@ -103,6 +120,9 @@ To access database you will need to use RedHat Client a.k.a. OpenShift client to
   * `FACEBOOK_CLUBBY_SECRET`
   * `FACEBOOK_CLUBBY_REDIRECT_URL`
   * `FACEBOOK_CLUBBY_APP_ID`
+5. Set environment variables for mail service (ask team for values):
+  * 'OPENSHIFT_GMAIL_PASSWORD'
+  * 'OPENSHIFT_GMAIL_USERNAME'
 
 ## More notes
 

@@ -10,6 +10,10 @@ public class CottageDto extends SlimCottageDto {
 
     public List<ExistingServiceDto> services;
 
+    public CottageDto() {
+        super();
+    }
+
     public CottageDto(Cottage cottage) {
         super(cottage);
 

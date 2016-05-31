@@ -57,7 +57,7 @@ public class LastYearGroupAssignerService implements IGroupsAssignmentService {
         int groupNumber = c == null ? 1 : Integer.parseInt(c.getValue());
         simpleEntityManager.insert(new ReservationGroup(user, generationNumber, groupNumber));
 
-        notificationsService.create(String.format(groupAssignedNotification,generationNumber), NotificationAction.NOACTION, user.getId(), null);
+        notificationsService.create(String.format(groupAssignedNotification, groupNumber ), NotificationAction.NOACTION, user.getId(), null);
     }
 
     private int getLastGenerationNumber() {

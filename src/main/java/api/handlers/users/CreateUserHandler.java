@@ -69,8 +69,8 @@ public class CreateUserHandler extends BaseHandler<CreateUserRequest, BaseRespon
         }
         Long membersCount = (Long) em.createQuery("SELECT COUNT(u) FROM User u WHERE u.login.disabled = false").getSingleResult();
         Configuration c = em.find(Configuration.class, "max_members");
-        if (membersCount >= Integer.parseInt(c.getValue())) {
-            errors.add(new ErrorDto("Club is full", ErrorCodes.DUPLICATE_EMAIL));
+        if (c != null && membersCount >= Integer.parseInt(c.getValue())){
+            errors.add(new ErrorDto("Club is full", ErrorCodes.VALIDATION_ERROR));
         }
 
         errors.addAll(formService.validateFormFields(request.fields));

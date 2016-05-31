@@ -47,7 +47,7 @@ function handleCreate() {
         "beds": bedcount.val(),
         "image": imageUrl.val(),
         "description": description.val(),
-        "price": parseInt(price.val()*100),
+        "price": parseInt(price.val() * 100),
         "availableFrom": availableFrom.val(),
         "availableTo": availableTo.val(),
         services: []
@@ -59,7 +59,7 @@ function handleCreate() {
         var maxCount = $(inputs.get(2)).val();
         var service = {
             "description": description,
-            "price": price,
+            "price": price * 100,
             "maxCount": maxCount
         };
         request.services.push(service);
@@ -129,7 +129,7 @@ function handleEdit(event) {
         imageUrl.attr('src', response.cottage.image);
         modal.find("#image").val(response.cottage.image);
         description.val(response.cottage.description);
-        price.val(response.cottage.price/100);
+        price.val(response.cottage.price / 100);
         availableFrom.val(response.cottage.availableFrom);
         availableTo.val(response.cottage.availableTo);
 
@@ -173,7 +173,7 @@ function sendUpdate() {
         "beds": bedcount.val(),
         "image": imageUrl.val(),
         "description": description.val(),
-        "price": parseInt(price.val().replace(',','.')*100),
+        "price": parseInt(price.val().replace(',', '.') * 100),
         "availableFrom": availableFrom.val(),
         "availableTo": availableTo.val(),
         services: []
@@ -182,7 +182,7 @@ function sendUpdate() {
     _.each($("#services-table-body").find("tr"), function (row) {
         var inputs = $(row).find("input");
         var description = $(inputs.get(0)).val();
-        var price = parseInt($(inputs.get(1)).val().replace(',','.')*100);
+        var price = parseInt($(inputs.get(1)).val().replace(',', '.') * 100);
         var maxCount = $(inputs.get(2)).val();
         var service = {
             "description": description,

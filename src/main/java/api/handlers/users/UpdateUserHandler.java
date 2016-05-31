@@ -91,6 +91,9 @@ public class UpdateUserHandler extends BaseHandler<UpdateUserRequest, UpdateUser
 
         User user = userService.get(request.id);
 
+        if (request.fields != null)
+            formService.saveFormResults(request.fields, user);
+
         if (request.name != null) {
             user.setName(request.name);
         }
@@ -109,8 +112,6 @@ public class UpdateUserHandler extends BaseHandler<UpdateUserRequest, UpdateUser
 
             user.getLogin().setPassword(encryptedPassword);
         }
-        if (request.fields != null)
-            formService.saveFormResults(request.fields, user);
 
         return response;
     }

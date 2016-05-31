@@ -5,7 +5,7 @@
         <span class="label label-danger" *ngIf="notifications && unreadCount > 0">{{unreadCount}}</span>
     </div>
 
-    <ul class="notifications-list dropdown-menu dropdown-menu-left" *ngIf="notifications" #dropdown>
+    <ul class="notifications-list dropdown-menu dropdown-menu-right" *ngIf="notifications" #dropdown>
         <div>
             <a id="notifications-mark-as-read" (click)="handleMarkAllAsReadClick()">Mark All as Read</a>
         </div>

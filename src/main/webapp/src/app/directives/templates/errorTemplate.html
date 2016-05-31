@@ -1,1 +1,4 @@
-<h1 style="margin-left: auto;margin-right: auto;display: table;">Something gone wrong</h1>
+
+
+<h1 *ngIf="code == 401" style="margin-left: auto;margin-right: auto;display: table;">You have no rights to access this page, try become a member and try again.</h1>
+<h1 *ngIf="code > 300 && code != 401" style="margin-left: auto;margin-right: auto;display: table;">Something gone wrong. Please try again later.</h1>

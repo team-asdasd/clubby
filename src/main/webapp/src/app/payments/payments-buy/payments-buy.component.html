@@ -1,5 +1,6 @@
-<div *ngIf="!payments" class="loader"></div>
-<div *ngIf="payments" class="wraper">
+<div *ngIf="loading" class="loader"></div>
+<cb-error [code]="code"></cb-error>
+<div *ngIf="payments && code < 300" class="wraper">
     <div *ngFor="#row of payments | rows:3" class="row">
         <div *ngFor="#col of row.columns" class="col-sm-4">
             <div class="card card-block">
@@ -11,4 +12,6 @@
             </div>
         </div>
     </div>
+    <p class="text-center"
+       *ngIf="payments.length === 0">Nothing found.</p>
 </div>

@@ -1,6 +1,7 @@
 import {PaymentsService} from "../shared/payments.service";
 import {Payment} from "../shared/payment.model";
 import {Component, Pipe, PipeTransform} from 'angular2/core';
+import {ErrorDirective} from "../../directives/error.ts";
 
 @Pipe({name: 'rows'})
 export class RowsPipe implements PipeTransform {
@@ -28,12 +29,12 @@ export class RowsPipe implements PipeTransform {
     template: require('./payments-buy.component.html'),
     styles: [require('./payments-buy.component.scss')],
     providers: [],
-    directives: [],
+    directives: [ErrorDirective],
     pipes: [RowsPipe]
 })
 export class BuyClubbyCoins {
     payments: Array<Payment>;
-    failed: boolean;
+    code: number;
     loading: boolean;
 
     constructor (private paymentsService: PaymentsService) {
@@ -41,11 +42,12 @@ export class BuyClubbyCoins {
 
         paymentsService.getAllPaymentsByType(2).subscribe(
             resp => {
+                this.code = 200;
                 this.payments = resp;
                 this.loading = false;
             },
             error => {
-                this.failed = true;
+                this.code = error.status;
                 this.loading = false;
             }
         );

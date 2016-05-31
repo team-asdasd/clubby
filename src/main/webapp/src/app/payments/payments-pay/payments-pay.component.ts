@@ -23,6 +23,7 @@ export class PayPayment {
     successPayment: boolean;
     errors: Array<ErrorDto>;
     currentDate: Date;
+    code: number;
 
     private _paymentsService: PaymentsService ;
 
@@ -31,10 +32,15 @@ export class PayPayment {
 
         this.currentDate = new Date();
         paymentsService.getPaymentInfo(params.get("id"))
-            .subscribe(resp => this.payment = resp,
-                        error => {
-                            this.failed = true;
-                        }
+            .subscribe(
+                resp => {
+                    this.code = 200;
+                    this.payment = resp;
+                },
+                error => {
+                    this.code = error.status;
+                    this.failed = true;
+            }
             );
     }
 

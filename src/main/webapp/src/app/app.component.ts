@@ -50,7 +50,11 @@ export class App {
         );
 
         userService.hasRole("candidate").subscribe(
-            resp => this.isCandidate = resp,
+            resp =>
+            {
+                this.isCandidate = resp;
+                this.router.navigate(['Profile']);
+            },
             error => this.isCandidate = false
         );
 

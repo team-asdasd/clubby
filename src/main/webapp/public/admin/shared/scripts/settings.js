@@ -107,7 +107,7 @@ function handleSetPrice() {
     var button = $("#set-price");
     button.button('loading');
     var request = {
-        price: $("#price").val()
+        price: $("#price").val() *100
     };
     return $.ajax({
         type: "PUT",

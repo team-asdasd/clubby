@@ -19,6 +19,9 @@ public class SlimCottageDto {
     public String availableFrom;
     public String availableTo;
 
+    public SlimCottageDto() {
+    }
+
     public SlimCottageDto(Cottage cottage) {
         version = cottage.getVersion();
         id = cottage.getId();

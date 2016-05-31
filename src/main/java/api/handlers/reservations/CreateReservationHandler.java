@@ -44,7 +44,7 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
         ArrayList<ErrorDto> errors = new Validator().getErrors();
 
         if (!cottageService.isNowReservationPeriod()) {
-            errors.add(new ErrorDto("Now is not reservation period.", ErrorCodes.VALIDATION_ERROR));
+            errors.add(new ErrorDto("Reservations are not available at this time.", ErrorCodes.VALIDATION_ERROR));
             return errors;
         }
 
@@ -58,7 +58,7 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
         }
 
         if(!cottageService.isGroupAvailable()){
-            errors.add(new ErrorDto("Users with current group can not make reservations right now.", ErrorCodes.VALIDATION_ERROR));
+            errors.add(new ErrorDto("Users with current group can not make reservations at this time.", ErrorCodes.VALIDATION_ERROR));
             return errors;
         }
 
@@ -122,7 +122,7 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
         boolean cottageAvailable = availableCottages.stream().anyMatch(c -> c.getId() == request.cottage);
 
         if (!cottageAvailable) {
-            errors.add(new ErrorDto("Cottage is not available in that period.", ErrorCodes.VALIDATION_ERROR));
+            errors.add(new ErrorDto("Cottage is not available during that period.", ErrorCodes.VALIDATION_ERROR));
             return errors;
         }
 
@@ -145,7 +145,7 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
                 }
 
                 if (request.cottage != service.getCottage().getId()) {
-                    errors.add(new ErrorDto("Selected service does not belong to selected cottage.", ErrorCodes.VALIDATION_ERROR));
+                    errors.add(new ErrorDto("Selected service does not belong to the selected cottage.", ErrorCodes.VALIDATION_ERROR));
                     return errors;
                 }
 

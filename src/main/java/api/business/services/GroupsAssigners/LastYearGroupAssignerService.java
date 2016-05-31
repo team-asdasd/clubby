@@ -34,7 +34,7 @@ public class LastYearGroupAssignerService implements IGroupsAssignmentService {
         int groupsSize = Integer.parseInt(simpleEntityManager.getById(Configuration.class, groupsSizeKey).getValue());
         int generationNumber = getLastGenerationNumber() + 1;
 
-        List<UserGroup> sorted = users.stream().map(u -> new UserGroup(u, getTotalVacationDays(u)))
+        List<UserGroup> sorted = users.stream().filter(u -> isMember(u)).map(u -> new UserGroup(u, getTotalVacationDays(u)))
                 .sorted((o1, o2) -> o1.daysCount - o2.daysCount).collect(Collectors.toList());
 
         int step = sorted.size() <= groupsSize ? 1 : sorted.size() / groupsSize;
@@ -57,7 +57,7 @@ public class LastYearGroupAssignerService implements IGroupsAssignmentService {
         int groupNumber = c == null ? 1 : Integer.parseInt(c.getValue());
         simpleEntityManager.insert(new ReservationGroup(user, generationNumber, groupNumber));
 
-        notificationsService.create(String.format(groupAssignedNotification,generationNumber), NotificationAction.NOACTION, user.getId(), null);
+        notificationsService.create(String.format(groupAssignedNotification, groupNumber ), NotificationAction.NOACTION, user.getId(), null);
     }
 
     private int getLastGenerationNumber() {
@@ -74,5 +74,8 @@ public class LastYearGroupAssignerService implements IGroupsAssignmentService {
                 .mapToInt(Long::intValue).sum();
 
         return vacationDays;
+    }
+    private boolean isMember(User u) {
+        return u.getLogin().getRoles().stream().anyMatch(r -> r.getRoleName().equals("member"));
     }
 }

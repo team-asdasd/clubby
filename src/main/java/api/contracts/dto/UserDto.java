@@ -1,13 +1,16 @@
 package api.contracts.dto;
 
+import api.business.entities.ReservationGroup;
 import api.business.entities.Role;
 import api.business.entities.User;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class UserDto extends SlimUserDto {
+    public int group;
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     public List<FormInfoDto> fields;
 
@@ -24,5 +27,7 @@ public class UserDto extends SlimUserDto {
         if (u.getLogin().getRoles() != null) {
             roles = u.getLogin().getRoles().stream().map(Role::getRoleName).collect(Collectors.toList());
         }
+
+        group = u.activeGroup();
     }
 }

@@ -2,9 +2,9 @@
 
 <div *ngIf="!successPayment" class="wraper">
     <div class="card card-block">
-        <div *ngIf="(!payment && !failed) || loading" class="loader"></div>
-        <cb-error *ngIf="failed && !loading"></cb-error>
-        <div *ngIf="payment && !failed && !loading" class="payment">
+        <div *ngIf="(!payment && code < 300) || loading" class="loader"></div>
+        <cb-error [code]="code"></cb-error>
+        <div *ngIf="payment && !loading && code < 300" class="payment">
             <ul *ngIf="errors" class="text-danger">
                 <li *ngFor="#err of errors; #i = index">
                     {{err.Message}}

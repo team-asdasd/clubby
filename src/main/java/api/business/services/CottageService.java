@@ -1,12 +1,10 @@
 package api.business.services;
 
-import api.business.entities.Cottage;
-import api.business.entities.Reservation;
-import api.business.entities.ReservationsPeriod;
-import api.business.entities.Service;
+import api.business.entities.*;
 import api.business.persistance.ISimpleEntityManager;
 import api.business.services.interfaces.ICottageService;
 import api.business.services.interfaces.IPaymentsService;
+import api.business.services.interfaces.IUserService;
 import api.contracts.enums.TransactionStatus;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -19,6 +17,8 @@ import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Stateless
 public class CottageService implements ICottageService {
@@ -28,6 +28,8 @@ public class CottageService implements ICottageService {
     private ISimpleEntityManager sem;
     @Inject
     private IPaymentsService paymentsService;
+    @Inject
+    private IUserService userService;
 
     @Override
     public List<Cottage> getByFilters(String title, int beds, String dateFrom, String dateTo, int priceFrom, int priceTo) {
@@ -207,5 +209,24 @@ public class CottageService implements ICottageService {
         }
 
         return false;
+    }
+
+    public boolean isGroupAvailable(){
+        int rg = userService.get().activeGroup();
+        if(rg == 0) return false;
+
+        DateTime periodStart = getCurrentPeriodStartDate();
+        boolean isGroupTime = DateTime.now().isAfter(periodStart.plusWeeks(rg -1));
+
+        return isGroupTime;
+    }
+
+    public DateTime getCurrentPeriodStartDate(){
+        Date date = (Date)em.createNativeQuery("SELECT fromdate FROM main.reservationsperiods " +
+                "WHERE :dateToCheck BETWEEN fromdate AND todate")
+                .setParameter("dateToCheck", new Date())
+                .getSingleResult();
+
+        return new DateTime(date.getTime());
     }
 }

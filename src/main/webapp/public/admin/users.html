@@ -103,6 +103,7 @@
                 <th>Id</th>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Group</th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -113,6 +114,7 @@
                 <td><%= _.escape(user.id) %></td>
                 <td><%= _.escape(user.name) %></td>
                 <td><%= _.escape(user.email) %></td>
+                <td><%= _.escape(user.group) %></td>
                 <td>
                     <a class="btn btn-default give-gift" data-toggle="modal" data-target="#gift-modal"
                        data-user-id="<%= _.escape(user.id) %>">

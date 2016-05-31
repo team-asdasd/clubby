@@ -8,6 +8,7 @@
 
 <div class="col-md-4" style="padding-top: 30px">
     <div class="card" >
+        <div id="onlineIndicator" [ngClass]="{online: member.online}"></div>
         <div class="avatar" >
             <img class="small-img img-thumbnail img-responsive img-circle" title="{{member.name}}" src="{{member.picture}}" alt="">
         </div>

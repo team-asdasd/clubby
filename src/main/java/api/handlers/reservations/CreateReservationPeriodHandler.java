@@ -8,6 +8,7 @@ import api.contracts.reservations.CreateReservationPeriodRequest;
 import api.handlers.base.BaseHandler;
 import api.helpers.validator.Validator;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -37,12 +38,20 @@ public class CreateReservationPeriodHandler extends BaseHandler<CreateReservatio
             errors.add(new ErrorDto("Invalid 'from' date format.", ErrorCodes.VALIDATION_ERROR));
             return errors;
         }
+        if (from.toLocalDate().equals(new LocalDate())){
+            errors.add(new ErrorDto("Reservation period cant start on creation day", ErrorCodes.VALIDATION_ERROR));
+            return errors;
+        }
 
         if (from.isAfter(to)) {
             errors.add(new ErrorDto("To date must be after from date.", ErrorCodes.VALIDATION_ERROR));
             return errors;
         }
 
+        if (from.isBeforeNow()) {
+            errors.add(new ErrorDto("'From' date must be in future", ErrorCodes.VALIDATION_ERROR));
+            return errors;
+        }
 
         if (cottageService.getReservationPeriods(request.from, request.to).size() != 0) {
             errors.add(new ErrorDto("Reservation period dates crosses with other reservation periods.", ErrorCodes.VALIDATION_ERROR));

@@ -31,22 +31,31 @@ import {Member} from "./member/member.component.ts";
 })
 
 @RouteConfig([
-    {path: '/', component: Home, as: 'Home', useAsDefault: true},
     {path: '/Profile', component: Profile, as: 'Profile'},
-    {path: '/Cottages/...', component: Cottages, as: 'Cottages'},
+    {path: '/Cottages/...', component: Cottages, as: 'Cottages', useAsDefault: true},
     {path: '/Payments/...', component: PaymentsCentral, as: 'Payments'},
     {path: '/Members/', component: Members, as: 'Members'},
     {path: '/Member/:id', component: Member, as: 'Member'}
 ])
 
 export class App {
-    balance:number;
-    isAdministrator:boolean;
+    balance: number;
+    isAdministrator = false;
+    isCandidate = true;
 
-    constructor(private router:Router, private paymentsService:PaymentsService, private userService:UserService) {
+    constructor(private router: Router, private paymentsService: PaymentsService, private userService: UserService) {
         userService.hasRole("administrator").subscribe(
             resp =>this.isAdministrator = resp,
             error => this.isAdministrator = false
+        );
+
+        userService.hasRole("candidate").subscribe(
+            resp =>
+            {
+                this.isCandidate = resp;
+                this.router.navigate(['Profile']);
+            },
+            error => this.isCandidate = false
         );
 
         paymentsService.getBalance().subscribe(

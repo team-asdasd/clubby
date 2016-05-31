@@ -1,10 +1,12 @@
 package api.contracts.reservations.groups;
 
+import api.business.entities.User;
+
 public class UserGroup{
-    public UserGroup(int userId, int daysCount){
-        this.userId = userId;
+    public UserGroup(User user, int daysCount){
+        this.user = user;
         this.daysCount = daysCount;
     }
-    public int userId;
+    public User user;
     public int daysCount;
 }

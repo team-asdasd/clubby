@@ -1,7 +1,7 @@
 <div class="card card-block">
     <div *ngIf="loading" class="loader"></div>
-    <cb-error *ngIf="failed"></cb-error>
-    <div *ngIf="!loading && payments && !failed">
+    <cb-error [code]="code"></cb-error>
+    <div *ngIf="!loading && payments && code < 300">
         <table class="table table-hover">
             <thead>
             <tr>
@@ -25,6 +25,8 @@
             </tr>
             </tbody>
         </table>
+        <p class="text-center"
+           *ngIf="payments.length === 0">Nothing found.</p>
     </div>
 
 </div>

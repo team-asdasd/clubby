@@ -9,6 +9,7 @@ import org.apache.shiro.subject.Subject;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Entity
@@ -88,6 +89,7 @@ public class User {
 
     private Collection<FormResult> formResults;
     private Collection<Reservation> reservations;
+    private Collection<ReservationGroup> reservationGroups;
 
     @OneToMany(mappedBy = "user")
     public Collection<FormResult> getFormResults() {
@@ -105,6 +107,15 @@ public class User {
 
     public void setReservations(Collection<Reservation> reservations) {
         this.reservations = reservations;
+    }
+
+    @OneToMany(mappedBy = "user")
+    public Collection<ReservationGroup> getReservationGroups() {
+        return reservationGroups;
+    }
+
+    public void setReservationGroups(Collection<ReservationGroup> reservationGroups) {
+        this.reservationGroups = reservationGroups;
     }
 
     @Basic
@@ -125,10 +136,26 @@ public class User {
         return activeSessions.stream().anyMatch(this::matchSession);
     }
 
+    @Transient
+    public int activeGroup() {
+        int group = 0;
+        Optional<ReservationGroup> rg = this.getReservationGroups().stream()
+                .sorted((s1, s2) -> Integer.compare(s2.getGeneration(), s1.getGeneration()))
+                .findFirst();
+        if (rg.isPresent()) {
+            group = rg.get().getGroupnumber();
+        }
+
+        return group;
+    }
+
     private boolean matchSession(Session s) {
         Subject subject = new Subject.Builder().sessionId(s.getId()).buildSubject();
         Object principal = subject.getPrincipal();
-        int id = Integer.parseInt(principal.toString());
-        return id == getId();
+        if (principal != null) {
+            int id = Integer.parseInt(principal.toString());
+            return id == getId();
+        }
+        return false;
     }
 }

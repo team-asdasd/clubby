@@ -113,7 +113,7 @@
 
                         <div *ngIf="hasSentRecommendations" style="margin-top: 40px">
                             <h4>You have sent recommendation requests to:</h4>
-                            <p *ngFor="#user of sentRecommendationsUsers">{{user}}</p>
+                            <p *ngFor="#user of sentRecommendationsUsers">{{user.email}} - {{user.statusMessage}}</p>
                         </div>
 
                     </div>

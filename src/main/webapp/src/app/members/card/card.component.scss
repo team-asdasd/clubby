@@ -1,5 +1,20 @@
 @import '../../../style/colors';
 
+#onlineIndicator {
+  width: 20px;
+  background-color: lightgrey; //#67cc67
+  height: 20px;
+  position: absolute;
+  right: 0;
+  margin: 10px;
+  border-radius: 20px;
+  box-shadow: inset 0px 0px 20px 0px rgba(0, 0, 10, 0.2);
+}
+
+.online {
+  background-color: #67cc67 !important;
+}
+
 #popUp {
   display: inline-block;
   top: 20%;
@@ -69,6 +84,7 @@
 }
 
 .card{
+  position: relative;
   max-width: 300px;
   height: 150px;
   margin: auto;

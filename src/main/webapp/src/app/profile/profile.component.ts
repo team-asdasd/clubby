@@ -29,7 +29,7 @@ export class Profile {
     loadingState: String = "waiting";
     isCandidate: boolean = false;
     hasSentRecommendations: Boolean = false;
-    sentRecommendationsUsers: Array<String> = new Array();
+    sentRecommendationsUsers: Array<any> = new Array();
 
     constructor(private router: Router, private userService: UserService, private recommendationService: RecommendationService) {
         userService.getUserInfo().subscribe(user => this.initUser(user));
@@ -57,7 +57,20 @@ export class Profile {
     initSentRec(rec: any) {
 
         for (var i = 0; i < rec.length; i++) {
-            this.sentRecommendationsUsers.push(rec[i].email);
+
+            var user = {
+                "email": rec[i].email,
+                "statusMessage": ""
+            }
+
+            if (rec[i].status === 0) {
+                user.statusMessage = "Pending";
+            }
+            else if (rec[i].status === 1) {
+                user.statusMessage = "Approved";
+            }
+
+            this.sentRecommendationsUsers.push(user);
         }
 
         if (rec.length > 0) {

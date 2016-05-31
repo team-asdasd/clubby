@@ -1,9 +1,6 @@
 package api.business.services.interfaces;
 
-import api.business.entities.Cottage;
-import api.business.entities.Reservation;
-import api.business.entities.ReservationsPeriod;
-import api.business.entities.Service;
+import api.business.entities.*;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
@@ -35,4 +32,9 @@ public interface ICottageService {
     List<ReservationsPeriod> getReservationPeriods(String fromDate, String toDate);
 
     boolean cancelReservation(int reservation);
+
+    boolean isGroupAvailable();
+
+    DateTime getCurrentPeriodStartDate();
+
 }

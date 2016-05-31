@@ -1,8 +1,10 @@
 import {Component, ViewChild} from 'angular2/core';
 import {User} from './../shared/user.model';
+import {Router} from 'angular2/router';
 import {UserService} from "./../shared/user.service";
 import {RecommendationService} from "../members/shared/recommendation.service";
 import 'rxjs/add/operator/catch';
+import {Recommendation} from "../members/shared/recommendation.model";
 
 @Component({
     selector: 'profile',
@@ -26,20 +28,57 @@ export class Profile {
     requestingRecommendationState: String = "default";
     loadingState: String = "waiting";
     isCandidate: boolean = false;
+    hasSentRecommendations: Boolean = false;
+    sentRecommendationsUsers: Array<any> = new Array();
 
-    constructor(private userService: UserService, private recommendationService: RecommendationService) {
+    constructor(private router: Router, private userService: UserService, private recommendationService: RecommendationService) {
         userService.getUserInfo().subscribe(user => this.initUser(user));
+        recommendationService.getSentRecommendations().subscribe(
+            rec => this.initSentRec(rec),
+            error => this.handleError(error)
+        )
     }
 
     initUser(user: User) {
         this.user = user;
 
-        this.loadingState = "done";
+        if (this.sentRecommendationsUsers) {
+
+            this.loadingState = "done";
+        }
 
         this.notificationMessage.nativeElement.hidden = false;
 
         if (user["roles"].indexOf("candidate") > -1) {
             this.isCandidate = true;
+        }
+    }
+
+    initSentRec(rec: any) {
+
+        for (var i = 0; i < rec.length; i++) {
+
+            var user = {
+                "email": rec[i].email,
+                "statusMessage": ""
+            }
+
+            if (rec[i].status === 0) {
+                user.statusMessage = "Pending";
+            }
+            else if (rec[i].status === 1) {
+                user.statusMessage = "Approved";
+            }
+
+            this.sentRecommendationsUsers.push(user);
+        }
+
+        if (rec.length > 0) {
+            this.hasSentRecommendations = true;
+        }
+
+        if (this.user) {
+            this.loadingState = "done";
         }
     }
 
@@ -54,7 +93,7 @@ export class Profile {
     sendRecommendationRequest(email: String) {
         this.recommendationService.sendRecommendationRequest(email)
             .subscribe(resp => this.handleRecommendationResponse(resp),
-                       err => this.handleError(err));
+                       err => this.handleRecError(err));
 
         this.requestingRecommendationState = "waiting";
     }
@@ -95,6 +134,38 @@ export class Profile {
                                                err => this.handlePatchResponse(err));
     }
 
+    inviteFriend(email: String, message: String) {
+
+        this.notificationMessage.nativeElement.innerHTML = "";
+
+        this.loadingState = "waiting";
+
+        this.userService.inviteFriend(email, message).subscribe(
+            res => this.handleInvite(res),
+            error => this.handleError(error)
+        );
+    }
+
+    handleInvite(res: any) {
+
+        var message = "";
+
+        message = "The invite has been sent!";
+
+        this.notificationMessage.nativeElement.hidden = false;
+        this.notificationMessage.nativeElement.innerHTML = message;
+
+        this.loadingState = "done";
+    }
+
+    leaveClub() {
+        this.userService.deleteMe().subscribe(res => this.handleLeave());
+    }
+
+    handleLeave() {
+        window.location.reload();
+    }
+
     handlePatchResponse(resp: any) {
 
         var message = "";
@@ -114,13 +185,22 @@ export class Profile {
         this.userService.getUserInfo().subscribe(user => this.initUser(user));
     }
 
-
     handleRecommendationResponse(resp: any) {
         this.requestingRecommendationState = "done";
         this.recommendationMessage.nativeElement.innerHTML = "The request has been send";
     }
 
     handleError(resp: any) {
+        this.loadingState = "done";
+
+        if (resp.Errors) {
+            this.notificationMessage.nativeElement.innerHTML = "Error: " + resp.Errors[0].Message;
+        } else {
+            this.notificationMessage.nativeElement.innerHTML = "Error: " + resp;
+        }
+    }
+
+    handleRecError(resp: any) {
         this.requestingRecommendationState = "done";
 
         if (resp.Errors) {

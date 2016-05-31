@@ -5,6 +5,7 @@ import api.business.entities.Recommendation;
 import api.business.entities.Role;
 import api.business.entities.User;
 import api.business.services.interfaces.IEmailService;
+import api.business.services.interfaces.IGroupsAssignmentService;
 import api.business.services.interfaces.IRecommendationService;
 import api.business.services.interfaces.IUserService;
 import api.business.services.interfaces.notifications.INotificationsService;
@@ -32,12 +33,14 @@ public class RecommendationService implements IRecommendationService {
     private IUserService userService;
     @Inject
     private INotificationsService notificationsService;
+    @Inject
+    private IGroupsAssignmentService groupsAssignmentService;
 
     private final Logger logger = LogManager.getLogger(getClass().getName());
-    private final String memberNotification = "You become club member!";
+    private final String memberNotification = "You became a club member!";
     private final String confirmedNotification = "%s confirmed recommendation.";
     private final String emailSubject = "Recommendation request";
-    private final String emailMessage = "Hello dear friend! \nYou have received recommendation request from user %s.";
+    private final String emailMessage = "Hello! \nYou have received recommendation request from user %s.";
     private final String requestReceivedNotification = "Recommendation request received from %s.";
 
     @Override
@@ -60,7 +63,7 @@ public class RecommendationService implements IRecommendationService {
                 .getSingleResult();
         Configuration minRec = em.find(Configuration.class, "min_recommendation_required");
 
-        if (Integer.parseInt(minRec.getValue()) <= count) {
+        if (Integer.parseInt(minRec.getValue()) <= count && userTo.getLogin().getRoles().stream().anyMatch(r -> r.getRoleName().equals("candidate"))) {
             //change role
             Role lr = em.createQuery("SELECT lr FROM Role lr WHERE lr.roleName = 'candidate' AND lr.username = :username", Role.class)
                     .setParameter("username", userTo.getLogin().getEmail())
@@ -73,7 +76,8 @@ public class RecommendationService implements IRecommendationService {
             logger.info("User " + userTo.getLogin().getEmail() + " is member");
             notificationsService.create(memberNotification, NotificationAction.NOACTION, userTo.getId(), null);
 
-            //TODO: Assign to ReservationGroup
+            groupsAssignmentService.assign(userTo);
+
         }
         logger.info("User " + userTo.getLogin().getEmail() + " received recommendation from " + userFrom.getLogin().getEmail());
 
@@ -104,7 +108,6 @@ public class RecommendationService implements IRecommendationService {
     }
 
     public List<RecommendationDto> getReceivedRecommendationRequests() {
-
         User user = userService.get();
 
         List<Recommendation> recommendations = em.createQuery("SELECT r FROM Recommendation r WHERE r.userFrom = :userFrom AND r.status = 0", Recommendation.class)
@@ -113,14 +116,13 @@ public class RecommendationService implements IRecommendationService {
 
         List<RecommendationDto> result = new ArrayList<>();
         for (Recommendation r : recommendations) {
-            RecommendationDto res = new RecommendationDto(r.getStatus(), r.getUserTo().getId(), r.getRecommendationCode());
+            RecommendationDto res = new RecommendationDto(r);
             result.add(res);
         }
         return result;
     }
 
     public List<RecommendationDto> getSentRecommendationRequests() {
-
         User user = userService.get();
 
         List<Recommendation> recommendations = em.createQuery("SELECT r FROM Recommendation r WHERE r.userTo = :userTo", Recommendation.class)
@@ -129,7 +131,7 @@ public class RecommendationService implements IRecommendationService {
 
         List<RecommendationDto> result = new ArrayList<>();
         for (Recommendation r : recommendations) {
-            RecommendationDto res = new RecommendationDto(r.getStatus(), r.getUserFrom().getId(), null);
+            RecommendationDto res = new RecommendationDto(r.getStatus(), r.getUserFrom(), null);
             result.add(res);
         }
         return result;

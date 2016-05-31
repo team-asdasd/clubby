@@ -82,7 +82,7 @@ public class PayClubbyHandler extends BaseHandler<PayClubbyRequest, PayClubbyRes
         mt.setTransactionid(UUID.randomUUID().toString());
         mt.setCreationTime(new Date());
         mt.setTransactionTypeId(TransactionTypes.clubby.getValue());
-        mt.setAmount(payment.calculatePrice()); // TODO: Move to strategy (so CDI Decorators could possibly work)
+        mt.setAmount(payment.calculatePrice());
         mt.setCurrency(Currency.ClubbyCoin);
 
         paymentsService.createMoneyTransaction(mt);

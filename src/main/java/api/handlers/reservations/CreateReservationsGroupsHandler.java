@@ -5,11 +5,9 @@ import api.business.persistance.ISimpleEntityManager;
 import api.business.services.interfaces.IGroupsAssignmentService;
 import api.contracts.base.BaseRequest;
 import api.contracts.base.BaseResponse;
-import api.contracts.base.ErrorCodes;
 import api.contracts.base.ErrorDto;
 import api.handlers.base.BaseHandler;
 import api.helpers.validator.Validator;
-import org.apache.shiro.SecurityUtils;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -32,7 +30,7 @@ public class CreateReservationsGroupsHandler extends BaseHandler<BaseRequest, Ba
     public BaseResponse handleBase(BaseRequest request) {
         List<User> users = em.getAll(User.class);
 
-        gas.Assign(users);
+        gas.assign(users);
 
         return createResponse();
     }

@@ -23,7 +23,65 @@
     </div>
 </div>
 
-<!-- Modal -->
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <h3 class="sub-header">Reservation periods
+            <button type="button" data-toggle="modal" data-target="#add-period-modal" id="add-period"
+                    class="btn btn-success pull-right">
+                Add period
+            </button>
+        </h3>
+        <div id="reservation-periods-table"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <h3 class="sub-header">Payments</h3>
+        <div>
+            <label for="price" class="control-label">Yearly membership payment price</label>
+            <div class="form-group col-xs-8 col-sm-10 col-md-10">
+                <input type="number" class="form-control" id="price" placeholder="Set price">
+            </div>
+            <div class="col-xs-4 col-sm-10 col-md-2">
+                <button type="button" id="set-price" class="btn btn-success">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- period Modal -->
+<div class="modal fade" id="add-period-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Settings</h4>
+            </div>
+            <div class="modal-body">
+                <div id="period-modal-message-box"></div>
+                <form>
+                    <div class="form-group">
+                        <label for="start-date" class="control-label">Start date</label>
+                        <input type="date" class="form-control" id="start-date">
+                    </div>
+                    <div class="form-group">
+                        <label for="end-date" class="control-label">End date</label>
+                        <input type="date" class="form-control" id="end-date">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="save-period" type="button" data-loading-text="Saving..." class="btn btn-primary">Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- cottage Modal -->
 <div class="modal fade" id="settings-modal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -43,7 +101,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button id="save" type="button" data-loading-text="Updating settings..." class="btn btn-primary">Save
+                <button id="save" type="button" data-loading-text="Updating settings..." class="btn btn-primary">
+                    Save
                 </button>
             </div>
         </div>
@@ -72,6 +131,35 @@
                         <span class="glyphicon glyphicon-pencil" data-setting-key="<%= _.escape(setting.key) %>"
                               aria-hidden="true"></span>
                         <span style="font-size: 16px;" data-setting-key="<%= _.escape(setting.key) %>"> Edit</span></a>
+                </td>
+            </tr>
+            <% }); %>
+            </tbody>
+        </table>
+    </div>
+</script>
+
+<script id="reservation-period-table-template" type="text/template">
+    <div>
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>Start date</th>
+                <th>End date</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody class="searchable">
+            <% _.each(reservationPeriods, function(period){ %>
+            <tr>
+                <td><%= _.escape(period.from) %></td>
+                <td><%= _.escape(period.to) %></td>
+                <td>
+                    <a class="btn btn-default delete-period" data-period-id="<%= _.escape(period.id) %>">
+                        <span class="glyphicon glyphicon-remove" data-period-id="<%= _.escape(period.id) %>"
+                              aria-hidden="true"></span>
+                            <span style="font-size: 16px;"
+                                  data-period-id="<%= _.escape(period.id) %>"> Delete</span></a>
                 </td>
             </tr>
             <% }); %>

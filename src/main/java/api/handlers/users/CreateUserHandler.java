@@ -1,5 +1,6 @@
 package api.handlers.users;
 
+import api.business.entities.Configuration;
 import api.business.entities.Login;
 import api.business.entities.User;
 import api.business.services.EmailService;
@@ -52,7 +53,7 @@ public class CreateUserHandler extends BaseHandler<CreateUserRequest, BaseRespon
 
         if (request.email == null || request.email.length() < 5) {
             errors.add(new ErrorDto("Email must be provided", ErrorCodes.VALIDATION_ERROR));
-        }else if(!EmailService.isValidEmailAddress(request.email)) {
+        } else if (!EmailService.isValidEmailAddress(request.email)) {
             errors.add(new ErrorDto("Invalid email", ErrorCodes.INCORRECT_EMAIL));
         }
         User user = userService.getByEmail(request.email);
@@ -66,6 +67,12 @@ public class CreateUserHandler extends BaseHandler<CreateUserRequest, BaseRespon
                 errors.add(new ErrorDto("Email already taken", ErrorCodes.DUPLICATE_EMAIL));
             }
         }
+        Long membersCount = (Long) em.createQuery("SELECT COUNT(u) FROM User u WHERE u.login.disabled = false").getSingleResult();
+        Configuration c = em.find(Configuration.class, "max_members");
+        if (membersCount >= Integer.parseInt(c.getValue())) {
+            errors.add(new ErrorDto("Club is full", ErrorCodes.DUPLICATE_EMAIL));
+        }
+
         errors.addAll(formService.validateFormFields(request.fields));
         return errors;
     }

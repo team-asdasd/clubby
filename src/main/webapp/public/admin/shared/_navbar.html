@@ -17,15 +17,27 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li th:classappend="${#httpServletRequest.getRequestURI().contains('/dashboard') ? 'active':''}"><a
-                        href="/admin/dashboard">Admin Dashboard</a></li>
+                        href="/admin/dashboard">Dashboard</a></li>
+                <li class="visible-xs"
+                    th:classappend="${#httpServletRequest.getRequestURI().contains('/users') ? 'active':''}"><a
+                        href="/admin/users">Users</a></li>
+                <li class="visible-xs"
+                    th:classappend="${#httpServletRequest.getRequestURI().contains('/cottages') ? 'active':''}">
+                    <a href="/admin/cottages">Cottages</a></li>
+                <li class="visible-xs"
+                    th:classappend="${#httpServletRequest.getRequestURI().contains('/settings') ? 'active':''}">
+                    <a href="/admin/settings">Settings</a></li>
+                <li class="visible-xs"
+                    th:classappend="${#httpServletRequest.getRequestURI().contains('/form') ? 'active':''}">
+                    <a href="/admin/form">Form</a></li>
                 <li th:classappend="${#httpServletRequest.getRequestURI().contains('/swagger') ? 'active':''}"><a
-                        href="/admin/swagger">API Docs</a></li>
+                        href="/admin/swagger">API Documentation</a></li>
                 <li th:classappend="${#httpServletRequest.getRequestURI().contains('/logs') ? 'active':''}">
                     <a href="/admin/logs">Logs</a></li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/app">App</a></li>
+                <li><a href="/app">Application</a></li>
                 <li><a href="/logout">Logout</a></li>
             </ul>
 

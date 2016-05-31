@@ -1,4 +1,4 @@
-import {Component} from 'angular2/core';
+import {Component, OnInit} from 'angular2/core';
 import {RouterOutlet, RouteConfig} from 'angular2/router';
 import {CottagesList} from "./cottages-list/cottages-list.component";
 import {Tabs} from "./tabs/tabs.component";
@@ -22,7 +22,8 @@ import {AllReservations} from "./all-reservations/all-reservations.component";
     {path: '/:id', component: CottageDetails, as: 'CottageDetails'},
 ])
 
-export class Cottages {
+export class Cottages implements OnInit {
+
     options: any;
 
     constructor() {
@@ -36,6 +37,10 @@ export class Cottages {
             name: 'All Reservations',
             link: 'AllReservations'
         }];
+    }
+
+    ngOnInit():any {
+        return undefined;
     }
 
 }

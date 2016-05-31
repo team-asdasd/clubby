@@ -10,12 +10,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" [routerLink]="['Home']">Clubby</a>
+                <a class="navbar-brand">Clubby</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
+                <ul class="nav navbar-nav"
+                    *ngIf="!isCandidate">
                     <li [class.active]="isRouteActive(['Cottages'])">
                         <a [routerLink]="['Cottages']">Cottages</a>
                     </li>
@@ -31,7 +32,7 @@
                     </li>
                     <li *ngIf="isAdministrator">
                         <a href="/admin">Admin Dashboard</a></li>
-                    <li>
+                    <li *ngIf="!isCandidate">
                         <span class="balance">{{balance | number:'1.2-2'}} CB
                         <a href="/app/#/Payments/buyclubbycoins">+</a></span></li>
                     <li [class.active]="isRouteActive(['Profile'])">

@@ -122,25 +122,25 @@ SELECT * FROM payment.payments
 WHERE paymentId = 5);
 
 INSERT INTO payment.lineitems
-SELECT * FROM (SELECT nextval('lineitems_id_seq'),'Membership payment', 10000, 1, 1) a
+SELECT * FROM (SELECT nextval('payment.lineitems_id_seq'),'Membership payment', 10000, 1, 1) a
 WHERE NOT EXISTS (
 SELECT * FROM payment.lineitems
 WHERE payment_id = 1);
 
 INSERT INTO payment.lineitems
-SELECT * FROM (SELECT nextval('lineitems_id_seq'),'Buy clubby coins', 10000, 1, 2) a
+SELECT * FROM (SELECT nextval('payment.lineitems_id_seq'),'Buy clubby coins', 10000, 1, 2) a
 WHERE NOT EXISTS (
 SELECT * FROM payment.lineitems
 WHERE payment_id = 2);
 
 INSERT INTO payment.lineitems
-SELECT * FROM (SELECT nextval('lineitems_id_seq'),'Gift', 1000, 1, 4) a
+SELECT * FROM (SELECT nextval('payment.lineitems_id_seq'),'Gift', 1000, 1, 4) a
 WHERE NOT EXISTS (
 SELECT * FROM payment.lineitems
 WHERE payment_id = 4);
 
 INSERT INTO payment.lineitems
-SELECT * FROM (SELECT nextval('lineitems_id_seq'),'Buy clubby coins', 100000, 1, 5) a
+SELECT * FROM (SELECT nextval('payment.lineitems_id_seq'),'Buy clubby coins', 100000, 1, 5) a
 WHERE NOT EXISTS (
 SELECT * FROM payment.lineitems
 WHERE payment_id = 5);

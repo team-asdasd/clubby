@@ -35,7 +35,8 @@ import {Member} from "./member/member.component.ts";
     {path: '/Cottages/...', component: Cottages, as: 'Cottages', useAsDefault: true},
     {path: '/Payments/...', component: PaymentsCentral, as: 'Payments'},
     {path: '/Members/', component: Members, as: 'Members'},
-    {path: '/Member/:id', component: Member, as: 'Member'}
+    {path: '/Member/:id', component: Member, as: 'Member'},
+    {path: '/*path', redirectTo:['Cottages'] }
 ])
 
 export class App {
@@ -50,10 +51,11 @@ export class App {
         );
 
         userService.hasRole("candidate").subscribe(
-            resp =>
-            {
+            resp => {
                 this.isCandidate = resp;
-                this.router.navigate(['Profile']);
+                if (this.isCandidate) {
+                    this.router.navigate(['Profile']);
+                }
             },
             error => this.isCandidate = false
         );

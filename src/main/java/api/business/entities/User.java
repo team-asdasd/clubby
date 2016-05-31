@@ -142,7 +142,7 @@ public class User {
         Optional<ReservationGroup> rg = this.getReservationGroups().stream()
                 .sorted((s1, s2) -> Integer.compare(s2.getGeneration(), s1.getGeneration()))
                 .findFirst();
-        if(rg.isPresent()){
+        if (rg.isPresent()) {
             group = rg.get().getGroupnumber();
         }
 
@@ -152,7 +152,10 @@ public class User {
     private boolean matchSession(Session s) {
         Subject subject = new Subject.Builder().sessionId(s.getId()).buildSubject();
         Object principal = subject.getPrincipal();
-        int id = Integer.parseInt(principal.toString());
-        return id == getId();
+        if (principal != null) {
+            int id = Integer.parseInt(principal.toString());
+            return id == getId();
+        }
+        return false;
     }
 }

@@ -13,7 +13,7 @@ public interface ICottageService {
 
     List<Cottage> getByFilters(String title, int beds, String dateFrom, String dateTo, int priceFrom, int priceTo);
 
-    List<Cottage> getAvailableCottagesForFullPeriod(LocalDate from, LocalDate to);
+    boolean isCottageAvailableInPeriod(int cottageId, LocalDate from, LocalDate to);
 
     void delete(int id);
 
@@ -36,5 +36,4 @@ public interface ICottageService {
     boolean isGroupAvailable();
 
     DateTime getCurrentPeriodStartDate();
-
 }

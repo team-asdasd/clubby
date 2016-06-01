@@ -83,15 +83,21 @@ public class CottageService implements ICottageService {
         return query.getResultList();
     }
 
-    public List<Cottage> getAvailableCottagesForFullPeriod(LocalDate from, LocalDate to) {
-        List<Cottage> cottages = new ArrayList<>();
+    public boolean isCottageAvailableInPeriod(int cottageId, LocalDate from, LocalDate to) {
         while (from.isBefore(to)) {
-            LocalDate newTo = from.plusWeeks(1);
-            cottages.addAll(getByFilters("", 0, from.toString("YYYY-MM-dd"), newTo.toString("YYYY-MM-dd"), 0, 0));
-            from = newTo;
+            LocalDate newTo = from.plusDays(6);
+
+            List<Cottage> cottages = getByFilters("", 0, from.toString("YYYY-MM-dd"), newTo.toString("YYYY-MM-dd"), 0, 0);
+            List<Cottage> available = cottages.stream().filter(c -> c.getId() == cottageId).collect(Collectors.toList());
+
+            if (available.size() == 0) {
+                return false;
+            }
+
+            from = newTo.plusDays(1);
         }
 
-        return cottages;
+        return true;
     }
 
     @Override
@@ -211,18 +217,18 @@ public class CottageService implements ICottageService {
         return false;
     }
 
-    public boolean isGroupAvailable(){
+    public boolean isGroupAvailable() {
         int rg = userService.get().activeGroup();
-        if(rg == 0) return false;
+        if (rg == 0) return false;
 
         DateTime periodStart = getCurrentPeriodStartDate();
-        boolean isGroupTime = DateTime.now().isAfter(periodStart.plusWeeks(rg -1));
+        boolean isGroupTime = DateTime.now().isAfter(periodStart.plusWeeks(rg - 1));
 
         return isGroupTime;
     }
 
-    public DateTime getCurrentPeriodStartDate(){
-        Date date = (Date)em.createNativeQuery("SELECT fromdate FROM main.reservationsperiods " +
+    public DateTime getCurrentPeriodStartDate() {
+        Date date = (Date) em.createNativeQuery("SELECT fromdate FROM main.reservationsperiods " +
                 "WHERE :dateToCheck BETWEEN fromdate AND todate")
                 .setParameter("dateToCheck", new Date())
                 .getSingleResult();

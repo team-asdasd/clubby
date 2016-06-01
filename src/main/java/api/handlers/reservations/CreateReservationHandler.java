@@ -57,7 +57,7 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
             return errors;
         }
 
-        if(!cottageService.isGroupAvailable()){
+        if (!cottageService.isGroupAvailable()) {
             errors.add(new ErrorDto("Users with current group can not make reservations at this time.", ErrorCodes.VALIDATION_ERROR));
             return errors;
         }
@@ -118,10 +118,8 @@ public class CreateReservationHandler extends BaseHandler<CreateReservationReque
             errors.add(new ErrorDto("Date 'to' must be after 'from'.", ErrorCodes.VALIDATION_ERROR));
         }
 
-        List<Cottage> availableCottages = cottageService.getAvailableCottagesForFullPeriod(from, to);
-        boolean cottageAvailable = availableCottages.stream().anyMatch(c -> c.getId() == request.cottage);
-
-        if (!cottageAvailable) {
+        boolean available = cottageService.isCottageAvailableInPeriod(cottage.getId(), from, to);
+        if (!available) {
             errors.add(new ErrorDto("Cottage is not available during that period.", ErrorCodes.VALIDATION_ERROR));
             return errors;
         }

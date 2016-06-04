@@ -2,6 +2,7 @@
 
 ![awd](/docs/asdasd.png)
 # clubby
+clubby is a social cottage reservation system built by team-asdasd as a software development group project in Vilnius University.
 
 ## Environments
 - [Production](http://clubby-teamasdasd.rhcloud.com/)

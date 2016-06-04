@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/team-asdasd/clubby.svg?branch=master)](https://travis-ci.org/team-asdasd/clubby) [![Dependency Status](https://david-dm.org/Tony-Mc/asdasd.svg?path=src/main/webapp)](https://david-dm.org/Tony-Mc/asdasd?path=src/main/webapp) [![devDependency Status](https://david-dm.org/Tony-Mc/asdasd/dev-status.svg?path=src/main/webapp)](https://david-dm.org/Tony-Mc/asdasd?path=src/main/webapp#info=devDependencies)
+[![Build Status](https://travis-ci.org/team-asdasd/clubby.svg?branch=master)](https://travis-ci.org/team-asdasd/clubby) [![Dependency Status](https://david-dm.org/team-asdasd/clubby.svg?path=src/main/webapp)](https://david-dm.org/team-asdasd/clubby?path=src/main/webapp) [![devDependency Status](https://david-dm.org/team-asdasd/clubby/dev-status.svg?path=src/main/webapp)](https://david-dm.org/team-asdasd/clubby?path=src/main/webapp#info=devDependencies)
 
 ![awd](/docs/asdasd.png)
 # clubby
